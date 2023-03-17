@@ -14,6 +14,7 @@
 		D49B706429C4D3FE009494A5 /* RevoltTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D49B706329C4D3FE009494A5 /* RevoltTests.swift */; };
 		D49B706E29C4D3FE009494A5 /* RevoltUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D49B706D29C4D3FE009494A5 /* RevoltUITests.swift */; };
 		D49B707029C4D3FE009494A5 /* RevoltUITestsLaunchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D49B706F29C4D3FE009494A5 /* RevoltUITestsLaunchTests.swift */; };
+		DAF41CBD29C508CD0004BFBE /* Login.swift in Sources */ = {isa = PBXBuildFile; fileRef = DAF41CBC29C508CD0004BFBE /* Login.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -44,6 +45,8 @@
 		D49B706929C4D3FE009494A5 /* RevoltUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = RevoltUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		D49B706D29C4D3FE009494A5 /* RevoltUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RevoltUITests.swift; sourceTree = "<group>"; };
 		D49B706F29C4D3FE009494A5 /* RevoltUITestsLaunchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RevoltUITestsLaunchTests.swift; sourceTree = "<group>"; };
+		DAF41CBC29C508CD0004BFBE /* Login.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Login.swift; sourceTree = "<group>"; };
+		DAF41CC129C516600004BFBE /* Inter.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = Inter.ttf; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -94,10 +97,12 @@
 		D49B705129C4D3FE009494A5 /* Revolt */ = {
 			isa = PBXGroup;
 			children = (
+				DAF41CC029C5164A0004BFBE /* Fonts */,
 				D49B705229C4D3FE009494A5 /* RevoltApp.swift */,
 				D49B705429C4D3FE009494A5 /* ContentView.swift */,
 				D49B705629C4D3FE009494A5 /* Assets.xcassets */,
 				D49B705829C4D3FE009494A5 /* Preview Content */,
+				DAF41CBC29C508CD0004BFBE /* Login.swift */,
 			);
 			path = Revolt;
 			sourceTree = "<group>";
@@ -125,6 +130,14 @@
 				D49B706F29C4D3FE009494A5 /* RevoltUITestsLaunchTests.swift */,
 			);
 			path = RevoltUITests;
+			sourceTree = "<group>";
+		};
+		DAF41CC029C5164A0004BFBE /* Fonts */ = {
+			isa = PBXGroup;
+			children = (
+				DAF41CC129C516600004BFBE /* Inter.ttf */,
+			);
+			path = Fonts;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -257,6 +270,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				DAF41CBD29C508CD0004BFBE /* Login.swift in Sources */,
 				D49B705529C4D3FE009494A5 /* ContentView.swift in Sources */,
 				D49B705329C4D3FE009494A5 /* RevoltApp.swift in Sources */,
 			);

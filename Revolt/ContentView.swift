@@ -8,21 +8,16 @@
 import SwiftUI
 
 struct ContentView: View {
-    @State private var show = false
-    
+    @State private var text = ""
+
     var body: some View {
         VStack {
-            Image(systemName: "person.3")
-                .imageScale(.large)
-                .foregroundColor(.red)
-            Text("hello chat")
-            Button("easter egg") {
-                show.toggle();
-            }
-            
-            if show {
-                Text("among us")
-            }
+            TextField(
+                "Enter your name",
+                text: $text
+            ).padding()
+            Text(text)
+                .padding()
         }
         .padding()
     }
