@@ -8,14 +8,6 @@
 import SwiftUI
 
 struct Login: View {
-    func logIn() {
-
-    }
-
-    func signUp() {
-
-    }
-
     var body: some View {
         NavigationStack {
             VStack {
