@@ -1,0 +1,582 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 56;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		D49B705329C4D3FE009494A5 /* RevoltApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = D49B705229C4D3FE009494A5 /* RevoltApp.swift */; };
+		D49B705529C4D3FE009494A5 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D49B705429C4D3FE009494A5 /* ContentView.swift */; };
+		D49B705729C4D3FE009494A5 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = D49B705629C4D3FE009494A5 /* Assets.xcassets */; };
+		D49B705A29C4D3FE009494A5 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = D49B705929C4D3FE009494A5 /* Preview Assets.xcassets */; };
+		D49B706429C4D3FE009494A5 /* RevoltTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D49B706329C4D3FE009494A5 /* RevoltTests.swift */; };
+		D49B706E29C4D3FE009494A5 /* RevoltUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D49B706D29C4D3FE009494A5 /* RevoltUITests.swift */; };
+		D49B707029C4D3FE009494A5 /* RevoltUITestsLaunchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D49B706F29C4D3FE009494A5 /* RevoltUITestsLaunchTests.swift */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		D49B706029C4D3FE009494A5 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = D49B704729C4D3FE009494A5 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = D49B704E29C4D3FE009494A5;
+			remoteInfo = Revolt;
+		};
+		D49B706A29C4D3FE009494A5 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = D49B704729C4D3FE009494A5 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = D49B704E29C4D3FE009494A5;
+			remoteInfo = Revolt;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXFileReference section */
+		D49B704F29C4D3FE009494A5 /* Revolt.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Revolt.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		D49B705229C4D3FE009494A5 /* RevoltApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RevoltApp.swift; sourceTree = "<group>"; };
+		D49B705429C4D3FE009494A5 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
+		D49B705629C4D3FE009494A5 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		D49B705929C4D3FE009494A5 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
+		D49B705F29C4D3FE009494A5 /* RevoltTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = RevoltTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		D49B706329C4D3FE009494A5 /* RevoltTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RevoltTests.swift; sourceTree = "<group>"; };
+		D49B706929C4D3FE009494A5 /* RevoltUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = RevoltUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		D49B706D29C4D3FE009494A5 /* RevoltUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RevoltUITests.swift; sourceTree = "<group>"; };
+		D49B706F29C4D3FE009494A5 /* RevoltUITestsLaunchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RevoltUITestsLaunchTests.swift; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		D49B704C29C4D3FE009494A5 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		D49B705C29C4D3FE009494A5 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		D49B706629C4D3FE009494A5 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		D49B704629C4D3FE009494A5 = {
+			isa = PBXGroup;
+			children = (
+				D49B705129C4D3FE009494A5 /* Revolt */,
+				D49B706229C4D3FE009494A5 /* RevoltTests */,
+				D49B706C29C4D3FE009494A5 /* RevoltUITests */,
+				D49B705029C4D3FE009494A5 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		D49B705029C4D3FE009494A5 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				D49B704F29C4D3FE009494A5 /* Revolt.app */,
+				D49B705F29C4D3FE009494A5 /* RevoltTests.xctest */,
+				D49B706929C4D3FE009494A5 /* RevoltUITests.xctest */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		D49B705129C4D3FE009494A5 /* Revolt */ = {
+			isa = PBXGroup;
+			children = (
+				D49B705229C4D3FE009494A5 /* RevoltApp.swift */,
+				D49B705429C4D3FE009494A5 /* ContentView.swift */,
+				D49B705629C4D3FE009494A5 /* Assets.xcassets */,
+				D49B705829C4D3FE009494A5 /* Preview Content */,
+			);
+			path = Revolt;
+			sourceTree = "<group>";
+		};
+		D49B705829C4D3FE009494A5 /* Preview Content */ = {
+			isa = PBXGroup;
+			children = (
+				D49B705929C4D3FE009494A5 /* Preview Assets.xcassets */,
+			);
+			path = "Preview Content";
+			sourceTree = "<group>";
+		};
+		D49B706229C4D3FE009494A5 /* RevoltTests */ = {
+			isa = PBXGroup;
+			children = (
+				D49B706329C4D3FE009494A5 /* RevoltTests.swift */,
+			);
+			path = RevoltTests;
+			sourceTree = "<group>";
+		};
+		D49B706C29C4D3FE009494A5 /* RevoltUITests */ = {
+			isa = PBXGroup;
+			children = (
+				D49B706D29C4D3FE009494A5 /* RevoltUITests.swift */,
+				D49B706F29C4D3FE009494A5 /* RevoltUITestsLaunchTests.swift */,
+			);
+			path = RevoltUITests;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		D49B704E29C4D3FE009494A5 /* Revolt */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = D49B707329C4D3FE009494A5 /* Build configuration list for PBXNativeTarget "Revolt" */;
+			buildPhases = (
+				D49B704B29C4D3FE009494A5 /* Sources */,
+				D49B704C29C4D3FE009494A5 /* Frameworks */,
+				D49B704D29C4D3FE009494A5 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = Revolt;
+			productName = Revolt;
+			productReference = D49B704F29C4D3FE009494A5 /* Revolt.app */;
+			productType = "com.apple.product-type.application";
+		};
+		D49B705E29C4D3FE009494A5 /* RevoltTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = D49B707629C4D3FE009494A5 /* Build configuration list for PBXNativeTarget "RevoltTests" */;
+			buildPhases = (
+				D49B705B29C4D3FE009494A5 /* Sources */,
+				D49B705C29C4D3FE009494A5 /* Frameworks */,
+				D49B705D29C4D3FE009494A5 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				D49B706129C4D3FE009494A5 /* PBXTargetDependency */,
+			);
+			name = RevoltTests;
+			productName = RevoltTests;
+			productReference = D49B705F29C4D3FE009494A5 /* RevoltTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
+		D49B706829C4D3FE009494A5 /* RevoltUITests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = D49B707929C4D3FE009494A5 /* Build configuration list for PBXNativeTarget "RevoltUITests" */;
+			buildPhases = (
+				D49B706529C4D3FE009494A5 /* Sources */,
+				D49B706629C4D3FE009494A5 /* Frameworks */,
+				D49B706729C4D3FE009494A5 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				D49B706B29C4D3FE009494A5 /* PBXTargetDependency */,
+			);
+			name = RevoltUITests;
+			productName = RevoltUITests;
+			productReference = D49B706929C4D3FE009494A5 /* RevoltUITests.xctest */;
+			productType = "com.apple.product-type.bundle.ui-testing";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		D49B704729C4D3FE009494A5 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				BuildIndependentTargetsInParallel = 1;
+				LastSwiftUpdateCheck = 1420;
+				LastUpgradeCheck = 1420;
+				TargetAttributes = {
+					D49B704E29C4D3FE009494A5 = {
+						CreatedOnToolsVersion = 14.2;
+					};
+					D49B705E29C4D3FE009494A5 = {
+						CreatedOnToolsVersion = 14.2;
+						TestTargetID = D49B704E29C4D3FE009494A5;
+					};
+					D49B706829C4D3FE009494A5 = {
+						CreatedOnToolsVersion = 14.2;
+						TestTargetID = D49B704E29C4D3FE009494A5;
+					};
+				};
+			};
+			buildConfigurationList = D49B704A29C4D3FE009494A5 /* Build configuration list for PBXProject "Revolt" */;
+			compatibilityVersion = "Xcode 14.0";
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = D49B704629C4D3FE009494A5;
+			productRefGroup = D49B705029C4D3FE009494A5 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				D49B704E29C4D3FE009494A5 /* Revolt */,
+				D49B705E29C4D3FE009494A5 /* RevoltTests */,
+				D49B706829C4D3FE009494A5 /* RevoltUITests */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		D49B704D29C4D3FE009494A5 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				D49B705A29C4D3FE009494A5 /* Preview Assets.xcassets in Resources */,
+				D49B705729C4D3FE009494A5 /* Assets.xcassets in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		D49B705D29C4D3FE009494A5 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		D49B706729C4D3FE009494A5 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		D49B704B29C4D3FE009494A5 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				D49B705529C4D3FE009494A5 /* ContentView.swift in Sources */,
+				D49B705329C4D3FE009494A5 /* RevoltApp.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		D49B705B29C4D3FE009494A5 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				D49B706429C4D3FE009494A5 /* RevoltTests.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		D49B706529C4D3FE009494A5 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				D49B707029C4D3FE009494A5 /* RevoltUITestsLaunchTests.swift in Sources */,
+				D49B706E29C4D3FE009494A5 /* RevoltUITests.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		D49B706129C4D3FE009494A5 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = D49B704E29C4D3FE009494A5 /* Revolt */;
+			targetProxy = D49B706029C4D3FE009494A5 /* PBXContainerItemProxy */;
+		};
+		D49B706B29C4D3FE009494A5 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = D49B704E29C4D3FE009494A5 /* Revolt */;
+			targetProxy = D49B706A29C4D3FE009494A5 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin XCBuildConfiguration section */
+		D49B707129C4D3FE009494A5 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 16.2;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = iphoneos;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+			};
+			name = Debug;
+		};
+		D49B707229C4D3FE009494A5 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 16.2;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				SDKROOT = iphoneos;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_OPTIMIZATION_LEVEL = "-O";
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		D49B707429C4D3FE009494A5 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_ASSET_PATHS = "\"Revolt/Preview Content\"";
+				ENABLE_PREVIEWS = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
+				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
+				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = chat.revolt.Revolt;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		D49B707529C4D3FE009494A5 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_ASSET_PATHS = "\"Revolt/Preview Content\"";
+				ENABLE_PREVIEWS = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
+				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
+				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = chat.revolt.Revolt;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
+		D49B707729C4D3FE009494A5 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 16.2;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = chat.revolt.RevoltTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Revolt.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/Revolt";
+			};
+			name = Debug;
+		};
+		D49B707829C4D3FE009494A5 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 16.2;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = chat.revolt.RevoltTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Revolt.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/Revolt";
+			};
+			name = Release;
+		};
+		D49B707A29C4D3FE009494A5 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				GENERATE_INFOPLIST_FILE = YES;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = chat.revolt.RevoltUITests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_TARGET_NAME = Revolt;
+			};
+			name = Debug;
+		};
+		D49B707B29C4D3FE009494A5 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				GENERATE_INFOPLIST_FILE = YES;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = chat.revolt.RevoltUITests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_TARGET_NAME = Revolt;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		D49B704A29C4D3FE009494A5 /* Build configuration list for PBXProject "Revolt" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				D49B707129C4D3FE009494A5 /* Debug */,
+				D49B707229C4D3FE009494A5 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		D49B707329C4D3FE009494A5 /* Build configuration list for PBXNativeTarget "Revolt" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				D49B707429C4D3FE009494A5 /* Debug */,
+				D49B707529C4D3FE009494A5 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		D49B707629C4D3FE009494A5 /* Build configuration list for PBXNativeTarget "RevoltTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				D49B707729C4D3FE009494A5 /* Debug */,
+				D49B707829C4D3FE009494A5 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		D49B707929C4D3FE009494A5 /* Build configuration list for PBXNativeTarget "RevoltUITests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				D49B707A29C4D3FE009494A5 /* Debug */,
+				D49B707B29C4D3FE009494A5 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = D49B704729C4D3FE009494A5 /* Project object */;
+}
