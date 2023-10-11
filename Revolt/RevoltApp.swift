@@ -1,17 +1,27 @@
-//
-//  RevoltApp.swift
-//  Revolt
-//
-//  Created by Paul on 17/03/2023.
-//
-
 import SwiftUI
 
 @main
 struct RevoltApp: App {
+    @StateObject var state = ViewState()
+    
     var body: some Scene {
         WindowGroup {
-            ContentView()
+            NavigationStack {
+                ApplicationSwitcher()
+            }
+            .environmentObject(state)
+        }
+    }
+}
+
+struct ApplicationSwitcher: View {
+    @EnvironmentObject var viewState: ViewState
+
+    var body: some View {
+        if (viewState.sessionToken != nil) {
+            Home()
+        } else {
+            Login()
         }
     }
 }

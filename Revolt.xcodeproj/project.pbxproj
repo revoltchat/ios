@@ -8,13 +8,28 @@
 
 /* Begin PBXBuildFile section */
 		D49B705329C4D3FE009494A5 /* RevoltApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = D49B705229C4D3FE009494A5 /* RevoltApp.swift */; };
-		D49B705529C4D3FE009494A5 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D49B705429C4D3FE009494A5 /* ContentView.swift */; };
 		D49B705729C4D3FE009494A5 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = D49B705629C4D3FE009494A5 /* Assets.xcassets */; };
 		D49B705A29C4D3FE009494A5 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = D49B705929C4D3FE009494A5 /* Preview Assets.xcassets */; };
 		D49B706429C4D3FE009494A5 /* RevoltTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D49B706329C4D3FE009494A5 /* RevoltTests.swift */; };
 		D49B706E29C4D3FE009494A5 /* RevoltUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D49B706D29C4D3FE009494A5 /* RevoltUITests.swift */; };
 		D49B707029C4D3FE009494A5 /* RevoltUITestsLaunchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D49B706F29C4D3FE009494A5 /* RevoltUITestsLaunchTests.swift */; };
-		DAF41CBD29C508CD0004BFBE /* Login.swift in Sources */ = {isa = PBXBuildFile; fileRef = DAF41CBC29C508CD0004BFBE /* Login.swift */; };
+		DA99EC4A29D5F35400419FDA /* Home.swift in Sources */ = {isa = PBXBuildFile; fileRef = DA99EC4929D5F35400419FDA /* Home.swift */; };
+		DA99EC4C29D5F35500419FDA /* ViewState.swift in Sources */ = {isa = PBXBuildFile; fileRef = DA99EC4B29D5F35500419FDA /* ViewState.swift */; };
+		DA99EC5029D5F35900419FDA /* Login.swift in Sources */ = {isa = PBXBuildFile; fileRef = DA99EC4F29D5F35900419FDA /* Login.swift */; };
+		DA99EC5329D6148200419FDA /* Alamofire in Frameworks */ = {isa = PBXBuildFile; productRef = DA99EC5229D6148200419FDA /* Alamofire */; };
+		DAAA4BF429F2274A00F41E52 /* Collections in Frameworks */ = {isa = PBXBuildFile; productRef = DAAA4BF329F2274A00F41E52 /* Collections */; };
+		DAAA4BF629F2274A00F41E52 /* DequeModule in Frameworks */ = {isa = PBXBuildFile; productRef = DAAA4BF529F2274A00F41E52 /* DequeModule */; };
+		DAAA4BF829F2274A00F41E52 /* OrderedCollections in Frameworks */ = {isa = PBXBuildFile; productRef = DAAA4BF729F2274A00F41E52 /* OrderedCollections */; };
+		DAAA4BFB29F2518900F41E52 /* MessageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DAAA4BFA29F2518900F41E52 /* MessageView.swift */; };
+		DAAA4BFF29F251ED00F41E52 /* User.swift in Sources */ = {isa = PBXBuildFile; fileRef = DAAA4BFE29F251ED00F41E52 /* User.swift */; };
+		DAAA4C0129F251FC00F41E52 /* Message.swift in Sources */ = {isa = PBXBuildFile; fileRef = DAAA4C0029F251FC00F41E52 /* Message.swift */; };
+		DAAA4C0329F2548400F41E52 /* MessageBox.swift in Sources */ = {isa = PBXBuildFile; fileRef = DAAA4C0229F2548400F41E52 /* MessageBox.swift */; };
+		DAAA4C0529F2560800F41E52 /* Channel.swift in Sources */ = {isa = PBXBuildFile; fileRef = DAAA4C0429F2560800F41E52 /* Channel.swift */; };
+		DAAA4C0729F2604A00F41E52 /* Server.swift in Sources */ = {isa = PBXBuildFile; fileRef = DAAA4C0629F2604A00F41E52 /* Server.swift */; };
+		DAAA4C0929F2974300F41E52 /* Http.swift in Sources */ = {isa = PBXBuildFile; fileRef = DAAA4C0829F2974300F41E52 /* Http.swift */; };
+		DAAA4C0B29F2CF1200F41E52 /* Websocket.swift in Sources */ = {isa = PBXBuildFile; fileRef = DAAA4C0A29F2CF1200F41E52 /* Websocket.swift */; };
+		DAAA4C0E29F2D37800F41E52 /* Api.swift in Sources */ = {isa = PBXBuildFile; fileRef = DAAA4C0D29F2D37800F41E52 /* Api.swift */; };
+		DAF84FFD2A0EFE1B00B01682 /* Starscream in Frameworks */ = {isa = PBXBuildFile; productRef = DAF84FFC2A0EFE1B00B01682 /* Starscream */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -37,7 +52,6 @@
 /* Begin PBXFileReference section */
 		D49B704F29C4D3FE009494A5 /* Revolt.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Revolt.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		D49B705229C4D3FE009494A5 /* RevoltApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RevoltApp.swift; sourceTree = "<group>"; };
-		D49B705429C4D3FE009494A5 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
 		D49B705629C4D3FE009494A5 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		D49B705929C4D3FE009494A5 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
 		D49B705F29C4D3FE009494A5 /* RevoltTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = RevoltTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -45,8 +59,21 @@
 		D49B706929C4D3FE009494A5 /* RevoltUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = RevoltUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		D49B706D29C4D3FE009494A5 /* RevoltUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RevoltUITests.swift; sourceTree = "<group>"; };
 		D49B706F29C4D3FE009494A5 /* RevoltUITestsLaunchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RevoltUITestsLaunchTests.swift; sourceTree = "<group>"; };
-		DAF41CBC29C508CD0004BFBE /* Login.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Login.swift; sourceTree = "<group>"; };
+		DA99EC4929D5F35400419FDA /* Home.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Home.swift; sourceTree = "<group>"; };
+		DA99EC4B29D5F35500419FDA /* ViewState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewState.swift; sourceTree = "<group>"; };
+		DA99EC4F29D5F35900419FDA /* Login.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Login.swift; sourceTree = "<group>"; };
+		DAAA4BFA29F2518900F41E52 /* MessageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageView.swift; sourceTree = "<group>"; };
+		DAAA4BFE29F251ED00F41E52 /* User.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = User.swift; sourceTree = "<group>"; };
+		DAAA4C0029F251FC00F41E52 /* Message.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Message.swift; sourceTree = "<group>"; };
+		DAAA4C0229F2548400F41E52 /* MessageBox.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageBox.swift; sourceTree = "<group>"; };
+		DAAA4C0429F2560800F41E52 /* Channel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Channel.swift; sourceTree = "<group>"; };
+		DAAA4C0629F2604A00F41E52 /* Server.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Server.swift; sourceTree = "<group>"; };
+		DAAA4C0829F2974300F41E52 /* Http.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Http.swift; sourceTree = "<group>"; };
+		DAAA4C0A29F2CF1200F41E52 /* Websocket.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Websocket.swift; sourceTree = "<group>"; };
+		DAAA4C0C29F2D16B00F41E52 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
+		DAAA4C0D29F2D37800F41E52 /* Api.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Api.swift; sourceTree = "<group>"; };
 		DAF41CC129C516600004BFBE /* Inter.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = Inter.ttf; sourceTree = "<group>"; };
+		DAFC10FB29CFBFB600D2C2F9 /* RevoltAppInternals */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = RevoltAppInternals; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -54,6 +81,11 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				DAAA4BF429F2274A00F41E52 /* Collections in Frameworks */,
+				DA99EC5329D6148200419FDA /* Alamofire in Frameworks */,
+				DAAA4BF829F2274A00F41E52 /* OrderedCollections in Frameworks */,
+				DAF84FFD2A0EFE1B00B01682 /* Starscream in Frameworks */,
+				DAAA4BF629F2274A00F41E52 /* DequeModule in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -81,6 +113,7 @@
 				D49B706229C4D3FE009494A5 /* RevoltTests */,
 				D49B706C29C4D3FE009494A5 /* RevoltUITests */,
 				D49B705029C4D3FE009494A5 /* Products */,
+				DAFC10FE29CFC3B400D2C2F9 /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -97,12 +130,17 @@
 		D49B705129C4D3FE009494A5 /* Revolt */ = {
 			isa = PBXGroup;
 			children = (
+				DAAA4C0C29F2D16B00F41E52 /* Info.plist */,
+				DAAA4BFD29F251DF00F41E52 /* Types */,
+				DAAA4BF929F2515E00F41E52 /* Home */,
 				DAF41CC029C5164A0004BFBE /* Fonts */,
 				D49B705229C4D3FE009494A5 /* RevoltApp.swift */,
-				D49B705429C4D3FE009494A5 /* ContentView.swift */,
+				DA99EC4F29D5F35900419FDA /* Login.swift */,
+				DA99EC4B29D5F35500419FDA /* ViewState.swift */,
 				D49B705629C4D3FE009494A5 /* Assets.xcassets */,
 				D49B705829C4D3FE009494A5 /* Preview Content */,
-				DAF41CBC29C508CD0004BFBE /* Login.swift */,
+				DAAA4C0829F2974300F41E52 /* Http.swift */,
+				DAAA4C0A29F2CF1200F41E52 /* Websocket.swift */,
 			);
 			path = Revolt;
 			sourceTree = "<group>";
@@ -132,12 +170,42 @@
 			path = RevoltUITests;
 			sourceTree = "<group>";
 		};
+		DAAA4BF929F2515E00F41E52 /* Home */ = {
+			isa = PBXGroup;
+			children = (
+				DAAA4C0229F2548400F41E52 /* MessageBox.swift */,
+				DA99EC4929D5F35400419FDA /* Home.swift */,
+				DAAA4BFA29F2518900F41E52 /* MessageView.swift */,
+			);
+			path = Home;
+			sourceTree = "<group>";
+		};
+		DAAA4BFD29F251DF00F41E52 /* Types */ = {
+			isa = PBXGroup;
+			children = (
+				DAAA4BFE29F251ED00F41E52 /* User.swift */,
+				DAAA4C0029F251FC00F41E52 /* Message.swift */,
+				DAAA4C0429F2560800F41E52 /* Channel.swift */,
+				DAAA4C0629F2604A00F41E52 /* Server.swift */,
+				DAAA4C0D29F2D37800F41E52 /* Api.swift */,
+			);
+			path = Types;
+			sourceTree = "<group>";
+		};
 		DAF41CC029C5164A0004BFBE /* Fonts */ = {
 			isa = PBXGroup;
 			children = (
+				DAFC10FB29CFBFB600D2C2F9 /* RevoltAppInternals */,
 				DAF41CC129C516600004BFBE /* Inter.ttf */,
 			);
 			path = Fonts;
+			sourceTree = "<group>";
+		};
+		DAFC10FE29CFC3B400D2C2F9 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = Frameworks;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -156,6 +224,13 @@
 			dependencies = (
 			);
 			name = Revolt;
+			packageProductDependencies = (
+				DA99EC5229D6148200419FDA /* Alamofire */,
+				DAAA4BF329F2274A00F41E52 /* Collections */,
+				DAAA4BF529F2274A00F41E52 /* DequeModule */,
+				DAAA4BF729F2274A00F41E52 /* OrderedCollections */,
+				DAF84FFC2A0EFE1B00B01682 /* Starscream */,
+			);
 			productName = Revolt;
 			productReference = D49B704F29C4D3FE009494A5 /* Revolt.app */;
 			productType = "com.apple.product-type.application";
@@ -228,6 +303,11 @@
 				Base,
 			);
 			mainGroup = D49B704629C4D3FE009494A5;
+			packageReferences = (
+				DA99EC5129D6148200419FDA /* XCRemoteSwiftPackageReference "Alamofire" */,
+				DAAA4BF229F2274A00F41E52 /* XCRemoteSwiftPackageReference "swift-collections" */,
+				DAF84FFB2A0EFE1B00B01682 /* XCRemoteSwiftPackageReference "Starscream" */,
+			);
 			productRefGroup = D49B705029C4D3FE009494A5 /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
@@ -270,9 +350,19 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				DAF41CBD29C508CD0004BFBE /* Login.swift in Sources */,
-				D49B705529C4D3FE009494A5 /* ContentView.swift in Sources */,
+				DAAA4C0729F2604A00F41E52 /* Server.swift in Sources */,
+				DAAA4C0B29F2CF1200F41E52 /* Websocket.swift in Sources */,
+				DA99EC4A29D5F35400419FDA /* Home.swift in Sources */,
+				DAAA4C0329F2548400F41E52 /* MessageBox.swift in Sources */,
+				DA99EC5029D5F35900419FDA /* Login.swift in Sources */,
+				DAAA4C0929F2974300F41E52 /* Http.swift in Sources */,
+				DAAA4C0E29F2D37800F41E52 /* Api.swift in Sources */,
+				DAAA4BFF29F251ED00F41E52 /* User.swift in Sources */,
+				DAAA4BFB29F2518900F41E52 /* MessageView.swift in Sources */,
 				D49B705329C4D3FE009494A5 /* RevoltApp.swift in Sources */,
+				DA99EC4C29D5F35500419FDA /* ViewState.swift in Sources */,
+				DAAA4C0529F2560800F41E52 /* Channel.swift in Sources */,
+				DAAA4C0129F251FC00F41E52 /* Message.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -428,11 +518,14 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"Revolt/Preview Content\"";
+				DEVELOPMENT_TEAM = 28739U4397;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = Revolt/Info.plist;
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
@@ -445,6 +538,7 @@
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = chat.revolt.Revolt;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -456,11 +550,14 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"Revolt/Preview Content\"";
+				DEVELOPMENT_TEAM = 28739U4397;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = Revolt/Info.plist;
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
@@ -473,6 +570,7 @@
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = chat.revolt.Revolt;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -591,6 +689,61 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		DA99EC5129D6148200419FDA /* XCRemoteSwiftPackageReference "Alamofire" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/Alamofire/Alamofire";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 5.0.0;
+			};
+		};
+		DAAA4BF229F2274A00F41E52 /* XCRemoteSwiftPackageReference "swift-collections" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/apple/swift-collections.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 1.0.0;
+			};
+		};
+		DAF84FFB2A0EFE1B00B01682 /* XCRemoteSwiftPackageReference "Starscream" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/daltoniam/Starscream";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 4.0.0;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		DA99EC5229D6148200419FDA /* Alamofire */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = DA99EC5129D6148200419FDA /* XCRemoteSwiftPackageReference "Alamofire" */;
+			productName = Alamofire;
+		};
+		DAAA4BF329F2274A00F41E52 /* Collections */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = DAAA4BF229F2274A00F41E52 /* XCRemoteSwiftPackageReference "swift-collections" */;
+			productName = Collections;
+		};
+		DAAA4BF529F2274A00F41E52 /* DequeModule */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = DAAA4BF229F2274A00F41E52 /* XCRemoteSwiftPackageReference "swift-collections" */;
+			productName = DequeModule;
+		};
+		DAAA4BF729F2274A00F41E52 /* OrderedCollections */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = DAAA4BF229F2274A00F41E52 /* XCRemoteSwiftPackageReference "swift-collections" */;
+			productName = OrderedCollections;
+		};
+		DAF84FFC2A0EFE1B00B01682 /* Starscream */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = DAF84FFB2A0EFE1B00B01682 /* XCRemoteSwiftPackageReference "Starscream" */;
+			productName = Starscream;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = D49B704729C4D3FE009494A5 /* Project object */;
 }
