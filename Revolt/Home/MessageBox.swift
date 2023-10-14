@@ -34,17 +34,23 @@ struct ReplyView: View {
             Button(action: { replies.remove(at: idx) }) {
                 Image(systemName: "xmark.circle")
             }
-            AsyncImage(url: URL(string: author.avatar)) { phase in
-                if let image = phase.image {
-                    image
-                        .resizable()
-                        .clipShape(Circle())
-                        .frame(width: 16, height: 16)
-                } else {
-                    Color.white
-                        .clipShape(Circle())
-                        .frame(width: 16, height: 16)
+            if let file = author.avatar {
+                AsyncImage(url: URL(string: viewState.formatUrl(with: file))) { phase in
+                    if let image = phase.image {
+                        image
+                            .resizable()
+                            .clipShape(Circle())
+                            .frame(width: 16, height: 16)
+                    } else {
+                        Color.clear
+                            .clipShape(Circle())
+                            .frame(width: 16, height: 16)
+                    }
                 }
+            } else {
+                Color.black
+                    .clipShape(Circle())
+                    .frame(width: 16, height: 16)
             }
             Text(author.username)
             Text(viewModel.reply.message.content)
@@ -63,12 +69,16 @@ struct ReplyView: View {
 }
 
 class MessageBoxViewModel: ObservableObject {
+    
     @Published var channel: TextChannel
     @Published var replies: [Reply]
     @Published var files: [URL]
     @Published var content: String
 
-    internal init(channel: TextChannel, replies: [Reply], content: String = "") {
+    var viewState: ViewState
+    
+    internal init(viewState: ViewState, channel: TextChannel, replies: [Reply], content: String = "") {
+        self.viewState = viewState
         self.channel = channel
         self.replies = replies
         self.content = content
@@ -76,7 +86,9 @@ class MessageBoxViewModel: ObservableObject {
     }
 
     func sendMessage() {
-        print(content)
+        Task {
+            await viewState.queueMessage(channel: channel.id, replies: replies, content: content)
+        }
     }
 }
 

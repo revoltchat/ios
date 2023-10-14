@@ -7,8 +7,34 @@
 
 import Foundation
 
-struct Server: Identifiable {
+struct Server: Decodable, Identifiable {
     var id: String
     var name: String
+    var channels: [String]
+    var default_permissions: Int
+    var description: String?
+    var categories: [Category]?
+    var system_messages: SystemMessages?
+    var roles: [String: Role]?
+    var icon: File?
+    var banner: File?
+    var nsfw: Bool?
+    
+    enum CodingKeys: String, CodingKey {
+        case id = "_id"
+        case name, channels, default_permissions, description, categories, system_messages, roles, icon, banner, nsfw
+    }
+}
+
+struct SystemMessages: Decodable {
+    var user_joined: String?
+    var user_left: String?
+    var user_kicked: String?
+    var user_banned: String?
+}
+
+struct Category: Decodable {
+    var id: String
+    var title: String
     var channels: [String]
 }

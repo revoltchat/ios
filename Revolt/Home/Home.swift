@@ -5,15 +5,17 @@ class ChannelViewModel: ObservableObject {
     @Published var channel: TextChannel
     @Published var messages: [Message]
     @Published var replies: [Reply] = []
+    @Published var queuedMessages: [QueuedMessage] = []
 
-    init(channel: TextChannel, messages: [Message], replies: [Reply] = []) {
+    init(channel: TextChannel, messages: [Message], replies: [Reply] = [], queuedMessages: [QueuedMessage]) {
         self.channel = channel
         self.messages = messages
         self.replies = replies
+        self.queuedMessages = []
     }
 }
 
-struct ChannelView: View {
+struct TextChannelView: View {
     @ObservedObject var viewModel: ChannelViewModel
     @EnvironmentObject var viewState: ViewState
     @State var showSheet = false
@@ -39,7 +41,13 @@ struct ChannelView: View {
             .backgroundStyle(.white)
             .listStyle(.plain)
 
-            MessageBox(viewModel:MessageBoxViewModel(channel: viewModel.channel, replies: viewModel.replies))
+//            List(viewModel.queuedMessages, id: \.nonce) { message in
+//                GhostMessageView(message: message)
+//            }
+//                .backgroundStyle(.white)
+//                .listStyle(.plain)
+            
+            MessageBox(viewModel: MessageBoxViewModel(viewState: viewState, channel: viewModel.channel, replies: viewModel.replies))
         }
         .toolbar {
             ToolbarItem(placement: .principal) {
@@ -115,12 +123,21 @@ struct Home: View {
         } content: {
             if let selectedServerId = viewState.currentServer {
                 let selectedServer = viewState.servers[selectedServerId]!
-                
+
                 VStack {
                     Text(selectedServer.name)
-                    List(selectedServer.channels, id: \.self, selection: $viewState.currentChannel) { channel in
-                        NavigationLink(value: channel) {
-                            Text(viewState.channels[channel]!.name)
+                    List(selectedServer.channels, id: \.self, selection: $viewState.currentChannel) { channel_id in
+                        NavigationLink(value: channel_id) {
+                            let channel = viewState.channels[channel_id]
+
+                            switch channel {
+                                case .text_channel(let c):
+                                    Text(c.name)
+                                case .voice_channel(let c):
+                                    Text(c.name)
+                                default:
+                                    EmptyView()
+                            }
                         }
                     }
                 }
@@ -132,18 +149,17 @@ struct Home: View {
             if let selectedChannel = viewState.currentChannel {
                 let channel = viewState.channels[selectedChannel]!
                 
-                if channel is TextChannel {
-                    let messages = viewState.messages[selectedChannel]!
-                    
-                    ChannelView(viewModel: ChannelViewModel(channel: channel as! TextChannel, messages: messages))
+                switch channel {
+                    case .text_channel(let c):
+                        let messages = viewState.messages[selectedChannel]!
+
+                        TextChannelView(viewModel: ChannelViewModel(channel: c, messages: messages, queuedMessages: viewState.queuedMessages[selectedChannel] ?? []))
+                    default:
+                        Text("Not a text channel :(")
                 }
             } else {
                 Text("Select a channel")
             }
-        }
-        .task {
-            print(1)
-            await viewState.backgroundWsTask()
         }
     }
 }

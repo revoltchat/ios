@@ -8,8 +8,37 @@
 import Foundation
 import Starscream
 
-struct WsMessage: Codable {
+enum WsMessage {
+    case authenticated
+    case ready(ReadyEvent)
+    case message(Message)
+}
+
+struct ReadyEvent: Decodable {
+    var users: [User]
+    var servers: [Server]
+    var channels: [Channel]
+    var members: [Member]
+    var emojis: [Emoji]
+}
+
+extension WsMessage: Decodable {
+    enum CodingKeys: String, CodingKey { case type }
+    enum Tag: String, Decodable { case Authenticated, Ready, Message }
     
+    init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        let singleValueContainer = try decoder.singleValueContainer()
+        
+        switch try container.decode(Tag.self, forKey: .type) {
+            case .Authenticated:
+                self = .authenticated
+            case .Ready:
+                self = .ready(try singleValueContainer.decode(ReadyEvent.self))
+            case .Message:
+                self = .message(try singleValueContainer.decode(Message.self))
+        }
+    }
 }
 
 enum WsState {
@@ -26,7 +55,7 @@ class SendWsMessage: Encodable {
     }
 }
 
-class Authenticate: SendWsMessage {
+class Authenticate: SendWsMessage, CustomStringConvertible {
     private enum CodingKeys: String, CodingKey { case type, token }
 
     var token: String
@@ -41,20 +70,26 @@ class Authenticate: SendWsMessage {
         try container.encode(token, forKey: .token)
         try container.encode(type, forKey: .type)
     }
+    
+    var description: String {
+        return "Authenticate(token: \(token))"
+    }
 }
 
 class WebSocketStream {
     private var client: WebSocket
     private var encoder: JSONEncoder
     private var decoder: JSONDecoder
+    private var onEvent: (WsMessage) async -> ()
 
     public var token: String
     public var currentState: WsState = .Disconnected
 
-    init(url: String, token: String) {
+    init(url: String, token: String, onEvent: @escaping (WsMessage) async -> ()) {
         self.token = token
         self.encoder = JSONEncoder()
         self.decoder = JSONDecoder()
+        self.onEvent = onEvent
 
         let url = URL(string: url)!
         let request = URLRequest(url: url)
@@ -74,20 +109,35 @@ class WebSocketStream {
             case .connected(_):
                 currentState = .Connecting
                 let payload = Authenticate(token: token)
+                print(payload.description)
+
                 do {
                     let s = try encoder.encode(payload)
-                    client.write(data: s)
+                    client.write(string: String(data: s, encoding: .utf8)!)
                 } catch {
                     print(error)
                 }
                     
-            case .disconnected(let reason, let _):
-                print(reason)
+            case .disconnected(let reason, _):
+                print("disconnect \(reason)")
                 currentState = .Disconnected
+
             case .text(let string):
-                print(string)
+                let e: WsMessage
+
+                do {
+                    e = try decoder.decode(WsMessage.self, from: string.data(using: .utf8)!)
+                } catch {
+                    print(error)
+                    return
+                }
+                
+                Task {
+                    await onEvent(e)
+                }
+    
             case .error(let error):
-                print(error)
+                print("error \(error)")
             default:
                 break
         }

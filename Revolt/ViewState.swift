@@ -1,6 +1,7 @@
 import Foundation
 import SwiftUI
 import Alamofire
+import ULID
 
 enum UserStateError: Error {
     case signInError
@@ -57,6 +58,17 @@ extension LoginResponse: Decodable {
     }
 }
 
+enum ConnectionState {
+    case connecting
+    case connected
+}
+
+struct QueuedMessage {
+    var nonce: String
+    var replies: [ApiReply]
+    var content: String
+}
+
 @MainActor
 public class ViewState: ObservableObject {
     var http: HTTPClient = HTTPClient(token: nil, baseURL: "https://api.revolt.chat")
@@ -69,28 +81,21 @@ public class ViewState: ObservableObject {
         }
     }
     @Published var user: User? = nil
-    @Published var users: Dictionary<String, User> = ["0": User(id: "0", username: "Zomatree", avatar: "https://avatars.githubusercontent.com/u/39768508")]
-    @Published var servers: Dictionary<String, Server> = ["0": Server(id: "0", name: "Lounge", channels: ["0"])]
-    @Published var channels: Dictionary<String, Channel> = ["0": TextChannel(id: "0", name: "General", description: "General channel yes yes very true so true")]
-    @Published var messages: Dictionary<String, [Message]> = ["0": [
-        Message(id: "0", content: "Hello world 0", author: "0", createdAt: Date.now, channel: "0"),
-        Message(id: "1", content: "Hello world 1\n\n\nasdasdasdasdasd", author: "0", createdAt: Date.now, channel: "0"),
-        Message(id: "2", content: "Hello world 2", author: "0", createdAt: Date.now, channel: "0"),
-        Message(id: "3", content: "Hello world 3", author: "0", createdAt: Date.now, channel: "0"),
-        Message(id: "4", content: "Hello world 4", author: "0", createdAt: Date.now, channel: "0"),
-        Message(id: "5", content: "Hello world 5", author: "0", createdAt: Date.now, channel: "0"),
-        Message(id: "6", content: "Hello world 6", author: "0", createdAt: Date.now, channel: "0"),
-        Message(id: "7", content: "Hello world 7", author: "0", createdAt: Date.now, channel: "0"),
-        Message(id: "8", content: "Hello world 8", author: "0", createdAt: Date.now, channel: "0"),
-        Message(id: "9", content: "Hello world 9", author: "0", createdAt: Date.now, channel: "0"),
-        Message(id: "10", content: "Hello world 10", author: "0", createdAt: Date.now, channel: "0")
-    ]]
+    @Published var users: Dictionary<String, User> = [:]
+    @Published var servers: Dictionary<String, Server> = [:]
+    @Published var channels: Dictionary<String, Channel> = [:]
+    @Published var messages: Dictionary<String, [Message]> = [:]
+    
+    @Published var state: ConnectionState = .connecting
+    @Published var queuedMessages: Dictionary<String, [QueuedMessage]> = [:]
+    @Published var currentUser: User? = nil
 
     @Published var currentServer: String? = nil {
         didSet {
             UserDefaults.standard.set(currentServer, forKey: "currentServer")
         }
     }
+
     @Published var currentChannel: String? = nil {
         didSet {
             UserDefaults.standard.set(currentChannel, forKey: "currentChannel")
@@ -101,41 +106,57 @@ public class ViewState: ObservableObject {
         self.sessionToken = UserDefaults.standard.string(forKey: "sessionToken")
         self.currentServer = UserDefaults.standard.string(forKey: "currentServer")
         self.currentChannel = UserDefaults.standard.string(forKey: "currentChannel")
+        self.http.token = self.sessionToken
     }
 
+    func signIn(mfa_ticket: String, mfa_response: [String: String], callback: @escaping((LoginState) -> ())) async {
+        let body = ["mfa_ticket": mfa_ticket, "mfa_response": mfa_response, "friendly_name": "Revolt IOS"] as [String : Any]
+    
+        await innerSignIn(body, callback)
+    }
+    
     func signIn(email: String, password: String, callback: @escaping((LoginState) -> ())) async {
         let body = ["email": email, "password": password, "friendly_name": "Revolt IOS"]
+
+        await innerSignIn(body, callback)
+    }
+    
+    private func innerSignIn(_ body: [String: Any], _ callback: @escaping((LoginState) -> ())) async {
         AF.request("https://api.revolt.chat/auth/session/login", method: .post, parameters: body, encoding: JSONEncoding.default)
-        .responseData { response in
-            switch response.result {
-                case .success(let data):
-                do {
-                    let result = try JSONDecoder().decode(LoginResponse.self, from: data)
-                    switch result {
-                        case .Success(let success):
-                            self.sessionToken = success.token
-                            self.http.token = success.token
-                            return callback(.Success)
-                    
-                        case .Mfa(let mfa):
-                            return callback(.Mfa(ticket: mfa.ticket, methods: mfa.allowed_methods))
-                        
-                        case .Disabled:
-                            return callback(.Disabled)
-                    }
-                
-                } catch {
-                    print("error \(error)")
+            .responseData { response in
+                switch response.result {
+                    case .success(let data):
+                        do {
+                            let result = try JSONDecoder().decode(LoginResponse.self, from: data)
+                            switch result {
+                                case .Success(let success):
+                                    self.sessionToken = success.token
+                                    self.http.token = success.token
+                                    return callback(.Success)
+                                    
+                                case .Mfa(let mfa):
+                                    return callback(.Mfa(ticket: mfa.ticket, methods: mfa.allowed_methods))
+                                    
+                                case .Disabled:
+                                    return callback(.Disabled)
+                            }
+                            
+                        } catch {
+                            print("error \(error)")
+                        }
+                    case .failure(let err):
+                        print(err)
                 }
-                case .failure(let err):
-                    print(err)
             }
-        }
     }
 
     func signOut() async -> Result<Bool, UserStateError>  {
-        sessionToken = ""
+        sessionToken = nil
         return .success(true)
+    }
+    
+    func formatUrl(with: File) -> String {
+        ""  // TODO
     }
     
     func backgroundWsTask() async {
@@ -148,12 +169,12 @@ public class ViewState: ObservableObject {
         }
         
         let apiInfo = await self.http.fetchApiInfo()
-        print(apiInfo)
+
         switch apiInfo {
             case .success(let info):
                 self.apiInfo = info
 
-                let ws = WebSocketStream(url: info.ws, token: token)
+                let ws = WebSocketStream(url: info.ws, token: token, onEvent: onEvent)
                 print(ws)
                 self.ws = ws
                         
@@ -161,5 +182,61 @@ public class ViewState: ObservableObject {
                 print(e)
         }
         
+    }
+    
+    func queueMessage(channel: String, replies: [Reply], content: String) async {
+        var queue = self.queuedMessages[channel]
+        
+        if queue == nil {
+            queue = []
+            self.queuedMessages[channel] = queue
+        }
+        
+        let nonce = ULID(timestamp: Date.now).ulidString
+        
+        var r: [ApiReply] = []
+        
+        for reply in replies {
+            r.append(ApiReply(id: reply.message.id, mention: reply.mention))
+        }
+        
+        queue!.append(QueuedMessage(nonce: nonce, replies: r, content: content))
+        
+        await http.sendMessage(channel: channel, replies: r, content: content, nonce: nonce)
+    }
+
+    func onEvent(_ event: WsMessage) async {
+        switch event {
+            case .ready(let event):
+                for channel in event.channels {
+                    channels[channel.id()] = channel
+                    messages[channel.id()] = []
+                }
+                
+                for server in event.servers {
+                    servers[server.id] = server
+                }
+                
+                for user in event.users {
+                    if user.relationship == "User" {
+                        currentUser = user
+                    }
+                    
+                    users[user.id] = user
+                }
+                
+                state = .connected
+
+            case .message(let m):
+                if users[m.author] == nil {
+                    user = try! await http.fetchUser(user: m.author).get()
+                    users[m.author] = user
+                }
+    
+                messages[m.channel]?.append(m)
+
+            default:
+                ()
+        }
     }
 }

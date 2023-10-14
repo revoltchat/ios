@@ -1,10 +1,12 @@
 import SwiftUI
 
 struct Login: View {
-    @State private var stack = NavigationPath()
+    @State private var path = NavigationPath()
+    @State private var mfaTicket = ""
+    @State private var mfaMethods: [String] = []
 
     var body: some View {
-        NavigationStack(path: $stack) {
+        NavigationStack(path: $path) {
             VStack {
                 Spacer()
                 Group {
@@ -26,14 +28,14 @@ struct Login: View {
                 Spacer()
 
                 Group {
-                    NavigationLink("Log In", destination: LogIn(stack: stack))
+                    NavigationLink("Log In", value: "login")
                         .padding(.vertical, 10)
                         .frame(width: 200.0)
                         .background(.black)
                         .foregroundColor(.white)
                         .cornerRadius(50)
 
-                    NavigationLink("Sign Up", destination: SignUp())
+                    NavigationLink("Sign Up", value: "signup")
                         .padding(.vertical, 10)
                         .frame(width: 200.0)
                         .foregroundColor(.black)
@@ -55,6 +57,21 @@ struct Login: View {
                         .foregroundColor(Color(white: 0.584))
                 }
             }
+            .navigationDestination(for: String.self) { dest in
+                let _ = print(dest)
+
+                switch dest {
+                    case "mfa":
+                        Mfa(path: $path, ticket: $mfaTicket, methods: $mfaMethods)
+                    case "login":
+                        LogIn(path: $path, mfaTicket: $mfaTicket, mfaMethods: $mfaMethods)
+                    case "signup":
+                        SignUp()
+                    case _:
+                        EmptyView()
+                }
+
+            }
         }
     }
 }
@@ -62,15 +79,16 @@ struct Login: View {
 struct LogIn: View {
     @EnvironmentObject var viewState: ViewState
 
-    @State var stack: NavigationPath
+    @Binding var path: NavigationPath
 
     @State private var email = ""
     @State private var password = ""
     @State private var showPassword = false
     @State private var showMfa = false
-    @State private var mfaTicket = ""
-    @State private var mfaMethods: [String] = []
     @State private var errorMessage: String? = nil
+
+    @Binding public var mfaTicket: String
+    @Binding public var mfaMethods: [String]
 
     @FocusState private var focus1: Bool
     @FocusState private var focus2: Bool
@@ -81,15 +99,16 @@ struct LogIn: View {
 
             switch state {
                 case .Mfa(let ticket, let methods):
+                    print(self.path)
                     self.mfaTicket = ticket
                     self.mfaMethods = methods
-                    self.stack.append("mfa")
+                    self.path.append("mfa")
 
                 case .Disabled:
                     self.errorMessage = "Account has been disabled."
-                    
+
                 case .Success:
-                    stack.removeLast(stack.count)
+                    path = NavigationPath()
             }
         })
     }
@@ -104,8 +123,8 @@ struct LogIn: View {
                 .padding()
 
             Group {
-                if (errorMessage != nil) {
-                    Text(errorMessage!).foregroundColor(.red)
+                if let error = errorMessage {
+                    Text(error)
                 }
                 TextField(
                     "Email",
@@ -113,7 +132,7 @@ struct LogIn: View {
                 )
                     .padding()
                     .background(Color(white: 0.851))
-                    .cornerRadius(5)
+                    .clipShape(.rect(cornerRadius: 5))
 
                 ZStack(alignment: .trailing) {
                     TextField(
@@ -122,7 +141,7 @@ struct LogIn: View {
                     )
                         .padding()
                         .background(Color(white: 0.851))
-                        .cornerRadius(5)
+                        .clipShape(.rect(cornerRadius: 5))
                         .modifier(PasswordModifier())
                         .textContentType(.password)
                         .opacity(showPassword ? 1 : 0)
@@ -134,7 +153,7 @@ struct LogIn: View {
                     )
                         .padding()
                         .background(Color(white: 0.851))
-                        .cornerRadius(5)
+                        .clipShape(.rect(cornerRadius: 5))
                         .modifier(PasswordModifier())
                         .textContentType(.password)
                         .opacity(showPassword ? 0 : 1)
@@ -152,9 +171,6 @@ struct LogIn: View {
                             .font(.system(size: 16, weight: .regular))
                             .padding()
                     })
-                    .navigationDestination(for: String.self) { _ in
-                        Mfa(ticket: mfaTicket, methods: mfaMethods)
-                    }
                 }
 
                 NavigationLink("Forgot password?", destination: ResendEmail())
@@ -170,7 +186,7 @@ struct LogIn: View {
                 .frame(width: 200.0)
                 .foregroundColor(.black)
                 .background(Color(white: 0.851))
-                .cornerRadius(50)
+                .clipShape(.rect(cornerRadius: 50))
 
             Spacer()
 
@@ -186,11 +202,83 @@ struct LogIn: View {
 }
 
 struct Mfa: View {
-    var ticket: String
-    var methods: [String]
-    
+    @EnvironmentObject var viewState: ViewState
+
+    @Binding public var path: NavigationPath
+    @Binding var ticket: String
+    @Binding var methods: [String]
+
+    @State var selected: String? = nil
+    @State var currentText: String = ""
+
     var body: some View {
-        Text("mfa")
+        VStack {
+            Spacer()
+    
+            Text("One more thing")
+                .font(.title)
+            
+            Spacer()
+
+            Text("You've got 2FA enabled to keep your account extra-safe.")
+
+            Spacer()
+        
+            List(methods, id: \.self) { method in
+                Button(action: {
+                    withAnimation {
+                        if selected == method {
+                            selected = nil
+                        } else {
+                            selected = method
+                        }
+                        
+                        currentText = ""
+                    }
+                }, label: {
+                    VStack(alignment: .leading) {
+                        HStack(alignment: .top) {
+                            Text("use a \(method.lowercased()) code")
+                                .frame(alignment: .center)
+                        }
+                        
+                        if selected == method {
+                            ZStack(alignment: .trailing) {
+                                TextField("\(method.lowercased()) code", text: $currentText)
+                                Button("enter", systemImage: "arrowshape.right.circle") {
+                                    let key: String
+                                    
+                                    switch method {
+                                        case "Password":
+                                            key = "password"
+                                        case "Totp":
+                                            key = "totp_code"
+                                        case "Recovery":
+                                            key = "recovery_code"
+                                        case _:
+                                            return
+                                    }
+                                    
+                                    Task {
+                                        await viewState.signIn(mfa_ticket: ticket, mfa_response: [key: currentText], callback: { response in
+                                            switch response {
+                                                case .Success:
+                                                    path = NavigationPath()
+                                                case _:
+                                                    ()
+                                            }
+                                        })
+                                    }
+                                }
+                                .labelStyle(.iconOnly)
+                            }
+                        }
+                    }
+                    .transition(.slide)
+                    .animation(.easeInOut, value: currentText)
+                })
+            }
+        }
     }
 }
 

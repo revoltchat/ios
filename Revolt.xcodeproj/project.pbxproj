@@ -7,6 +7,13 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		17BC3EFA2AD826970029D820 /* File.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17BC3EF92AD826970029D820 /* File.swift */; };
+		17BC3EFC2AD82A1B0029D820 /* Member.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17BC3EFB2AD82A1B0029D820 /* Member.swift */; };
+		17CCCF672ADA109600D78D7A /* Permissions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17CCCF662ADA109600D78D7A /* Permissions.swift */; };
+		17CCCF692ADA131D00D78D7A /* Emoji.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17CCCF682ADA131D00D78D7A /* Emoji.swift */; };
+		17CCCF6B2ADA14CB00D78D7A /* Role.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17CCCF6A2ADA14CB00D78D7A /* Role.swift */; };
+		17CCCF6E2ADA173B00D78D7A /* ULID in Frameworks */ = {isa = PBXBuildFile; productRef = 17CCCF6D2ADA173B00D78D7A /* ULID */; };
+		17CCCF702ADA17B600D78D7A /* Utils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17CCCF6F2ADA17B600D78D7A /* Utils.swift */; };
 		D49B705329C4D3FE009494A5 /* RevoltApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = D49B705229C4D3FE009494A5 /* RevoltApp.swift */; };
 		D49B705729C4D3FE009494A5 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = D49B705629C4D3FE009494A5 /* Assets.xcassets */; };
 		D49B705A29C4D3FE009494A5 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = D49B705929C4D3FE009494A5 /* Preview Assets.xcassets */; };
@@ -50,6 +57,12 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		17BC3EF92AD826970029D820 /* File.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = File.swift; sourceTree = "<group>"; };
+		17BC3EFB2AD82A1B0029D820 /* Member.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Member.swift; sourceTree = "<group>"; };
+		17CCCF662ADA109600D78D7A /* Permissions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Permissions.swift; sourceTree = "<group>"; };
+		17CCCF682ADA131D00D78D7A /* Emoji.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Emoji.swift; sourceTree = "<group>"; };
+		17CCCF6A2ADA14CB00D78D7A /* Role.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Role.swift; sourceTree = "<group>"; };
+		17CCCF6F2ADA17B600D78D7A /* Utils.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Utils.swift; sourceTree = "<group>"; };
 		D49B704F29C4D3FE009494A5 /* Revolt.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Revolt.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		D49B705229C4D3FE009494A5 /* RevoltApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RevoltApp.swift; sourceTree = "<group>"; };
 		D49B705629C4D3FE009494A5 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
@@ -73,7 +86,6 @@
 		DAAA4C0C29F2D16B00F41E52 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		DAAA4C0D29F2D37800F41E52 /* Api.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Api.swift; sourceTree = "<group>"; };
 		DAF41CC129C516600004BFBE /* Inter.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = Inter.ttf; sourceTree = "<group>"; };
-		DAFC10FB29CFBFB600D2C2F9 /* RevoltAppInternals */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = RevoltAppInternals; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -83,6 +95,7 @@
 			files = (
 				DAAA4BF429F2274A00F41E52 /* Collections in Frameworks */,
 				DA99EC5329D6148200419FDA /* Alamofire in Frameworks */,
+				17CCCF6E2ADA173B00D78D7A /* ULID in Frameworks */,
 				DAAA4BF829F2274A00F41E52 /* OrderedCollections in Frameworks */,
 				DAF84FFD2A0EFE1B00B01682 /* Starscream in Frameworks */,
 				DAAA4BF629F2274A00F41E52 /* DequeModule in Frameworks */,
@@ -141,6 +154,7 @@
 				D49B705829C4D3FE009494A5 /* Preview Content */,
 				DAAA4C0829F2974300F41E52 /* Http.swift */,
 				DAAA4C0A29F2CF1200F41E52 /* Websocket.swift */,
+				17CCCF6F2ADA17B600D78D7A /* Utils.swift */,
 			);
 			path = Revolt;
 			sourceTree = "<group>";
@@ -188,6 +202,11 @@
 				DAAA4C0429F2560800F41E52 /* Channel.swift */,
 				DAAA4C0629F2604A00F41E52 /* Server.swift */,
 				DAAA4C0D29F2D37800F41E52 /* Api.swift */,
+				17BC3EF92AD826970029D820 /* File.swift */,
+				17BC3EFB2AD82A1B0029D820 /* Member.swift */,
+				17CCCF662ADA109600D78D7A /* Permissions.swift */,
+				17CCCF682ADA131D00D78D7A /* Emoji.swift */,
+				17CCCF6A2ADA14CB00D78D7A /* Role.swift */,
 			);
 			path = Types;
 			sourceTree = "<group>";
@@ -195,7 +214,6 @@
 		DAF41CC029C5164A0004BFBE /* Fonts */ = {
 			isa = PBXGroup;
 			children = (
-				DAFC10FB29CFBFB600D2C2F9 /* RevoltAppInternals */,
 				DAF41CC129C516600004BFBE /* Inter.ttf */,
 			);
 			path = Fonts;
@@ -230,6 +248,7 @@
 				DAAA4BF529F2274A00F41E52 /* DequeModule */,
 				DAAA4BF729F2274A00F41E52 /* OrderedCollections */,
 				DAF84FFC2A0EFE1B00B01682 /* Starscream */,
+				17CCCF6D2ADA173B00D78D7A /* ULID */,
 			);
 			productName = Revolt;
 			productReference = D49B704F29C4D3FE009494A5 /* Revolt.app */;
@@ -307,6 +326,7 @@
 				DA99EC5129D6148200419FDA /* XCRemoteSwiftPackageReference "Alamofire" */,
 				DAAA4BF229F2274A00F41E52 /* XCRemoteSwiftPackageReference "swift-collections" */,
 				DAF84FFB2A0EFE1B00B01682 /* XCRemoteSwiftPackageReference "Starscream" */,
+				17CCCF6C2ADA173B00D78D7A /* XCRemoteSwiftPackageReference "ULID" */,
 			);
 			productRefGroup = D49B705029C4D3FE009494A5 /* Products */;
 			projectDirPath = "";
@@ -354,14 +374,20 @@
 				DAAA4C0B29F2CF1200F41E52 /* Websocket.swift in Sources */,
 				DA99EC4A29D5F35400419FDA /* Home.swift in Sources */,
 				DAAA4C0329F2548400F41E52 /* MessageBox.swift in Sources */,
+				17BC3EFC2AD82A1B0029D820 /* Member.swift in Sources */,
+				17CCCF6B2ADA14CB00D78D7A /* Role.swift in Sources */,
 				DA99EC5029D5F35900419FDA /* Login.swift in Sources */,
 				DAAA4C0929F2974300F41E52 /* Http.swift in Sources */,
 				DAAA4C0E29F2D37800F41E52 /* Api.swift in Sources */,
+				17CCCF692ADA131D00D78D7A /* Emoji.swift in Sources */,
+				17CCCF672ADA109600D78D7A /* Permissions.swift in Sources */,
 				DAAA4BFF29F251ED00F41E52 /* User.swift in Sources */,
 				DAAA4BFB29F2518900F41E52 /* MessageView.swift in Sources */,
+				17BC3EFA2AD826970029D820 /* File.swift in Sources */,
 				D49B705329C4D3FE009494A5 /* RevoltApp.swift in Sources */,
 				DA99EC4C29D5F35500419FDA /* ViewState.swift in Sources */,
 				DAAA4C0529F2560800F41E52 /* Channel.swift in Sources */,
+				17CCCF702ADA17B600D78D7A /* Utils.swift in Sources */,
 				DAAA4C0129F251FC00F41E52 /* Message.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -691,6 +717,14 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
+		17CCCF6C2ADA173B00D78D7A /* XCRemoteSwiftPackageReference "ULID" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/yaslab/ULID.swift";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 1.2.0;
+			};
+		};
 		DA99EC5129D6148200419FDA /* XCRemoteSwiftPackageReference "Alamofire" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/Alamofire/Alamofire";
@@ -718,6 +752,11 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
+		17CCCF6D2ADA173B00D78D7A /* ULID */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 17CCCF6C2ADA173B00D78D7A /* XCRemoteSwiftPackageReference "ULID" */;
+			productName = ULID;
+		};
 		DA99EC5229D6148200419FDA /* Alamofire */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = DA99EC5129D6148200419FDA /* XCRemoteSwiftPackageReference "Alamofire" */;
