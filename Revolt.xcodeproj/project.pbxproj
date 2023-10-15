@@ -7,6 +7,12 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		175E01DE2ADAB3F6004F6431 /* LazyImage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 175E01DD2ADAB3F6004F6431 /* LazyImage.swift */; };
+		175E01E02ADAB554004F6431 /* Avatar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 175E01DF2ADAB554004F6431 /* Avatar.swift */; };
+		1777DD842ADC24CE003D6C72 /* ReversedSrollView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1777DD832ADC24CE003D6C72 /* ReversedSrollView.swift */; };
+		1777DD892ADC3C31003D6C72 /* Markdown.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1777DD882ADC3C31003D6C72 /* Markdown.swift */; };
+		1777DD8C2ADC3C4E003D6C72 /* MarkdownKit in Frameworks */ = {isa = PBXBuildFile; productRef = 1777DD8B2ADC3C4E003D6C72 /* MarkdownKit */; };
+		1777DD8E2ADC4336003D6C72 /* RemoteImageTextAttachment.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1777DD8D2ADC4336003D6C72 /* RemoteImageTextAttachment.swift */; };
 		17BC3EFA2AD826970029D820 /* File.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17BC3EF92AD826970029D820 /* File.swift */; };
 		17BC3EFC2AD82A1B0029D820 /* Member.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17BC3EFB2AD82A1B0029D820 /* Member.swift */; };
 		17CCCF672ADA109600D78D7A /* Permissions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17CCCF662ADA109600D78D7A /* Permissions.swift */; };
@@ -14,6 +20,7 @@
 		17CCCF6B2ADA14CB00D78D7A /* Role.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17CCCF6A2ADA14CB00D78D7A /* Role.swift */; };
 		17CCCF6E2ADA173B00D78D7A /* ULID in Frameworks */ = {isa = PBXBuildFile; productRef = 17CCCF6D2ADA173B00D78D7A /* ULID */; };
 		17CCCF702ADA17B600D78D7A /* Utils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17CCCF6F2ADA17B600D78D7A /* Utils.swift */; };
+		17D9C2BD2ADCA48D00426857 /* Kingfisher in Frameworks */ = {isa = PBXBuildFile; productRef = 17D9C2BC2ADCA48D00426857 /* Kingfisher */; };
 		D49B705329C4D3FE009494A5 /* RevoltApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = D49B705229C4D3FE009494A5 /* RevoltApp.swift */; };
 		D49B705729C4D3FE009494A5 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = D49B705629C4D3FE009494A5 /* Assets.xcassets */; };
 		D49B705A29C4D3FE009494A5 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = D49B705929C4D3FE009494A5 /* Preview Assets.xcassets */; };
@@ -57,6 +64,11 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		175E01DD2ADAB3F6004F6431 /* LazyImage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LazyImage.swift; sourceTree = "<group>"; };
+		175E01DF2ADAB554004F6431 /* Avatar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Avatar.swift; sourceTree = "<group>"; };
+		1777DD832ADC24CE003D6C72 /* ReversedSrollView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReversedSrollView.swift; sourceTree = "<group>"; };
+		1777DD882ADC3C31003D6C72 /* Markdown.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Markdown.swift; sourceTree = "<group>"; };
+		1777DD8D2ADC4336003D6C72 /* RemoteImageTextAttachment.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemoteImageTextAttachment.swift; sourceTree = "<group>"; };
 		17BC3EF92AD826970029D820 /* File.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = File.swift; sourceTree = "<group>"; };
 		17BC3EFB2AD82A1B0029D820 /* Member.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Member.swift; sourceTree = "<group>"; };
 		17CCCF662ADA109600D78D7A /* Permissions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Permissions.swift; sourceTree = "<group>"; };
@@ -94,6 +106,8 @@
 			buildActionMask = 2147483647;
 			files = (
 				DAAA4BF429F2274A00F41E52 /* Collections in Frameworks */,
+				1777DD8C2ADC3C4E003D6C72 /* MarkdownKit in Frameworks */,
+				17D9C2BD2ADCA48D00426857 /* Kingfisher in Frameworks */,
 				DA99EC5329D6148200419FDA /* Alamofire in Frameworks */,
 				17CCCF6E2ADA173B00D78D7A /* ULID in Frameworks */,
 				DAAA4BF829F2274A00F41E52 /* OrderedCollections in Frameworks */,
@@ -119,6 +133,18 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		175E01DC2ADAB3EA004F6431 /* Components */ = {
+			isa = PBXGroup;
+			children = (
+				175E01DD2ADAB3F6004F6431 /* LazyImage.swift */,
+				175E01DF2ADAB554004F6431 /* Avatar.swift */,
+				1777DD832ADC24CE003D6C72 /* ReversedSrollView.swift */,
+				1777DD882ADC3C31003D6C72 /* Markdown.swift */,
+				1777DD8D2ADC4336003D6C72 /* RemoteImageTextAttachment.swift */,
+			);
+			path = Components;
+			sourceTree = "<group>";
+		};
 		D49B704629C4D3FE009494A5 = {
 			isa = PBXGroup;
 			children = (
@@ -143,6 +169,7 @@
 		D49B705129C4D3FE009494A5 /* Revolt */ = {
 			isa = PBXGroup;
 			children = (
+				175E01DC2ADAB3EA004F6431 /* Components */,
 				DAAA4C0C29F2D16B00F41E52 /* Info.plist */,
 				DAAA4BFD29F251DF00F41E52 /* Types */,
 				DAAA4BF929F2515E00F41E52 /* Home */,
@@ -249,6 +276,8 @@
 				DAAA4BF729F2274A00F41E52 /* OrderedCollections */,
 				DAF84FFC2A0EFE1B00B01682 /* Starscream */,
 				17CCCF6D2ADA173B00D78D7A /* ULID */,
+				1777DD8B2ADC3C4E003D6C72 /* MarkdownKit */,
+				17D9C2BC2ADCA48D00426857 /* Kingfisher */,
 			);
 			productName = Revolt;
 			productReference = D49B704F29C4D3FE009494A5 /* Revolt.app */;
@@ -327,6 +356,10 @@
 				DAAA4BF229F2274A00F41E52 /* XCRemoteSwiftPackageReference "swift-collections" */,
 				DAF84FFB2A0EFE1B00B01682 /* XCRemoteSwiftPackageReference "Starscream" */,
 				17CCCF6C2ADA173B00D78D7A /* XCRemoteSwiftPackageReference "ULID" */,
+				1777DD852ADC3A7A003D6C72 /* XCRemoteSwiftPackageReference "swift-markdown-ui" */,
+				1777DD8A2ADC3C4E003D6C72 /* XCRemoteSwiftPackageReference "MarkdownKit" */,
+				17D9C2B82ADCA1A000426857 /* XCRemoteSwiftPackageReference "swiftui-cached-async-image" */,
+				17D9C2BB2ADCA48D00426857 /* XCRemoteSwiftPackageReference "Kingfisher" */,
 			);
 			productRefGroup = D49B705029C4D3FE009494A5 /* Products */;
 			projectDirPath = "";
@@ -375,7 +408,9 @@
 				DA99EC4A29D5F35400419FDA /* Home.swift in Sources */,
 				DAAA4C0329F2548400F41E52 /* MessageBox.swift in Sources */,
 				17BC3EFC2AD82A1B0029D820 /* Member.swift in Sources */,
+				175E01DE2ADAB3F6004F6431 /* LazyImage.swift in Sources */,
 				17CCCF6B2ADA14CB00D78D7A /* Role.swift in Sources */,
+				1777DD8E2ADC4336003D6C72 /* RemoteImageTextAttachment.swift in Sources */,
 				DA99EC5029D5F35900419FDA /* Login.swift in Sources */,
 				DAAA4C0929F2974300F41E52 /* Http.swift in Sources */,
 				DAAA4C0E29F2D37800F41E52 /* Api.swift in Sources */,
@@ -386,9 +421,12 @@
 				17BC3EFA2AD826970029D820 /* File.swift in Sources */,
 				D49B705329C4D3FE009494A5 /* RevoltApp.swift in Sources */,
 				DA99EC4C29D5F35500419FDA /* ViewState.swift in Sources */,
+				1777DD892ADC3C31003D6C72 /* Markdown.swift in Sources */,
 				DAAA4C0529F2560800F41E52 /* Channel.swift in Sources */,
+				175E01E02ADAB554004F6431 /* Avatar.swift in Sources */,
 				17CCCF702ADA17B600D78D7A /* Utils.swift in Sources */,
 				DAAA4C0129F251FC00F41E52 /* Message.swift in Sources */,
+				1777DD842ADC24CE003D6C72 /* ReversedSrollView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -717,12 +755,44 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
+		1777DD852ADC3A7A003D6C72 /* XCRemoteSwiftPackageReference "swift-markdown-ui" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/gonzalezreal/swift-markdown-ui";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 2.2.0;
+			};
+		};
+		1777DD8A2ADC3C4E003D6C72 /* XCRemoteSwiftPackageReference "MarkdownKit" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/bmoliveira/MarkdownKit";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 1.7.1;
+			};
+		};
 		17CCCF6C2ADA173B00D78D7A /* XCRemoteSwiftPackageReference "ULID" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/yaslab/ULID.swift";
 			requirement = {
 				kind = upToNextMajorVersion;
 				minimumVersion = 1.2.0;
+			};
+		};
+		17D9C2B82ADCA1A000426857 /* XCRemoteSwiftPackageReference "swiftui-cached-async-image" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/lorenzofiamingo/swiftui-cached-async-image";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 2.1.1;
+			};
+		};
+		17D9C2BB2ADCA48D00426857 /* XCRemoteSwiftPackageReference "Kingfisher" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/onevcat/Kingfisher";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 7.9.1;
 			};
 		};
 		DA99EC5129D6148200419FDA /* XCRemoteSwiftPackageReference "Alamofire" */ = {
@@ -752,10 +822,20 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
+		1777DD8B2ADC3C4E003D6C72 /* MarkdownKit */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 1777DD8A2ADC3C4E003D6C72 /* XCRemoteSwiftPackageReference "MarkdownKit" */;
+			productName = MarkdownKit;
+		};
 		17CCCF6D2ADA173B00D78D7A /* ULID */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = 17CCCF6C2ADA173B00D78D7A /* XCRemoteSwiftPackageReference "ULID" */;
 			productName = ULID;
+		};
+		17D9C2BC2ADCA48D00426857 /* Kingfisher */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 17D9C2BB2ADCA48D00426857 /* XCRemoteSwiftPackageReference "Kingfisher" */;
+			productName = Kingfisher;
 		};
 		DA99EC5229D6148200419FDA /* Alamofire */ = {
 			isa = XCSwiftPackageProductDependency;

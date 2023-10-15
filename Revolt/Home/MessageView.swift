@@ -9,35 +9,39 @@ import Foundation
 import SwiftUI
 
 class MessageViewModel: ObservableObject {
-    @Published var message: Message
-    @Published var author: User
-    @EnvironmentObject var viewState: ViewState
+    @Binding var message: Message
+    @Binding var author: User
+    @Binding var channelReplies: [Reply]
 
-    init(message: Message, author: User) {
-        self.message = message
-        self.author = author
+    var viewState: ViewState
+
+    init(viewState: ViewState, message: Binding<Message>, author: Binding<User>, replies: Binding<[Reply]>) {
+        self.viewState = viewState
+        self._message = message
+        self._author = author
+        self._channelReplies = replies
     }
     
     func delete() async {
-        viewState.messages[message.channel]?.removeAll(where: {$0.id == message.id})
+        await viewState.http.deleteMessage(channel: message.channel, message: message.id)
     }
 
     func report() async {
         
+    }
+    
+    func reply() {
+        if !channelReplies.contains(where: { $0.message.id == message.id }) && channelReplies.count < 5 {
+            channelReplies.append(Reply(message: message))
+        }
+        
+        print(channelReplies)
     }
 }
 
 struct MessageView: View {
     @ObservedObject var viewModel: MessageViewModel
     @EnvironmentObject var viewState: ViewState
-
-    @Binding var channelReplies: [Reply]
-
-    func reply() {
-        if !channelReplies.contains(where: { $0.message.id == viewModel.message.id }) && channelReplies.count < 5 {
-            channelReplies.append(Reply(message: viewModel.message))
-        }
-    }
 
     var body: some View {
         VStack {
@@ -50,62 +54,68 @@ struct MessageView: View {
             }
             HStack(alignment: .top) {
                 if let file = viewModel.author.avatar {
-                    AsyncImage(url: URL(string: viewState.formatUrl(with: file))) { phase in
-                        if let image = phase.image {
-                            image
-                                .resizable()
-                                .clipShape(Circle())
-                                .frame(width: 16, height: 16)
-                        } else {
-                            Color.clear
-                                .clipShape(Circle())
-                                .frame(width: 16, height: 16)
-                        }
-                    }
+                    LazyImage(file: file, height: 32, width: 32, clipTo: Circle())
+                        .padding(.trailing, 4)
                 } else {
                     Color.black
                         .clipShape(Circle())
-                        .frame(width: 16, height: 16)
+                        .frame(width: 32, height: 32)
+                        .padding(.trailing, 4)
                 }
                 VStack(alignment: .leading) {
                     HStack {
                         Text(viewModel.author.username)
                             .fontWeight(.heavy)
                         Text(createdAt(id: viewModel.message.id).formatted())
+                            .font(.footnote)
+                            .foregroundStyle(.gray)
+                        
+                        if viewModel.message.edited != nil {
+                            Text("(edited)")
+                                .font(.footnote)
+                                .foregroundStyle(.gray)
+                        }
                     }
                     Text(viewModel.message.content)
                     //.frame(maxWidth: .infinity, alignment: .leading)
+                    Group {
+                        VStack(alignment: .leading) {
+                            ForEach(viewModel.message.attachments ?? []) { attachment in
+                                LazyImage(file: attachment, clipTo: RoundedRectangle(cornerRadius: 5))
+                            }
+                        }
+                    }
                 }
                 //.frame(maxWidth: .infinity, alignment: .leading)
             }
             .listRowSeparator(.hidden)
-            .contextMenu {
-                Button(action: reply, label: {
-                    Label("Reply", systemImage: "arrowshape.turn.up.left.fill")
-                })
-                
-                Button(role: .destructive, action: {
-                    Task {
-                        await viewModel.delete()
-                    }
-                }, label: {
-                    Label("Delete", systemImage: "trash")
-                })
-                
-                Button(role: .destructive, action: {
-                    Task {
-                        await viewModel.delete()
-                    }
-                }, label: {
-                    Label("Report", systemImage: "exclamationmark.triangle")
-                })
-            }
-            .swipeActions(edge: .trailing) {
-                Button(action: reply, label: {
-                    Label("Reply", systemImage: "arrowshape.turn.up.left.fill")
-                })
-                .tint(.green)
-            }
+        }
+        .contextMenu {
+            Button(action: viewModel.reply, label: {
+                Label("Reply", systemImage: "arrowshape.turn.up.left.fill")
+            })
+            
+            Button(role: .destructive, action: {
+                Task {
+                    await viewModel.delete()
+                }
+            }, label: {
+                Label("Delete", systemImage: "trash")
+            })
+            
+            Button(role: .destructive, action: {
+                Task {
+                    await viewModel.delete()
+                }
+            }, label: {
+                Label("Report", systemImage: "exclamationmark.triangle")
+            })
+        }
+        .swipeActions(edge: .trailing) {
+            Button(action: viewModel.reply, label: {
+                Label("Reply", systemImage: "arrowshape.turn.up.left.fill")
+            })
+            .tint(.green)
         }
     }
 }
@@ -117,24 +127,7 @@ struct GhostMessageView: View {
     
     var body: some View {
         HStack(alignment: .top) {
-            if let file = viewState.currentUser!.avatar {
-                AsyncImage(url: URL(string: viewState.formatUrl(with: file))) { phase in
-                    if let image = phase.image {
-                        image
-                            .resizable()
-                            .clipShape(Circle())
-                            .frame(width: 16, height: 16)
-                    } else {
-                        Color.clear
-                            .clipShape(Circle())
-                            .frame(width: 16, height: 16)
-                    }
-                }
-            } else {
-                Color.black
-                    .clipShape(Circle())
-                    .frame(width: 16, height: 16)
-            }
+            Avatar(user: viewState.currentUser!, width: 16, height: 16)
             VStack(alignment: .leading) {
                 HStack {
                     Text(viewState.currentUser!.username)

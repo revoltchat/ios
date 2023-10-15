@@ -12,6 +12,7 @@ enum WsMessage {
     case authenticated
     case ready(ReadyEvent)
     case message(Message)
+    case message_update(MessageUpdateEvent)
 }
 
 struct ReadyEvent: Decodable {
@@ -22,9 +23,20 @@ struct ReadyEvent: Decodable {
     var emojis: [Emoji]
 }
 
+struct MessageUpdateEventData: Decodable {
+    var content: String?
+    var edited: String
+}
+
+struct MessageUpdateEvent: Decodable {
+    var channel: String
+    var id: String
+    var data: MessageUpdateEventData
+}
+
 extension WsMessage: Decodable {
     enum CodingKeys: String, CodingKey { case type }
-    enum Tag: String, Decodable { case Authenticated, Ready, Message }
+    enum Tag: String, Decodable { case Authenticated, Ready, Message, MessageUpdate }
     
     init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
@@ -37,6 +49,8 @@ extension WsMessage: Decodable {
                 self = .ready(try singleValueContainer.decode(ReadyEvent.self))
             case .Message:
                 self = .message(try singleValueContainer.decode(Message.self))
+            case .MessageUpdate:
+                self = .message_update(try singleValueContainer.decode(MessageUpdateEvent.self))
         }
     }
 }
@@ -104,7 +118,6 @@ class WebSocketStream {
     }
 
     public func didReceive(event: WebSocketEvent) {
-        print(event)
         switch event {
             case .connected(_):
                 currentState = .Connecting
@@ -114,9 +127,7 @@ class WebSocketStream {
                 do {
                     let s = try encoder.encode(payload)
                     client.write(string: String(data: s, encoding: .utf8)!)
-                } catch {
-                    print(error)
-                }
+                } catch {}
                     
             case .disconnected(let reason, _):
                 print("disconnect \(reason)")

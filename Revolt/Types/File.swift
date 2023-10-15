@@ -45,7 +45,7 @@ extension FileMetadata: Decodable {
     }
 }
 
-struct File: Decodable {
+struct File: Decodable, Identifiable {
     var id: String
     var tag: String
     var size: Int

@@ -14,49 +14,40 @@ struct Reply {
 }
 
 class ReplyViewModel: ObservableObject {
-    @Published var reply: Reply
+    var idx: Int
+
+    @Binding var replies: [Reply]
+
+    func remove() {
+        replies.remove(at: idx)
+    }
     
-    internal init(reply: Reply) {
-        self.reply = reply
+    internal init(idx: Int, replies: Binding<[Reply]>) {
+        self.idx = idx
+        _replies = replies
     }
 }
 
 struct ReplyView: View {
     @EnvironmentObject var viewState: ViewState
     @ObservedObject var viewModel: ReplyViewModel
-    @Binding var replies: [Reply]
-    var idx: Int
-
+    
+    var id: String
+    
+    @ViewBuilder
     var body: some View {
-        let author = viewState.users[viewModel.reply.message.author]!
+        let author = viewState.users[viewModel.replies[viewModel.idx].message.author]!
 
         HStack {
-            Button(action: { replies.remove(at: idx) }) {
+            Button(action: viewModel.remove) {
                 Image(systemName: "xmark.circle")
             }
-            if let file = author.avatar {
-                AsyncImage(url: URL(string: viewState.formatUrl(with: file))) { phase in
-                    if let image = phase.image {
-                        image
-                            .resizable()
-                            .clipShape(Circle())
-                            .frame(width: 16, height: 16)
-                    } else {
-                        Color.clear
-                            .clipShape(Circle())
-                            .frame(width: 16, height: 16)
-                    }
-                }
-            } else {
-                Color.black
-                    .clipShape(Circle())
-                    .frame(width: 16, height: 16)
-            }
+            Avatar(user: author, width:16, height: 16)
             Text(author.username)
-            Text(viewModel.reply.message.content)
+            Text(viewModel.replies[viewModel.idx].message.content)
             Spacer()
-            Button(action: { viewModel.reply.mention.toggle() }) {
-                if viewModel.reply.mention {
+            Button(action: { viewModel.replies[viewModel.idx].mention.toggle() }) {
+                if viewModel.replies[viewModel.idx].mention {
                     Text("@ on")
                         .foregroundColor(.accentColor)
                 } else {
@@ -71,23 +62,23 @@ struct ReplyView: View {
 class MessageBoxViewModel: ObservableObject {
     
     @Published var channel: TextChannel
-    @Published var replies: [Reply]
+    @Binding var channelReplies: [Reply]
     @Published var files: [URL]
     @Published var content: String
 
     var viewState: ViewState
     
-    internal init(viewState: ViewState, channel: TextChannel, replies: [Reply], content: String = "") {
+    internal init(viewState: ViewState, channel: TextChannel, replies: Binding<[Reply]>, content: String = "") {
         self.viewState = viewState
         self.channel = channel
-        self.replies = replies
+        self._channelReplies = replies
         self.content = content
         self.files = []
     }
 
     func sendMessage() {
         Task {
-            await viewState.queueMessage(channel: channel.id, replies: replies, content: content)
+            await viewState.queueMessage(channel: channel.id, replies: channelReplies, content: content)
         }
     }
 }
@@ -103,12 +94,13 @@ struct MessageBox: View {
     
     var body: some View {
         VStack {
-            ForEach(Array(viewModel.replies.enumerated()), id: \.element.message.id) { reply in
-                ReplyView(viewModel: ReplyViewModel(reply: reply.element), replies: $viewModel.replies, idx: reply.offset)
+            ForEach(Array(viewModel.channelReplies.enumerated()), id: \.element.message.id) { reply in
+                let model = ReplyViewModel(idx: reply.offset, replies: $viewModel.channelReplies)
+                ReplyView(viewModel: model, id: reply.element.message.id)
                     .padding(.horizontal, 16)
             }
             ScrollView(.horizontal) {
-                ForEach(Array(viewModel.files.enumerated()), id: \.offset) { file in
+                ForEach(Array(viewModel.files.enumerated()), id: \.element.absoluteString) { file in
                     Button(action: { viewModel.files.remove(at: file.offset) }) {
                         Text(file.element.absoluteString)
                         Image(systemName: "xmark")
@@ -132,7 +124,8 @@ struct MessageBox: View {
                         .background(RoundedRectangle(cornerRadius: 16)
                             .stroke(Color(UIColor.separator), lineWidth: 1)
                         )
-                    if viewModel.content != "" {
+                    
+                    if !viewModel.content.isEmpty || !viewModel.files.isEmpty {
                         Button(action: viewModel.sendMessage) {
                             Image(systemName: "arrow.up.circle.fill")
                                 .resizable()

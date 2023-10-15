@@ -85,6 +85,7 @@ public class ViewState: ObservableObject {
     @Published var servers: Dictionary<String, Server> = [:]
     @Published var channels: Dictionary<String, Channel> = [:]
     @Published var messages: Dictionary<String, [Message]> = [:]
+    @Published var members: Dictionary<String, Dictionary<String, Member>> = [:]
     
     @Published var state: ConnectionState = .connecting
     @Published var queuedMessages: Dictionary<String, [QueuedMessage]> = [:]
@@ -140,12 +141,9 @@ public class ViewState: ObservableObject {
                                 case .Disabled:
                                     return callback(.Disabled)
                             }
-                            
-                        } catch {
-                            print("error \(error)")
-                        }
+                        } catch {}
                     case .failure(let err):
-                        print(err)
+                        ()
                 }
             }
     }
@@ -156,7 +154,7 @@ public class ViewState: ObservableObject {
     }
     
     func formatUrl(with: File) -> String {
-        ""  // TODO
+        "\(apiInfo!.features.autumn.url)/\(with.tag)/\(with.id)"
     }
     
     func backgroundWsTask() async {
@@ -175,7 +173,6 @@ public class ViewState: ObservableObject {
                 self.apiInfo = info
 
                 let ws = WebSocketStream(url: info.ws, token: token, onEvent: onEvent)
-                print(ws)
                 self.ws = ws
                         
             case .failure(let e):
@@ -215,6 +212,7 @@ public class ViewState: ObservableObject {
                 
                 for server in event.servers {
                     servers[server.id] = server
+                    members[server.id] = [:]
                 }
                 
                 for user in event.users {
@@ -235,6 +233,18 @@ public class ViewState: ObservableObject {
     
                 messages[m.channel]?.append(m)
 
+            case .message_update(let event):
+                let message = messages[event.channel]?.reversed().first(where: { $0.id == event.id })
+                
+                if var message = message {
+                    message.edited = event.data.edited
+
+                    if let content = event.data.content {
+                        message.content = content
+                        print(content)
+                    }
+                }
+                
             default:
                 ()
         }

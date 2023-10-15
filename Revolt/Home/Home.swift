@@ -1,23 +1,54 @@
 import SwiftUI
 import OrderedCollections
 
+@MainActor
 class ChannelViewModel: ObservableObject {
+    var viewState: ViewState
     @Published var channel: TextChannel
-    @Published var messages: [Message]
+    @Binding var messages: [Message]
     @Published var replies: [Reply] = []
     @Published var queuedMessages: [QueuedMessage] = []
 
-    init(channel: TextChannel, messages: [Message], replies: [Reply] = [], queuedMessages: [QueuedMessage]) {
+    init(viewState: ViewState, channel: TextChannel, messages: Binding<[Message]>) {
+        self.viewState = viewState
         self.channel = channel
-        self.messages = messages
-        self.replies = replies
+        self._messages = messages
+        self.replies = []
         self.queuedMessages = []
+    }
+    
+    func loadMoreMessages(before: String? = nil) {
+        Task {
+            let result = try! await viewState.http.fetchHistory(channel: channel.id, limit: 50, before: before).get()
+            
+            for user in result.users {
+                viewState.users[user.id] = user
+            }
+            
+            for member in result.members {
+                viewState.members[member.id.server]![member.id.user] = member
+            }
+            
+            viewState.messages[channel.id] = result.messages.reversed() + viewState.messages[channel.id]!
+        }
+    }
+    
+    func loadMoreMessagesIfNeeded(current: Message?) {
+        guard let item = current else {
+            loadMoreMessages()
+            return
+        }
+                
+        if messages.first!.id == item.id {
+            loadMoreMessages(before: item.id)
+        }
     }
 }
 
 struct TextChannelView: View {
-    @ObservedObject var viewModel: ChannelViewModel
     @EnvironmentObject var viewState: ViewState
+    @ObservedObject var viewModel: ChannelViewModel
+
     @State var showSheet = false
     
     func viewMembers() {
@@ -34,10 +65,19 @@ struct TextChannelView: View {
     
     var body: some View {
         VStack(alignment: .leading) {
-            List(viewModel.messages, id: \.id) { message in
-                let author = viewState.users[message.author]!
-                MessageView(viewModel: MessageViewModel(message: message, author: author), channelReplies: $viewModel.replies)
+            List {
+                Text("Loading more messages...")
+                    .onAppear {
+                        viewModel.loadMoreMessages(before: viewModel.messages.first?.id)
+                    }
+
+                ForEach($viewModel.messages, id: \.id) { message in
+                    let author = Binding($viewState.users[message.author.wrappedValue])!
+                    MessageView(viewModel: MessageViewModel(viewState: viewState, message: message, author: author, replies: $viewModel.replies))
+                }
+                .listRowInsets(EdgeInsets(top: 8, leading: 12, bottom: 8, trailing: 12))
             }
+            .padding(.leading, 0)
             .backgroundStyle(.white)
             .listStyle(.plain)
 
@@ -47,7 +87,7 @@ struct TextChannelView: View {
 //                .backgroundStyle(.white)
 //                .listStyle(.plain)
             
-            MessageBox(viewModel: MessageBoxViewModel(viewState: viewState, channel: viewModel.channel, replies: viewModel.replies))
+            MessageBox(viewModel: MessageBoxViewModel(viewState: viewState, channel: viewModel.channel, replies: $viewModel.replies))
         }
         .toolbar {
             ToolbarItem(placement: .principal) {
@@ -117,6 +157,10 @@ struct Home: View {
         NavigationSplitView {
             List(Array(viewState.servers), id: \.self.key, selection: $viewState.currentServer) { server in
                 NavigationLink(value: server.key) {
+                    if let icon = server.value.icon {
+                        LazyImage(file: icon, height: 32, width: 32, clipTo: Circle())
+                    }
+
                     Text(server.value.name)
                 }
             }
@@ -125,15 +169,37 @@ struct Home: View {
                 let selectedServer = viewState.servers[selectedServerId]!
 
                 VStack {
-                    Text(selectedServer.name)
+//                    HStack {
+//                        if let icon = selectedServer.icon {
+//                            LazyImage(file: icon, height: 24, width: 24, clipTo: Circle())
+//                        }
+//                        Text(selectedServer.name)
+//                    }
+
                     List(selectedServer.channels, id: \.self, selection: $viewState.currentChannel) { channel_id in
                         NavigationLink(value: channel_id) {
                             let channel = viewState.channels[channel_id]
-
+                            
                             switch channel {
                                 case .text_channel(let c):
+                                    if let icon = c.icon {
+                                        LazyImage(file: icon, height: 32, width: 32, clipTo: Rectangle())
+                                    } else {
+                                        Image(systemName: "number.circle")
+                                            .resizable()
+                                            .frame(width: 32, height: 32)
+                                    }
+
                                     Text(c.name)
                                 case .voice_channel(let c):
+                                    if let icon = c.icon {
+                                        LazyImage(file: icon, height: 32, width: 32, clipTo: Rectangle())
+                                    } else {
+                                        Image(systemName: "speaker.wave.2.circle")
+                                            .resizable()
+                                            .frame(width: 32, height: 32)
+                                    }
+
                                     Text(c.name)
                                 default:
                                     EmptyView()
@@ -151,9 +217,12 @@ struct Home: View {
                 
                 switch channel {
                     case .text_channel(let c):
-                        let messages = viewState.messages[selectedChannel]!
+                        let messages = Binding($viewState.messages[c.id])!
+                        
+                        let channelViewModel = ChannelViewModel(viewState: viewState, channel: c, messages: messages)
+                        TextChannelView(viewModel: channelViewModel)
 
-                        TextChannelView(viewModel: ChannelViewModel(channel: c, messages: messages, queuedMessages: viewState.queuedMessages[selectedChannel] ?? []))
+
                     default:
                         Text("Not a text channel :(")
                 }
