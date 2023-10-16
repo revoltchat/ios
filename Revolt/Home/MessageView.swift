@@ -8,6 +8,68 @@
 import Foundation
 import SwiftUI
 
+struct MessageReplyView: View {
+    @EnvironmentObject var viewState: ViewState
+    
+    @Binding var mentions: [String]?
+    @State var dead: Bool = false
+    var id: String
+    var channel: String
+
+    @ViewBuilder
+    var body: some View {
+        let message = viewState.messages[id]
+        if message != nil || dead {
+            InnerMessageReplyView(mentions: $mentions, message: message)
+        } else {
+            if !viewState.loadingMessages.contains(id) {
+                let _ = Task {
+                    do {
+                        let message = try await viewState.http.fetchMessage(channel: channel, message: id).get()
+                        viewState.messages[id] = message
+                    } catch {
+                        dead = true
+                    }
+                }
+            }
+
+            Text("Loading...")
+        }
+    }
+}
+
+struct InnerMessageReplyView: View {
+    @EnvironmentObject var viewState: ViewState
+    
+    @Binding var mentions: [String]?
+    var message: Message?
+    
+    var body: some View {
+        if let message = message {
+            HStack {
+                let author = viewState.users[message.author]!
+                
+                Avatar(user: author, width: 24, height: 24)
+                
+                if mentions?.contains(message.author) == true {
+                    Text("@")
+                        .font(.caption)
+                }
+                
+                Text(author.username)
+                    .font(.caption)
+                
+                Text(message.content)
+                    .font(.caption)
+                    .lineLimit(1)
+                    .truncationMode(.tail)
+            }
+        } else {
+            Text("Unknown message")
+        }
+    }
+}
+
 class MessageViewModel: ObservableObject {
     @Binding var message: Message
     @Binding var author: User
@@ -44,24 +106,20 @@ struct MessageView: View {
     @EnvironmentObject var viewState: ViewState
 
     var body: some View {
-        VStack {
+
+        VStack(alignment: .leading) {
             if let replies = viewModel.message.replies {
-                VStack {
+                VStack(alignment: .leading) {
                     ForEach(replies, id: \.self) { id in
-                        Text(id)
+                        MessageReplyView(mentions: $viewModel.message.mentions, id: id, channel: viewModel.message.channel)
+                            .padding(.leading, 36)
                     }
                 }
             }
             HStack(alignment: .top) {
-                if let file = viewModel.author.avatar {
-                    LazyImage(file: file, height: 32, width: 32, clipTo: Circle())
-                        .padding(.trailing, 4)
-                } else {
-                    Color.black
-                        .clipShape(Circle())
-                        .frame(width: 32, height: 32)
-                        .padding(.trailing, 4)
-                }
+                Avatar(user: viewModel.author, width: 32, height: 32)
+                    .padding(.trailing, 8)
+
                 VStack(alignment: .leading) {
                     HStack {
                         Text(viewModel.author.username)
@@ -76,17 +134,15 @@ struct MessageView: View {
                                 .foregroundStyle(.gray)
                         }
                     }
+
                     Text(viewModel.message.content)
-                    //.frame(maxWidth: .infinity, alignment: .leading)
-                    Group {
-                        VStack(alignment: .leading) {
-                            ForEach(viewModel.message.attachments ?? []) { attachment in
-                                LazyImage(file: attachment, clipTo: RoundedRectangle(cornerRadius: 5))
-                            }
+
+                    VStack(alignment: .leading) {
+                        ForEach(viewModel.message.attachments ?? []) { attachment in
+                            LazyImage(file: attachment, clipTo: RoundedRectangle(cornerRadius: 5))
                         }
                     }
                 }
-                //.frame(maxWidth: .infinity, alignment: .leading)
             }
             .listRowSeparator(.hidden)
         }

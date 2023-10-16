@@ -84,12 +84,14 @@ public class ViewState: ObservableObject {
     @Published var users: Dictionary<String, User> = [:]
     @Published var servers: Dictionary<String, Server> = [:]
     @Published var channels: Dictionary<String, Channel> = [:]
-    @Published var messages: Dictionary<String, [Message]> = [:]
+    @Published var messages: Dictionary<String, Message> = [:]
+    @Published var channelMessages: Dictionary<String, [String]> = [:]
     @Published var members: Dictionary<String, Dictionary<String, Member>> = [:]
     
     @Published var state: ConnectionState = .connecting
     @Published var queuedMessages: Dictionary<String, [QueuedMessage]> = [:]
     @Published var currentUser: User? = nil
+    @Published var loadingMessages: Set<String> = Set()
 
     @Published var currentServer: String? = nil {
         didSet {
@@ -207,7 +209,7 @@ public class ViewState: ObservableObject {
             case .ready(let event):
                 for channel in event.channels {
                     channels[channel.id()] = channel
-                    messages[channel.id()] = []
+                    channelMessages[channel.id()] = []
                 }
                 
                 for server in event.servers {
@@ -231,10 +233,11 @@ public class ViewState: ObservableObject {
                     users[m.author] = user
                 }
     
-                messages[m.channel]?.append(m)
+                messages[m.id] = m
+                channelMessages[m.channel]?.append(m.id)
 
             case .message_update(let event):
-                let message = messages[event.channel]?.reversed().first(where: { $0.id == event.id })
+                let message = messages[event.id]
                 
                 if var message = message {
                     message.edited = event.data.edited

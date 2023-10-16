@@ -45,6 +45,8 @@ struct ReplyView: View {
             Avatar(user: author, width:16, height: 16)
             Text(author.username)
             Text(viewModel.replies[viewModel.idx].message.content)
+                .lineLimit(1)
+                .truncationMode(.tail)
             Spacer()
             Button(action: { viewModel.replies[viewModel.idx].mention.toggle() }) {
                 if viewModel.replies[viewModel.idx].mention {

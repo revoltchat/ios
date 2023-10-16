@@ -36,30 +36,35 @@ struct HTTPClient {
             headers: token.map({ HTTPHeaders(dictionaryLiteral: ("x-session-token", $0)) })
         )
     
-        let body = await req.serializingString()
+        let response = await req.serializingString()
             .response
-            .result
+        
+        let code = response.response?.statusCode
+        
+        if ![200, 201, 202, 203, 204, 205, 206, 207, 208, 226].contains(code) {
+            return Result.failure(AFError.responseSerializationFailed(reason: .inputFileNil))
+        }
                 
-        return body.map({ b in try! JSONDecoder().decode(O.self, from: b.data(using: .utf8)!) })
+        return response.result.map({ b in try! JSONDecoder().decode(O.self, from: b.data(using: .utf8)!) })
 //            .serializingDecodable(O.self, emptyResponseCodes: [200])
 //            .response
 //            .result
     }
     
     func fetchSelf() async -> Result<User, AFError> {
-        return await req(method: .get, route: "/users/@me")
+        await req(method: .get, route: "/users/@me")
     }
-    
+
     func fetchApiInfo() async -> Result<ApiInfo, AFError> {
-        return await req(method: .get, route: "/")
+        await req(method: .get, route: "/")
     }
     
     func sendMessage(channel: String, replies: [ApiReply], content: String, nonce: String) async -> Result<Message, AFError> {
-        return await req(method: .post, route: "/channels/\(channel)/messages", parameters: SendMessage(replies: replies, content: content))
+        await req(method: .post, route: "/channels/\(channel)/messages", parameters: SendMessage(replies: replies, content: content))
     }
     
     func fetchUser(user: String) async -> Result<User, AFError> {
-        return await req(method: .get, route: "/users/\(user)")
+        await req(method: .get, route: "/users/\(user)")
     }
     
     func deleteMessage(channel: String, message: String) async -> Result<EmptyResponse, AFError> {
@@ -73,8 +78,11 @@ struct HTTPClient {
             url = "\(url)&before=\(before)"
         }
         
-        print(url)
         return await req(method: .get, route: url)
+    }
+    
+    func fetchMessage(channel: String, message: String) async -> Result<Message, AFError> {
+        await req(method: .get, route: "/channels/\(channel)/messages/\(message)")
     }
 }
 

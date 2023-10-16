@@ -7,6 +7,7 @@
 
 import Foundation
 import SwiftUI
+import Kingfisher
 
 struct Avatar: View {
     @EnvironmentObject var viewState: ViewState
@@ -21,18 +22,13 @@ struct Avatar: View {
         } else {
             let baseUrl = viewState.http.baseURL
 
-            AsyncImage(url: URL(string: "\(baseUrl)/users/\(user)/default_avatar")) { phase in
-                if let image = phase.image {
-                    image
-                        .resizable()
-                        .clipShape(Circle())
-                        .frame(width: width, height: height)
-                } else {
-                    Color.clear
-                        .clipShape(Circle())
-                        .frame(width: width, height: height)
-                }
-            }
+            KFImage.url(URL(string: "\(baseUrl)/users/\(user)/default_avatar"))
+                .placeholder { Color.clear }
+                .resizable()
+                .aspectRatio(contentMode: .fill)
+                .frame(width: width, height: height)
+                .clipped()
+                .clipShape(Circle())
         }
     }
 }

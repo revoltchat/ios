@@ -5,11 +5,11 @@ import OrderedCollections
 class ChannelViewModel: ObservableObject {
     var viewState: ViewState
     @Published var channel: TextChannel
-    @Binding var messages: [Message]
+    @Binding var messages: [String]
     @Published var replies: [Reply] = []
     @Published var queuedMessages: [QueuedMessage] = []
 
-    init(viewState: ViewState, channel: TextChannel, messages: Binding<[Message]>) {
+    init(viewState: ViewState, channel: TextChannel, messages: Binding<[String]>) {
         self.viewState = viewState
         self.channel = channel
         self._messages = messages
@@ -29,7 +29,14 @@ class ChannelViewModel: ObservableObject {
                 viewState.members[member.id.server]![member.id.user] = member
             }
             
-            viewState.messages[channel.id] = result.messages.reversed() + viewState.messages[channel.id]!
+            var ids: [String] = []
+            
+            for message in result.messages {
+                viewState.messages[message.id] = message
+                ids.append(message.id)
+            }
+            
+            viewState.channelMessages[channel.id] = ids.reversed() + viewState.channelMessages[channel.id]!
         }
     }
     
@@ -38,8 +45,8 @@ class ChannelViewModel: ObservableObject {
             loadMoreMessages()
             return
         }
-                
-        if messages.first!.id == item.id {
+
+        if messages.first! == item.id {
             loadMoreMessages(before: item.id)
         }
     }
@@ -68,11 +75,13 @@ struct TextChannelView: View {
             List {
                 Text("Loading more messages...")
                     .onAppear {
-                        viewModel.loadMoreMessages(before: viewModel.messages.first?.id)
+                        viewModel.loadMoreMessages(before: viewModel.messages.first)
                     }
 
-                ForEach($viewModel.messages, id: \.id) { message in
+                ForEach($viewModel.messages, id: \.self) { messageId in
+                    let message = Binding($viewState.messages[messageId.wrappedValue])!
                     let author = Binding($viewState.users[message.author.wrappedValue])!
+
                     MessageView(viewModel: MessageViewModel(viewState: viewState, message: message, author: author, replies: $viewModel.replies))
                 }
                 .listRowInsets(EdgeInsets(top: 8, leading: 12, bottom: 8, trailing: 12))
@@ -217,7 +226,7 @@ struct Home: View {
                 
                 switch channel {
                     case .text_channel(let c):
-                        let messages = Binding($viewState.messages[c.id])!
+                        let messages = Binding($viewState.channelMessages[c.id])!
                         
                         let channelViewModel = ChannelViewModel(viewState: viewState, channel: c, messages: messages)
                         TextChannelView(viewModel: channelViewModel)

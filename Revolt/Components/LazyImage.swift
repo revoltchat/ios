@@ -23,8 +23,9 @@ struct LazyImage<S: Shape>: View {
         KFImage.url(URL(string: viewState.formatUrl(with: file)))
             .placeholder { Color.clear }
             .resizable()
-            .aspectRatio(contentMode: .fit)
-            .clipShape(clipTo)
+            .aspectRatio(contentMode: .fill)
             .frame(width: width, height: height)
+            .clipped()
+            .clipShape(clipTo)
     }
 }
