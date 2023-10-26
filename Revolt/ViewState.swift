@@ -81,17 +81,19 @@ public class ViewState: ObservableObject {
         }
     }
     @Published var user: User? = nil
-    @Published var users: Dictionary<String, User> = [:]
-    @Published var servers: Dictionary<String, Server> = [:]
-    @Published var channels: Dictionary<String, Channel> = [:]
-    @Published var messages: Dictionary<String, Message> = [:]
-    @Published var channelMessages: Dictionary<String, [String]> = [:]
-    @Published var members: Dictionary<String, Dictionary<String, Member>> = [:]
+    @Published var users: [String: User] = [:]
+    @Published var servers: [String: Server] = [:]
+    @Published var channels: [String: Channel] = [:]
+    @Published var messages: [String: Message] = [:]
+    @Published var channelMessages: [String: [String]] = [:]
+    @Published var members: [String: [String: Member]] = [:]
+    @Published var dms: [Channel] = []
     
     @Published var state: ConnectionState = .connecting
     @Published var queuedMessages: Dictionary<String, [QueuedMessage]> = [:]
     @Published var currentUser: User? = nil
     @Published var loadingMessages: Set<String> = Set()
+    @Published var currentlyTyping: [String: [String]] = [:]
 
     @Published var currentServer: String? = nil {
         didSet {
@@ -104,12 +106,45 @@ public class ViewState: ObservableObject {
             UserDefaults.standard.set(currentChannel, forKey: "currentChannel")
         }
     }
+    
+    @Published var currentSessionId: String? = nil {
+        didSet {
+            UserDefaults.standard.set(currentSessionId, forKey: "currentSessionId")
+        }
+    }
 
+    @Published var path: NavigationPath = NavigationPath()
+    
     init() {
         self.sessionToken = UserDefaults.standard.string(forKey: "sessionToken")
         self.currentServer = UserDefaults.standard.string(forKey: "currentServer")
         self.currentChannel = UserDefaults.standard.string(forKey: "currentChannel")
+        self.currentSessionId = UserDefaults.standard.string(forKey: "currentSessionId")
         self.http.token = self.sessionToken
+        self.users["00000000000000000000000000"] = User(id: "00000000000000000000000000", username: "Revolt", discriminator: "0000")
+    }
+
+    class func preview() -> ViewState {
+        let this = ViewState()
+        this.state = .connected
+        this.currentUser = User(id: "0", username: "Zomatree", discriminator: "0000")
+        this.users["0"] = this.currentUser!
+        this.servers["0"] = Server(id: "0", name: "Testing Server", channels: ["0"], default_permissions: 0)
+        this.channels["0"] = .text_channel(TextChannel(id: "0", server: "0", name: "General"))
+        this.messages["01HD4VQY398JNRJY60JDY2QHA5"] = Message(id: "01HD4VQY398JNRJY60JDY2QHA5", content: "Hello World", author: "0", channel: "0", mentions: ["0"], replies: ["01HDEX6M2E3SHY8AC2S6B9SEAW"])
+        this.messages["01HDEX6M2E3SHY8AC2S6B9SEAW"] = Message(id: "01HDEX6M2E3SHY8AC2S6B9SEAW", content: "reply", author: "0", channel: "0")
+        this.channelMessages["0"] = ["01HD4VQY398JNRJY60JDY2QHA5", "01HDEX6M2E3SHY8AC2S6B9SEAW"]
+        this.members["0"] = ["0": Member(id: MemberId(server: "0", user: "0"), joined_at: "")]
+        this.currentServer = "0"
+        this.currentChannel = "0"
+        
+        for i in (1...9) {
+            this.users["\(i)"] = User(id: "i", username: "\(i)", discriminator: "\(i)\(i)\(i)\(i)")
+        }
+        
+        this.currentlyTyping["0"] = ["0", "1", "2", "3", "4"]
+        
+        return this
     }
 
     func signIn(mfa_ticket: String, mfa_response: [String: String], callback: @escaping((LoginState) -> ())) async {
@@ -133,6 +168,7 @@ public class ViewState: ObservableObject {
                             let result = try JSONDecoder().decode(LoginResponse.self, from: data)
                             switch result {
                                 case .Success(let success):
+                                    self.currentSessionId = success._id
                                     self.sessionToken = success.token
                                     self.http.token = success.token
                                     return callback(.Success)
@@ -168,22 +204,15 @@ public class ViewState: ObservableObject {
             return
         }
         
-        let apiInfo = await self.http.fetchApiInfo()
+        let apiInfo = try! await self.http.fetchApiInfo().get()
+        self.http.apiInfo = apiInfo
+        self.apiInfo = apiInfo
 
-        switch apiInfo {
-            case .success(let info):
-                self.apiInfo = info
-
-                let ws = WebSocketStream(url: info.ws, token: token, onEvent: onEvent)
-                self.ws = ws
-                        
-            case .failure(let e):
-                print(e)
-        }
-        
+        let ws = WebSocketStream(url: apiInfo.ws, token: token, onEvent: onEvent)
+        self.ws = ws
     }
     
-    func queueMessage(channel: String, replies: [Reply], content: String) async {
+    func queueMessage(channel: String, replies: [Reply], content: String, attachments: [(URL, String)]) async {
         var queue = self.queuedMessages[channel]
         
         if queue == nil {
@@ -201,15 +230,15 @@ public class ViewState: ObservableObject {
         
         queue!.append(QueuedMessage(nonce: nonce, replies: r, content: content))
         
-        await http.sendMessage(channel: channel, replies: r, content: content, nonce: nonce)
+        await http.sendMessage(channel: channel, replies: r, content: content, attachments: attachments, nonce: nonce)
     }
 
     func onEvent(_ event: WsMessage) async {
         switch event {
             case .ready(let event):
                 for channel in event.channels {
-                    channels[channel.id()] = channel
-                    channelMessages[channel.id()] = []
+                    channels[channel.id] = channel
+                    channelMessages[channel.id] = []
                 }
                 
                 for server in event.servers {
@@ -225,6 +254,12 @@ public class ViewState: ObservableObject {
                     users[user.id] = user
                 }
                 
+                dms = try! await http.fetchDms().get()
+                
+                for dm in dms {
+                    channelMessages[dm.id] = []
+                }
+
                 state = .connected
 
             case .message(let m):
@@ -246,10 +281,35 @@ public class ViewState: ObservableObject {
                         message.content = content
                         print(content)
                     }
+                    
+                    messages[event.id] = message
                 }
+
+                print(messages[event.id])
                 
-            default:
-                ()
+            case .authenticated:
+                print("authenticated")
+                
+            case .channel_start_typing(let e):
+                var typing = currentlyTyping.setDefault(key: e.channel, default: [])
+                
+                typing.append(e.id)
+                
+            case .channel_stop_typing(let e):
+                currentlyTyping[e.channel]?.removeAll(where: { $0 == e.id })
         }
+    }
+}
+
+extension Dictionary {
+    mutating func setDefault(key: Key, default def: Value) -> Value {
+        var value = self[key]
+        
+        if value == nil {
+            value = def
+            self[key] = value
+        }
+        
+        return value!
     }
 }

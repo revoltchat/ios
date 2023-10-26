@@ -13,6 +13,8 @@ enum WsMessage {
     case ready(ReadyEvent)
     case message(Message)
     case message_update(MessageUpdateEvent)
+    case channel_start_typing(ChannelTyping)
+    case channel_stop_typing(ChannelTyping)
 }
 
 struct ReadyEvent: Decodable {
@@ -34,9 +36,14 @@ struct MessageUpdateEvent: Decodable {
     var data: MessageUpdateEventData
 }
 
+struct ChannelTyping: Decodable {
+    var channel: String
+    var id: String
+}
+
 extension WsMessage: Decodable {
     enum CodingKeys: String, CodingKey { case type }
-    enum Tag: String, Decodable { case Authenticated, Ready, Message, MessageUpdate }
+    enum Tag: String, Decodable { case Authenticated, Ready, Message, MessageUpdate, ChannelStartTyping, ChannelStopTyping }
     
     init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
@@ -51,6 +58,10 @@ extension WsMessage: Decodable {
                 self = .message(try singleValueContainer.decode(Message.self))
             case .MessageUpdate:
                 self = .message_update(try singleValueContainer.decode(MessageUpdateEvent.self))
+            case .ChannelStartTyping:
+                self = .channel_start_typing(try singleValueContainer.decode(ChannelTyping.self))
+            case .ChannelStopTyping:
+                self = .channel_stop_typing(try singleValueContainer.decode(ChannelTyping.self))
         }
     }
 }

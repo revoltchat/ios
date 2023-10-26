@@ -6,14 +6,12 @@ struct RevoltApp: App {
     
     var body: some Scene {
         WindowGroup {
-            NavigationStack {
-                ApplicationSwitcher()
-            }
-            .environmentObject(state)
+            ApplicationSwitcher()
+                .environmentObject(state)
         }
     }
 }
-
+    
 struct ApplicationSwitcher: View {
     @EnvironmentObject var viewState: ViewState
 
@@ -33,13 +31,14 @@ struct ApplicationSwitcher: View {
 struct InnerApp: View {
     @EnvironmentObject var viewState: ViewState
     
-    @ViewBuilder
     var body: some View {
-        switch viewState.state {
-            case .connecting:
-                Text("Connecting...")
-            case .connected:
-                Home()
+        NavigationStack(path: $viewState.path) {
+            switch viewState.state {
+                case .connecting:
+                    Text("Connecting...")
+                case .connected:
+                    Home()
+            }
         }
     }
 }

@@ -7,7 +7,7 @@
 
 import Foundation
 
-class MemberId: Decodable {
+struct MemberId: Decodable {
     var server: String
     var user: String
 }

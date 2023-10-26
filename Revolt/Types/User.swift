@@ -25,7 +25,7 @@ struct Status: Codable {
 }
 
 struct UserRelation: Codable {
-    var status: Relation
+    var status: String
 }
 
 struct User: Identifiable, Decodable {
@@ -42,9 +42,15 @@ struct User: Identifiable, Decodable {
     var flags: Int?
     var bot: UserBot?
     var privileged: Bool?
+    var profile: Profile?
     
     enum CodingKeys: String, CodingKey {
         case id = "_id"
         case username, discriminator, display_name, avatar, relations, badges, status, relationship, online, flags, bot, privileged
     }
+}
+
+struct Profile: Decodable {
+    var content: String?
+    var background: File?
 }

@@ -33,7 +33,7 @@ struct SystemMessages: Decodable {
     var user_banned: String?
 }
 
-struct Category: Decodable {
+struct Category: Decodable, Identifiable {
     var id: String
     var title: String
     var channels: [String]

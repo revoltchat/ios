@@ -20,3 +20,11 @@ enum FileCategory: String {
     case banner = "banners"
     case emoji = "emojis"
 }
+
+enum ChannelType {
+    case text, voice, group, dm, saved
+}
+
+protocol Messageable: Identifiable {
+    var channelType: ChannelType { get }
+}

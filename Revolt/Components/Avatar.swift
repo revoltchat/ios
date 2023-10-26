@@ -17,18 +17,37 @@ struct Avatar: View {
     public var height: CGFloat = 32
 
     var body: some View {
-        if let avatar = user.avatar {
-            LazyImage(file: avatar, height: height, width: width, clipTo: Circle())
-        } else {
-            let baseUrl = viewState.http.baseURL
-
-            KFImage.url(URL(string: "\(baseUrl)/users/\(user)/default_avatar"))
-                .placeholder { Color.clear }
+        if ProcessInfo.processInfo.environment["XCODE_RUNNING_FOR_PREVIEWS"] == "1" {
+            Image("Image")
                 .resizable()
                 .aspectRatio(contentMode: .fill)
                 .frame(width: width, height: height)
                 .clipped()
                 .clipShape(Circle())
+        } else {
+            if let avatar = user.avatar {
+                LazyImage(source: .file(avatar), height: height, width: width, clipTo: Circle())
+            } else {
+                let baseUrl = viewState.http.baseURL
+                
+                KFImage.url(URL(string: "\(baseUrl)/users/\(user)/default_avatar"))
+                    .placeholder { Color.clear }
+                    .resizable()
+                    .aspectRatio(contentMode: .fill)
+                    .frame(width: width, height: height)
+                    .clipped()
+                    .clipShape(Circle())
+            }
         }
+    }
+}
+
+class Avatar_Preview: PreviewProvider {
+    static var viewState: ViewState = ViewState.preview()
+    
+    static var previews: some View {
+        Avatar(user: viewState.currentUser!)
+            .environmentObject(viewState)
+            .previewLayout(.sizeThatFits)
     }
 }

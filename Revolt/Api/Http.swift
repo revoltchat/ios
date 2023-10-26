@@ -11,11 +11,13 @@ import Alamofire
 struct HTTPClient {
     var token: String?
     var baseURL: String
+    var apiInfo: ApiInfo?
     var session: Alamofire.Session
 
     init(token: String?, baseURL: String) {
         self.token = token
         self.baseURL = baseURL
+        self.apiInfo = nil
         self.session = Alamofire.Session()
     }
 
@@ -44,11 +46,9 @@ struct HTTPClient {
         if ![200, 201, 202, 203, 204, 205, 206, 207, 208, 226].contains(code) {
             return Result.failure(AFError.responseSerializationFailed(reason: .inputFileNil))
         }
-                
+               
+        print(response.result)
         return response.result.map({ b in try! JSONDecoder().decode(O.self, from: b.data(using: .utf8)!) })
-//            .serializingDecodable(O.self, emptyResponseCodes: [200])
-//            .response
-//            .result
     }
     
     func fetchSelf() async -> Result<User, AFError> {
@@ -59,8 +59,21 @@ struct HTTPClient {
         await req(method: .get, route: "/")
     }
     
-    func sendMessage(channel: String, replies: [ApiReply], content: String, nonce: String) async -> Result<Message, AFError> {
-        await req(method: .post, route: "/channels/\(channel)/messages", parameters: SendMessage(replies: replies, content: content))
+    func sendMessage(channel: String, replies: [ApiReply], content: String, attachments: [(URL, String)], nonce: String) async -> Result<Message, AFError> {
+        var attachmentIds: [String] = []
+        
+        for attachment in attachments {
+            let body = await session.request(attachment.0)
+                .serializingData()
+                .response
+                .data!
+            
+            let response = try! await uploadFile(data: body, name: attachment.1, category: .attachment).get()
+            
+            attachmentIds.append(response.id)
+        }
+        
+        return await req(method: .post, route: "/channels/\(channel)/messages", parameters: SendMessage(replies: replies, content: content, attachments: attachmentIds))
     }
     
     func fetchUser(user: String) async -> Result<User, AFError> {
@@ -84,6 +97,26 @@ struct HTTPClient {
     func fetchMessage(channel: String, message: String) async -> Result<Message, AFError> {
         await req(method: .get, route: "/channels/\(channel)/messages/\(message)")
     }
+    
+    func fetchDms() async -> Result<[Channel], AFError> {
+        await req(method: .get, route: "/users/dms")
+    }
+    
+    func fetchProfile(user: String) async -> Result<Profile, AFError> {
+        await req(method: .get, route: "/users/\(user)/profile")
+    }
+    
+    func uploadFile(data: Data, name: String, category: FileCategory) async -> Result<AutumnResponse, AFError> {
+        let url = "\(apiInfo!.features.autumn.url)/\(category.rawValue)"
+
+        return await session.upload(
+            multipartFormData: { form in form.append(data, withName: "file", fileName: name)},
+            to: url
+        )
+            .serializingDecodable(decoder: JSONDecoder())
+            .response
+            .result
+    }
 }
 
 struct EmptyResponse: Decodable {
@@ -93,7 +126,7 @@ struct EmptyResponse: Decodable {
 struct FetchHistory: Decodable {
     var messages: [Message]
     var users: [User]
-    var members: [Member]
+    var members: [Member]?
 }
 
 struct ApiReply: Encodable {
@@ -104,4 +137,13 @@ struct ApiReply: Encodable {
 struct SendMessage: Encodable {
     var replies: [ApiReply]
     var content: String
+    var attachments: [String]
+}
+
+struct AutumnResponse: Decodable {
+    var id: String
+}
+
+struct AutumnPayload: Encodable {
+    var file: Data
 }

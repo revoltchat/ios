@@ -79,14 +79,14 @@ struct VoiceChannel: Decodable {
     }
 }
 
-enum Channel {
+enum Channel: Identifiable {
     case saved_messages(SavedMessages)
     case dm_channel(DMChannel)
     case group_dm_channel(GroupDMChannel)
     case text_channel(TextChannel)
     case voice_channel(VoiceChannel)
     
-    func id() -> String {
+    var id: String {
         switch self {
             case .saved_messages(let c):
                 c.id
@@ -98,6 +98,52 @@ enum Channel {
                 c.id
             case .voice_channel(let c):
                 c.id
+        }
+    }
+    
+    var icon: File? {
+        switch self {
+            case .saved_messages(_):
+                nil
+            case .dm_channel(_):
+                nil
+            case .group_dm_channel(let c):
+                c.icon
+            case .text_channel(let c):
+                c.icon
+            case .voice_channel(let c):
+                c.icon
+        }
+    }
+    
+    var description: String? {
+        switch self {
+            case .saved_messages(_):
+                nil
+            case .dm_channel(_):
+                nil
+            case .group_dm_channel(let c):
+                c.description
+            case .text_channel(let c):
+                c.description
+            case .voice_channel(let c):
+                c.description
+        }
+    }
+    
+    @MainActor
+    func getName(_ viewState: ViewState) -> String {
+        switch self {
+            case .saved_messages(_):
+                "Saved Messages"
+            case .dm_channel(let c):
+                viewState.users[c.recipients.first(where: {$0 != viewState.currentUser!.id})!]!.username
+            case .group_dm_channel(let c):
+                c.name
+            case .text_channel(let c):
+                c.name
+            case .voice_channel(let c):
+                c.name
         }
     }
 }

@@ -1,7 +1,7 @@
 {
   "images" : [
     {
-      "filename" : "ipadpro3_splash.png",
+      "filename" : "large.png",
       "idiom" : "universal",
       "scale" : "1x"
     },
@@ -17,10 +17,5 @@
   "info" : {
     "author" : "xcode",
     "version" : 1
-  },
-  "properties" : {
-    "on-demand-resource-tags" : [
-      "New"
-    ]
   }
 }

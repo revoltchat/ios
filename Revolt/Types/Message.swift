@@ -118,7 +118,7 @@ extension SystemMessageContent: Decodable {
 struct Message: Identifiable, Decodable {
     var id: String
 
-    var content: String
+    var content: String?
     var author: String
     var channel: String
     var system: SystemMessageContent?
