@@ -136,6 +136,10 @@ class WebSocketStream {
         client = ws
     }
 
+    public func stop() {
+        client.disconnect(closeCode: .zero)
+    }
+    
     public func didReceive(event: WebSocketEvent) {
         switch event {
             case .connected(_):

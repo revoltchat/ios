@@ -15,7 +15,8 @@ struct Settings: View {
         List {
             Section("Revolt") {
                 NavigationLink("Profile", destination: ProfileSettings.init)
-                    .listRowBackground(viewState.theme.background2.color)
+                
+                NavigationLink("Sessions", destination: SessionsSettings.init)
                 
                 NavigationLink("Appearance") {
                     AppearanceSettings(
@@ -29,13 +30,21 @@ struct Settings: View {
                         messageBoxBorder: viewState.theme.messageBoxBorder.color
                     )
                 }
-                .listRowBackground(viewState.theme.background2.color)
             }
+            .listRowBackground(viewState.theme.background2.color)
+
             
             Section("Misc") {
                 NavigationLink("About", destination: About.init)
-                    .listRowBackground(viewState.theme.background2.color)
+
+                Button {
+                    viewState.logout()
+                } label: {
+                    Text("Logout")
+                        .foregroundStyle(.red)
+                }
             }
+            .listRowBackground(viewState.theme.background2.color)
         }
         .listStyle(.insetGrouped)
         .scrollContentBackground(.hidden)

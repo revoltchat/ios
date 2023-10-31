@@ -316,6 +316,25 @@ public class ViewState: ObservableObject {
                 }
         }
     }
+    
+    func logout() {
+        currentUser = nil
+        sessionToken = nil
+        currentServer = nil
+        currentChannel = nil
+        currentlyTyping = [:]
+        currentSessionId = nil
+        users = [:]
+        servers = [:]
+        channels = [:]
+        messages = [:]
+        channelMessages = [:]
+        members = [:]
+        dms = []
+        path = NavigationPath()
+
+        ws?.stop()
+    }
 }
 
 extension Dictionary {

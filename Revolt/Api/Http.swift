@@ -132,6 +132,10 @@ struct HTTPClient {
             .response
             .result
     }
+    
+    func fetchSessions() async -> Result<[Session], AFError> {
+        await req(method: .get, route: "/auth/session/all")
+    }
 }
 
 struct EmptyResponse: Decodable {

@@ -38,3 +38,10 @@ struct ApiInfo: Codable {
     var app: String
     var vapid: String
 }
+
+struct Session: Decodable, Identifiable {
+    var id: String
+    var name: String
+    
+    enum CodingKeys: String, CodingKey { case id = "_id", name }
+}
