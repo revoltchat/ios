@@ -8,10 +8,13 @@ struct RevoltApp: App {
         WindowGroup {
             ApplicationSwitcher()
                 .environmentObject(state)
+                .tint(state.theme.accent.color)
+                .background(state.theme.background.color)
+                .foregroundStyle(state.theme.textColor.color)
         }
     }
 }
-    
+
 struct ApplicationSwitcher: View {
     @EnvironmentObject var viewState: ViewState
 
@@ -39,6 +42,19 @@ struct InnerApp: View {
                 case .connected:
                     Home()
             }
+        }
+    }
+}
+
+extension View {
+    func placeholder<Content: View>(
+        when shouldShow: Bool,
+        alignment: Alignment = .leading,
+        @ViewBuilder placeholder: () -> Content
+    ) -> some View {
+        ZStack(alignment: alignment) {
+            placeholder().opacity(shouldShow ? 1 : 0)
+            self
         }
     }
 }

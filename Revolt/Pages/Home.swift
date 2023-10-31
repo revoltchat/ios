@@ -30,32 +30,40 @@ struct Home: View {
     
     var body: some View {
         VStack(alignment: .leading) {
-            if viewState.currentServer == nil {
-                HStack {
+            NavigationSplitView {
+                List(selection: $viewState.currentServer) {
                     NavigationLink(destination: DMList.init) {
-                        Avatar(user: viewState.currentUser!)
+                        Avatar(user: viewState.currentUser!, withPresence: true)
+                            .frame(width: 16, height: 16)
+                            .frame(width: 24, height: 24)
+
                         Text("Direct Messages")
                     }
-                    
-                    Spacer()
+                    .listRowBackground(viewState.theme.background2.color)
+
+                    Section("Servers") {
+                        ForEach(viewState.servers.elements, id: \.key) { elem in
+                            NavigationLink(value: elem.key) {
+                                ServerIcon(server: elem.value, height: 32, width: 32)
+                                Text(elem.value.name)
+                            }
+                        }
+                    }
+                    .listRowBackground(viewState.theme.background2.color)
                     
                     NavigationLink(destination: Settings.init) {
-                        Label("Settings", systemImage: "gearshape.fill")
-                    }
-                }
-                .padding(.horizontal, 16)
-            }
-
-            NavigationSplitView {
-                List(Array(viewState.servers), id: \.self.key, selection: $viewState.currentServer) { server in
-                    NavigationLink(value: server.key) {
-                        if let icon = server.value.icon {
-                            LazyImage(source: .file(icon), height: 32, width: 32, clipTo: Circle())
-                        }
+                        Image(systemName: "gearshape.fill")
+                            .resizable()
+                            .frame(width: 16, height: 16)
+                            .frame(width: 24, height: 24)
                         
-                        Text(server.value.name)
+                        Text("Settings")
                     }
+                    .listRowBackground(viewState.theme.background2.color)
                 }
+                .scrollContentBackground(.hidden)
+                .background(viewState.theme.background.color)
+
             } content: {
                 if let selectedServerId = viewState.currentServer {
                     let selectedServer = viewState.servers[selectedServerId]!
@@ -66,29 +74,33 @@ struct Home: View {
                     List(selection: $viewState.currentChannel) {
                         if let banner = selectedServer.banner {
                             LazyImage(source: .file(banner), height: 100, clipTo: RoundedRectangle(cornerRadius: 10))
+                                .listRowBackground(viewState.theme.background.color)
                                 .listRowInsets(EdgeInsets(top: 0, leading: 0, bottom: 0, trailing: 0))
                         }
 
                         ForEach(nonCategoryChannels.compactMap({ viewState.channels[$0] })) { channel in
                             ChannelNavigationLink(channel: channel)
                         }
+                        .listRowBackground(viewState.theme.background2.color)
                         
-                         ForEach(selectedServer.categories ?? []) { category in
+                        ForEach(selectedServer.categories ?? []) { category in
                             CategorySection(category: category)
                         }
+                        .listRowBackground(viewState.theme.background2.color)
                     }
+                    .scrollContentBackground(.hidden)
+                    .background(viewState.theme.background.color)
                     .listStyle(SidebarListStyle())
                     .toolbar {
                         ToolbarItem(placement: .principal) {
                             HStack {
-                                if let icon = selectedServer.icon {
-                                    LazyImage(source: .file(icon), height: 32, width: 32, clipTo: Circle())
-                                }
+                                ServerIcon(server: selectedServer, height: 32, width: 32)
                                 
                                 Text(selectedServer.name)
                             }
                         }
                     }
+                    .toolbarBackground(viewState.theme.topBar.color, for: .automatic)
                     
                 } else {
                     Text("Select a server")
@@ -105,6 +117,7 @@ struct Home: View {
                 }
                 
             }
+            .background(viewState.theme.background.color)
         }
     }
 }

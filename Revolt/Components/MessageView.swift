@@ -12,6 +12,7 @@ struct MessageReplyView: View {
     @EnvironmentObject var viewState: ViewState
     
     @Binding var mentions: [String]?
+    @Binding var channelScrollPosition: String?
     @State var dead: Bool = false
     var id: String
     var channel: String
@@ -20,7 +21,7 @@ struct MessageReplyView: View {
     var body: some View {
         let message = viewState.messages[id]
         if message != nil || dead {
-            InnerMessageReplyView(mentions: $mentions, message: message)
+            InnerMessageReplyView(mentions: $mentions, channelScrollPosition: $channelScrollPosition, message: message)
         } else {
             if !viewState.loadingMessages.contains(id) {
                 let _ = Task {
@@ -42,6 +43,7 @@ struct InnerMessageReplyView: View {
     @EnvironmentObject var viewState: ViewState
     
     @Binding var mentions: [String]?
+    @Binding var channelScrollPosition: String?
     var message: Message?
     
     var body: some View {
@@ -68,6 +70,9 @@ struct InnerMessageReplyView: View {
                         .truncationMode(.tail)
                 }
             }
+            .onTapGesture {
+                channelScrollPosition = message.id
+            }
         } else {
             Text("Unknown message")
         }
@@ -78,14 +83,16 @@ class MessageViewModel: ObservableObject {
     @Binding var message: Message
     @Binding var author: User
     @Binding var channelReplies: [Reply]
+    @Binding var channelScrollPosition: String?
 
     var viewState: ViewState
 
-    init(viewState: ViewState, message: Binding<Message>, author: Binding<User>, replies: Binding<[Reply]>) {
+    init(viewState: ViewState, message: Binding<Message>, author: Binding<User>, replies: Binding<[Reply]>, channelScrollPosition: Binding<String?>) {
         self.viewState = viewState
         self._message = message
         self._author = author
         self._channelReplies = replies
+        self._channelScrollPosition = channelScrollPosition
     }
     
     func delete() async {
@@ -134,7 +141,7 @@ struct MessageView: View {
                 if let replies = viewModel.message.replies {
                     VStack(alignment: .leading) {
                         ForEach(replies, id: \.self) { id in
-                            MessageReplyView(mentions: $viewModel.message.mentions, id: id, channel: viewModel.message.channel)
+                            MessageReplyView(mentions: $viewModel.message.mentions, channelScrollPosition: $viewModel.channelScrollPosition, id: id, channel: viewModel.message.channel)
                                 .padding(.leading, 48)
                         }
                     }
@@ -167,6 +174,7 @@ struct MessageView: View {
                         
                         if let content = viewModel.message.content {
                             Text(content)
+                                .font(.system(size: 16))
                         }
                         
                         VStack(alignment: .leading) {
@@ -180,12 +188,18 @@ struct MessageView: View {
                 .listRowSeparator(.hidden)
             }
         }
+        .background(viewState.theme.background.color)
         .sheet(isPresented: $showMemberSheet) {
-            let _ = print(1)
-            let serverMembers = Binding($viewState.members[viewState.currentServer!])!
-            let member = serverMembers[viewModel.author.id]
             let user = Binding($viewState.users[viewModel.message.author])!
-            UserSheet(user: user, member: member)
+
+            if let currentServer = viewState.currentServer {
+                let serverMembers = Binding($viewState.members[currentServer])!
+                let member = serverMembers[viewModel.author.id]
+                
+                UserSheet(user: user, member: member)
+            } else {
+                UserSheet(user: user, member: Binding.constant(nil))
+            }
         }
 
         .contextMenu {
@@ -254,9 +268,10 @@ struct MessageView_Previews: PreviewProvider {
     @State static var message = viewState.messages["01HD4VQY398JNRJY60JDY2QHA5"]!
     @State static var author = viewState.users[message.author]!
     @State static var replies: [Reply] = []
+    @State static var channelScrollPosition: String? = nil
     
     static var previews: some View {
-        MessageView(viewModel: MessageViewModel(viewState: viewState, message: $message, author: $author, replies: $replies))
+        MessageView(viewModel: MessageViewModel(viewState: viewState, message: $message, author: $author, replies: $replies, channelScrollPosition: $channelScrollPosition))
             .environmentObject(viewState)
             .previewLayout(.sizeThatFits)
     }

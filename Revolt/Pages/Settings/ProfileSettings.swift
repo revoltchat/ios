@@ -1,22 +1,21 @@
 //
-//  MemberSheet.swift
+//  ProfileSettings.swift
 //  Revolt
 //
-//  Created by Angelo on 23/10/2023.
+//  Created by Angelo on 31/10/2023.
 //
 
 import Foundation
 import SwiftUI
-import WrappingHStack
 
-struct UserSheet: View {
+struct ProfileSettings: View {
     @EnvironmentObject var viewState: ViewState
-    @Binding var user: User
-    @Binding var member: Member?
-    @State var profile: Profile?
+    @State var profile: Profile? = nil
 
     var body: some View {
         VStack(alignment: .leading) {
+            let user = viewState.currentUser!
+
             if let profile = profile {
                 ZStack(alignment: .bottomLeading) {
                     if let banner = profile.background {
@@ -46,50 +45,31 @@ struct UserSheet: View {
                     }
                     .padding(.bottom, 8)
                     .padding(.leading, 8)
-                }
-                
-                if let member = member {
-                    let server = viewState.servers[member.id.server]!
-
-                    if let roles = member.roles {
-                        Text("Roles")
-                            .font(.caption)
-                        
-                        VStack(alignment: .leading) {
-                            WrappingHStack(roles, id: \.self, spacing: .constant(8), lineSpacing: 4) { roleId in
-                                let role = server.roles![roleId]!
-                                
-                                Text(role.name)
-                                    .padding(8)
-                                    .background(RoundedRectangle(cornerRadius: 5).foregroundStyle(.gray))
-                            }
-                        }
-                        
-                        //.frame(maxHeight: .infinity)
-                    }
-                }
-                
-                if let bio = profile.content {
-                    Text("Bio")
-                        .font(.caption)
                     
-                    Text(bio)
                 }
-                
-                Spacer()
-            } else {
-                Text("Loading...")
             }
+            
+            Group {
+                Text("Profile Picture")
+                Avatar(user: user, width: 56, height: 56)
+            }
+            
+            Group {
+                if let banner = profile?.background {
+                    Text("Banner")
+                    LazyImage(source: .file(banner), height: 100, clipTo: RoundedRectangle(cornerRadius: 10))
+                }
+            }
+            
+            Spacer()
         }
         .padding(.horizontal, 16)
-        .presentationDetents([.fraction(0.4), .large])
+        .background(viewState.theme.background.color)
         .task {
-            if let profile = user.profile {
-                self.profile = profile
-            } else {
-                Task {
-                    profile = try! await viewState.http.fetchProfile(user: user.id).get()
-                }
+            profile = viewState.currentUser?.profile
+            
+            if profile == nil {
+                profile = try! await viewState.http.fetchProfile(user: viewState.currentUser!.id).get()
             }
         }
     }

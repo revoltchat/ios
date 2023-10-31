@@ -25,6 +25,7 @@ struct ReversedScrollView<Content: View>: View {
             ScrollViewReader { scrollProxy in
                 ScrollView {
                     LazyVStack(alignment: .leading) {
+                        Spacer()
                         builder(scrollProxy)
                     }
                     .padding(.horizontal, padding)

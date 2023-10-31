@@ -152,11 +152,15 @@ struct MessageBox: View {
                 .fileImporter(isPresented: $showingSelectFile, allowedContentTypes: [.item], onCompletion: onFileCompletion)
             
                 ZStack(alignment: .bottomTrailing) {
-                    TextField("Message \(channel.getName(viewState))", text: $content)
-                        .padding([.vertical, .trailing], 8)
-                        .padding(.leading, 8)
+                    TextField("", text: $content)
+                        .placeholder(when: content.isEmpty) {
+                            Text("Message \(channel.getName(viewState))")
+                        }
+                        .foregroundStyle(viewState.theme.textColor.color)
+                        .padding([.vertical, .leading, .trailing], 8)
                         .background(RoundedRectangle(cornerRadius: 16)
-                            .stroke(Color(UIColor.separator), lineWidth: 1)
+                            .fill(viewState.theme.messageBox.color)
+                            .stroke(viewState.theme.messageBoxBorder.color, lineWidth: 1)
                         )
                     
                     if !content.isEmpty || !files.isEmpty {
@@ -173,6 +177,7 @@ struct MessageBox: View {
         }
         .padding(.horizontal, 16)
         .padding(.bottom, 8)
+        .background(viewState.theme.messageBoxBackground.color)
     }
 }
 

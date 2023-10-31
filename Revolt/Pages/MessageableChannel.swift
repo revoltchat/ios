@@ -68,7 +68,8 @@ struct MessageableChannelView: View {
     
     @State var showSheet = false
     @State var foundAllMessages = false
-    
+    @State var scrollPosition: String?
+
     func viewMembers() {
         
     }
@@ -82,7 +83,7 @@ struct MessageableChannelView: View {
     }
     
     var body: some View {
-        VStack(alignment: .leading) {
+        VStack(alignment: .leading, spacing: 0) {
             List {
                 if foundAllMessages {
                     VStack(alignment: .leading) {
@@ -90,6 +91,7 @@ struct MessageableChannelView: View {
                             .font(.title)
                         Text("This is the start of your conversation.")
                     }
+                    .listRowBackground(viewState.theme.background.color)
                 } else {
                     Text("Loading more messages...")
                         .onAppear {
@@ -97,18 +99,22 @@ struct MessageableChannelView: View {
                                 foundAllMessages = await viewModel.loadMoreMessages(before: viewModel.messages.wrappedValue.first).messages.count < 50
                             }
                         }
+                        .listRowBackground(viewState.theme.background.color)
                 }
                 
                 ForEach($viewModel.messages.wrappedValue, id: \.self) { messageId in
                     let message = Binding($viewState.messages[messageId.wrappedValue])!
                     let author = Binding($viewState.users[message.author.wrappedValue])!
                     
-                    MessageView(viewModel: MessageViewModel(viewState: viewState, message: message, author: author, replies: $viewModel.replies))
+                    MessageView(viewModel: MessageViewModel(viewState: viewState, message: message, author: author, replies: $viewModel.replies, channelScrollPosition: $scrollPosition))
                 }
                 .listRowInsets(EdgeInsets(top: 8, leading: 12, bottom: 8, trailing: 12))
+                .listRowBackground(viewState.theme.background.color)
             }
+            .scrollPosition(id: $scrollPosition)
             .listStyle(.plain)
             .listRowSeparator(.hidden)
+            .background(viewState.theme.background.color)
             
             //            List(viewModel.queuedMessages, id: \.nonce) { message in
             //                GhostMessageView(message: message)
@@ -124,9 +130,10 @@ struct MessageableChannelView: View {
                     ChannelIcon(channel: viewModel.channel)
                     Image(systemName: "chevron.right")
                         .frame(height: 4)
-                }.foregroundColor(.black)
+                }
             }
         }
+        .toolbarBackground(viewState.theme.topBar.color, for: .automatic)
         .sheet(isPresented: $showSheet) {
             VStack(alignment: .leading, spacing: 12) {
                 HStack(alignment: .center) {

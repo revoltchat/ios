@@ -2,6 +2,7 @@ import Foundation
 import SwiftUI
 import Alamofire
 import ULID
+import Collections
 
 enum UserStateError: Error {
     case signInError
@@ -80,9 +81,8 @@ public class ViewState: ObservableObject {
             UserDefaults.standard.set(sessionToken, forKey: "sessionToken")
         }
     }
-    @Published var user: User? = nil
     @Published var users: [String: User] = [:]
-    @Published var servers: [String: Server] = [:]
+    @Published var servers: OrderedDictionary<String, Server> = [:]
     @Published var channels: [String: Channel] = [:]
     @Published var messages: [String: Message] = [:]
     @Published var channelMessages: [String: [String]] = [:]
@@ -112,6 +112,11 @@ public class ViewState: ObservableObject {
             UserDefaults.standard.set(currentSessionId, forKey: "currentSessionId")
         }
     }
+    @Published var theme: Theme {
+        didSet {
+            UserDefaults.standard.set(try! JSONEncoder().encode(theme), forKey: "theme")
+        }
+    }
 
     @Published var path: NavigationPath = NavigationPath()
     
@@ -120,6 +125,13 @@ public class ViewState: ObservableObject {
         self.currentServer = UserDefaults.standard.string(forKey: "currentServer")
         self.currentChannel = UserDefaults.standard.string(forKey: "currentChannel")
         self.currentSessionId = UserDefaults.standard.string(forKey: "currentSessionId")
+
+        if let theme = UserDefaults.standard.data(forKey: "theme") {
+            self.theme = try! JSONDecoder().decode(Theme.self, from: theme)
+        } else {
+            self.theme = Theme.light
+        }
+
         self.http.token = self.sessionToken
         self.users["00000000000000000000000000"] = User(id: "00000000000000000000000000", username: "Revolt", discriminator: "0000")
     }
@@ -127,7 +139,7 @@ public class ViewState: ObservableObject {
     class func preview() -> ViewState {
         let this = ViewState()
         this.state = .connected
-        this.currentUser = User(id: "0", username: "Zomatree", discriminator: "0000")
+        this.currentUser = User(id: "0", username: "Zomatree", discriminator: "0000", status: Status(text: "hello world", presence: "Busy"))
         this.users["0"] = this.currentUser!
         this.servers["0"] = Server(id: "0", name: "Testing Server", channels: ["0"], default_permissions: 0)
         this.channels["0"] = .text_channel(TextChannel(id: "0", server: "0", name: "General"))
@@ -264,7 +276,7 @@ public class ViewState: ObservableObject {
 
             case .message(let m):
                 if users[m.author] == nil {
-                    user = try! await http.fetchUser(user: m.author).get()
+                    let user = try! await http.fetchUser(user: m.author).get()
                     users[m.author] = user
                 }
     
@@ -279,13 +291,10 @@ public class ViewState: ObservableObject {
 
                     if let content = event.data.content {
                         message.content = content
-                        print(content)
                     }
                     
                     messages[event.id] = message
                 }
-
-                print(messages[event.id])
                 
             case .authenticated:
                 print("authenticated")

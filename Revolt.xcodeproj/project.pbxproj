@@ -26,6 +26,12 @@
 		17D9C2BD2ADCA48D00426857 /* Kingfisher in Frameworks */ = {isa = PBXBuildFile; productRef = 17D9C2BC2ADCA48D00426857 /* Kingfisher */; };
 		17DFB4642AE06A5D00E1D417 /* Settings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17DFB4632AE06A5D00E1D417 /* Settings.swift */; };
 		17DFB4662AE06AB900E1D417 /* MessageableChannel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17DFB4652AE06AB900E1D417 /* MessageableChannel.swift */; };
+		17E019C92AF1279100AB4663 /* AppearanceSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17E019C82AF1279100AB4663 /* AppearanceSettings.swift */; };
+		17E019CD2AF136B100AB4663 /* PresenceIndicator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17E019CC2AF136B100AB4663 /* PresenceIndicator.swift */; };
+		17E019CF2AF146AD00AB4663 /* About.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17E019CE2AF146AD00AB4663 /* About.swift */; };
+		17E019D12AF14EC000AB4663 /* ServerIcon.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17E019D02AF14EC000AB4663 /* ServerIcon.swift */; };
+		17E019D32AF17F9D00AB4663 /* ProfileSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17E019D22AF17F9D00AB4663 /* ProfileSettings.swift */; };
+		17E019D52AF1937400AB4663 /* Theme.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17E019D42AF1937400AB4663 /* Theme.swift */; };
 		17FDBA712AEAFEAC00CB7637 /* WrappingHStack in Frameworks */ = {isa = PBXBuildFile; productRef = 17FDBA702AEAFEAC00CB7637 /* WrappingHStack */; };
 		D49B705329C4D3FE009494A5 /* RevoltApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = D49B705229C4D3FE009494A5 /* RevoltApp.swift */; };
 		D49B705729C4D3FE009494A5 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = D49B705629C4D3FE009494A5 /* Assets.xcassets */; };
@@ -86,6 +92,12 @@
 		17CE2E132AE709CE0059FB3A /* UserSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserSheet.swift; sourceTree = "<group>"; };
 		17DFB4632AE06A5D00E1D417 /* Settings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Settings.swift; sourceTree = "<group>"; };
 		17DFB4652AE06AB900E1D417 /* MessageableChannel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageableChannel.swift; sourceTree = "<group>"; };
+		17E019C82AF1279100AB4663 /* AppearanceSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppearanceSettings.swift; sourceTree = "<group>"; };
+		17E019CC2AF136B100AB4663 /* PresenceIndicator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PresenceIndicator.swift; sourceTree = "<group>"; };
+		17E019CE2AF146AD00AB4663 /* About.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = About.swift; sourceTree = "<group>"; };
+		17E019D02AF14EC000AB4663 /* ServerIcon.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ServerIcon.swift; sourceTree = "<group>"; };
+		17E019D22AF17F9D00AB4663 /* ProfileSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileSettings.swift; sourceTree = "<group>"; };
+		17E019D42AF1937400AB4663 /* Theme.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Theme.swift; sourceTree = "<group>"; };
 		D49B704F29C4D3FE009494A5 /* Revolt.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Revolt.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		D49B705229C4D3FE009494A5 /* RevoltApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RevoltApp.swift; sourceTree = "<group>"; };
 		D49B705629C4D3FE009494A5 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
@@ -157,6 +169,8 @@
 				1777DD8D2ADC4336003D6C72 /* RemoteImageTextAttachment.swift */,
 				17966B642AE0842A00BAEC58 /* ChannelIcon.swift */,
 				17CE2E132AE709CE0059FB3A /* UserSheet.swift */,
+				17E019CC2AF136B100AB4663 /* PresenceIndicator.swift */,
+				17E019D02AF14EC000AB4663 /* ServerIcon.swift */,
 			);
 			path = Components;
 			sourceTree = "<group>";
@@ -164,9 +178,9 @@
 		17DFB4612AE06A0F00E1D417 /* Pages */ = {
 			isa = PBXGroup;
 			children = (
+				17E019C72AF1277D00AB4663 /* Settings */,
 				DA99EC4929D5F35400419FDA /* Home.swift */,
 				DA99EC4F29D5F35900419FDA /* Login.swift */,
-				17DFB4632AE06A5D00E1D417 /* Settings.swift */,
 				17DFB4652AE06AB900E1D417 /* MessageableChannel.swift */,
 				17966B662AE08C3000BAEC58 /* DMList.swift */,
 			);
@@ -181,6 +195,17 @@
 				17CCCF6F2ADA17B600D78D7A /* Utils.swift */,
 			);
 			path = Api;
+			sourceTree = "<group>";
+		};
+		17E019C72AF1277D00AB4663 /* Settings */ = {
+			isa = PBXGroup;
+			children = (
+				17DFB4632AE06A5D00E1D417 /* Settings.swift */,
+				17E019C82AF1279100AB4663 /* AppearanceSettings.swift */,
+				17E019CE2AF146AD00AB4663 /* About.swift */,
+				17E019D22AF17F9D00AB4663 /* ProfileSettings.swift */,
+			);
+			path = Settings;
 			sourceTree = "<group>";
 		};
 		D49B704629C4D3FE009494A5 = {
@@ -217,6 +242,7 @@
 				DA99EC4B29D5F35500419FDA /* ViewState.swift */,
 				D49B705629C4D3FE009494A5 /* Assets.xcassets */,
 				D49B705829C4D3FE009494A5 /* Preview Content */,
+				17E019D42AF1937400AB4663 /* Theme.swift */,
 			);
 			path = Revolt;
 			sourceTree = "<group>";
@@ -356,7 +382,7 @@
 					New,
 				);
 				LastSwiftUpdateCheck = 1420;
-				LastUpgradeCheck = 1420;
+				LastUpgradeCheck = 1500;
 				TargetAttributes = {
 					D49B704E29C4D3FE009494A5 = {
 						CreatedOnToolsVersion = 14.2;
@@ -434,6 +460,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				DAAA4C0729F2604A00F41E52 /* Server.swift in Sources */,
+				17E019CF2AF146AD00AB4663 /* About.swift in Sources */,
 				DAAA4C0B29F2CF1200F41E52 /* Websocket.swift in Sources */,
 				DA99EC4A29D5F35400419FDA /* Home.swift in Sources */,
 				DAAA4C0329F2548400F41E52 /* MessageBox.swift in Sources */,
@@ -444,21 +471,26 @@
 				17966B672AE08C3000BAEC58 /* DMList.swift in Sources */,
 				DA99EC5029D5F35900419FDA /* Login.swift in Sources */,
 				17DFB4642AE06A5D00E1D417 /* Settings.swift in Sources */,
+				17E019D32AF17F9D00AB4663 /* ProfileSettings.swift in Sources */,
 				DAAA4C0929F2974300F41E52 /* Http.swift in Sources */,
 				DAAA4C0E29F2D37800F41E52 /* Api.swift in Sources */,
 				17CCCF692ADA131D00D78D7A /* Emoji.swift in Sources */,
 				17CCCF672ADA109600D78D7A /* Permissions.swift in Sources */,
 				DAAA4BFF29F251ED00F41E52 /* User.swift in Sources */,
 				DAAA4BFB29F2518900F41E52 /* MessageView.swift in Sources */,
+				17E019D12AF14EC000AB4663 /* ServerIcon.swift in Sources */,
 				17BC3EFA2AD826970029D820 /* File.swift in Sources */,
 				D49B705329C4D3FE009494A5 /* RevoltApp.swift in Sources */,
 				DA99EC4C29D5F35500419FDA /* ViewState.swift in Sources */,
+				17E019C92AF1279100AB4663 /* AppearanceSettings.swift in Sources */,
 				17CE2E142AE709CE0059FB3A /* UserSheet.swift in Sources */,
 				17966B652AE0842A00BAEC58 /* ChannelIcon.swift in Sources */,
 				1777DD892ADC3C31003D6C72 /* Markdown.swift in Sources */,
+				17E019D52AF1937400AB4663 /* Theme.swift in Sources */,
 				DAAA4C0529F2560800F41E52 /* Channel.swift in Sources */,
 				175E01E02ADAB554004F6431 /* Avatar.swift in Sources */,
 				17DFB4662AE06AB900E1D417 /* MessageableChannel.swift in Sources */,
+				17E019CD2AF136B100AB4663 /* PresenceIndicator.swift in Sources */,
 				17CCCF702ADA17B600D78D7A /* Utils.swift in Sources */,
 				DAAA4C0129F251FC00F41E52 /* Message.swift in Sources */,
 				1777DD842ADC24CE003D6C72 /* ReversedSrollView.swift in Sources */,
@@ -534,6 +566,7 @@
 				DEBUG_INFORMATION_FORMAT = dwarf;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				ENABLE_TESTABILITY = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu11;
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_NO_COMMON_BLOCKS = YES;
@@ -594,6 +627,7 @@
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				ENABLE_NS_ASSERTIONS = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu11;
 				GCC_NO_COMMON_BLOCKS = YES;
 				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
@@ -606,7 +640,6 @@
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
 				SDKROOT = iphoneos;
-				SWIFT_COMPILATION_MODE = wholemodule;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				VALIDATE_PRODUCT = YES;
 			};
