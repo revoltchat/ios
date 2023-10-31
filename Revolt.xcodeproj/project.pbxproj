@@ -32,6 +32,8 @@
 		17E019D12AF14EC000AB4663 /* ServerIcon.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17E019D02AF14EC000AB4663 /* ServerIcon.swift */; };
 		17E019D32AF17F9D00AB4663 /* ProfileSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17E019D22AF17F9D00AB4663 /* ProfileSettings.swift */; };
 		17E019D52AF1937400AB4663 /* Theme.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17E019D42AF1937400AB4663 /* Theme.swift */; };
+		17E019D72AF1998300AB4663 /* MessageAttachment.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17E019D62AF1998300AB4663 /* MessageAttachment.swift */; };
+		17E019DA2AF199A600AB4663 /* MessageReply.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17E019D92AF199A600AB4663 /* MessageReply.swift */; };
 		17FDBA712AEAFEAC00CB7637 /* WrappingHStack in Frameworks */ = {isa = PBXBuildFile; productRef = 17FDBA702AEAFEAC00CB7637 /* WrappingHStack */; };
 		D49B705329C4D3FE009494A5 /* RevoltApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = D49B705229C4D3FE009494A5 /* RevoltApp.swift */; };
 		D49B705729C4D3FE009494A5 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = D49B705629C4D3FE009494A5 /* Assets.xcassets */; };
@@ -98,6 +100,8 @@
 		17E019D02AF14EC000AB4663 /* ServerIcon.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ServerIcon.swift; sourceTree = "<group>"; };
 		17E019D22AF17F9D00AB4663 /* ProfileSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileSettings.swift; sourceTree = "<group>"; };
 		17E019D42AF1937400AB4663 /* Theme.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Theme.swift; sourceTree = "<group>"; };
+		17E019D62AF1998300AB4663 /* MessageAttachment.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageAttachment.swift; sourceTree = "<group>"; };
+		17E019D92AF199A600AB4663 /* MessageReply.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageReply.swift; sourceTree = "<group>"; };
 		D49B704F29C4D3FE009494A5 /* Revolt.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Revolt.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		D49B705229C4D3FE009494A5 /* RevoltApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RevoltApp.swift; sourceTree = "<group>"; };
 		D49B705629C4D3FE009494A5 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
@@ -160,8 +164,8 @@
 		175E01DC2ADAB3EA004F6431 /* Components */ = {
 			isa = PBXGroup;
 			children = (
+				17E019D82AF1998800AB4663 /* MessageRenderer */,
 				DAAA4C0229F2548400F41E52 /* MessageBox.swift */,
-				DAAA4BFA29F2518900F41E52 /* MessageView.swift */,
 				175E01DD2ADAB3F6004F6431 /* LazyImage.swift */,
 				175E01DF2ADAB554004F6431 /* Avatar.swift */,
 				1777DD832ADC24CE003D6C72 /* ReversedSrollView.swift */,
@@ -206,6 +210,16 @@
 				17E019D22AF17F9D00AB4663 /* ProfileSettings.swift */,
 			);
 			path = Settings;
+			sourceTree = "<group>";
+		};
+		17E019D82AF1998800AB4663 /* MessageRenderer */ = {
+			isa = PBXGroup;
+			children = (
+				DAAA4BFA29F2518900F41E52 /* MessageView.swift */,
+				17E019D62AF1998300AB4663 /* MessageAttachment.swift */,
+				17E019D92AF199A600AB4663 /* MessageReply.swift */,
+			);
+			path = MessageRenderer;
 			sourceTree = "<group>";
 		};
 		D49B704629C4D3FE009494A5 = {
@@ -475,6 +489,7 @@
 				DAAA4C0929F2974300F41E52 /* Http.swift in Sources */,
 				DAAA4C0E29F2D37800F41E52 /* Api.swift in Sources */,
 				17CCCF692ADA131D00D78D7A /* Emoji.swift in Sources */,
+				17E019D72AF1998300AB4663 /* MessageAttachment.swift in Sources */,
 				17CCCF672ADA109600D78D7A /* Permissions.swift in Sources */,
 				DAAA4BFF29F251ED00F41E52 /* User.swift in Sources */,
 				DAAA4BFB29F2518900F41E52 /* MessageView.swift in Sources */,
@@ -493,6 +508,7 @@
 				17E019CD2AF136B100AB4663 /* PresenceIndicator.swift in Sources */,
 				17CCCF702ADA17B600D78D7A /* Utils.swift in Sources */,
 				DAAA4C0129F251FC00F41E52 /* Message.swift in Sources */,
+				17E019DA2AF199A600AB4663 /* MessageReply.swift in Sources */,
 				1777DD842ADC24CE003D6C72 /* ReversedSrollView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

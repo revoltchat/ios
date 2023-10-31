@@ -81,7 +81,22 @@ struct HTTPClient {
     }
     
     func deleteMessage(channel: String, message: String) async -> Result<EmptyResponse, AFError> {
-        await req(method: .delete, route: "/channels/\(channel)/messages/\(message)")
+        let req = self.session.request(
+            "\(baseURL)/channels/\(channel)/messages/\(message)",
+            method: .delete,
+            headers: token.map({ HTTPHeaders(dictionaryLiteral: ("x-session-token", $0)) })
+        )
+        
+        let response = await req.serializingString()
+            .response
+        
+        let code = response.response?.statusCode
+        
+        if ![200, 201, 202, 203, 204, 205, 206, 207, 208, 226].contains(code) {
+            return Result.failure(AFError.responseSerializationFailed(reason: .inputFileNil))
+        }
+        
+        return response.result.map({ _ in EmptyResponse() })
     }
     
     func fetchHistory(channel: String, limit: Int, before: String?) async -> Result<FetchHistory, AFError> {

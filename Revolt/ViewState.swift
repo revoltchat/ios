@@ -306,6 +306,14 @@ public class ViewState: ObservableObject {
                 
             case .channel_stop_typing(let e):
                 currentlyTyping[e.channel]?.removeAll(where: { $0 == e.id })
+                
+            case .message_delete(let e):
+                if var channel = channelMessages[e.channel] {
+                    if let index = channel.firstIndex(of: e.id) {
+                        channel.remove(at: index)
+                        channelMessages[e.channel] = channel
+                    }
+                }
         }
     }
 }

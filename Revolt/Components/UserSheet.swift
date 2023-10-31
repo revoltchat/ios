@@ -82,6 +82,7 @@ struct UserSheet: View {
             }
         }
         .padding(.horizontal, 16)
+        .background(viewState.theme.background.color)
         .presentationDetents([.fraction(0.4), .large])
         .task {
             if let profile = user.profile {

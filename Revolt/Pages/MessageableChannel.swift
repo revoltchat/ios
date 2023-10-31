@@ -182,8 +182,9 @@ struct MessageableChannelView: View {
             }
             .padding(.horizontal, 16)
             .padding(.vertical, 16)
+            .frame(maxWidth: .infinity)
+            .background(viewState.theme.background.color)
             .presentationDetents([.fraction(0.4)])
         }
-        //.navigationBarTitleDisplayMode(.inline)
     }
 }
