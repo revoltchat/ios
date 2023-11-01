@@ -14,11 +14,17 @@ struct Settings: View {
     var body: some View {
         List {
             Section("Revolt") {
-                NavigationLink("Profile", destination: ProfileSettings.init)
+                NavigationLink(destination: ProfileSettings.init) {
+                    Image(systemName: "person.fill")
+                    Text("Profile")
+                }
                 
-                NavigationLink("Sessions", destination: SessionsSettings.init)
+                NavigationLink(destination: SessionsSettings.init) {
+                    Image(systemName: "shield.fill")
+                    Text("Sessions")
+                }
                 
-                NavigationLink("Appearance") {
+                NavigationLink {
                     AppearanceSettings(
                         accent: viewState.theme.accent.color,
                         background: viewState.theme.background.color,
@@ -29,19 +35,29 @@ struct Settings: View {
                         topBar: viewState.theme.topBar.color,
                         messageBoxBorder: viewState.theme.messageBoxBorder.color
                     )
+                } label: {
+                    Image(systemName: "paintpalette.fill")
+                    Text("Appearance")
                 }
             }
             .listRowBackground(viewState.theme.background2.color)
 
             
             Section("Misc") {
-                NavigationLink("About", destination: About.init)
+                NavigationLink(destination: About.init) {
+                    Image(systemName: "info.circle.fill")
+                    Text("About")
+                }
 
                 Button {
                     viewState.logout()
                 } label: {
-                    Text("Logout")
-                        .foregroundStyle(.red)
+                    HStack {
+                        Image(systemName: "arrow.left.square")
+                            .foregroundStyle(.red)
+                        Text("Logout")
+                            .foregroundStyle(.red)
+                    }
                 }
             }
             .listRowBackground(viewState.theme.background2.color)
