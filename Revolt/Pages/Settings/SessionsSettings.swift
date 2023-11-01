@@ -27,6 +27,17 @@ struct SessionsSettings: View {
             Section("Active Sessions") {
                 ForEach($sessions.filter({ $0.id != viewState.currentSessionId }).sorted(by: { $0.id > $1.id })) { session in
                     SessionView(session: session.wrappedValue)
+                        .swipeActions(edge: .trailing) {
+                            Button {
+                                Task {
+                                    let _ = try! await viewState.http.deleteSession(session: session.id).get()
+                                    sessions = sessions.filter({ $0.id != session.id })
+                                }
+                            } label: {
+                                Label("Delete", systemImage: "trash.fill")
+                            }
+                            .tint(.red)
+                        }
                 }
             }
             .listRowBackground(viewState.theme.background2.color)
@@ -50,18 +61,16 @@ struct SessionView: View {
     @EnvironmentObject var viewState: ViewState
     var session: Session
     
-    func delete() {
-        
-    }
-    
     var body: some View {
         HStack(alignment: .center) {
             Image(systemName: "lock")
                 .resizable()
+                .aspectRatio(contentMode: .fit)
                 .frame(width: 24, height: 24)
             
             VStack(alignment: .leading) {
                 Text(session.name)
+                    .bold()
                 let created = createdAt(id: session.id)
                 let days = Calendar.current.dateComponents([.day], from: created, to: Date.now).day!
                 
@@ -73,12 +82,6 @@ struct SessionView: View {
             }
             .padding(.leading, 16)
             .padding(.vertical, 8)
-        }
-        .swipeActions(edge: .trailing) {
-            Button(action: delete, label: {
-                Label("Delete", systemImage: "trash.fill")
-            })
-            .tint(.red)
         }
     }
 }
