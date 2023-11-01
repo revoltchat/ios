@@ -57,4 +57,22 @@ extension View {
             self
         }
     }
+
+    @ViewBuilder
+    func `if`<Content: View>(_ conditional: Bool, content: (Self) -> Content) -> some View {
+        if conditional {
+            content(self)
+        } else {
+            self
+        }
+    }
+    
+    @ViewBuilder
+    func `if`<Content: View, Else: View>(_ conditional: Bool, content: (Self) -> Content, else other: (Self) -> Else) -> some View {
+        if conditional {
+            content(self)
+        } else {
+            other(self)
+        }
+    }
 }

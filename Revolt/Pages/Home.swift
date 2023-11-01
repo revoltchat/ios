@@ -73,9 +73,16 @@ struct Home: View {
 
                     List(selection: $viewState.currentChannel) {
                         if let banner = selectedServer.banner {
-                            LazyImage(source: .file(banner), height: 100, clipTo: RoundedRectangle(cornerRadius: 10))
-                                .listRowBackground(viewState.theme.background.color)
-                                .listRowInsets(EdgeInsets(top: 0, leading: 0, bottom: 0, trailing: 0))
+                            if nonCategoryChannels.isEmpty {
+                                LazyImage(source: .file(banner), height: 100, clipTo: RoundedRectangle(cornerRadius: 10))
+                                    .listRowBackground(viewState.theme.background.color)
+                                    .listRowInsets(EdgeInsets(top: 0, leading: 0, bottom: 0, trailing: 0))
+
+                            } else {
+                                LazyImage(source: .file(banner), height: 100, clipTo: UnevenRoundedRectangle(topLeadingRadius: 10, bottomLeadingRadius: 0, bottomTrailingRadius: 0, topTrailingRadius: 10, style: .continuous))
+                                    .listRowBackground(viewState.theme.background.color)
+                                    .listRowInsets(EdgeInsets(top: 0, leading: 0, bottom: 0, trailing: 0))
+                            }
                         }
 
                         ForEach(nonCategoryChannels.compactMap({ viewState.channels[$0] })) { channel in
