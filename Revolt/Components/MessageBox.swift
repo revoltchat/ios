@@ -146,6 +146,7 @@ struct MessageBox: View {
                 Button(action: { showingSelectFile.toggle() }) {
                     Image(systemName: "plus.circle")
                         .resizable()
+                        .foregroundStyle(.gray)
                         .scaledToFit()
                         .frame(width: 28, height: 28)
                 }

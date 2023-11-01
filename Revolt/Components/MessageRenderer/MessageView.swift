@@ -121,8 +121,8 @@ struct MessageView: View {
         .sheet(isPresented: $showMemberSheet) {
             let user = Binding($viewState.users[viewModel.message.author])!
 
-            if let currentServer = viewState.currentServer {
-                let serverMembers = Binding($viewState.members[currentServer])!
+            if case .server(let serverId) = viewState.currentServer {
+                let serverMembers = Binding($viewState.members[serverId])!
                 let member = serverMembers[viewModel.author.id]
                 
                 UserSheet(user: user, member: member)

@@ -17,7 +17,7 @@ struct About: View {
 
             Text("Revolt on IOS")
 
-            Text("0.0.1")
+            Text(Bundle.main.releaseVersionNumber!)
                 .font(.caption)
 
             Spacer()

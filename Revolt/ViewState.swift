@@ -70,6 +70,20 @@ struct QueuedMessage {
     var content: String
 }
 
+enum MainSelection: Hashable, Codable {
+    case server(String)
+    case dms
+    
+    var id: String? {
+        switch self {
+            case .server(let id):
+                id
+            case .dms:
+                nil
+        }
+    }
+}
+
 @MainActor
 public class ViewState: ObservableObject {
     var http: HTTPClient = HTTPClient(token: nil, baseURL: "https://api.revolt.chat")
@@ -95,9 +109,9 @@ public class ViewState: ObservableObject {
     @Published var loadingMessages: Set<String> = Set()
     @Published var currentlyTyping: [String: [String]] = [:]
 
-    @Published var currentServer: String? = nil {
+    @Published var currentServer: MainSelection? = nil {
         didSet {
-            UserDefaults.standard.set(currentServer, forKey: "currentServer")
+            UserDefaults.standard.set(try! JSONEncoder().encode(currentServer), forKey: "currentServer")
         }
     }
 
@@ -121,13 +135,17 @@ public class ViewState: ObservableObject {
     @Published var path: NavigationPath = NavigationPath()
     
     init() {
+        let decoder = JSONDecoder()
+
         self.sessionToken = UserDefaults.standard.string(forKey: "sessionToken")
-        self.currentServer = UserDefaults.standard.string(forKey: "currentServer")
+        if let currentServer = UserDefaults.standard.data(forKey: "currentServer") {
+            self.currentServer = try! decoder.decode(MainSelection.self, from: currentServer)
+        }
         self.currentChannel = UserDefaults.standard.string(forKey: "currentChannel")
         self.currentSessionId = UserDefaults.standard.string(forKey: "currentSessionId")
 
         if let theme = UserDefaults.standard.data(forKey: "theme") {
-            self.theme = try! JSONDecoder().decode(Theme.self, from: theme)
+            self.theme = try! decoder.decode(Theme.self, from: theme)
         } else {
             self.theme = Theme.light
         }
@@ -147,7 +165,7 @@ public class ViewState: ObservableObject {
         this.messages["01HDEX6M2E3SHY8AC2S6B9SEAW"] = Message(id: "01HDEX6M2E3SHY8AC2S6B9SEAW", content: "reply", author: "0", channel: "0")
         this.channelMessages["0"] = ["01HD4VQY398JNRJY60JDY2QHA5", "01HDEX6M2E3SHY8AC2S6B9SEAW"]
         this.members["0"] = ["0": Member(id: MemberId(server: "0", user: "0"), joined_at: "")]
-        this.currentServer = "0"
+        this.currentServer = .server("0")
         this.currentChannel = "0"
         
         for i in (1...9) {

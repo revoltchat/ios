@@ -25,14 +25,15 @@ struct CategorySection: View {
     }
 }
 
+
 struct Home: View {
     @EnvironmentObject var viewState: ViewState
-    
+
     var body: some View {
         VStack(alignment: .leading) {
             NavigationSplitView {
                 List(selection: $viewState.currentServer) {
-                    NavigationLink(destination: DMList.init) {
+                    NavigationLink(value: MainSelection.dms) {
                         Avatar(user: viewState.currentUser!, withPresence: true)
                             .frame(width: 16, height: 16)
                             .frame(width: 24, height: 24)
@@ -43,7 +44,7 @@ struct Home: View {
 
                     Section("Servers") {
                         ForEach(viewState.servers.elements, id: \.key) { elem in
-                            NavigationLink(value: elem.key) {
+                            NavigationLink(value: MainSelection.server(elem.key)) {
                                 ServerIcon(server: elem.value, height: 32, width: 32)
                                 Text(elem.value.name)
                             }
@@ -65,52 +66,108 @@ struct Home: View {
                 .background(viewState.theme.background.color)
 
             } content: {
-                if let selectedServerId = viewState.currentServer {
-                    let selectedServer = viewState.servers[selectedServerId]!
-                    
-                    let categoryChannels = selectedServer.categories?.flatMap(\.channels) ?? []
-                    let nonCategoryChannels = selectedServer.channels.filter({ !categoryChannels.contains($0) })
-
-                    List(selection: $viewState.currentChannel) {
-                        if let banner = selectedServer.banner {
-                            if nonCategoryChannels.isEmpty {
-                                LazyImage(source: .file(banner), height: 100, clipTo: RoundedRectangle(cornerRadius: 10))
-                                    .listRowBackground(viewState.theme.background.color)
-                                    .listRowInsets(EdgeInsets(top: 0, leading: 0, bottom: 0, trailing: 0))
-
-                            } else {
-                                LazyImage(source: .file(banner), height: 100, clipTo: UnevenRoundedRectangle(topLeadingRadius: 10, bottomLeadingRadius: 0, bottomTrailingRadius: 0, topTrailingRadius: 10, style: .continuous))
-                                    .listRowBackground(viewState.theme.background.color)
-                                    .listRowInsets(EdgeInsets(top: 0, leading: 0, bottom: 0, trailing: 0))
-                            }
-                        }
-
-                        ForEach(nonCategoryChannels.compactMap({ viewState.channels[$0] })) { channel in
-                            ChannelNavigationLink(channel: channel)
-                        }
-                        .listRowBackground(viewState.theme.background2.color)
+                switch viewState.currentServer {
+                    case .server(let selectedServerId):
+                        let selectedServer = viewState.servers[selectedServerId]!
                         
-                        ForEach(selectedServer.categories ?? []) { category in
-                            CategorySection(category: category)
+                        let categoryChannels = selectedServer.categories?.flatMap(\.channels) ?? []
+                        let nonCategoryChannels = selectedServer.channels.filter({ !categoryChannels.contains($0) })
+                        
+                        List(selection: $viewState.currentChannel) {
+                            if let banner = selectedServer.banner {
+                                if nonCategoryChannels.isEmpty {
+                                    LazyImage(source: .file(banner), height: 100, clipTo: RoundedRectangle(cornerRadius: 10))
+                                        .listRowBackground(viewState.theme.background.color)
+                                        .listRowInsets(EdgeInsets(top: 0, leading: 0, bottom: 0, trailing: 0))
+                                    
+                                } else {
+                                    LazyImage(source: .file(banner), height: 100, clipTo: UnevenRoundedRectangle(topLeadingRadius: 10, bottomLeadingRadius: 0, bottomTrailingRadius: 0, topTrailingRadius: 10, style: .continuous))
+                                        .listRowBackground(viewState.theme.background.color)
+                                        .listRowInsets(EdgeInsets(top: 0, leading: 0, bottom: 0, trailing: 0))
+                                }
+                            }
+                            
+                            ForEach(nonCategoryChannels.compactMap({ viewState.channels[$0] })) { channel in
+                                ChannelNavigationLink(channel: channel)
+                            }
+                            .listRowBackground(viewState.theme.background2.color)
+                            
+                            ForEach(selectedServer.categories ?? []) { category in
+                                CategorySection(category: category)
+                            }
+                            .listRowBackground(viewState.theme.background2.color)
                         }
-                        .listRowBackground(viewState.theme.background2.color)
-                    }
-                    .scrollContentBackground(.hidden)
-                    .background(viewState.theme.background.color)
-                    .listStyle(SidebarListStyle())
-                    .toolbar {
-                        ToolbarItem(placement: .principal) {
-                            HStack {
-                                ServerIcon(server: selectedServer, height: 32, width: 32)
-                                
-                                Text(selectedServer.name)
+                        .scrollContentBackground(.hidden)
+                        .background(viewState.theme.background.color)
+                        .listStyle(SidebarListStyle())
+                        .toolbar {
+                            ToolbarItem(placement: .principal) {
+                                HStack {
+                                    ServerIcon(server: selectedServer, height: 32, width: 32)
+                                    
+                                    Text(selectedServer.name)
+                                }
                             }
                         }
-                    }
-                    .toolbarBackground(viewState.theme.topBar.color, for: .automatic)
-                    
-                } else {
-                    Text("Select a server")
+                        .toolbarBackground(viewState.theme.topBar.color, for: .automatic)
+
+                    case .dms:
+                        List(selection: $viewState.currentChannel) {
+                            NavigationLink(destination: Text("Friends")) {
+                                Image(systemName: "person.fill")
+                                    .symbolRenderingMode(.hierarchical)
+                                    .resizable()
+                                    .frame(width: 16, height: 16)
+                                    .frame(width: 24, height: 24)
+                                
+                                Text("Friends")
+                            }
+                            .listRowBackground(viewState.theme.background2.color)
+                            
+                            let channel: SavedMessages = viewState.dms.compactMap { channel in
+                                if case .saved_messages(let c) = channel {
+                                    return c
+                                }
+                                
+                                return nil
+                            }.first!
+                            
+                            NavigationLink(value: channel.id) {
+                                ChannelIcon(channel: .saved_messages(channel))
+                            }
+                            .listRowBackground(viewState.theme.background2.color)
+                            
+                            Section("Conversations") {
+                                ForEach(viewState.dms.filter {
+                                    switch $0 {
+                                        case .saved_messages(_):
+                                            return false
+                                        default:
+                                            return true
+                                    }
+                                }) { channel in
+                                    NavigationLink(value: channel.id) {
+                                        ChannelIcon(channel: channel)
+                                    }
+                                }
+                            }
+                            .listRowBackground(viewState.theme.background2.color)
+                        }
+                        .scrollContentBackground(.hidden)
+                        .background(viewState.theme.background.color)
+                        .listStyle(SidebarListStyle())
+                        .toolbar {
+                            ToolbarItem(placement: .principal) {
+                                HStack {
+                                    Avatar(user: viewState.currentUser!, width: 32, height: 32)
+                                    
+                                    Text("Direct Messages")
+                                }
+                            }
+                        }
+                        .toolbarBackground(viewState.theme.topBar.color, for: .automatic)
+                    case nil:
+                        Text("Select a server")
                 }
             } detail: {
                 if let selectedChannel = viewState.currentChannel {
