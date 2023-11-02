@@ -21,10 +21,21 @@ struct ApplicationSwitcher: View {
     @ViewBuilder
     var body: some View {
         if viewState.sessionToken != nil {
+//             VStack(alignment: .leading) {
+//                HStack {
+//                    Spacer()
+//                    Text("Reconnecting")
+//                        .foregroundStyle(.black)
+//                        .bold()
+//                    Spacer()
+//                }
+//                .background(.green)
+
             InnerApp()
                 .task {
                     await viewState.backgroundWsTask()
                 }
+ //            }
         } else {
             Login()
         }

@@ -28,6 +28,7 @@ struct CategorySection: View {
 
 struct Home: View {
     @EnvironmentObject var viewState: ViewState
+    @State var showJoinServerSheet: Bool = false
 
     var body: some View {
         VStack(alignment: .leading) {
@@ -52,6 +53,20 @@ struct Home: View {
                     }
                     .listRowBackground(viewState.theme.background2.color)
                     
+                    Button {
+                        showJoinServerSheet.toggle()
+                    } label: {
+                        HStack {
+                            Image(systemName: "plus")
+                                .resizable()
+                                .frame(width: 16, height: 16)
+                                .frame(width: 24, height: 24)
+                            
+                            Text("Add a server")
+                        }
+                    }
+                    .listRowBackground(viewState.theme.background2.color)
+                    
                     NavigationLink(destination: Settings.init) {
                         Image(systemName: "gearshape.fill")
                             .resizable()
@@ -61,6 +76,7 @@ struct Home: View {
                         Text("Settings")
                     }
                     .listRowBackground(viewState.theme.background2.color)
+                    
                 }
                 .scrollContentBackground(.hidden)
                 .background(viewState.theme.background.color)
@@ -182,6 +198,7 @@ struct Home: View {
                 
             }
             .background(viewState.theme.background.color)
+            .sheet(isPresented: $showJoinServerSheet, content: JoinServer.init)
         }
     }
 }

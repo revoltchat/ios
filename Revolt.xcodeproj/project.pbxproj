@@ -35,6 +35,7 @@
 		17E019D72AF1998300AB4663 /* MessageAttachment.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17E019D62AF1998300AB4663 /* MessageAttachment.swift */; };
 		17E019DA2AF199A600AB4663 /* MessageReply.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17E019D92AF199A600AB4663 /* MessageReply.swift */; };
 		17E019DC2AF1B25100AB4663 /* SessionsSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17E019DB2AF1B25100AB4663 /* SessionsSettings.swift */; };
+		17E28E082AF319D500F6069F /* JoinServer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17E28E072AF319D500F6069F /* JoinServer.swift */; };
 		17FDBA712AEAFEAC00CB7637 /* WrappingHStack in Frameworks */ = {isa = PBXBuildFile; productRef = 17FDBA702AEAFEAC00CB7637 /* WrappingHStack */; };
 		D49B705329C4D3FE009494A5 /* RevoltApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = D49B705229C4D3FE009494A5 /* RevoltApp.swift */; };
 		D49B705729C4D3FE009494A5 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = D49B705629C4D3FE009494A5 /* Assets.xcassets */; };
@@ -104,6 +105,7 @@
 		17E019D62AF1998300AB4663 /* MessageAttachment.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageAttachment.swift; sourceTree = "<group>"; };
 		17E019D92AF199A600AB4663 /* MessageReply.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageReply.swift; sourceTree = "<group>"; };
 		17E019DB2AF1B25100AB4663 /* SessionsSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SessionsSettings.swift; sourceTree = "<group>"; };
+		17E28E072AF319D500F6069F /* JoinServer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JoinServer.swift; sourceTree = "<group>"; };
 		D49B704F29C4D3FE009494A5 /* Revolt.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Revolt.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		D49B705229C4D3FE009494A5 /* RevoltApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RevoltApp.swift; sourceTree = "<group>"; };
 		D49B705629C4D3FE009494A5 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
@@ -189,6 +191,7 @@
 				DA99EC4F29D5F35900419FDA /* Login.swift */,
 				17DFB4652AE06AB900E1D417 /* MessageableChannel.swift */,
 				17966B662AE08C3000BAEC58 /* DMList.swift */,
+				17E28E072AF319D500F6069F /* JoinServer.swift */,
 			);
 			path = Pages;
 			sourceTree = "<group>";
@@ -482,6 +485,7 @@
 				DA99EC4A29D5F35400419FDA /* Home.swift in Sources */,
 				DAAA4C0329F2548400F41E52 /* MessageBox.swift in Sources */,
 				17BC3EFC2AD82A1B0029D820 /* Member.swift in Sources */,
+				17E28E082AF319D500F6069F /* JoinServer.swift in Sources */,
 				175E01DE2ADAB3F6004F6431 /* LazyImage.swift in Sources */,
 				17E019DC2AF1B25100AB4663 /* SessionsSettings.swift in Sources */,
 				17CCCF6B2ADA14CB00D78D7A /* Role.swift in Sources */,

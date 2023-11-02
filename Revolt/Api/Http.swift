@@ -169,6 +169,10 @@ struct HTTPClient {
     func deleteSession(session: String) async -> Result<EmptyResponse, AFError> {
         await req(method: .delete, route: "/auth/session/\(session)")
     }
+    
+    func joinServer(code: String) async -> Result<JoinResponse, AFError> {
+        await req(method: .post, route: "/invites/\(code)")
+    }
 }
 
 struct EmptyResponse {
@@ -198,4 +202,10 @@ struct AutumnResponse: Decodable {
 
 struct AutumnPayload: Encodable {
     var file: Data
+}
+
+struct JoinResponse: Decodable {
+    var type: String
+    var channels: [Channel]
+    var server: Server
 }

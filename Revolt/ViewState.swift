@@ -70,7 +70,7 @@ struct QueuedMessage {
     var content: String
 }
 
-enum MainSelection: Hashable, Codable {
+enum MainSelection: Hashable {
     case server(String)
     case dms
     
@@ -111,7 +111,7 @@ public class ViewState: ObservableObject {
 
     @Published var currentServer: MainSelection? = nil {
         didSet {
-            UserDefaults.standard.set(try! JSONEncoder().encode(currentServer), forKey: "currentServer")
+            UserDefaults.standard.set(currentServer?.id, forKey: "currentServer")
         }
     }
 
@@ -138,9 +138,11 @@ public class ViewState: ObservableObject {
         let decoder = JSONDecoder()
 
         self.sessionToken = UserDefaults.standard.string(forKey: "sessionToken")
-        if let currentServer = UserDefaults.standard.data(forKey: "currentServer") {
-            self.currentServer = try! decoder.decode(MainSelection.self, from: currentServer)
+    
+        if let currentServer = UserDefaults.standard.string(forKey: "currentServer") {
+            self.currentServer = .server(currentServer)
         }
+    
         self.currentChannel = UserDefaults.standard.string(forKey: "currentChannel")
         self.currentSessionId = UserDefaults.standard.string(forKey: "currentSessionId")
 
@@ -352,6 +354,19 @@ public class ViewState: ObservableObject {
         path = NavigationPath()
 
         ws?.stop()
+    }
+    
+    func joinServer(code: String) async -> JoinResponse {
+        let response = try! await http.joinServer(code: code).get()
+        
+        for channel in response.channels {
+            channels[channel.id] = channel
+            channelMessages[channel.id] = []
+        }
+        
+        servers[response.server.id] = response.server
+        
+        return response
     }
 }
 
