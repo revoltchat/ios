@@ -13,6 +13,7 @@ enum LoginState {
     case Success
     case Mfa(ticket: String, methods: [String])
     case Disabled
+    case Invalid
 }
 
 struct LoginSuccess: Decodable {
@@ -194,8 +195,12 @@ public class ViewState: ObservableObject {
     private func innerSignIn(_ body: [String: Any], _ callback: @escaping((LoginState) -> ())) async {
         AF.request("https://api.revolt.chat/auth/session/login", method: .post, parameters: body, encoding: JSONEncoding.default)
             .responseData { response in
+
                 switch response.result {
                     case .success(let data):
+                        if [401, 500].contains(response.response!.statusCode) {
+                            return callback(.Invalid)
+                        }
                         do {
                             let result = try JSONDecoder().decode(LoginResponse.self, from: data)
                             switch result {
@@ -212,7 +217,7 @@ public class ViewState: ObservableObject {
                                     return callback(.Disabled)
                             }
                         } catch {}
-                    case .failure(let err):
+                    case .failure(_):
                         ()
                 }
             }
