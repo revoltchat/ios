@@ -91,12 +91,12 @@ struct MessageView: View {
                                 }
 
                             Text(createdAt(id: viewModel.message.id).formatted())
-                                .font(.footnote)
+                                .font(.caption2)
                                 .foregroundStyle(.gray)
                             
                             if viewModel.message.edited != nil {
                                 Text("(edited)")
-                                    .font(.footnote)
+                                    .font(.caption2)
                                     .foregroundStyle(.gray)
                             }
                         }
