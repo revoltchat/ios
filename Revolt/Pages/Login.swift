@@ -4,25 +4,35 @@ struct Login: View {
     @State private var path = NavigationPath()
     @State private var mfaTicket = ""
     @State private var mfaMethods: [String] = []
+    
+    @Environment(\.colorScheme) var colorScheme: ColorScheme
 
     var body: some View {
         NavigationStack(path: $path) {
             VStack {
                 Spacer()
                 Group {
-                    Image("wide")
-                        .colorInvert()
-                        .padding(.bottom, 20)
+                    if colorScheme == .light {
+                        Image("wide")
+                            .colorInvert()
+                            .padding(.bottom, 20)
+                    } else {
+                        Image("wide")
+                            .padding(.bottom, 20)
+                    }
                     Text("Find your community, connect with the world.")
                         .font(.title)
                         .fontWeight(.bold)
                         .multilineTextAlignment(.center)
                         .padding(.horizontal)
+                        .foregroundColor((colorScheme == .light) ? Color.black : Color.white)
                     Text("Revolt is one of the best ways to stay connected with your friends and community, anywhere, anytime.")
                         .multilineTextAlignment(.center)
                         .padding(.horizontal, 55.0)
                         .padding(.top, 10.0)
                         .font(.footnote)
+                        .foregroundColor((colorScheme == .light) ? Color.black : Color.white)
+
                 }
 
                 Spacer()
@@ -31,15 +41,15 @@ struct Login: View {
                     NavigationLink("Log In", value: "login")
                         .padding(.vertical, 10)
                         .frame(width: 200.0)
-                        .background(.black)
-                        .foregroundColor(.white)
+                        .background((colorScheme == .light) ? Color.black : Color.white)
+                        .foregroundColor((colorScheme == .light) ? Color.white : Color.black)
                         .cornerRadius(50)
 
                     NavigationLink("Sign Up", value: "signup")
                         .padding(.vertical, 10)
                         .frame(width: 200.0)
                         .foregroundColor(.black)
-                        .background(Color(white: 0.851))
+                        .background((colorScheme == .light) ? Color(white: 0.851) : Color(white: 0.4))
                         .cornerRadius(50)
                 }
 
@@ -92,6 +102,8 @@ struct LogIn: View {
 
     @FocusState private var focus1: Bool
     @FocusState private var focus2: Bool
+    
+    @Environment(\.colorScheme) var colorScheme: ColorScheme
 
     private func logIn() async {
         await viewState.signIn(email: email, password: password, callback: { state in
@@ -109,6 +121,9 @@ struct LogIn: View {
 
                 case .Success:
                     path = NavigationPath()
+                
+                case .Invalid:
+                    self.errorMessage = "Invalid email and/or password"
             }
         })
     }
@@ -121,18 +136,21 @@ struct LogIn: View {
                 .font(.title)
                 .fontWeight(.bold)
                 .padding()
+                .foregroundStyle((colorScheme == .light) ? Color.black : Color.white)
 
             Group {
                 if let error = errorMessage {
                     Text(error)
+                        .foregroundStyle(Color.red)
                 }
                 TextField(
                     "Email",
                     text: $email
                 )
                     .padding()
-                    .background(Color(white: 0.851))
+                    .background((colorScheme == .light) ? Color(white: 0.851) : Color(white: 0.2))
                     .clipShape(.rect(cornerRadius: 5))
+                    .foregroundStyle((colorScheme == .light) ? Color.black : Color.white)
 
                 ZStack(alignment: .trailing) {
                     TextField(
@@ -140,10 +158,11 @@ struct LogIn: View {
                         text: $password
                     )
                         .padding()
-                        .background(Color(white: 0.851))
+                        .background((colorScheme == .light) ? Color(white: 0.851) : Color(white: 0.2))
                         .clipShape(.rect(cornerRadius: 5))
                         .modifier(PasswordModifier())
                         .textContentType(.password)
+                        .foregroundStyle((colorScheme == .light) ? Color.black : Color.white)
                         .opacity(showPassword ? 1 : 0)
                         .focused($focus1)
 
@@ -152,10 +171,11 @@ struct LogIn: View {
                         text: $password
                     )
                         .padding()
-                        .background(Color(white: 0.851))
+                        .background((colorScheme == .light) ? Color(white: 0.851) : Color(white: 0.2))
                         .clipShape(.rect(cornerRadius: 5))
                         .modifier(PasswordModifier())
                         .textContentType(.password)
+                        .foregroundStyle((colorScheme == .light) ? Color.black : Color.white)
                         .opacity(showPassword ? 0 : 1)
                         .focused($focus2)
 
@@ -167,15 +187,26 @@ struct LogIn: View {
                             focus2 = true
                         }
                     }, label: {
-                        Image(systemName: self.showPassword ? "eye.slash.fill" : "eye.fill")
-                            .font(.system(size: 16, weight: .regular))
-                            .padding()
+                        if colorScheme == .light {
+                            Image(systemName: self.showPassword ? "eye.slash.fill" : "eye.fill")
+                                .font(.system(size: 16, weight: .regular))
+                                .padding()
+                        } else {
+                            Image(systemName: self.showPassword ? "eye.slash.fill" : "eye.fill")
+                                .font(.system(size: 16, weight: .regular))
+                                .padding()
+                                .colorInvert()
+                        }
                     })
                 }
 
                 NavigationLink("Forgot password?", destination: ResendEmail())
+                    .background((colorScheme == .light) ? Color(white: 0.9) : Color(white: 0.1))
+                    .foregroundStyle((colorScheme == .light) ? Color.black : Color.white)
+                    .frame(width: 180)
+                    .clipShape(.rect(cornerRadius: 50))
             }
-            .padding()
+            .padding(.bottom)
 
             Spacer()
 
@@ -184,7 +215,7 @@ struct LogIn: View {
             }
                 .padding(.vertical, 10)
                 .frame(width: 200.0)
-                .foregroundColor(.black)
+                .foregroundStyle(.black)
                 .background(Color(white: 0.851))
                 .clipShape(.rect(cornerRadius: 50))
 
@@ -192,7 +223,11 @@ struct LogIn: View {
 
             Group {
                 NavigationLink("Resend a verification email", destination: ResendEmail())
+                    .foregroundColor((colorScheme == .light) ? Color.black : Color.white)
+                    .padding(15)
                 NavigationLink("Using a password manager?", destination: ResendEmail())
+                    .foregroundColor((colorScheme == .light) ? Color.black : Color.white)
+                    .padding(15)
             }
 
             Spacer()
@@ -303,8 +338,8 @@ struct ResendEmail: View {
     }
 }
 
-struct Login_Previews: PreviewProvider {
-    static var previews: some View {
-        Login()
-    }
+
+
+#Preview {
+    Login()
 }
