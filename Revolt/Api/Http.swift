@@ -7,18 +7,21 @@
 
 import Foundation
 import Alamofire
+import os
 
 struct HTTPClient {
     var token: String?
     var baseURL: String
     var apiInfo: ApiInfo?
     var session: Alamofire.Session
+    var logger: Logger
 
     init(token: String?, baseURL: String) {
         self.token = token
         self.baseURL = baseURL
         self.apiInfo = nil
         self.session = Alamofire.Session()
+        self.logger = Logger(subsystem: "chat.revolt.Revolt", category: "HTTP")
     }
 
     func req<
@@ -30,6 +33,7 @@ struct HTTPClient {
         parameters: I? = nil as Int?,
         encoder: ParameterEncoder = JSONParameterEncoder.default
     ) async -> Result<O, AFError> {
+        
         let req = self.session.request(
             "\(baseURL)\(route)",
             method: method,
@@ -41,8 +45,10 @@ struct HTTPClient {
         let response = await req.serializingString()
             .response
         
-        let code = response.response?.statusCode
+        let code = response.response?.statusCode ?? 500
         
+        logger.debug("Received response \(code) for route \(method.rawValue) \(route) with result \(try! response.result.get())")
+
         if ![200, 201, 202, 203, 204, 205, 206, 207, 208, 226].contains(code) {
             return Result.failure(AFError.responseSerializationFailed(reason: .inputFileNil))
         }
@@ -70,13 +76,16 @@ struct HTTPClient {
         let response = await req.serializingString()
             .response
         
-        let code = response.response?.statusCode
+        let code = response.response?.statusCode ?? 500
+        
+        logger.debug("Received response \(code) for route \(method.rawValue) \(route)")
+        print(response.result)
+
         
         if ![200, 201, 202, 203, 204, 205, 206, 207, 208, 226].contains(code) {
             return Result.failure(AFError.responseSerializationFailed(reason: .inputFileNil))
         }
         
-        print(response.result)
         return response.result.map({ _ in EmptyResponse() })
     }
     
@@ -173,6 +182,10 @@ struct HTTPClient {
     func joinServer(code: String) async -> Result<JoinResponse, AFError> {
         await req(method: .post, route: "/invites/\(code)")
     }
+    
+    func reportMessage(id: String, reason: ContentReportPayload.ContentReportReason, userContext: String) async -> Result<EmptyResponse, AFError> {
+        await req(method: .post, route: "/safety/report", parameters: ContentReportPayload(type: .Message, contentId: id, reason: reason, userContext: userContext))
+    }
 }
 
 struct EmptyResponse {
@@ -196,16 +209,60 @@ struct SendMessage: Encodable {
     var attachments: [String]
 }
 
-struct AutumnResponse: Decodable {
-    var id: String
-}
 
-struct AutumnPayload: Encodable {
-    var file: Data
-}
-
-struct JoinResponse: Decodable {
-    var type: String
-    var channels: [Channel]
-    var server: Server
-}
+struct ContentReportPayload: Encodable {
+    enum ContentReportReason: String, Encodable, CaseIterable {
+        /// No reason has been specified
+        case NoneSpecified = "No reason Specified"
+        /// Illegal content catch-all reason
+        case Illegal = "Illegal Activity"
+        /// Selling or facilitating use of drugs or other illegal goods
+        case IllegalGoods = "Illegal Goods"
+        /// Extortion or blackmail
+        case IllegalExtortion = "Extortion"
+        /// Revenge or child pornography
+        case IllegalPornography = "Child/Revenge Pornography"
+        /// Illegal hacking activity
+        case IllegalHacking = "Hacking"
+        /// Extreme violence, gore, or animal cruelty
+        /// With exception to violence potrayed in media / creative arts
+        case ExtremeViolence = "Extreme Violence"
+        /// Content that promotes harm to others / self
+        case PromotesHarm = "Promoting Harm"
+        /// Unsolicited advertisements
+        case UnsolicitedSpam = "Spam"
+        /// This is a raid
+        case Raid = "Raid"
+        /// Spam or platform abuse
+        case SpamAbuse = "Platform Abuse"
+        /// Scams or fraud
+        case ScamsFraud = "Scam/Fraud"
+        /// Distribution of malware or malicious links
+        case Malware = "Malware"
+        /// Harassment or abuse targeted at another user
+        case Harassment = "Harassment"
+        
+        func encode(to encoder: Encoder) throws {
+            var container = encoder.singleValueContainer()
+            try container.encode(String(describing: self))
+        }
+    }
+    
+    enum ContentReportType: String, Encodable {
+        case Message = "Message"
+        case Server = "Server"
+        case User = "User"
+    }
+    
+    struct NestedContentReportPayload: Encodable {
+        var type: ContentReportType
+        var id: String
+        var report_reason: ContentReportReason
+    }
+    
+    var content: NestedContentReportPayload
+    var additional_context: String
+    
+    init(type: ContentReportType, contentId: String, reason: ContentReportReason, userContext: String) {
+        self.content = NestedContentReportPayload(type: type, id: contentId, report_reason: reason)
+        s

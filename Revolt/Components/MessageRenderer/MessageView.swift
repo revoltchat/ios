@@ -50,6 +50,20 @@ struct MessageView: View {
     @EnvironmentObject var viewState: ViewState
     
     @State var showMemberSheet: Bool = false
+    @State var showReportSheet: Bool = false
+    @State var isStatic: Bool
+    
+    private var isModeratorInChannel: Bool {
+        return false // TODO: need bit op stuff
+    }
+    
+    private var isMessageAuthor: Bool {
+        viewModel.message.author == viewState.currentUser?.id
+    }
+    
+    private var canDeleteMessage: Bool {
+        return isMessageAuthor || isModeratorInChannel
+    }
 
     var body: some View {
         VStack(alignment: .leading) {
@@ -79,7 +93,9 @@ struct MessageView: View {
                     Avatar(user: viewModel.author, width: 32, height: 32)
                         .padding(.trailing, 8)
                         .onTapGesture {
-                            showMemberSheet.toggle()
+                            if !isStatic {
+                                showMemberSheet.toggle()
+                            }
                         }
                     
                     VStack(alignment: .leading) {
@@ -87,7 +103,9 @@ struct MessageView: View {
                             Text(viewModel.author.username)
                                 .fontWeight(.heavy)
                                 .onTapGesture {
-                                    showMemberSheet.toggle()
+                                    if !isStatic {
+                                        showMemberSheet.toggle()
+                                    }
                                 }
 
                             Text(createdAt(id: viewModel.message.id).formatted())
@@ -130,8 +148,11 @@ struct MessageView: View {
                 UserSheet(user: user, member: Binding.constant(nil))
             }
         }
+        .sheet(isPresented: $showReportSheet) {
+            ReportMessageSheetView(showSheet: $showReportSheet, messageView: viewModel)
+        }
 
-        .contextMenu {
+        .contextMenu(self.isStatic ? nil : ContextMenu {
             Button(action: viewModel.reply, label: {
                 Label("Reply", systemImage: "arrowshape.turn.up.left.fill")
             })
@@ -144,23 +165,35 @@ struct MessageView: View {
                 Label("Open Profile", systemImage: "person.crop.circle")
             })
             
-            Button(role: .destructive, action: {
-                Task {
-                    await viewModel.delete()
-                }
-            }, label: {
-                Label("Delete", systemImage: "trash")
-            })
+            if isMessageAuthor {
+                Button(role: .destructive, action: {
+                    Task {
+                        
+                    }
+                }, label: {
+                    Label("Edit", systemImage: "pencil")
+                })
+            }
             
-            Button(role: .destructive, action: {
-                Task {
-                    await viewModel.delete()
-                }
-            }, label: {
-                Label("Report", systemImage: "exclamationmark.triangle")
-            })
+            if canDeleteMessage {
+                Button(role: .destructive, action: {
+                    Task {
+                        await viewModel.delete()
+                    }
+                }, label: {
+                    Label("Delete", systemImage: "trash")
+                })
+            }
+            
+            if !isMessageAuthor {
+                Button(role: .destructive, action: { showReportSheet.toggle() }, label: {
+                    Label("Report", systemImage: "exclamationmark.triangle")
+                })
+            }
         }
+        )
         .swipeActions(edge: .trailing) {
+            isStatic ? nil :
             Button(action: viewModel.reply, label: {
                 Label("Reply", systemImage: "arrowshape.turn.up.left.fill")
             })
@@ -200,7 +233,7 @@ struct MessageView_Previews: PreviewProvider {
     @State static var channelScrollPosition: String? = nil
     
     static var previews: some View {
-        MessageView(viewModel: MessageViewModel(viewState: viewState, message: $message, author: $author, replies: $replies, channelScrollPosition: $channelScrollPosition))
+        MessageView(viewModel: MessageViewModel(viewState: viewState, message: $message, author: $author, replies: $replies, channelScrollPosition: $channelScrollPosition), isStatic: false)
             .environmentObject(viewState)
             .previewLayout(.sizeThatFits)
     }

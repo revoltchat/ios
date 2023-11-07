@@ -106,7 +106,7 @@ struct MessageableChannelView: View {
                     let message = Binding($viewState.messages[messageId.wrappedValue])!
                     let author = Binding($viewState.users[message.author.wrappedValue])!
                     
-                    MessageView(viewModel: MessageViewModel(viewState: viewState, message: message, author: author, replies: $viewModel.replies, channelScrollPosition: $scrollPosition))
+                    MessageView(viewModel: MessageViewModel(viewState: viewState, message: message, author: author, replies: $viewModel.replies, channelScrollPosition: $scrollPosition), isStatic: false)
                 }
                 .listRowInsets(EdgeInsets(top: 8, leading: 12, bottom: 8, trailing: 12))
                 .listRowBackground(viewState.theme.background.color)
