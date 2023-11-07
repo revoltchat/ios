@@ -265,4 +265,20 @@ struct ContentReportPayload: Encodable {
     
     init(type: ContentReportType, contentId: String, reason: ContentReportReason, userContext: String) {
         self.content = NestedContentReportPayload(type: type, id: contentId, report_reason: reason)
-        s
+        self.additional_context = userContext
+        }
+}
+
+struct AutumnResponse: Decodable {
+    var id: String
+}
+
+struct AutumnPayload: Encodable {
+    var file: Data
+}
+
+struct JoinResponse: Decodable {
+    var type: String
+    var channels: [Channel]
+    var server: Server
+}
