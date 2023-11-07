@@ -16,6 +16,7 @@
 		1777DD8E2ADC4336003D6C72 /* RemoteImageTextAttachment.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1777DD8D2ADC4336003D6C72 /* RemoteImageTextAttachment.swift */; };
 		17966B652AE0842A00BAEC58 /* ChannelIcon.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17966B642AE0842A00BAEC58 /* ChannelIcon.swift */; };
 		17966B672AE08C3000BAEC58 /* DMList.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17966B662AE08C3000BAEC58 /* DMList.swift */; };
+		17B51A682AFAFA8E0018C967 /* CodableWrapper in Frameworks */ = {isa = PBXBuildFile; productRef = 17B51A672AFAFA8E0018C967 /* CodableWrapper */; };
 		17BC3EFA2AD826970029D820 /* File.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17BC3EF92AD826970029D820 /* File.swift */; };
 		17BC3EFC2AD82A1B0029D820 /* Member.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17BC3EFB2AD82A1B0029D820 /* Member.swift */; };
 		17CCCF672ADA109600D78D7A /* Permissions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17CCCF662ADA109600D78D7A /* Permissions.swift */; };
@@ -141,6 +142,7 @@
 				DAAA4BF429F2274A00F41E52 /* Collections in Frameworks */,
 				1777DD8C2ADC3C4E003D6C72 /* MarkdownKit in Frameworks */,
 				17D9C2BD2ADCA48D00426857 /* Kingfisher in Frameworks */,
+				17B51A682AFAFA8E0018C967 /* CodableWrapper in Frameworks */,
 				DA99EC5329D6148200419FDA /* Alamofire in Frameworks */,
 				17FDBA712AEAFEAC00CB7637 /* WrappingHStack in Frameworks */,
 				17CCCF6E2ADA173B00D78D7A /* ULID in Frameworks */,
@@ -353,6 +355,7 @@
 				1777DD8B2ADC3C4E003D6C72 /* MarkdownKit */,
 				17D9C2BC2ADCA48D00426857 /* Kingfisher */,
 				17FDBA702AEAFEAC00CB7637 /* WrappingHStack */,
+				17B51A672AFAFA8E0018C967 /* CodableWrapper */,
 			);
 			productName = Revolt;
 			productReference = D49B704F29C4D3FE009494A5 /* Revolt.app */;
@@ -439,6 +442,7 @@
 				17D9C2B82ADCA1A000426857 /* XCRemoteSwiftPackageReference "swiftui-cached-async-image" */,
 				17D9C2BB2ADCA48D00426857 /* XCRemoteSwiftPackageReference "Kingfisher" */,
 				17FDBA6F2AEAFEAC00CB7637 /* XCRemoteSwiftPackageReference "WrappingHStack" */,
+				17B51A662AFAFA8E0018C967 /* XCRemoteSwiftPackageReference "CodableWrapper" */,
 			);
 			productRefGroup = D49B705029C4D3FE009494A5 /* Products */;
 			projectDirPath = "";
@@ -871,6 +875,14 @@
 				minimumVersion = 1.7.1;
 			};
 		};
+		17B51A662AFAFA8E0018C967 /* XCRemoteSwiftPackageReference "CodableWrapper" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/winddpan/CodableWrapper";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 1.0.1;
+			};
+		};
 		17CCCF6C2ADA173B00D78D7A /* XCRemoteSwiftPackageReference "ULID" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/yaslab/ULID.swift";
@@ -934,6 +946,11 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 1777DD8A2ADC3C4E003D6C72 /* XCRemoteSwiftPackageReference "MarkdownKit" */;
 			productName = MarkdownKit;
+		};
+		17B51A672AFAFA8E0018C967 /* CodableWrapper */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 17B51A662AFAFA8E0018C967 /* XCRemoteSwiftPackageReference "CodableWrapper" */;
+			productName = CodableWrapper;
 		};
 		17CCCF6D2ADA173B00D78D7A /* ULID */ = {
 			isa = XCSwiftPackageProductDependency;
