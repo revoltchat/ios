@@ -146,17 +146,22 @@ public class ViewState: ObservableObject {
     
         self.currentChannel = UserDefaults.standard.string(forKey: "currentChannel")
         self.currentSessionId = UserDefaults.standard.string(forKey: "currentSessionId")
-
-        if let theme = UserDefaults.standard.data(forKey: "theme") {
-            self.theme = try! decoder.decode(Theme.self, from: theme)
+    
+        if let themeData = UserDefaults.standard.data(forKey: "theme") {
+            self.theme = try! decoder.decode(Theme.self, from: themeData)
         } else {
-            self.theme = Theme.light
+            self.theme = .dark
         }
 
-        self.http.token = self.sessionToken
         self.users["00000000000000000000000000"] = User(id: "00000000000000000000000000", username: "Revolt", discriminator: "0000")
+        self.http.token = self.sessionToken
     }
 
+    func applySystemScheme(theme: ColorScheme) -> Self {
+        self.theme = theme == .dark ? .dark : .light
+        return self
+    }
+    
     class func preview() -> ViewState {
         let this = ViewState()
         this.state = .connected
@@ -201,22 +206,20 @@ public class ViewState: ObservableObject {
                         if [401, 500].contains(response.response!.statusCode) {
                             return callback(.Invalid)
                         }
-                        do {
-                            let result = try JSONDecoder().decode(LoginResponse.self, from: data)
-                            switch result {
-                                case .Success(let success):
-                                    self.currentSessionId = success._id
-                                    self.sessionToken = success.token
-                                    self.http.token = success.token
-                                    return callback(.Success)
-                                    
-                                case .Mfa(let mfa):
-                                    return callback(.Mfa(ticket: mfa.ticket, methods: mfa.allowed_methods))
-                                    
-                                case .Disabled:
-                                    return callback(.Disabled)
-                            }
-                        } catch {}
+                        let result = try! JSONDecoder().decode(LoginResponse.self, from: data)
+                        switch result {
+                            case .Success(let success):
+                                self.currentSessionId = success._id
+                                self.sessionToken = success.token
+                                self.http.token = success.token
+                                return callback(.Success)
+                                
+                            case .Mfa(let mfa):
+                                return callback(.Mfa(ticket: mfa.ticket, methods: mfa.allowed_methods))
+                                
+                            case .Disabled:
+                                return callback(.Disabled)
+                        }
                     case .failure(_):
                         ()
                 }

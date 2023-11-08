@@ -11,6 +11,7 @@ import SwiftUI
 
 struct AppearanceSettings: View {
     @Environment(\.self) var environment
+    @Environment(\.colorScheme) var colorScheme
     @EnvironmentObject var viewState: ViewState
 
     @State var accent: Color
@@ -24,6 +25,33 @@ struct AppearanceSettings: View {
 
     var body: some View {
         VStack(alignment: .leading) {
+            HStack(spacing: 4) {
+                Button {
+                    viewState.theme = .light
+                } label: {
+                    Text("Light")
+                        .foregroundStyle(viewState.theme.accent.color)
+                }
+                .frame(maxWidth: .infinity)
+                
+                Button {
+                    viewState.theme = .dark
+                } label: {
+                    Text("Dark")
+                        .foregroundStyle(viewState.theme.accent.color)
+                }
+                .frame(maxWidth: .infinity)
+                
+                Button {
+                    let _ = viewState.applySystemScheme(theme: colorScheme)
+                } label: {
+                    Text("Auto")
+                        .foregroundStyle(viewState.theme.accent.color)
+                }
+                .frame(maxWidth: .infinity)
+            }
+            .frame(maxWidth: .infinity)
+
             ColorPicker(selection: $accent, label: {
                 Text("Accent")
             })
@@ -92,5 +120,35 @@ struct AppearanceSettings: View {
         }
         .padding(.horizontal, 16)
         .background(viewState.theme.background.color)
+        .animation(.easeInOut, value: viewState.theme)
+    }
+}
+
+struct AppearanceSettings_Preview: PreviewProvider {
+    static var previews: some View {
+        let viewState = ViewState.preview()
+        AppearanceSettings(
+            accent: viewState.theme.accent.color,
+            background: viewState.theme.background.color,
+            background2: viewState.theme.background2.color,
+            textColor: viewState.theme.textColor.color,
+            messageBox: viewState.theme.messageBox.color,
+            messageBoxBackground: viewState.theme.messageBoxBackground.color,
+            topBar: viewState.theme.topBar.color,
+            messageBoxBorder: viewState.theme.messageBoxBorder.color
+        )
+        .applyPreviewModifiers(withState: viewState.applySystemScheme(theme: .light))
+        
+        AppearanceSettings(
+            accent: viewState.theme.accent.color,
+            background: viewState.theme.background.color,
+            background2: viewState.theme.background2.color,
+            textColor: viewState.theme.textColor.color,
+            messageBox: viewState.theme.messageBox.color,
+            messageBoxBackground: viewState.theme.messageBoxBackground.color,
+            topBar: viewState.theme.topBar.color,
+            messageBoxBorder: viewState.theme.messageBoxBorder.color
+        )
+        .applyPreviewModifiers(withState: viewState.applySystemScheme(theme: .dark))
     }
 }

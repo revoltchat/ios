@@ -7,32 +7,39 @@
 
 import Foundation
 import SwiftUI
+import CodableWrapper
 
-struct ThemeColor: Codable {
+@Codable
+struct ThemeColor: Equatable {
     var r: Double
     var g: Double
     var b: Double
     var a: Double
     
-    init(r: Double, g: Double, b: Double, a: Double) {
-        self.r = r
-        self.g = g
-        self.b = b
-        self.a = a
-    }
-    
-    init(fromHex: String) {
-        var hex = fromHex
-        hex.trimPrefix("#")
+    init(hex: String) {
+        let hex = hex.trimmingCharacters(in: CharacterSet.alphanumerics.inverted)
+        var int: UInt64 = 0
+        Scanner(string: hex).scanHexInt64(&int)
+        let r, g, b, a: UInt64
+        switch hex.count {
+            case 3: // RGB (12-bit)
+                (r, g, b, a) = ((int >> 8) * 17, (int >> 4 & 0xF) * 17, (int & 0xF) * 17, 255)
+            case 6: // RGB (24-bit)
+                (r, g, b, a) = (int >> 16, int >> 8 & 0xFF, int & 0xFF, 255)
+            case 8: // RGBA (32-bit)
+                (r, g, b, a) = (int >> 24, int >> 16 & 0xFF, int >> 8 & 0xFF, int & 0xFF)
+            default:
+                (r, g, b, a) = (1, 1, 1, 0)
+        }
         
-        let int = Int(hex, radix: 16)!
-        
-        r = 255.0 / Double(int >> 24)
-        g = 255.0 / Double(int >> 16 & 0xFF)
-        b = 255.0 / Double(int >> 8 & 0xFF)
-        a = 255.0 / Double(int & 0xFF)
+        self.init(
+            r: Double(r) / 255,
+            g: Double(g) / 255,
+            b:  Double(b) / 255,
+            a: Double(a) / 255
+        )
     }
-    
+
     mutating func set(with: Color.Resolved) {
         self.r = Double(with.red)
         
@@ -61,70 +68,49 @@ struct ThemeColor: Codable {
     }
     
     var color: Color {
-        Color(red: r, green: g, blue: b, opacity: a)
+        let c = Color(red: r, green: g, blue: b, opacity: a)
+        print(c)
+        return c
     }
     
-    static var white: ThemeColor {
-        ThemeColor(r: 1, g: 1, b: 1, a: 1)
-    }
-    
-    static var black: ThemeColor {
-        ThemeColor(r: 0, g: 0, b: 0, a: 1)
-    }
+    static var white: ThemeColor = ThemeColor(hex: "#FFFFFFFF")
+    static var black: ThemeColor = ThemeColor(hex: "#000000FF")
 }
 
-struct Theme: Codable {
-    var accent: ThemeColor
-    var background: ThemeColor
-    var background2: ThemeColor
-    var textColor: ThemeColor
-    var messageBox: ThemeColor
-    var messageBoxBackground: ThemeColor
-    var topBar: ThemeColor
-    var messageBoxBorder: ThemeColor
+@Codable
+struct Theme: Codable, Equatable {
+    var accent: ThemeColor = ThemeColor(hex: "#FD7771FF")
+    var background: ThemeColor = ThemeColor.white
+    var background2: ThemeColor = ThemeColor.white
+    var textColor: ThemeColor = ThemeColor.black
+    var messageBox: ThemeColor = ThemeColor.white
+    var messageBoxBackground: ThemeColor = ThemeColor.white
+    var topBar: ThemeColor = ThemeColor(hex: "#FFFFFFAA")
+    var messageBoxBorder: ThemeColor = ThemeColor.black
     
     static var light: Theme {
         Theme(
-            accent: ThemeColor.init(fromHex: "#FD6671FF"),
+            accent: ThemeColor(hex: "#FD7771FF"),
             background: ThemeColor.white,
-            background2: ThemeColor.white,
+            background2: ThemeColor(hex: "#F5F5F5FF"),
             textColor: ThemeColor.black,
             messageBox: ThemeColor.white,
             messageBoxBackground: ThemeColor.white,
-            topBar: ThemeColor(fromHex: "#FFFFFFAA"),
+            topBar: ThemeColor(hex: "#FFFFFFAA"),
             messageBoxBorder: ThemeColor.black
         )
     }
-    
-    init(
-        accent: ThemeColor,
-        background: ThemeColor,
-        background2: ThemeColor,
-        textColor: ThemeColor,
-        messageBox: ThemeColor,
-        messageBoxBackground: ThemeColor,
-        topBar: ThemeColor,
-        messageBoxBorder: ThemeColor
-    ) {
-        self.accent = accent
-        self.background = background
-        self.background2 = background2
-        self.textColor = textColor
-        self.messageBox = messageBox
-        self.messageBoxBackground = messageBoxBackground
-        self.topBar = topBar
-        self.messageBoxBorder = messageBoxBorder
-    }
-    
-    init(from decoder: Decoder) throws {
-        let container = try decoder.container(keyedBy: CodingKeys.self)
-        self.accent = try container.decodeIfPresent(ThemeColor.self, forKey: .accent) ?? Theme.light.accent
-        self.background = try container.decodeIfPresent(ThemeColor.self, forKey: .background) ?? Theme.light.background
-        self.background2 = try container.decodeIfPresent(ThemeColor.self, forKey: .background2) ?? Theme.light.background2
-        self.textColor = try container.decodeIfPresent(ThemeColor.self, forKey: .textColor) ?? Theme.light.textColor
-        self.messageBox = try container.decodeIfPresent(ThemeColor.self, forKey: .messageBox) ?? Theme.light.messageBox
-        self.messageBoxBackground = try container.decodeIfPresent(ThemeColor.self, forKey: .messageBoxBackground) ?? Theme.light.messageBoxBackground
-        self.topBar = try container.decodeIfPresent(ThemeColor.self, forKey: .topBar) ?? Theme.light.topBar
-        self.messageBoxBorder = try container.decodeIfPresent(ThemeColor.self, forKey: .messageBoxBorder) ?? Theme.light.messageBoxBorder
+
+    static var dark: Theme {
+        Theme(
+            accent: ThemeColor(hex: "#FD7771FF"),
+            background: ThemeColor(hex: "#191919FF"),
+            background2: ThemeColor(hex:"#242424FF"),
+            textColor: ThemeColor.white,
+            messageBox: ThemeColor(hex:"#363636FF"),
+            messageBoxBackground: ThemeColor(hex:"#363636FF"),
+            topBar: ThemeColor(hex: "#191919AA"),
+            messageBoxBorder: ThemeColor.white
+        )
     }
 }

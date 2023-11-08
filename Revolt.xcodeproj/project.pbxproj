@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		1718FB542AF8470400E9C511 /* ReportMessageSheetView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1718FB532AF8470400E9C511 /* ReportMessageSheetView.swift */; };
+		1726F9F42AF3AF9F007A8D38 /* CodableWrapper in Frameworks */ = {isa = PBXBuildFile; productRef = 1726F9F32AF3AF9F007A8D38 /* CodableWrapper */; };
 		175E01DE2ADAB3F6004F6431 /* LazyImage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 175E01DD2ADAB3F6004F6431 /* LazyImage.swift */; };
 		175E01E02ADAB554004F6431 /* Avatar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 175E01DF2ADAB554004F6431 /* Avatar.swift */; };
 		1777DD842ADC24CE003D6C72 /* ReversedSrollView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1777DD832ADC24CE003D6C72 /* ReversedSrollView.swift */; };
@@ -42,9 +43,6 @@
 		D49B705329C4D3FE009494A5 /* RevoltApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = D49B705229C4D3FE009494A5 /* RevoltApp.swift */; };
 		D49B705729C4D3FE009494A5 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = D49B705629C4D3FE009494A5 /* Assets.xcassets */; };
 		D49B705A29C4D3FE009494A5 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = D49B705929C4D3FE009494A5 /* Preview Assets.xcassets */; };
-		D49B706429C4D3FE009494A5 /* RevoltTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D49B706329C4D3FE009494A5 /* RevoltTests.swift */; };
-		D49B706E29C4D3FE009494A5 /* RevoltUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D49B706D29C4D3FE009494A5 /* RevoltUITests.swift */; };
-		D49B707029C4D3FE009494A5 /* RevoltUITestsLaunchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D49B706F29C4D3FE009494A5 /* RevoltUITestsLaunchTests.swift */; };
 		DA99EC4A29D5F35400419FDA /* Home.swift in Sources */ = {isa = PBXBuildFile; fileRef = DA99EC4929D5F35400419FDA /* Home.swift */; };
 		DA99EC4C29D5F35500419FDA /* ViewState.swift in Sources */ = {isa = PBXBuildFile; fileRef = DA99EC4B29D5F35500419FDA /* ViewState.swift */; };
 		DA99EC5029D5F35900419FDA /* Login.swift in Sources */ = {isa = PBXBuildFile; fileRef = DA99EC4F29D5F35900419FDA /* Login.swift */; };
@@ -63,23 +61,6 @@
 		DAAA4C0E29F2D37800F41E52 /* Api.swift in Sources */ = {isa = PBXBuildFile; fileRef = DAAA4C0D29F2D37800F41E52 /* Api.swift */; };
 		DAF84FFD2A0EFE1B00B01682 /* Starscream in Frameworks */ = {isa = PBXBuildFile; productRef = DAF84FFC2A0EFE1B00B01682 /* Starscream */; };
 /* End PBXBuildFile section */
-
-/* Begin PBXContainerItemProxy section */
-		D49B706029C4D3FE009494A5 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = D49B704729C4D3FE009494A5 /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = D49B704E29C4D3FE009494A5;
-			remoteInfo = Revolt;
-		};
-		D49B706A29C4D3FE009494A5 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = D49B704729C4D3FE009494A5 /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = D49B704E29C4D3FE009494A5;
-			remoteInfo = Revolt;
-		};
-/* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
 		1718FB532AF8470400E9C511 /* ReportMessageSheetView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReportMessageSheetView.swift; sourceTree = "<group>"; };
@@ -109,15 +90,11 @@
 		17E019D92AF199A600AB4663 /* MessageReply.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageReply.swift; sourceTree = "<group>"; };
 		17E019DB2AF1B25100AB4663 /* SessionsSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SessionsSettings.swift; sourceTree = "<group>"; };
 		17E28E072AF319D500F6069F /* JoinServer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JoinServer.swift; sourceTree = "<group>"; };
+		17F57A902AF724A700F0318C /* Revolt.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Revolt.entitlements; sourceTree = "<group>"; };
 		D49B704F29C4D3FE009494A5 /* Revolt.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Revolt.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		D49B705229C4D3FE009494A5 /* RevoltApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RevoltApp.swift; sourceTree = "<group>"; };
 		D49B705629C4D3FE009494A5 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		D49B705929C4D3FE009494A5 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
-		D49B705F29C4D3FE009494A5 /* RevoltTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = RevoltTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
-		D49B706329C4D3FE009494A5 /* RevoltTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RevoltTests.swift; sourceTree = "<group>"; };
-		D49B706929C4D3FE009494A5 /* RevoltUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = RevoltUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
-		D49B706D29C4D3FE009494A5 /* RevoltUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RevoltUITests.swift; sourceTree = "<group>"; };
-		D49B706F29C4D3FE009494A5 /* RevoltUITestsLaunchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RevoltUITestsLaunchTests.swift; sourceTree = "<group>"; };
 		DA99EC4929D5F35400419FDA /* Home.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Home.swift; sourceTree = "<group>"; };
 		DA99EC4B29D5F35500419FDA /* ViewState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewState.swift; sourceTree = "<group>"; };
 		DA99EC4F29D5F35900419FDA /* Login.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Login.swift; sourceTree = "<group>"; };
@@ -149,20 +126,6 @@
 				DAAA4BF829F2274A00F41E52 /* OrderedCollections in Frameworks */,
 				DAF84FFD2A0EFE1B00B01682 /* Starscream in Frameworks */,
 				DAAA4BF629F2274A00F41E52 /* DequeModule in Frameworks */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		D49B705C29C4D3FE009494A5 /* Frameworks */ = {
-			isa = PBXFrameworksBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		D49B706629C4D3FE009494A5 /* Frameworks */ = {
-			isa = PBXFrameworksBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -237,8 +200,6 @@
 			isa = PBXGroup;
 			children = (
 				D49B705129C4D3FE009494A5 /* Revolt */,
-				D49B706229C4D3FE009494A5 /* RevoltTests */,
-				D49B706C29C4D3FE009494A5 /* RevoltUITests */,
 				D49B705029C4D3FE009494A5 /* Products */,
 				DAFC10FE29CFC3B400D2C2F9 /* Frameworks */,
 			);
@@ -248,8 +209,6 @@
 			isa = PBXGroup;
 			children = (
 				D49B704F29C4D3FE009494A5 /* Revolt.app */,
-				D49B705F29C4D3FE009494A5 /* RevoltTests.xctest */,
-				D49B706929C4D3FE009494A5 /* RevoltUITests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -257,6 +216,7 @@
 		D49B705129C4D3FE009494A5 /* Revolt */ = {
 			isa = PBXGroup;
 			children = (
+				17F57A902AF724A700F0318C /* Revolt.entitlements */,
 				17DFB4622AE06A3200E1D417 /* Api */,
 				17DFB4612AE06A0F00E1D417 /* Pages */,
 				175E01DC2ADAB3EA004F6431 /* Components */,
@@ -265,9 +225,9 @@
 				DAF41CC029C5164A0004BFBE /* Fonts */,
 				D49B705229C4D3FE009494A5 /* RevoltApp.swift */,
 				DA99EC4B29D5F35500419FDA /* ViewState.swift */,
+				17E019D42AF1937400AB4663 /* Theme.swift */,
 				D49B705629C4D3FE009494A5 /* Assets.xcassets */,
 				D49B705829C4D3FE009494A5 /* Preview Content */,
-				17E019D42AF1937400AB4663 /* Theme.swift */,
 			);
 			path = Revolt;
 			sourceTree = "<group>";
@@ -278,23 +238,6 @@
 				D49B705929C4D3FE009494A5 /* Preview Assets.xcassets */,
 			);
 			path = "Preview Content";
-			sourceTree = "<group>";
-		};
-		D49B706229C4D3FE009494A5 /* RevoltTests */ = {
-			isa = PBXGroup;
-			children = (
-				D49B706329C4D3FE009494A5 /* RevoltTests.swift */,
-			);
-			path = RevoltTests;
-			sourceTree = "<group>";
-		};
-		D49B706C29C4D3FE009494A5 /* RevoltUITests */ = {
-			isa = PBXGroup;
-			children = (
-				D49B706D29C4D3FE009494A5 /* RevoltUITests.swift */,
-				D49B706F29C4D3FE009494A5 /* RevoltUITestsLaunchTests.swift */,
-			);
-			path = RevoltUITests;
 			sourceTree = "<group>";
 		};
 		DAAA4BFD29F251DF00F41E52 /* Types */ = {
@@ -361,42 +304,6 @@
 			productReference = D49B704F29C4D3FE009494A5 /* Revolt.app */;
 			productType = "com.apple.product-type.application";
 		};
-		D49B705E29C4D3FE009494A5 /* RevoltTests */ = {
-			isa = PBXNativeTarget;
-			buildConfigurationList = D49B707629C4D3FE009494A5 /* Build configuration list for PBXNativeTarget "RevoltTests" */;
-			buildPhases = (
-				D49B705B29C4D3FE009494A5 /* Sources */,
-				D49B705C29C4D3FE009494A5 /* Frameworks */,
-				D49B705D29C4D3FE009494A5 /* Resources */,
-			);
-			buildRules = (
-			);
-			dependencies = (
-				D49B706129C4D3FE009494A5 /* PBXTargetDependency */,
-			);
-			name = RevoltTests;
-			productName = RevoltTests;
-			productReference = D49B705F29C4D3FE009494A5 /* RevoltTests.xctest */;
-			productType = "com.apple.product-type.bundle.unit-test";
-		};
-		D49B706829C4D3FE009494A5 /* RevoltUITests */ = {
-			isa = PBXNativeTarget;
-			buildConfigurationList = D49B707929C4D3FE009494A5 /* Build configuration list for PBXNativeTarget "RevoltUITests" */;
-			buildPhases = (
-				D49B706529C4D3FE009494A5 /* Sources */,
-				D49B706629C4D3FE009494A5 /* Frameworks */,
-				D49B706729C4D3FE009494A5 /* Resources */,
-			);
-			buildRules = (
-			);
-			dependencies = (
-				D49B706B29C4D3FE009494A5 /* PBXTargetDependency */,
-			);
-			name = RevoltUITests;
-			productName = RevoltUITests;
-			productReference = D49B706929C4D3FE009494A5 /* RevoltUITests.xctest */;
-			productType = "com.apple.product-type.bundle.ui-testing";
-		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
@@ -412,14 +319,6 @@
 				TargetAttributes = {
 					D49B704E29C4D3FE009494A5 = {
 						CreatedOnToolsVersion = 14.2;
-					};
-					D49B705E29C4D3FE009494A5 = {
-						CreatedOnToolsVersion = 14.2;
-						TestTargetID = D49B704E29C4D3FE009494A5;
-					};
-					D49B706829C4D3FE009494A5 = {
-						CreatedOnToolsVersion = 14.2;
-						TestTargetID = D49B704E29C4D3FE009494A5;
 					};
 				};
 			};
@@ -449,8 +348,6 @@
 			projectRoot = "";
 			targets = (
 				D49B704E29C4D3FE009494A5 /* Revolt */,
-				D49B705E29C4D3FE009494A5 /* RevoltTests */,
-				D49B706829C4D3FE009494A5 /* RevoltUITests */,
 			);
 		};
 /* End PBXProject section */
@@ -462,20 +359,6 @@
 			files = (
 				D49B705A29C4D3FE009494A5 /* Preview Assets.xcassets in Resources */,
 				D49B705729C4D3FE009494A5 /* Assets.xcassets in Resources */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		D49B705D29C4D3FE009494A5 /* Resources */ = {
-			isa = PBXResourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		D49B706729C4D3FE009494A5 /* Resources */ = {
-			isa = PBXResourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -529,37 +412,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		D49B705B29C4D3FE009494A5 /* Sources */ = {
-			isa = PBXSourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				D49B706429C4D3FE009494A5 /* RevoltTests.swift in Sources */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		D49B706529C4D3FE009494A5 /* Sources */ = {
-			isa = PBXSourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				D49B707029C4D3FE009494A5 /* RevoltUITestsLaunchTests.swift in Sources */,
-				D49B706E29C4D3FE009494A5 /* RevoltUITests.swift in Sources */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 /* End PBXSourcesBuildPhase section */
-
-/* Begin PBXTargetDependency section */
-		D49B706129C4D3FE009494A5 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = D49B704E29C4D3FE009494A5 /* Revolt */;
-			targetProxy = D49B706029C4D3FE009494A5 /* PBXContainerItemProxy */;
-		};
-		D49B706B29C4D3FE009494A5 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = D49B704E29C4D3FE009494A5 /* Revolt */;
-			targetProxy = D49B706A29C4D3FE009494A5 /* PBXContainerItemProxy */;
-		};
-/* End PBXTargetDependency section */
 
 /* Begin XCBuildConfiguration section */
 		D49B707129C4D3FE009494A5 /* Debug */ = {
@@ -682,6 +535,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = Revolt/Revolt.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
@@ -702,7 +556,7 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 0.0.1;
-				PRODUCT_BUNDLE_IDENTIFIER = chat.revolt.Revolt;
+				PRODUCT_BUNDLE_IDENTIFIER = app.revolt.chat;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_EMIT_LOC_STRINGS = YES;
@@ -716,6 +570,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = Revolt/Revolt.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
@@ -736,84 +591,12 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 0.0.1;
-				PRODUCT_BUNDLE_IDENTIFIER = chat.revolt.Revolt;
+				PRODUCT_BUNDLE_IDENTIFIER = app.revolt.chat;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
-			};
-			name = Release;
-		};
-		D49B707729C4D3FE009494A5 /* Debug */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
-				BUNDLE_LOADER = "$(TEST_HOST)";
-				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
-				GENERATE_INFOPLIST_FILE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 16.2;
-				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = chat.revolt.RevoltTests;
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_EMIT_LOC_STRINGS = NO;
-				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Revolt.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/Revolt";
-			};
-			name = Debug;
-		};
-		D49B707829C4D3FE009494A5 /* Release */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
-				BUNDLE_LOADER = "$(TEST_HOST)";
-				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
-				GENERATE_INFOPLIST_FILE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 16.2;
-				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = chat.revolt.RevoltTests;
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_EMIT_LOC_STRINGS = NO;
-				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Revolt.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/Revolt";
-			};
-			name = Release;
-		};
-		D49B707A29C4D3FE009494A5 /* Debug */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
-				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
-				GENERATE_INFOPLIST_FILE = YES;
-				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = chat.revolt.RevoltUITests;
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_EMIT_LOC_STRINGS = NO;
-				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
-				TEST_TARGET_NAME = Revolt;
-			};
-			name = Debug;
-		};
-		D49B707B29C4D3FE009494A5 /* Release */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
-				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
-				GENERATE_INFOPLIST_FILE = YES;
-				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = chat.revolt.RevoltUITests;
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_EMIT_LOC_STRINGS = NO;
-				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
-				TEST_TARGET_NAME = Revolt;
 			};
 			name = Release;
 		};
@@ -838,27 +621,17 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		D49B707629C4D3FE009494A5 /* Build configuration list for PBXNativeTarget "RevoltTests" */ = {
-			isa = XCConfigurationList;
-			buildConfigurations = (
-				D49B707729C4D3FE009494A5 /* Debug */,
-				D49B707829C4D3FE009494A5 /* Release */,
-			);
-			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
-		};
-		D49B707929C4D3FE009494A5 /* Build configuration list for PBXNativeTarget "RevoltUITests" */ = {
-			isa = XCConfigurationList;
-			buildConfigurations = (
-				D49B707A29C4D3FE009494A5 /* Debug */,
-				D49B707B29C4D3FE009494A5 /* Release */,
-			);
-			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
-		};
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
+		1726F9F22AF3AF9F007A8D38 /* XCRemoteSwiftPackageReference "CodableWrapper" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/winddpan/CodableWrapper.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 1.0.1;
+			};
+		};
 		1777DD852ADC3A7A003D6C72 /* XCRemoteSwiftPackageReference "swift-markdown-ui" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/gonzalezreal/swift-markdown-ui";
@@ -942,6 +715,11 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
+		1726F9F32AF3AF9F007A8D38 /* CodableWrapper */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 1726F9F22AF3AF9F007A8D38 /* XCRemoteSwiftPackageReference "CodableWrapper" */;
+			productName = CodableWrapper;
+		};
 		1777DD8B2ADC3C4E003D6C72 /* MarkdownKit */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = 1777DD8A2ADC3C4E003D6C72 /* XCRemoteSwiftPackageReference "MarkdownKit" */;
