@@ -42,42 +42,70 @@ struct ReportMessageSheetView: View {
     }
     
     var body: some View {
-        VStack(alignment: .center) {
-            Text("Tell us what's wrong with this message")
-                .font(.title)
-                .foregroundStyle(viewState.theme.textColor.color)
-                .multilineTextAlignment(.center)
-            MessageView(viewModel: messageView, isStatic: true)
-            
-            Spacer()
-                .frame(maxHeight: 50)
-            
-            Text("Pick a category")
-                .font(.caption)
-                .foregroundStyle(viewState.theme.textColor.color)
-            Picker("Report reason", selection: $reason) {
-                ForEach(ContentReportPayload.ContentReportReason.allCases, id: \.rawValue) { reason in
-                    Text(reason.rawValue)
-                        .tag(reason)
-                        .foregroundStyle(viewState.theme.textColor.color)
-                }
-            }
-                .foregroundStyle(viewState.theme.textColor.color)
-                .border((error != nil && reason == .NoneSpecified) ? Color.red : viewState.theme.messageBoxBorder.color)
-
+        VStack(alignment: .leading, spacing: 30) {
             Spacer()
                 .frame(maxHeight: 20)
-            
-            Text("Give us some detail")
-                .font(.caption)
+
+            VStack(alignment: .center) {
+                Text("Tell us what's wrong with this message")
+                    .font(.title)
+                    .multilineTextAlignment(.center)
+                
+                Text("Please note that this does not get sent to this server's moderators")
+                    .font(.caption)
+                    .foregroundStyle(.red)
+                    .multilineTextAlignment(.center)
+                    .padding(.top, 4)
+            }
+            .frame(maxWidth: .infinity)
+
+            MessageView(viewModel: messageView, isStatic: true)
+                .padding(.horizontal, 5)
+                .padding(.vertical, 10)
+
+            VStack {
+                Text("Pick a category")
+                    .font(.caption)
+                    .foregroundStyle(viewState.theme.textColor.color)
+    
+                Picker("Report reason", selection: $reason) {
+                    ForEach(ContentReportPayload.ContentReportReason.allCases, id: \.rawValue) { reason in
+                        Text(reason.rawValue)
+                            .tag(reason)
+                            .foregroundStyle(viewState.theme.textColor.color)
+                    }
+                }
+                .padding(.vertical, 2)
+                .frame(maxWidth: .infinity)
                 .foregroundStyle(viewState.theme.textColor.color)
-            TextField("What's wrong...", text: $userContext, axis: .vertical)
-                .padding(.top, 15)
-                .padding(.bottom, 20)
-                .frame(minHeight: 50)
-                .foregroundStyle(viewState.theme.textColor.color)
-                .backgroundStyle(viewState.theme.messageBox.color)
-                .border((error != nil && userContext.isEmpty) ? Color.red : viewState.theme.messageBoxBorder.color)
+                .overlay(
+                    RoundedRectangle(cornerRadius: 5)
+                        .stroke((error != nil && userContext.isEmpty) ? Color.red : viewState.theme.messageBoxBorder.color, lineWidth: 1)
+                )
+            }
+
+            VStack {
+                Text("Give us some detail")
+                    .font(.caption)
+                    .foregroundStyle(viewState.theme.textColor.color)
+
+                TextField("", text: $userContext, axis: .vertical)
+                    .padding(.vertical, 15)
+                    .padding(.leading)
+                    .overlay(
+                        RoundedRectangle(cornerRadius: 5)
+                            .stroke(
+                                (error != nil && userContext.isEmpty)
+                                ? Color.red
+                                : viewState.theme.messageBoxBorder.color,
+                                lineWidth: 1)
+                    )
+                    .placeholder(when: userContext.isEmpty) {
+                        Text("What's wrong...")
+                            .padding()
+                    }
+                    .frame(minHeight: 50)
+            }
             
             if error != nil {
                 Text(error!)
@@ -89,19 +117,22 @@ struct ReportMessageSheetView: View {
                     .foregroundStyle(viewState.theme.textColor.color)
             })
                 .padding()
-                .frame(width: 200)
-                .clipShape(.rect(cornerRadius: 50))
+                .frame(maxWidth: .infinity)
                 .background(viewState.theme.accent.color)
+                .clipShape(.rect(cornerRadius: 5))
+
             Spacer()
         }
+        .padding(.horizontal, 32)
         .background(viewState.theme.background.color)
     }
 }
 
-#Preview {
-    @StateObject var viewState = ViewState.preview()
-    var message = viewState.messages["01HD4VQY398JNRJY60JDY2QHA5"]!
-    var model = MessageViewModel(
+struct ReportMessageSheetView_Preview: PreviewProvider {
+    @StateObject static var viewState = ViewState.preview()
+
+    static var message = viewState.messages["01HD4VQY398JNRJY60JDY2QHA5"]!
+    static var model = MessageViewModel(
         viewState: viewState,
         message: .constant(message),
         author: .constant(viewState.users[message.author]!),
@@ -109,5 +140,11 @@ struct ReportMessageSheetView: View {
         channelScrollPosition: .constant(nil)
     )
     
-    return ReportMessageSheetView(showSheet: .constant(true), messageView: model)
+    static var previews: some View {
+        ReportMessageSheetView(showSheet: .constant(true), messageView: model)
+            .applyPreviewModifiers(withState: viewState.applySystemScheme(theme: .light))
+        
+        ReportMessageSheetView(showSheet: .constant(true), messageView: model)
+            .applyPreviewModifiers(withState: viewState.applySystemScheme(theme: .dark))
+    }
 }

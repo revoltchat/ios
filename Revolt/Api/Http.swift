@@ -213,7 +213,7 @@ struct SendMessage: Encodable {
 struct ContentReportPayload: Encodable {
     enum ContentReportReason: String, Encodable, CaseIterable {
         /// No reason has been specified
-        case NoneSpecified = "No reason Specified"
+        case NoneSpecified = "No reason specified"
         /// Illegal content catch-all reason
         case Illegal = "Illegal Activity"
         /// Selling or facilitating use of drugs or other illegal goods

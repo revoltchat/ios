@@ -35,5 +35,6 @@ struct About: View {
 struct About_Preview: PreviewProvider {
     static var previews: some View {
         About()
+            .environmentObject(ViewState.preview())
     }
 }

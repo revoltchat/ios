@@ -81,6 +81,7 @@ struct UserSheet: View {
                 Text("Loading...")
             }
         }
+        .frame(maxWidth: .infinity)
         .padding(.horizontal, 16)
         .background(viewState.theme.background.color)
         .presentationDetents([.fraction(0.4), .large])

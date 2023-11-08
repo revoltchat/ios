@@ -135,7 +135,6 @@ struct MessageView: View {
                 .listRowSeparator(.hidden)
             }
         }
-        .background(viewState.theme.background.color)
         .sheet(isPresented: $showMemberSheet) {
             let user = Binding($viewState.users[viewModel.message.author])!
 
