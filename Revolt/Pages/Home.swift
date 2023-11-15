@@ -5,7 +5,7 @@ struct ChannelNavigationLink: View {
     var channel: Channel
     
     var body: some View {
-        NavigationLink(value: channel.id) {
+        NavigationLink(value: ChannelSelection.channel(channel.id)) {
             ChannelIcon(channel: channel)
         }
     }
@@ -46,8 +46,10 @@ struct Home: View {
                     Section("Servers") {
                         ForEach(viewState.servers.elements, id: \.key) { elem in
                             NavigationLink(value: MainSelection.server(elem.key)) {
-                                ServerIcon(server: elem.value, height: 32, width: 32)
-                                Text(elem.value.name)
+                                HStack(spacing: 12) {
+                                    ServerIcon(server: elem.value, height: 32, width: 32)
+                                    Text(elem.value.name)
+                                }
                             }
                         }
                     }
@@ -56,7 +58,7 @@ struct Home: View {
                     Button {
                         showJoinServerSheet.toggle()
                     } label: {
-                        HStack {
+                        HStack(spacing: 12) {
                             Image(systemName: "plus")
                                 .resizable()
                                 .frame(width: 16, height: 16)
@@ -68,12 +70,14 @@ struct Home: View {
                     .listRowBackground(viewState.theme.background2.color)
                     
                     NavigationLink(destination: Settings.init) {
-                        Image(systemName: "gearshape.fill")
-                            .resizable()
-                            .frame(width: 16, height: 16)
-                            .frame(width: 24, height: 24)
-                        
-                        Text("Settings")
+                        HStack(spacing: 12) {
+                            Image(systemName: "gearshape.fill")
+                                .resizable()
+                                .frame(width: 16, height: 16)
+                                .frame(width: 24, height: 24)
+                            
+                            Text("Settings")
+                        }
                     }
                     .listRowBackground(viewState.theme.background2.color)
                     
@@ -112,6 +116,20 @@ struct Home: View {
                                 CategorySection(category: category)
                             }
                             .listRowBackground(viewState.theme.background2.color)
+                            
+                            Section {
+                                NavigationLink(value: ChannelSelection.server_settings) {
+                                    HStack(spacing: 12) {
+                                        Image(systemName: "gearshape.fill")
+                                            .resizable()
+                                            .frame(width: 16, height: 16)
+                                            .frame(width: 24, height: 24)
+                                        
+                                        Text("Settings")
+                                    }
+                                }
+                            }
+                            .listRowBackground(viewState.theme.background2.color)
                         }
                         .scrollContentBackground(.hidden)
                         .background(viewState.theme.background.color)
@@ -129,7 +147,7 @@ struct Home: View {
 
                     case .dms:
                         List(selection: $viewState.currentChannel) {
-                            NavigationLink(destination: Text("Friends")) {
+                            NavigationLink(destination: FriendsList.init) {
                                 Image(systemName: "person.fill")
                                     .symbolRenderingMode(.hierarchical)
                                     .resizable()
@@ -187,11 +205,16 @@ struct Home: View {
                 }
             } detail: {
                 if let selectedChannel = viewState.currentChannel {
-                    let channel = viewState.channels[selectedChannel]!
-                    
-                    let messages = Binding($viewState.channelMessages[channel.id])!
-                    
-                    MessageableChannelView(viewModel: MessageableChannelViewModel(viewState: viewState, channel: channel, messages: messages))
+                    switch selectedChannel {
+                        case .channel(let channelId):
+                            let channel = viewState.channels[channelId]!
+                            
+                            let messages = Binding($viewState.channelMessages[channelId])!
+                            
+                            MessageableChannelView(viewModel: MessageableChannelViewModel(viewState: viewState, channel: channel, messages: messages))
+                        case .server_settings:
+                            ServerSettings(serverId: viewState.currentServer!.id!)
+                    }
                 } else {
                     Text("Select a channel")
                 }

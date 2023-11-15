@@ -13,7 +13,7 @@ struct ChannelIcon: View {
     var channel: Channel
     
     var body: some View {
-        HStack {
+        HStack(spacing: 8) {
             switch channel {
                 case .text_channel(let c):
                     if let icon = c.icon {

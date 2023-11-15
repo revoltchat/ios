@@ -86,6 +86,20 @@ enum MainSelection: Hashable {
     }
 }
 
+enum ChannelSelection: Hashable {
+    case channel(String)
+    case server_settings
+    
+    var id: String? {
+        switch self {
+            case .channel(let id):
+                id
+            case .server_settings:
+                nil
+        }
+    }
+}
+
 @MainActor
 public class ViewState: ObservableObject {
     var http: HTTPClient = HTTPClient(token: nil, baseURL: "https://api.revolt.chat")
@@ -118,9 +132,9 @@ public class ViewState: ObservableObject {
         }
     }
 
-    @Published var currentChannel: String? = nil {
+    @Published var currentChannel: ChannelSelection? = nil {
         didSet {
-            UserDefaults.standard.set(currentChannel, forKey: "currentChannel")
+            UserDefaults.standard.set(currentChannel?.id, forKey: "currentChannel")
         }
     }
     
@@ -146,7 +160,10 @@ public class ViewState: ObservableObject {
             self.currentServer = .server(currentServer)
         }
     
-        self.currentChannel = UserDefaults.standard.string(forKey: "currentChannel")
+        if let currentChannel = UserDefaults.standard.string(forKey: "currentChannel") {
+            self.currentChannel = .channel(currentChannel)
+        }
+
         self.currentSessionId = UserDefaults.standard.string(forKey: "currentSessionId")
     
         if let themeData = UserDefaults.standard.data(forKey: "theme") {
@@ -176,7 +193,7 @@ public class ViewState: ObservableObject {
         this.channelMessages["0"] = ["01HD4VQY398JNRJY60JDY2QHA5", "01HDEX6M2E3SHY8AC2S6B9SEAW"]
         this.members["0"] = ["0": Member(id: MemberId(server: "0", user: "0"), joined_at: "")]
         this.currentServer = .server("0")
-        this.currentChannel = "0"
+        this.currentChannel = .channel("0")
         
         for i in (1...9) {
             this.users["\(i)"] = User(id: "i", username: "\(i)", discriminator: "\(i)\(i)\(i)\(i)")
