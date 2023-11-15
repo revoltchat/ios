@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct Overwrite: Codable {
+struct Overwrite: Codable, Equatable {
     var a: Int
     var d: Int
 }

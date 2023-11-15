@@ -66,18 +66,18 @@ struct ReportMessageSheetView: View {
             VStack {
                 Text("Pick a category")
                     .font(.caption)
-                    .foregroundStyle(viewState.theme.textColor.color)
+                    .foregroundStyle(viewState.theme.foreground.color)
     
                 Picker("Report reason", selection: $reason) {
                     ForEach(ContentReportPayload.ContentReportReason.allCases, id: \.rawValue) { reason in
                         Text(reason.rawValue)
                             .tag(reason)
-                            .foregroundStyle(viewState.theme.textColor.color)
+                            .foregroundStyle(viewState.theme.foreground.color)
                     }
                 }
                 .padding(.vertical, 2)
                 .frame(maxWidth: .infinity)
-                .foregroundStyle(viewState.theme.textColor.color)
+                .foregroundStyle(viewState.theme.foreground.color)
                 .overlay(
                     RoundedRectangle(cornerRadius: 5)
                         .stroke((error != nil && userContext.isEmpty) ? Color.red : viewState.theme.messageBoxBorder.color, lineWidth: 1)
@@ -87,7 +87,7 @@ struct ReportMessageSheetView: View {
             VStack {
                 Text("Give us some detail")
                     .font(.caption)
-                    .foregroundStyle(viewState.theme.textColor.color)
+                    .foregroundStyle(viewState.theme.foreground.color)
 
                 TextField("", text: $userContext, axis: .vertical)
                     .padding(.vertical, 15)
@@ -114,7 +114,7 @@ struct ReportMessageSheetView: View {
             }
             Button(action: submit, label: {
                 Text("Submit")
-                    .foregroundStyle(viewState.theme.textColor.color)
+                    .foregroundStyle(viewState.theme.foreground.color)
             })
                 .padding()
                 .frame(maxWidth: .infinity)

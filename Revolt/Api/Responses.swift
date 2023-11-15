@@ -23,3 +23,13 @@ struct AccountCreateVerifyResponse: Decodable {
 struct OnboardingStatusResponse: Decodable {
     var onboarding: Bool
 }
+
+struct AutumnResponse: Decodable {
+    var id: String
+}
+
+struct JoinResponse: Decodable {
+    var type: String
+    var channels: [Channel]
+    var server: Server
+}

@@ -29,7 +29,7 @@ struct Settings: View {
                         accent: viewState.theme.accent.color,
                         background: viewState.theme.background.color,
                         background2: viewState.theme.background2.color,
-                        textColor: viewState.theme.textColor.color,
+                        textColor: viewState.theme.foreground.color,
                         messageBox: viewState.theme.messageBox.color,
                         messageBoxBackground: viewState.theme.messageBoxBackground.color,
                         topBar: viewState.theme.topBar.color,

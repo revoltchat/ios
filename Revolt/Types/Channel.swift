@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct SavedMessages: Decodable {
+struct SavedMessages: Decodable, Equatable {
     var id: String
     var user: String
     
@@ -17,7 +17,7 @@ struct SavedMessages: Decodable {
     }
 }
 
-struct DMChannel: Decodable {
+struct DMChannel: Decodable, Equatable {
     var id: String
     var active: Bool
     var recipients: [String]
@@ -29,7 +29,7 @@ struct DMChannel: Decodable {
     }
 }
 
-struct GroupDMChannel: Decodable {
+struct GroupDMChannel: Decodable, Equatable {
     var id: String
     var recipients: [String]
     var name: String
@@ -46,7 +46,7 @@ struct GroupDMChannel: Decodable {
     }
 }
 
-struct TextChannel: Decodable {
+struct TextChannel: Decodable, Equatable {
     var id: String
     var server: String
     var name: String
@@ -63,7 +63,7 @@ struct TextChannel: Decodable {
     }
 }
 
-struct VoiceChannel: Decodable {
+struct VoiceChannel: Decodable, Equatable {
     var id: String
     var server: String
     var name: String
@@ -79,7 +79,7 @@ struct VoiceChannel: Decodable {
     }
 }
 
-enum Channel: Identifiable {
+enum Channel: Identifiable, Equatable {
     case saved_messages(SavedMessages)
     case dm_channel(DMChannel)
     case group_dm_channel(GroupDMChannel)

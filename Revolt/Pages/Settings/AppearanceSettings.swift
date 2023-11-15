@@ -81,7 +81,7 @@ struct AppearanceSettings: View {
             })
             .onChange(of: textColor) {
                 let resolved = textColor.resolve(in: environment)
-                viewState.theme.textColor.set(with: resolved)
+                viewState.theme.foreground.set(with: resolved)
             }
             
             ColorPicker(selection: $messageBox, label: {
@@ -131,7 +131,7 @@ struct AppearanceSettings_Preview: PreviewProvider {
             accent: viewState.theme.accent.color,
             background: viewState.theme.background.color,
             background2: viewState.theme.background2.color,
-            textColor: viewState.theme.textColor.color,
+            textColor: viewState.theme.foreground.color,
             messageBox: viewState.theme.messageBox.color,
             messageBoxBackground: viewState.theme.messageBoxBackground.color,
             topBar: viewState.theme.topBar.color,
@@ -143,7 +143,7 @@ struct AppearanceSettings_Preview: PreviewProvider {
             accent: viewState.theme.accent.color,
             background: viewState.theme.background.color,
             background2: viewState.theme.background2.color,
-            textColor: viewState.theme.textColor.color,
+            textColor: viewState.theme.foreground.color,
             messageBox: viewState.theme.messageBox.color,
             messageBoxBackground: viewState.theme.messageBoxBackground.color,
             topBar: viewState.theme.topBar.color,

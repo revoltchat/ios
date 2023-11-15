@@ -8,26 +8,34 @@
 import Foundation
 import SwiftUI
 
+enum Destination: Hashable, Codable {
+    case dm(String)
+    case friends
+}
+
+
 struct DMList: View {
-    @State var currentDm: String?
+    @State var currentDm: Destination?
 
     @EnvironmentObject var viewState: ViewState
     
     var body: some View {
         NavigationSplitView {
             List(selection: $currentDm) {
-                NavigationLink(destination: Text("Friends")) {
-                    Image(systemName: "person.fill")
-                        .symbolRenderingMode(.hierarchical)
-                        .resizable()
-                        .frame(width: 16, height: 16)
-                        .frame(width: 24, height: 24)
-                    
-                    Text("Friends")
+                NavigationLink(value: Destination.friends) {
+                    HStack(spacing: 12) {
+                        Image(systemName: "person.fill")
+                            .symbolRenderingMode(.hierarchical)
+                            .resizable()
+                            .frame(width: 16, height: 16)
+                            .frame(width: 24, height: 24)
+                        
+                        Text("Friends")
+                    }
                 }
                 .listRowBackground(viewState.theme.background2.color)
 
-                let channel: SavedMessages = viewState.dms.compactMap { channel in
+                let savedMessagesChannel: SavedMessages = viewState.dms.compactMap { channel in
                     if case .saved_messages(let c) = channel {
                         return c
                     }
@@ -35,21 +43,14 @@ struct DMList: View {
                     return nil
                 }.first!
                                 
-                NavigationLink(value: channel.id) {
-                    ChannelIcon(channel: .saved_messages(channel))
+                NavigationLink(value: Destination.dm(savedMessagesChannel.id)) {
+                    ChannelIcon(channel: .saved_messages(savedMessagesChannel))
                 }
                 .listRowBackground(viewState.theme.background2.color)
 
                 Section("Conversations") {
-                    ForEach(viewState.dms.filter {
-                        switch $0 {
-                            case .saved_messages(_):
-                                return false
-                            default:
-                                return true
-                        }
-                    }) { channel in
-                        NavigationLink(value: channel.id) {
+                    ForEach(viewState.dms.filter { $0 != .saved_messages(savedMessagesChannel) }) { channel in
+                        NavigationLink(value: Destination.dm(channel.id)) {
                             ChannelIcon(channel: channel)
                         }
                     }
@@ -61,17 +62,16 @@ struct DMList: View {
 
         } detail: {
             if let currentDm = currentDm {
-                let channel = viewState.channels[currentDm]!
-                let messages = Binding($viewState.channelMessages[currentDm])!
+                switch currentDm {
+                    case .dm(let id):
+                        let channel = viewState.channels[id]!
+                        let messages = Binding($viewState.channelMessages[id])!
+                        
+                        MessageableChannelView(viewModel: MessageableChannelViewModel(viewState: viewState, channel: channel, messages: messages))
 
-                MessageableChannelView(viewModel: MessageableChannelViewModel(viewState: viewState, channel: channel, messages: messages))
-                    .navigationBarTitleDisplayMode(.inline)
-                    .toolbar {
-                        ToolbarItem(placement: .principal) {
-                            ChannelIcon(channel: channel)
-                        }
-                    }
-                    .toolbarBackground(viewState.theme.topBar.color, for: .automatic)
+                    case .friends:
+                        FriendsList()
+                }
             }
         }
         .toolbar {

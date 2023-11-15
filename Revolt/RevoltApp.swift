@@ -10,7 +10,7 @@ struct RevoltApp: App {
                 .environmentObject(state)
                 .tint(state.theme.accent.color)
                 .background(state.theme.background.color)
-                .foregroundStyle(state.theme.textColor.color)
+                .foregroundStyle(state.theme.foreground.color)
         }
     }
 }
@@ -80,7 +80,7 @@ extension View {
     func applyPreviewModifiers(withState viewState: ViewState) -> some View {
         self.environmentObject(viewState)
             .tint(viewState.theme.accent.color)
-            .foregroundStyle(viewState.theme.textColor.color)
+            .foregroundStyle(viewState.theme.foreground.color)
             .background(viewState.theme.background.color)
 
     }

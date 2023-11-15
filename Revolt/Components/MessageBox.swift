@@ -157,7 +157,7 @@ struct MessageBox: View {
                         .placeholder(when: content.isEmpty) {
                             Text("Message \(channel.getName(viewState))")
                         }
-                        .foregroundStyle(viewState.theme.textColor.color)
+                        .foregroundStyle(viewState.theme.foreground.color)
                         .padding([.vertical, .leading, .trailing], 8)
                         .background(RoundedRectangle(cornerRadius: 16)
                             .fill(viewState.theme.messageBox.color)

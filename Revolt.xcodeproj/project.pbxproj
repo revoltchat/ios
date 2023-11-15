@@ -24,6 +24,7 @@
 		17966B652AE0842A00BAEC58 /* ChannelIcon.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17966B642AE0842A00BAEC58 /* ChannelIcon.swift */; };
 		17966B672AE08C3000BAEC58 /* DMList.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17966B662AE08C3000BAEC58 /* DMList.swift */; };
 		17B51A682AFAFA8E0018C967 /* CodableWrapper in Frameworks */ = {isa = PBXBuildFile; productRef = 17B51A672AFAFA8E0018C967 /* CodableWrapper */; };
+		17B7128D2B03E9D700CFF61C /* FriendsList.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17B7128C2B03E9D700CFF61C /* FriendsList.swift */; };
 		17BC3EFA2AD826970029D820 /* File.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17BC3EF92AD826970029D820 /* File.swift */; };
 		17BC3EFC2AD82A1B0029D820 /* Member.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17BC3EFB2AD82A1B0029D820 /* Member.swift */; };
 		17CCCF672ADA109600D78D7A /* Permissions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17CCCF662ADA109600D78D7A /* Permissions.swift */; };
@@ -45,6 +46,7 @@
 		17E019DA2AF199A600AB4663 /* MessageReply.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17E019D92AF199A600AB4663 /* MessageReply.swift */; };
 		17E019DC2AF1B25100AB4663 /* SessionsSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17E019DB2AF1B25100AB4663 /* SessionsSettings.swift */; };
 		17E28E082AF319D500F6069F /* JoinServer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17E28E072AF319D500F6069F /* JoinServer.swift */; };
+		17F555272AFC229900958F2F /* ServerSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17F555262AFC229900958F2F /* ServerSettings.swift */; };
 		17FDBA712AEAFEAC00CB7637 /* WrappingHStack in Frameworks */ = {isa = PBXBuildFile; productRef = 17FDBA702AEAFEAC00CB7637 /* WrappingHStack */; };
 		D49B705329C4D3FE009494A5 /* RevoltApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = D49B705229C4D3FE009494A5 /* RevoltApp.swift */; };
 		D49B705729C4D3FE009494A5 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = D49B705629C4D3FE009494A5 /* Assets.xcassets */; };
@@ -82,6 +84,7 @@
 		178BB11A2B02FCDD001143A4 /* Responses.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Responses.swift; sourceTree = "<group>"; };
 		17966B642AE0842A00BAEC58 /* ChannelIcon.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChannelIcon.swift; sourceTree = "<group>"; };
 		17966B662AE08C3000BAEC58 /* DMList.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DMList.swift; sourceTree = "<group>"; };
+		17B7128C2B03E9D700CFF61C /* FriendsList.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FriendsList.swift; sourceTree = "<group>"; };
 		17BC3EF92AD826970029D820 /* File.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = File.swift; sourceTree = "<group>"; };
 		17BC3EFB2AD82A1B0029D820 /* Member.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Member.swift; sourceTree = "<group>"; };
 		17CCCF662ADA109600D78D7A /* Permissions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Permissions.swift; sourceTree = "<group>"; };
@@ -101,7 +104,7 @@
 		17E019D92AF199A600AB4663 /* MessageReply.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageReply.swift; sourceTree = "<group>"; };
 		17E019DB2AF1B25100AB4663 /* SessionsSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SessionsSettings.swift; sourceTree = "<group>"; };
 		17E28E072AF319D500F6069F /* JoinServer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JoinServer.swift; sourceTree = "<group>"; };
-		17F57A902AF724A700F0318C /* Revolt.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Revolt.entitlements; sourceTree = "<group>"; };
+		17F555262AFC229900958F2F /* ServerSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ServerSettings.swift; sourceTree = "<group>"; };
 		D49B704F29C4D3FE009494A5 /* Revolt.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Revolt.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		D49B705229C4D3FE009494A5 /* RevoltApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RevoltApp.swift; sourceTree = "<group>"; };
 		D49B705629C4D3FE009494A5 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
@@ -199,6 +202,8 @@
 				17DFB4652AE06AB900E1D417 /* MessageableChannel.swift */,
 				17966B662AE08C3000BAEC58 /* DMList.swift */,
 				17E28E072AF319D500F6069F /* JoinServer.swift */,
+				17F555262AFC229900958F2F /* ServerSettings.swift */,
+				17B7128C2B03E9D700CFF61C /* FriendsList.swift */,
 			);
 			path = Pages;
 			sourceTree = "<group>";
@@ -258,7 +263,6 @@
 		D49B705129C4D3FE009494A5 /* Revolt */ = {
 			isa = PBXGroup;
 			children = (
-				17F57A902AF724A700F0318C /* Revolt.entitlements */,
 				17DFB4622AE06A3200E1D417 /* Api */,
 				17DFB4612AE06A0F00E1D417 /* Pages */,
 				175E01DC2ADAB3EA004F6431 /* Components */,
@@ -432,6 +436,7 @@
 				DA99EC5029D5F35900419FDA /* Login.swift in Sources */,
 				178BB1102B02D89A001143A4 /* HCaptchaView.swift in Sources */,
 				17DFB4642AE06A5D00E1D417 /* Settings.swift in Sources */,
+				17F555272AFC229900958F2F /* ServerSettings.swift in Sources */,
 				17E019D32AF17F9D00AB4663 /* ProfileSettings.swift in Sources */,
 				DAAA4C0929F2974300F41E52 /* Http.swift in Sources */,
 				DAAA4C0E29F2D37800F41E52 /* Api.swift in Sources */,
@@ -453,6 +458,7 @@
 				DAAA4C0529F2560800F41E52 /* Channel.swift in Sources */,
 				175E01E02ADAB554004F6431 /* Avatar.swift in Sources */,
 				17DFB4662AE06AB900E1D417 /* MessageableChannel.swift in Sources */,
+				17B7128D2B03E9D700CFF61C /* FriendsList.swift in Sources */,
 				17E019CD2AF136B100AB4663 /* PresenceIndicator.swift in Sources */,
 				17CCCF702ADA17B600D78D7A /* Utils.swift in Sources */,
 				1718FB542AF8470400E9C511 /* ReportMessageSheetView.swift in Sources */,

@@ -205,99 +205,24 @@ struct HTTPClient {
     func completeOnboarding(username: String) async -> Result<EmptyResponse, AFError> {
         await req(method: .post, route: "/onboard/complete", parameters: ["username": username])
     }
-}
-
-struct EmptyResponse {
     
-}
-
-struct FetchHistory: Decodable {
-    var messages: [Message]
-    var users: [User]
-    var members: [Member]?
-}
-
-struct ApiReply: Encodable {
-    var id: String
-    var mention: Bool
-}
-
-struct SendMessage: Encodable {
-    var replies: [ApiReply]
-    var content: String
-    var attachments: [String]
-}
-
-
-struct ContentReportPayload: Encodable {
-    enum ContentReportReason: String, Encodable, CaseIterable {
-        /// No reason has been specified
-        case NoneSpecified = "No reason specified"
-        /// Illegal content catch-all reason
-        case Illegal = "Illegal Activity"
-        /// Selling or facilitating use of drugs or other illegal goods
-        case IllegalGoods = "Illegal Goods"
-        /// Extortion or blackmail
-        case IllegalExtortion = "Extortion"
-        /// Revenge or child pornography
-        case IllegalPornography = "Child/Revenge Pornography"
-        /// Illegal hacking activity
-        case IllegalHacking = "Hacking"
-        /// Extreme violence, gore, or animal cruelty
-        /// With exception to violence potrayed in media / creative arts
-        case ExtremeViolence = "Extreme Violence"
-        /// Content that promotes harm to others / self
-        case PromotesHarm = "Promoting Harm"
-        /// Unsolicited advertisements
-        case UnsolicitedSpam = "Spam"
-        /// This is a raid
-        case Raid = "Raid"
-        /// Spam or platform abuse
-        case SpamAbuse = "Platform Abuse"
-        /// Scams or fraud
-        case ScamsFraud = "Scam/Fraud"
-        /// Distribution of malware or malicious links
-        case Malware = "Malware"
-        /// Harassment or abuse targeted at another user
-        case Harassment = "Harassment"
-        
-        func encode(to encoder: Encoder) throws {
-            var container = encoder.singleValueContainer()
-            try container.encode(String(describing: self))
-        }
+    func acceptFriendRequest(user: String) async -> Result<User, AFError> {
+        await req(method: .put, route: "/users/\(user)/friend")
     }
     
-    enum ContentReportType: String, Encodable {
-        case Message = "Message"
-        case Server = "Server"
-        case User = "User"
+    func removeFriend(user: String) async -> Result<User, AFError> {
+        await req(method: .delete, route: "/users/\(user)/friend")
     }
     
-    struct NestedContentReportPayload: Encodable {
-        var type: ContentReportType
-        var id: String
-        var report_reason: ContentReportReason
+    func blockUser(user: String) async -> Result<User, AFError> {
+        await req(method: .put, route: "/users/\(user)/block")
     }
     
-    var content: NestedContentReportPayload
-    var additional_context: String
+    func unblockUser(user: String) async -> Result<User, AFError> {
+        await req(method: .delete, route: "/users/\(user)/block")
+    }
     
-    init(type: ContentReportType, contentId: String, reason: ContentReportReason, userContext: String) {
-        self.content = NestedContentReportPayload(type: type, id: contentId, report_reason: reason)
-        self.additional_context = userContext
-        }
-}
-
-struct AutumnResponse: Decodable {
-    var id: String
-}
-
-struct AutumnPayload: Encodable {
-    var file: Data
-}
-
-struct JoinResponse: Decodable {
-    var type: String
-    var channels: [Channel]
-    var server: Server
+    func sendFriendRequest(username: String) async -> Result<User, AFError> {
+        await req(method: .post, route: "/users/friend", parameters: ["username": username])
+    }
 }
