@@ -20,7 +20,7 @@ struct ApplicationSwitcher: View {
 
     @ViewBuilder
     var body: some View {
-        if viewState.sessionToken != nil {
+        if viewState.sessionToken != nil && !viewState.isOnboarding {
             InnerApp()
                 .task {
                     await viewState.backgroundWsTask()

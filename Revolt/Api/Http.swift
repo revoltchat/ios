@@ -33,6 +33,7 @@ struct HTTPClient {
         parameters: I? = nil as Int?,
         encoder: ParameterEncoder = JSONParameterEncoder.default
     ) async -> Result<O, AFError> {
+        print(self.token)
         
         let req = self.session.request(
             "\(baseURL)\(route)",
@@ -47,7 +48,7 @@ struct HTTPClient {
         
         let code = response.response?.statusCode ?? 500
         
-        logger.debug("Received response \(code) for route \(method.rawValue) \(route) with result \(try! response.result.get())")
+        logger.debug("Received response \(code) for route \(method.rawValue) \(baseURL)\(route) with result \(try! response.result.get())")
 
         if ![200, 201, 202, 203, 204, 205, 206, 207, 208, 226].contains(code) {
             return Result.failure(AFError.responseSerializationFailed(reason: .inputFileNil))
@@ -65,6 +66,8 @@ struct HTTPClient {
         parameters: I? = nil as Int?,
         encoder: ParameterEncoder = JSONParameterEncoder.default
     ) async -> Result<EmptyResponse, AFError> {
+        print(self.token)
+
         let req = self.session.request(
             "\(baseURL)\(route)",
             method: method,
@@ -78,7 +81,7 @@ struct HTTPClient {
         
         let code = response.response?.statusCode ?? 500
         
-        logger.debug("Received response \(code) for route \(method.rawValue) \(route)")
+        logger.debug("Received response \(code) for route \(method.rawValue) \(baseURL)\(route) with result \(try! response.result.get())")
         print(response.result)
 
         
@@ -185,6 +188,21 @@ struct HTTPClient {
     
     func reportMessage(id: String, reason: ContentReportPayload.ContentReportReason, userContext: String) async -> Result<EmptyResponse, AFError> {
         await req(method: .post, route: "/safety/report", parameters: ContentReportPayload(type: .Message, contentId: id, reason: reason, userContext: userContext))
+    }
+    
+    func createAccount(email: String, password: String, invite: String?, captcha: String?) async -> Result<EmptyResponse, AFError> {
+        print(captcha ?? "No Captcha")
+        return await req(method: .post, route: "/auth/account/create", parameters: AccountCreatePayload(email: email, password: password, invite: invite, captcha: captcha))
+    }
+    
+    func createAccount_VerificationCode(code: String) async -> Result<AccountCreateVerifyResponse, AFError> {
+        await req(method: .post, route: "/auth/account/verify/\(code)")
+    }
+    
+    func completeOnboarding(username: String) async -> Result<EmptyResponse, AFError> {
+        let resp = await req(method: .post, route: "/onboard/complete", parameters: ["username": username])
+        print(resp)
+        return resp
     }
 }
 
