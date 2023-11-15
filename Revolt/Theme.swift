@@ -68,9 +68,7 @@ struct ThemeColor: Equatable {
     }
     
     var color: Color {
-        let c = Color(red: r, green: g, blue: b, opacity: a)
-        print(c)
-        return c
+        Color(red: r, green: g, blue: b, opacity: a)
     }
     
     static var white: ThemeColor = ThemeColor(hex: "#FFFFFFFF")
