@@ -106,17 +106,9 @@ struct SpinnerCircle: View {
 #Preview {
     @State var action = false
 
-    LoadingSpinnerView(frameSize: CGSize(width: 100, height: 100), isActionComplete: $action)
+    return LoadingSpinnerView(frameSize: CGSize(width: 100, height: 100), isActionComplete: $action)
         .task {
             try! await Task.sleep(for: .seconds(3))
             action = true
         }
-        .applyPreviewModifiers(withState: ViewState().applySystemScheme(theme: .light))
-    
-    LoadingSpinnerView(frameSize: CGSize(width: 100, height: 100), isActionComplete: $action)
-        .task {
-            try! await Task.sleep(for: .seconds(3))
-            action = true
-        }
-        .applyPreviewModifiers(withState: ViewState().applySystemScheme(theme: .dark))
 }
