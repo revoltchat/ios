@@ -46,7 +46,12 @@ struct HTTPClient {
         
         let code = response.response?.statusCode ?? 500
         
-        logger.debug("Received response \(code) for route \(method.rawValue) \(baseURL)\(route) with result \(try! response.result.get())")
+        do {
+            let resp = try response.result.get()
+            logger.debug("Received response \(code) for route \(method.rawValue) \(baseURL)\(route) with result \(resp)")
+        } catch {
+            logger.debug("Received response \(code) for route \(method.rawValue) \(baseURL)\(route) with bad result \(response.error)")
+        }
 
         if ![200, 201, 202, 203, 204, 205, 206, 207, 208, 226].contains(code) {
             return Result.failure(AFError.responseSerializationFailed(reason: .inputFileNil))
@@ -193,10 +198,12 @@ struct HTTPClient {
         await req(method: .post, route: "/auth/account/verify/\(code)")
     }
     
+    func checkOnboarding() async -> Result<OnboardingStatusResponse, AFError> {
+        await req(method: .get, route: "/onboard/hello")
+    }
+    
     func completeOnboarding(username: String) async -> Result<EmptyResponse, AFError> {
-        let resp = await req(method: .post, route: "/onboard/complete", parameters: ["username": username])
-        print(resp)
-        return resp
+        await req(method: .post, route: "/onboard/complete", parameters: ["username": username])
     }
 }
 

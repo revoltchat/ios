@@ -103,6 +103,8 @@ struct LogIn: View {
     @State private var showPassword = false
     @State private var showMfa = false
     @State private var errorMessage: String? = nil
+    
+    @State private var needsOnboarding = false
 
     @Binding public var mfaTicket: String
     @Binding public var mfaMethods: [String]
@@ -118,7 +120,6 @@ struct LogIn: View {
 
             switch state {
                 case .Mfa(let ticket, let methods):
-                    print(self.path)
                     self.mfaTicket = ticket
                     self.mfaMethods = methods
                     self.path.append("mfa")
@@ -131,6 +132,10 @@ struct LogIn: View {
                 
                 case .Invalid:
                     self.errorMessage = "Invalid email and/or password"
+                
+                case .Onboarding:
+                    viewState.isOnboarding = true
+                    self.needsOnboarding = true
             }
         })
     }
@@ -240,6 +245,9 @@ struct LogIn: View {
             Spacer()
         }
         .padding()
+        .navigationDestination(isPresented: $needsOnboarding) {
+            CreateAccount(onboardingStage: .Username)
+        }
     }
 }
 

@@ -14,6 +14,7 @@ enum LoginState {
     case Mfa(ticket: String, methods: [String])
     case Disabled
     case Invalid
+    case Onboarding
 }
 
 struct LoginSuccess: Decodable {
@@ -213,7 +214,7 @@ public class ViewState: ObservableObject {
     }
     
     private func innerSignIn(_ body: [String: Any], _ callback: @escaping((LoginState) -> ())) async {
-        AF.request("https://api.revolt.chat/auth/session/login", method: .post, parameters: body, encoding: JSONEncoding.default)
+        AF.request("\(http.baseURL)/auth/session/login", method: .post, parameters: body, encoding: JSONEncoding.default)
             .responseData { response in
 
                 switch response.result {
@@ -224,10 +225,25 @@ public class ViewState: ObservableObject {
                         let result = try! JSONDecoder().decode(LoginResponse.self, from: data)
                         switch result {
                             case .Success(let success):
-                                self.currentSessionId = success._id
-                                self.sessionToken = success.token
-                                self.http.token = success.token
-                                return callback(.Success)
+                                Task {
+                                    self.isOnboarding = true
+                                    self.currentSessionId = success._id
+                                    self.sessionToken = success.token
+                                    self.http.token = success.token
+                                    
+                                    do {
+                                        let onboardingState = try await self.http.checkOnboarding().get()
+                                        if onboardingState.onboarding {
+                                            callback(.Onboarding)
+                                        } else {
+                                            self.isOnboarding = false
+                                            callback(.Success)
+                                        }
+                                    } catch {
+                                        self.isOnboarding = false
+                                        return callback(.Success) // if the onboard check dies, just try to go for it
+                                    }
+                                }
                                 
                             case .Mfa(let mfa):
                                 return callback(.Mfa(ticket: mfa.ticket, methods: mfa.allowed_methods))

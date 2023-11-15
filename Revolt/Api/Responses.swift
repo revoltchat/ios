@@ -19,3 +19,7 @@ struct AccountCreateVerifyResponse: Decodable {
     
     var ticket: Inner
 }
+
+struct OnboardingStatusResponse: Decodable {
+    var onboarding: Bool
+}
