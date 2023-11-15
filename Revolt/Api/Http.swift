@@ -33,8 +33,6 @@ struct HTTPClient {
         parameters: I? = nil as Int?,
         encoder: ParameterEncoder = JSONParameterEncoder.default
     ) async -> Result<O, AFError> {
-        print(self.token)
-        
         let req = self.session.request(
             "\(baseURL)\(route)",
             method: method,
@@ -54,7 +52,6 @@ struct HTTPClient {
             return Result.failure(AFError.responseSerializationFailed(reason: .inputFileNil))
         }
                
-        print(response.result)
         return response.result.map({ b in try! JSONDecoder().decode(O.self, from: b.data(using: .utf8)!) })
     }
 
@@ -66,8 +63,6 @@ struct HTTPClient {
         parameters: I? = nil as Int?,
         encoder: ParameterEncoder = JSONParameterEncoder.default
     ) async -> Result<EmptyResponse, AFError> {
-        print(self.token)
-
         let req = self.session.request(
             "\(baseURL)\(route)",
             method: method,
@@ -82,7 +77,6 @@ struct HTTPClient {
         let code = response.response?.statusCode ?? 500
         
         logger.debug("Received response \(code) for route \(method.rawValue) \(baseURL)\(route) with result \(try! response.result.get())")
-        print(response.result)
 
         
         if ![200, 201, 202, 203, 204, 205, 206, 207, 208, 226].contains(code) {
