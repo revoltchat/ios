@@ -9,6 +9,20 @@ import Foundation
 import SwiftUI
 import WrappingHStack
 
+enum Badges: Int, CaseIterable {
+    case developer = 1
+    case translator = 2
+    case supporter = 4
+    case responsible_disclosure = 8
+    case founder = 16
+    case moderation = 32
+    case active_supporter = 64
+    case paw = 128
+    case early_adopter = 256
+    case amog = 512
+    case amorbus = 1024
+}
+
 struct UserSheet: View {
     @EnvironmentObject var viewState: ViewState
     @Binding var user: User
@@ -46,6 +60,14 @@ struct UserSheet: View {
                     }
                     .padding(.bottom, 8)
                     .padding(.leading, 8)
+                }
+
+                if let badges = user.badges {
+                    HStack {
+                        ForEach(Badges.allCases, id: \.self) { value in
+                            Badge(badges: badges, filename: String(describing: value), value: value.rawValue)
+                        }
+                    }
                 }
                 
                 if let member = member {
@@ -86,6 +108,7 @@ struct UserSheet: View {
         .background(viewState.theme.background.color)
         .presentationDetents([.fraction(0.4), .large])
         .task {
+            print(user)
             if let profile = user.profile {
                 self.profile = profile
             } else {
@@ -94,5 +117,28 @@ struct UserSheet: View {
                 }
             }
         }
+    }
+}
+
+struct Badge: View {
+    var badges: Int
+    var filename: String
+    var value: Int
+    
+    var body: some View {
+        if badges & (value << 0) != 0 {
+            Image(filename)
+                .resizable()
+                .frame(width: 24, height: 24)
+        }
+    }
+}
+
+struct UserSheetPreview: PreviewProvider {
+    @StateObject static var viewState: ViewState = ViewState.preview()
+        
+    static var previews: some View {
+        UserSheet(user: Binding($viewState.users["0"])!, member: .constant(nil))
+            .applyPreviewModifiers(withState: viewState)
     }
 }

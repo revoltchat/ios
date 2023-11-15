@@ -184,7 +184,7 @@ public class ViewState: ObservableObject {
     class func preview() -> ViewState {
         let this = ViewState()
         this.state = .connected
-        this.currentUser = User(id: "0", username: "Zomatree", discriminator: "0000", status: Status(text: "hello world", presence: "Busy"))
+        this.currentUser = User(id: "0", username: "Zomatree", discriminator: "0000", badges: Int.max, status: Status(text: "hello world", presence: "Busy"), profile: Profile(content: "hello world"))
         this.users["0"] = this.currentUser!
         this.servers["0"] = Server(id: "0", name: "Testing Server", channels: ["0"], default_permissions: 0)
         this.channels["0"] = .text_channel(TextChannel(id: "0", server: "0", name: "General"))
@@ -335,7 +335,7 @@ public class ViewState: ObservableObject {
                 }
                 
                 for user in event.users {
-                    if user.relationship == "User" {
+                    if user.relationship == .User {
                         currentUser = user
                     }
                     

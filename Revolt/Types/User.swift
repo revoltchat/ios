@@ -15,8 +15,14 @@ enum Presence: Codable {
     case Busy, Idle, Invisible, Online, Focus
 }
 
-enum Relation: Codable {
-    case Blocked, BlockedOther, Friend, Incoming, None, Outgoing, User
+enum Relation: String, Codable {
+    case Blocked
+    case BlockedOther
+    case Friend
+    case Incoming
+    case None
+    case Outgoing
+    case User
 }
 
 struct Status: Codable {
@@ -37,7 +43,7 @@ struct User: Identifiable, Decodable {
     var relations: [UserRelation]?
     var badges: Int?
     var status: Status?
-    var relationship: String?
+    var relationship: Relation?
     var online: Bool?
     var flags: Int?
     var bot: UserBot?
