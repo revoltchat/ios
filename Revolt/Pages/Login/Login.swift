@@ -13,27 +13,23 @@ struct Login: View {
             VStack {
                 Spacer()
                 Group {
-                    if colorScheme == .light {
-                        Image("wide")
-                            .colorInvert()
-                            .padding(.bottom, 20)
-                    } else {
-                        Image("wide")
-                            .padding(.bottom, 20)
-                    }
+                    Image("wide")
+                        .if(colorScheme == .light, content: { $0.colorInvert() })
+                        .padding(.bottom, 20)
+        
                     Text("Find your community, connect with the world.")
                         .font(.title)
                         .fontWeight(.bold)
                         .multilineTextAlignment(.center)
                         .padding(.horizontal)
                         .foregroundColor((colorScheme == .light) ? Color.black : Color.white)
+                    
                     Text("Revolt is one of the best ways to stay connected with your friends and community, anywhere, anytime.")
                         .multilineTextAlignment(.center)
                         .padding(.horizontal, 55.0)
                         .padding(.top, 10.0)
                         .font(.footnote)
                         .foregroundColor((colorScheme == .light) ? Color.black : Color.white)
-
                 }
 
                 Spacer()
@@ -69,8 +65,6 @@ struct Login: View {
                 }
             }
             .navigationDestination(for: String.self) { dest in
-                let _ = print(dest)
-
                 switch dest {
                     case "mfa":
                         Mfa(path: $path, ticket: $mfaTicket, methods: $mfaMethods)
@@ -116,8 +110,6 @@ struct LogIn: View {
 
     private func logIn() async {
         await viewState.signIn(email: email, password: password, callback: { state in
-            print(state)
-
             switch state {
                 case .Mfa(let ticket, let methods):
                     self.mfaTicket = ticket
@@ -155,6 +147,7 @@ struct LogIn: View {
                     Text(error)
                         .foregroundStyle(Color.red)
                 }
+
                 TextField(
                     "Email",
                     text: $email
@@ -261,6 +254,8 @@ struct Mfa: View {
     @State var selected: String? = nil
     @State var currentText: String = ""
 
+    @Environment(\.colorScheme) var colorScheme: ColorScheme
+    
     var body: some View {
         VStack {
             Spacer()
@@ -329,6 +324,7 @@ struct Mfa: View {
                 })
             }
         }
+        .foregroundColor((colorScheme == .light) ? Color.black : Color.white)
     }
 }
 
