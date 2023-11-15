@@ -56,5 +56,11 @@ class Avatar_Preview: PreviewProvider {
         Avatar(user: viewState.currentUser!, withPresence: true)
             .environmentObject(viewState)
             .previewLayout(.sizeThatFits)
+            .background(Theme.light.background.color)
+        
+        Avatar(user: viewState.currentUser!, withPresence: true)
+            .environmentObject(viewState)
+            .previewLayout(.sizeThatFits)
+            .background(Theme.dark.background.color)
     }
 }

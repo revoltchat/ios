@@ -104,9 +104,9 @@ struct SpinnerCircle: View {
 }
 
 #Preview {
-    var action = false
-    var actionComplete: Binding<Bool> = Binding(get: {action}, set: {a in action = a})
-    return LoadingSpinnerView(frameSize: CGSize(width: 100, height: 100), isActionComplete: actionComplete)
+    @State var action = false
+
+    return LoadingSpinnerView(frameSize: CGSize(width: 100, height: 100), isActionComplete: $action)
         .task {
             try! await Task.sleep(for: .seconds(3))
             action = true

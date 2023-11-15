@@ -134,6 +134,7 @@ struct MessageableChannelView: View {
             }
         }
         .toolbarBackground(viewState.theme.topBar.color, for: .automatic)
+        .navigationBarTitleDisplayMode(.inline)
         .sheet(isPresented: $showSheet) {
             VStack(alignment: .leading, spacing: 12) {
                 HStack(alignment: .center) {
