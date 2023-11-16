@@ -37,7 +37,7 @@ struct CreateAccount: View {
     var body: some View {
         ZStack {
             VStack {
-                if !isWaitingWithSpinner && onboardingStage == .Initial {
+                if (!isWaitingWithSpinner && onboardingStage == .Initial) || [OnboardingStage.Username, OnboardingStage.Verify].contains(onboardingStage) {
                     Spacer()
                 }
 
@@ -285,7 +285,11 @@ struct CreateAccount: View {
                         .clipShape(.rect(cornerRadius: 50))
                     
                 }
-                if !isWaitingWithSpinner && onboardingStage == .Initial {
+                if (!isWaitingWithSpinner && onboardingStage == .Initial) {
+                    NavigationLink("Resend a verification email", destination: ResendEmail())
+                        .padding(15)
+                }
+                if (!isWaitingWithSpinner && onboardingStage == .Initial) || [OnboardingStage.Username, OnboardingStage.Verify].contains(onboardingStage) {
                     Spacer()
                 }
             }

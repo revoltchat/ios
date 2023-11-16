@@ -8,6 +8,8 @@
 
 /* Begin PBXBuildFile section */
 		1718FB542AF8470400E9C511 /* ReportMessageSheetView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1718FB532AF8470400E9C511 /* ReportMessageSheetView.swift */; };
+		1750EF6C2B05854C00DD3EB3 /* ForgotPassword.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1750EF6B2B05854C00DD3EB3 /* ForgotPassword.swift */; };
+		1750EF6E2B0585B300DD3EB3 /* ResendEmail.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1750EF6D2B0585B300DD3EB3 /* ResendEmail.swift */; };
 		175E01DE2ADAB3F6004F6431 /* LazyImage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 175E01DD2ADAB3F6004F6431 /* LazyImage.swift */; };
 		175E01E02ADAB554004F6431 /* Avatar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 175E01DF2ADAB554004F6431 /* Avatar.swift */; };
 		1777DD842ADC24CE003D6C72 /* ReversedSrollView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1777DD832ADC24CE003D6C72 /* ReversedSrollView.swift */; };
@@ -27,6 +29,7 @@
 		17B7128D2B03E9D700CFF61C /* FriendsList.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17B7128C2B03E9D700CFF61C /* FriendsList.swift */; };
 		17BC3EFA2AD826970029D820 /* File.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17BC3EF92AD826970029D820 /* File.swift */; };
 		17BC3EFC2AD82A1B0029D820 /* Member.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17BC3EFB2AD82A1B0029D820 /* Member.swift */; };
+		17C9A3502B0580D10043A387 /* Welcome.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17C9A34F2B0580D10043A387 /* Welcome.swift */; };
 		17CCCF672ADA109600D78D7A /* Permissions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17CCCF662ADA109600D78D7A /* Permissions.swift */; };
 		17CCCF692ADA131D00D78D7A /* Emoji.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17CCCF682ADA131D00D78D7A /* Emoji.swift */; };
 		17CCCF6B2ADA14CB00D78D7A /* Role.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17CCCF6A2ADA14CB00D78D7A /* Role.swift */; };
@@ -72,6 +75,8 @@
 
 /* Begin PBXFileReference section */
 		1718FB532AF8470400E9C511 /* ReportMessageSheetView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReportMessageSheetView.swift; sourceTree = "<group>"; };
+		1750EF6B2B05854C00DD3EB3 /* ForgotPassword.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ForgotPassword.swift; sourceTree = "<group>"; };
+		1750EF6D2B0585B300DD3EB3 /* ResendEmail.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ResendEmail.swift; sourceTree = "<group>"; };
 		175E01DD2ADAB3F6004F6431 /* LazyImage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LazyImage.swift; sourceTree = "<group>"; };
 		175E01DF2ADAB554004F6431 /* Avatar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Avatar.swift; sourceTree = "<group>"; };
 		1777DD832ADC24CE003D6C72 /* ReversedSrollView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReversedSrollView.swift; sourceTree = "<group>"; };
@@ -87,6 +92,7 @@
 		17B7128C2B03E9D700CFF61C /* FriendsList.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FriendsList.swift; sourceTree = "<group>"; };
 		17BC3EF92AD826970029D820 /* File.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = File.swift; sourceTree = "<group>"; };
 		17BC3EFB2AD82A1B0029D820 /* Member.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Member.swift; sourceTree = "<group>"; };
+		17C9A34F2B0580D10043A387 /* Welcome.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Welcome.swift; sourceTree = "<group>"; };
 		17CCCF662ADA109600D78D7A /* Permissions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Permissions.swift; sourceTree = "<group>"; };
 		17CCCF682ADA131D00D78D7A /* Emoji.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Emoji.swift; sourceTree = "<group>"; };
 		17CCCF6A2ADA14CB00D78D7A /* Role.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Role.swift; sourceTree = "<group>"; };
@@ -181,6 +187,9 @@
 			children = (
 				DA99EC4F29D5F35900419FDA /* Login.swift */,
 				178BB1132B02E475001143A4 /* CreateAccount.swift */,
+				17C9A34F2B0580D10043A387 /* Welcome.swift */,
+				1750EF6B2B05854C00DD3EB3 /* ForgotPassword.swift */,
+				1750EF6D2B0585B300DD3EB3 /* ResendEmail.swift */,
 			);
 			path = Login;
 			sourceTree = "<group>";
@@ -420,6 +429,7 @@
 			files = (
 				178BB11B2B02FCDD001143A4 /* Responses.swift in Sources */,
 				DAAA4C0729F2604A00F41E52 /* Server.swift in Sources */,
+				17C9A3502B0580D10043A387 /* Welcome.swift in Sources */,
 				17E019CF2AF146AD00AB4663 /* About.swift in Sources */,
 				DAAA4C0B29F2CF1200F41E52 /* Websocket.swift in Sources */,
 				DA99EC4A29D5F35400419FDA /* Home.swift in Sources */,
@@ -439,10 +449,12 @@
 				17F555272AFC229900958F2F /* ServerSettings.swift in Sources */,
 				17E019D32AF17F9D00AB4663 /* ProfileSettings.swift in Sources */,
 				DAAA4C0929F2974300F41E52 /* Http.swift in Sources */,
+				1750EF6E2B0585B300DD3EB3 /* ResendEmail.swift in Sources */,
 				DAAA4C0E29F2D37800F41E52 /* Api.swift in Sources */,
 				17CCCF692ADA131D00D78D7A /* Emoji.swift in Sources */,
 				17E019D72AF1998300AB4663 /* MessageAttachment.swift in Sources */,
 				17CCCF672ADA109600D78D7A /* Permissions.swift in Sources */,
+				1750EF6C2B05854C00DD3EB3 /* ForgotPassword.swift in Sources */,
 				DAAA4BFF29F251ED00F41E52 /* User.swift in Sources */,
 				DAAA4BFB29F2518900F41E52 /* MessageView.swift in Sources */,
 				17E019D12AF14EC000AB4663 /* ServerIcon.swift in Sources */,

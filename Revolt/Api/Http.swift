@@ -198,6 +198,10 @@ struct HTTPClient {
         await req(method: .post, route: "/auth/account/verify/\(code)")
     }
     
+    func createAccount_ResendVerification(email: String, captcha: String?) async -> Result<EmptyResponse, AFError> {
+        await req(method: .post, route: "/auth/account/reverify", parameters: ["email": email, "captcha": captcha])
+    }
+    
     func checkOnboarding() async -> Result<OnboardingStatusResponse, AFError> {
         await req(method: .get, route: "/onboard/hello")
     }

@@ -26,7 +26,7 @@ struct ApplicationSwitcher: View {
                     await viewState.backgroundWsTask()
                 }
         } else {
-            Login()
+            Welcome()
         }
     }
 }

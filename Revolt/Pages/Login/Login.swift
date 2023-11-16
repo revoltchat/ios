@@ -1,91 +1,5 @@
 import SwiftUI
 
-struct Login: View {
-    @EnvironmentObject var viewState: ViewState
-    @State private var path = NavigationPath()
-    @State private var mfaTicket = ""
-    @State private var mfaMethods: [String] = []
-    
-    @Environment(\.colorScheme) var colorScheme: ColorScheme
-
-    var body: some View {
-        NavigationStack(path: $path) {
-            VStack {
-                Spacer()
-                Group {
-                    Image("wide")
-                        .if(colorScheme == .light, content: { $0.colorInvert() })
-                        .padding(.bottom, 20)
-        
-                    Text("Find your community, connect with the world.")
-                        .font(.title)
-                        .fontWeight(.bold)
-                        .multilineTextAlignment(.center)
-                        .padding(.horizontal)
-                        .foregroundColor((colorScheme == .light) ? Color.black : Color.white)
-                    
-                    Text("Revolt is one of the best ways to stay connected with your friends and community, anywhere, anytime.")
-                        .multilineTextAlignment(.center)
-                        .padding(.horizontal, 55.0)
-                        .padding(.top, 10.0)
-                        .font(.footnote)
-                        .foregroundColor((colorScheme == .light) ? Color.black : Color.white)
-                }
-
-                Spacer()
-
-                Group {
-                    NavigationLink("Log In", value: "login")
-                        .padding(.vertical, 10)
-                        .frame(width: 200.0)
-                        .background((colorScheme == .light) ? Color.black : Color.white)
-                        .foregroundColor((colorScheme == .light) ? Color.white : Color.black)
-                        .cornerRadius(50)
-
-                    NavigationLink("Sign Up", value: "signup")
-                        .padding(.vertical, 10)
-                        .frame(width: 200.0)
-                        .foregroundColor(.black)
-                        .background((colorScheme == .light) ? Color(white: 0.851) : Color(white: 0.4))
-                        .cornerRadius(50)
-                }
-
-                Spacer()
-
-                Group {
-                    Link("Terms of Service", destination: URL(string: "https://revolt.chat/terms")!)
-                        .font(.footnote)
-                        .foregroundColor(Color(white: 0.584))
-                    Link("Privacy Policy", destination: URL(string: "https://revolt.chat/privacy")!)
-                        .font(.footnote)
-                        .foregroundColor(Color(white: 0.584))
-                    Link("Community Guidelines", destination: URL(string: "https://revolt.chat/aup")!)
-                        .font(.footnote)
-                        .foregroundColor(Color(white: 0.584))
-                }
-            }
-            .navigationDestination(for: String.self) { dest in
-                switch dest {
-                    case "mfa":
-                        Mfa(path: $path, ticket: $mfaTicket, methods: $mfaMethods)
-                    case "login":
-                        LogIn(path: $path, mfaTicket: $mfaTicket, mfaMethods: $mfaMethods)
-                    case "signup":
-                        CreateAccount()
-                    case _:
-                        EmptyView()
-                }
-
-            }
-        }
-        .onAppear {
-            viewState.isOnboarding = false
-        }
-        .task {
-            viewState.apiInfo = try? await viewState.http.fetchApiInfo().get()
-        }
-    }
-}
 
 struct LogIn: View {
     @EnvironmentObject var viewState: ViewState
@@ -204,12 +118,6 @@ struct LogIn: View {
                         }
                     })
                 }
-
-                NavigationLink("Forgot password?", destination: ResendEmail())
-                    .background((colorScheme == .light) ? Color(white: 0.9) : Color(white: 0.1))
-                    .foregroundStyle((colorScheme == .light) ? Color.black : Color.white)
-                    .frame(width: 180)
-                    .clipShape(.rect(cornerRadius: 50))
             }
             .padding(.bottom)
 
@@ -226,19 +134,14 @@ struct LogIn: View {
 
             Spacer()
 
-            Group {
-                NavigationLink("Resend a verification email", destination: ResendEmail())
-                    .foregroundColor((colorScheme == .light) ? Color.black : Color.white)
-                    .padding(15)
-                NavigationLink("Using a password manager?", destination: ResendEmail())
-                    .foregroundColor((colorScheme == .light) ? Color.black : Color.white)
-                    .padding(15)
-            }
+            NavigationLink("Resend a verification email", destination: ResendEmail())
+                .foregroundColor((colorScheme == .light) ? Color.black : Color.white)
+                .padding(15)
 
             Spacer()
         }
         .padding()
-        .navigationDestination(isPresented: $needsOnboarding) {
+        .navigationDestination(isPresented: $needsOnboarding) { // we dont use a link+destination because this will overlay when the user hasn't onboarded
             CreateAccount(onboardingStage: .Username)
         }
     }
@@ -337,14 +240,9 @@ struct PasswordModifier: ViewModifier {
     }
 }
 
-struct ResendEmail: View {
-    var body: some View {
-        Text("resend email")
-    }
-}
-
 
 
 #Preview {
-    Login()
+    LogIn(path: .constant(NavigationPath()), mfaTicket: .constant(""), mfaMethods: .constant([]))
+        .environmentObject(ViewState.preview())
 }
