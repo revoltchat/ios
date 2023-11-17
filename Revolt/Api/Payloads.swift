@@ -99,3 +99,8 @@ struct ContentReportPayload: Encodable {
 struct AutumnPayload: Encodable {
     var file: Data
 }
+
+struct PasswordResetPayload: Encodable {
+    var token: String
+    var password: String
+}

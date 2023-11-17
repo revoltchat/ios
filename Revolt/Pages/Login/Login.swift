@@ -135,7 +135,9 @@ struct LogIn: View {
             Spacer()
 
             NavigationLink("Resend a verification email", destination: ResendEmail())
-                .foregroundColor((colorScheme == .light) ? Color.black : Color.white)
+                .padding(15)
+            
+            NavigationLink("Forgot Password", destination: ForgotPassword())
                 .padding(15)
 
             Spacer()

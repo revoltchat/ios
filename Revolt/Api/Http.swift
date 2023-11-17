@@ -190,7 +190,6 @@ struct HTTPClient {
     }
     
     func createAccount(email: String, password: String, invite: String?, captcha: String?) async -> Result<EmptyResponse, AFError> {
-        print(captcha ?? "No Captcha")
         return await req(method: .post, route: "/auth/account/create", parameters: AccountCreatePayload(email: email, password: password, invite: invite, captcha: captcha))
     }
     
@@ -200,6 +199,14 @@ struct HTTPClient {
     
     func createAccount_ResendVerification(email: String, captcha: String?) async -> Result<EmptyResponse, AFError> {
         await req(method: .post, route: "/auth/account/reverify", parameters: ["email": email, "captcha": captcha])
+    }
+    
+    func sendResetPasswordEmail(email: String, captcha: String?) async -> Result<EmptyResponse, AFError> {
+        await req(method: .post, route: "/auth/account/reverify", parameters: ["email": email, "captcha": captcha])
+    }
+    
+    func resetPassword(token: String, password: String, removeSessions: Bool = false) async -> Result<EmptyResponse, AFError> {
+        await req(method: .patch, route: "/auth/account/reset_password", parameters: PasswordResetPayload(token: token, password: password))
     }
     
     func checkOnboarding() async -> Result<OnboardingStatusResponse, AFError> {

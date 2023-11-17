@@ -8,7 +8,6 @@
 
 /* Begin PBXBuildFile section */
 		1718FB542AF8470400E9C511 /* ReportMessageSheetView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1718FB532AF8470400E9C511 /* ReportMessageSheetView.swift */; };
-		1750EF6C2B05854C00DD3EB3 /* ForgotPassword.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1750EF6B2B05854C00DD3EB3 /* ForgotPassword.swift */; };
 		1750EF6E2B0585B300DD3EB3 /* ResendEmail.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1750EF6D2B0585B300DD3EB3 /* ResendEmail.swift */; };
 		175E01DE2ADAB3F6004F6431 /* LazyImage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 175E01DD2ADAB3F6004F6431 /* LazyImage.swift */; };
 		175E01E02ADAB554004F6431 /* Avatar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 175E01DF2ADAB554004F6431 /* Avatar.swift */; };
@@ -29,6 +28,7 @@
 		17B7128D2B03E9D700CFF61C /* FriendsList.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17B7128C2B03E9D700CFF61C /* FriendsList.swift */; };
 		17BC3EFA2AD826970029D820 /* File.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17BC3EF92AD826970029D820 /* File.swift */; };
 		17BC3EFC2AD82A1B0029D820 /* Member.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17BC3EFB2AD82A1B0029D820 /* Member.swift */; };
+		17C444582B06CC5400F97E4A /* ForgotPassword.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17C444572B06CC5400F97E4A /* ForgotPassword.swift */; };
 		17C9A3502B0580D10043A387 /* Welcome.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17C9A34F2B0580D10043A387 /* Welcome.swift */; };
 		17CCCF672ADA109600D78D7A /* Permissions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17CCCF662ADA109600D78D7A /* Permissions.swift */; };
 		17CCCF692ADA131D00D78D7A /* Emoji.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17CCCF682ADA131D00D78D7A /* Emoji.swift */; };
@@ -75,7 +75,6 @@
 
 /* Begin PBXFileReference section */
 		1718FB532AF8470400E9C511 /* ReportMessageSheetView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReportMessageSheetView.swift; sourceTree = "<group>"; };
-		1750EF6B2B05854C00DD3EB3 /* ForgotPassword.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ForgotPassword.swift; sourceTree = "<group>"; };
 		1750EF6D2B0585B300DD3EB3 /* ResendEmail.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ResendEmail.swift; sourceTree = "<group>"; };
 		175E01DD2ADAB3F6004F6431 /* LazyImage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LazyImage.swift; sourceTree = "<group>"; };
 		175E01DF2ADAB554004F6431 /* Avatar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Avatar.swift; sourceTree = "<group>"; };
@@ -92,6 +91,7 @@
 		17B7128C2B03E9D700CFF61C /* FriendsList.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FriendsList.swift; sourceTree = "<group>"; };
 		17BC3EF92AD826970029D820 /* File.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = File.swift; sourceTree = "<group>"; };
 		17BC3EFB2AD82A1B0029D820 /* Member.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Member.swift; sourceTree = "<group>"; };
+		17C444572B06CC5400F97E4A /* ForgotPassword.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ForgotPassword.swift; sourceTree = "<group>"; };
 		17C9A34F2B0580D10043A387 /* Welcome.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Welcome.swift; sourceTree = "<group>"; };
 		17CCCF662ADA109600D78D7A /* Permissions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Permissions.swift; sourceTree = "<group>"; };
 		17CCCF682ADA131D00D78D7A /* Emoji.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Emoji.swift; sourceTree = "<group>"; };
@@ -188,8 +188,8 @@
 				DA99EC4F29D5F35900419FDA /* Login.swift */,
 				178BB1132B02E475001143A4 /* CreateAccount.swift */,
 				17C9A34F2B0580D10043A387 /* Welcome.swift */,
-				1750EF6B2B05854C00DD3EB3 /* ForgotPassword.swift */,
 				1750EF6D2B0585B300DD3EB3 /* ResendEmail.swift */,
+				17C444572B06CC5400F97E4A /* ForgotPassword.swift */,
 			);
 			path = Login;
 			sourceTree = "<group>";
@@ -463,6 +463,7 @@
 				D49B705329C4D3FE009494A5 /* RevoltApp.swift in Sources */,
 				DA99EC4C29D5F35500419FDA /* ViewState.swift in Sources */,
 				17E019C92AF1279100AB4663 /* AppearanceSettings.swift in Sources */,
+				17C444582B06CC5400F97E4A /* ForgotPassword.swift in Sources */,
 				17CE2E142AE709CE0059FB3A /* UserSheet.swift in Sources */,
 				17966B652AE0842A00BAEC58 /* ChannelIcon.swift in Sources */,
 				1777DD892ADC3C31003D6C72 /* Markdown.swift in Sources */,
