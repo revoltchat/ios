@@ -454,7 +454,6 @@
 				17CCCF692ADA131D00D78D7A /* Emoji.swift in Sources */,
 				17E019D72AF1998300AB4663 /* MessageAttachment.swift in Sources */,
 				17CCCF672ADA109600D78D7A /* Permissions.swift in Sources */,
-				1750EF6C2B05854C00DD3EB3 /* ForgotPassword.swift in Sources */,
 				DAAA4BFF29F251ED00F41E52 /* User.swift in Sources */,
 				DAAA4BFB29F2518900F41E52 /* MessageView.swift in Sources */,
 				17E019D12AF14EC000AB4663 /* ServerIcon.swift in Sources */,
