@@ -8,6 +8,6 @@
 import Foundation
 
 struct Overwrite: Codable, Equatable {
-    var a: Int
-    var d: Int
+    var a: Permissions
+    var d: Permissions
 }

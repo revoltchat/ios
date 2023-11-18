@@ -9,9 +9,10 @@ import Foundation
 
 struct Server: Decodable, Identifiable {
     var id: String
+    var owner: String
     var name: String
     var channels: [String]
-    var default_permissions: Int
+    var default_permissions: Permissions
     var description: String?
     var categories: [Category]?
     var system_messages: SystemMessages?
@@ -22,7 +23,7 @@ struct Server: Decodable, Identifiable {
     
     enum CodingKeys: String, CodingKey {
         case id = "_id"
-        case name, channels, default_permissions, description, categories, system_messages, roles, icon, banner, nsfw
+        case owner, name, channels, default_permissions, description, categories, system_messages, roles, icon, banner, nsfw
     }
 }
 

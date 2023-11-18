@@ -37,6 +37,7 @@
 		17CCCF702ADA17B600D78D7A /* Utils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17CCCF6F2ADA17B600D78D7A /* Utils.swift */; };
 		17CE2E142AE709CE0059FB3A /* UserSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17CE2E132AE709CE0059FB3A /* UserSheet.swift */; };
 		17D9C2BD2ADCA48D00426857 /* Kingfisher in Frameworks */ = {isa = PBXBuildFile; productRef = 17D9C2BC2ADCA48D00426857 /* Kingfisher */; };
+		17D9D2B72B0843DE00D57812 /* PermissionsCalculator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17D9D2B62B0843DE00D57812 /* PermissionsCalculator.swift */; };
 		17DFB4642AE06A5D00E1D417 /* Settings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17DFB4632AE06A5D00E1D417 /* Settings.swift */; };
 		17DFB4662AE06AB900E1D417 /* MessageableChannel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17DFB4652AE06AB900E1D417 /* MessageableChannel.swift */; };
 		17E019C92AF1279100AB4663 /* AppearanceSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17E019C82AF1279100AB4663 /* AppearanceSettings.swift */; };
@@ -98,6 +99,7 @@
 		17CCCF6A2ADA14CB00D78D7A /* Role.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Role.swift; sourceTree = "<group>"; };
 		17CCCF6F2ADA17B600D78D7A /* Utils.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Utils.swift; sourceTree = "<group>"; };
 		17CE2E132AE709CE0059FB3A /* UserSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserSheet.swift; sourceTree = "<group>"; };
+		17D9D2B62B0843DE00D57812 /* PermissionsCalculator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PermissionsCalculator.swift; sourceTree = "<group>"; };
 		17DFB4632AE06A5D00E1D417 /* Settings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Settings.swift; sourceTree = "<group>"; };
 		17DFB4652AE06AB900E1D417 /* MessageableChannel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageableChannel.swift; sourceTree = "<group>"; };
 		17E019C82AF1279100AB4663 /* AppearanceSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppearanceSettings.swift; sourceTree = "<group>"; };
@@ -225,6 +227,7 @@
 				17CCCF6F2ADA17B600D78D7A /* Utils.swift */,
 				178BB1182B02FBD0001143A4 /* Payloads.swift */,
 				178BB11A2B02FCDD001143A4 /* Responses.swift */,
+				17D9D2B62B0843DE00D57812 /* PermissionsCalculator.swift */,
 			);
 			path = Api;
 			sourceTree = "<group>";
@@ -458,6 +461,7 @@
 				DAAA4BFB29F2518900F41E52 /* MessageView.swift in Sources */,
 				17E019D12AF14EC000AB4663 /* ServerIcon.swift in Sources */,
 				17BC3EFA2AD826970029D820 /* File.swift in Sources */,
+				17D9D2B72B0843DE00D57812 /* PermissionsCalculator.swift in Sources */,
 				178BB1142B02E475001143A4 /* CreateAccount.swift in Sources */,
 				D49B705329C4D3FE009494A5 /* RevoltApp.swift in Sources */,
 				DA99EC4C29D5F35500419FDA /* ViewState.swift in Sources */,
