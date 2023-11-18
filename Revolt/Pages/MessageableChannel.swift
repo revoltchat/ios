@@ -12,18 +12,20 @@ import SwiftUI
 class MessageableChannelViewModel: ObservableObject {
     var viewState: ViewState
     @Published var channel: Channel
-    var messages: Binding<[String]>
+    @Published var server: Server?
+    @Binding var messages: [String]
     @Published var replies: [Reply] = []
     @Published var queuedMessages: [QueuedMessage] = []
-    
-    init(viewState: ViewState, channel: Channel, messages: Binding<[String]>) {
+
+    init(viewState: ViewState, channel: Channel, server: Server?, messages: Binding<[String]>) {
         self.viewState = viewState
         self.channel = channel
-        self.messages = messages
+        self.server = server
+        self._messages = messages
         self.replies = []
         self.queuedMessages = []
     }
-    
+
     func loadMoreMessages(before: String? = nil) async -> FetchHistory {
         let result = try! await viewState.http.fetchHistory(channel: channel.id, limit: 50, before: before).get()
 
@@ -53,8 +55,8 @@ class MessageableChannelViewModel: ObservableObject {
         guard let item = current else {
             return await loadMoreMessages()
         }
-        
-        if messages.wrappedValue.first! == item.id {
+
+        if $messages.wrappedValue.first! == item.id {
             return await loadMoreMessages(before: item.id)
         }
         
@@ -82,6 +84,14 @@ struct MessageableChannelView: View {
         
     }
     
+    func getMember(message: Message) -> Binding<Member?> {
+        if let server = viewModel.server {
+            return Binding($viewState.members[server.id])![message.author]
+        } else {
+            return .constant(nil)
+        }
+    }
+    
     var body: some View {
         VStack(alignment: .leading, spacing: 0) {
             List {
@@ -96,17 +106,26 @@ struct MessageableChannelView: View {
                     Text("Loading more messages...")
                         .onAppear {
                             Task {
-                                foundAllMessages = await viewModel.loadMoreMessages(before: viewModel.messages.wrappedValue.first).messages.count < 50
+                                foundAllMessages = await viewModel.loadMoreMessages(before: viewModel.$messages.wrappedValue.first).messages.count < 50
                             }
                         }
                         .listRowBackground(viewState.theme.background.color)
                 }
                 
-                ForEach($viewModel.messages.wrappedValue, id: \.self) { messageId in
+                ForEach(viewModel.$messages, id: \.self) { messageId in
                     let message = Binding($viewState.messages[messageId.wrappedValue])!
                     let author = Binding($viewState.users[message.author.wrappedValue])!
                     
-                    MessageView(viewModel: MessageViewModel(viewState: viewState, message: message, author: author, replies: $viewModel.replies, channelScrollPosition: $scrollPosition), isStatic: false)
+                    MessageView(viewModel: MessageViewModel(
+                        viewState: viewState,
+                        message: message,
+                        author: author,
+                        member: getMember(message: message.wrappedValue),
+                        server: $viewModel.server,
+                        channel: $viewModel.channel,
+                        replies: $viewModel.replies,
+                        channelScrollPosition: $scrollPosition),
+                    isStatic: false)
                 }
                 .listRowInsets(EdgeInsets(top: 8, leading: 12, bottom: 8, trailing: 12))
                 .listRowBackground(viewState.theme.background.color)

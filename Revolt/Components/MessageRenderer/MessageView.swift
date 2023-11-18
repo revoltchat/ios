@@ -8,18 +8,25 @@
 import Foundation
 import SwiftUI
 
+@MainActor
 class MessageViewModel: ObservableObject {
     @Binding var message: Message
     @Binding var author: User
+    @Binding var member: Member?
+    @Binding var server: Server?
+    @Binding var channel: Channel
     @Binding var channelReplies: [Reply]
     @Binding var channelScrollPosition: String?
 
     var viewState: ViewState
 
-    init(viewState: ViewState, message: Binding<Message>, author: Binding<User>, replies: Binding<[Reply]>, channelScrollPosition: Binding<String?>) {
+    init(viewState: ViewState, message: Binding<Message>, author: Binding<User>, member: Binding<Member?>, server: Binding<Server?>, channel: Binding<Channel>, replies: Binding<[Reply]>, channelScrollPosition: Binding<String?>) {
         self.viewState = viewState
         self._message = message
         self._author = author
+        self._member = member
+        self._server = server
+        self._channel = channel
         self._channelReplies = replies
         self._channelScrollPosition = channelScrollPosition
     }
@@ -73,7 +80,7 @@ struct MessageView: View {
                         case .user_joined(let content):
                             let user = viewState.users[content.id]!
                             Image(systemName: "arrow.forward")
-                            Avatar(user: user)
+                            Avatar(user: user, masquerade: viewModel.message.masquerade)
                             Text(user.username)
                             Text("Joined")
                         default:
@@ -90,7 +97,7 @@ struct MessageView: View {
                     }
                 }
                 HStack(alignment: .top) {
-                    Avatar(user: viewModel.author, width: 32, height: 32)
+                    Avatar(user: viewModel.author, member: viewModel.member, masquerade: viewModel.message.masquerade, width: 32, height: 32)
                         .padding(.trailing, 8)
                         .onTapGesture {
                             if !isStatic {
@@ -100,7 +107,7 @@ struct MessageView: View {
                     
                     VStack(alignment: .leading) {
                         HStack {
-                            Text(viewModel.author.username)
+                            Text(viewModel.message.masquerade?.name ?? viewModel.author.display_name ?? viewModel.author.username)
                                 .fontWeight(.heavy)
                                 .onTapGesture {
                                     if !isStatic {
@@ -228,11 +235,23 @@ struct MessageView_Previews: PreviewProvider {
     static var viewState: ViewState = ViewState.preview()
     @State static var message = viewState.messages["01HD4VQY398JNRJY60JDY2QHA5"]!
     @State static var author = viewState.users[message.author]!
+    @State static var member = viewState.members["0"]!["0"]
+    @State static var channel = viewState.channels["0"]!
+    @State static var server = viewState.servers["0"]
     @State static var replies: [Reply] = []
     @State static var channelScrollPosition: String? = nil
     
     static var previews: some View {
-        MessageView(viewModel: MessageViewModel(viewState: viewState, message: $message, author: $author, replies: $replies, channelScrollPosition: $channelScrollPosition), isStatic: false)
+        MessageView(viewModel: MessageViewModel(
+            viewState: viewState,
+            message: $message,
+            author: $author,
+            member: $member,
+            server: $server,
+            channel: $channel,
+            replies: $replies,
+            channelScrollPosition: $channelScrollPosition
+        ), isStatic: false)
             .environmentObject(viewState)
             .previewLayout(.sizeThatFits)
     }

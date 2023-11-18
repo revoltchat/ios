@@ -35,7 +35,7 @@ struct GroupDMChannel: Decodable, Equatable {
     var name: String
     var owner: String
     var icon: File?
-    var permissions: Int?
+    var permissions: Permissions?
     var description: String?
     var nsfw: Bool?
     var last_message_id: String?

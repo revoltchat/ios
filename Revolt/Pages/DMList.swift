@@ -67,7 +67,7 @@ struct DMList: View {
                         let channel = viewState.channels[id]!
                         let messages = Binding($viewState.channelMessages[id])!
                         
-                        MessageableChannelView(viewModel: MessageableChannelViewModel(viewState: viewState, channel: channel, messages: messages))
+                        MessageableChannelView(viewModel: MessageableChannelViewModel(viewState: viewState, channel: channel, server: nil, messages: messages))
 
                     case .friends:
                         FriendsList()

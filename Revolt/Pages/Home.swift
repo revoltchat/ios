@@ -30,6 +30,14 @@ struct Home: View {
     @EnvironmentObject var viewState: ViewState
     @State var showJoinServerSheet: Bool = false
 
+    var currentServer: Server? {
+        if let id = viewState.currentServer?.id {
+            return viewState.servers[id]!
+        }
+        
+        return nil
+    }
+    
     var body: some View {
         VStack(alignment: .leading) {
             NavigationSplitView {
@@ -211,7 +219,7 @@ struct Home: View {
                             
                             let messages = Binding($viewState.channelMessages[channelId])!
                             
-                            MessageableChannelView(viewModel: MessageableChannelViewModel(viewState: viewState, channel: channel, messages: messages))
+                            MessageableChannelView(viewModel: MessageableChannelViewModel(viewState: viewState, channel: channel, server: currentServer, messages: messages))
                         case .server_settings:
                             ServerSettings(serverId: viewState.currentServer!.id!)
                     }

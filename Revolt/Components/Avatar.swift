@@ -13,9 +13,21 @@ struct Avatar: View {
     @EnvironmentObject var viewState: ViewState
     
     public var user: User
+    public var member: Member? = nil
+    public var masquerade: Masquerade? = nil
     public var width: CGFloat = 32
     public var height: CGFloat = 32
     public var withPresence: Bool = false
+
+    var source: Source? {
+        if let url = masquerade?.avatar {
+            return .url(URL(string: url)!)
+        } else if let file = member?.avatar ?? user.avatar {
+            return .file(file)
+        }
+        
+        return nil
+    }
 
     var body: some View {
         ZStack(alignment: .bottomTrailing) {
@@ -27,8 +39,8 @@ struct Avatar: View {
                     .clipped()
                     .clipShape(Circle())
             } else {
-                if let avatar = user.avatar {
-                    LazyImage(source: .file(avatar), height: height, width: width, clipTo: Circle())
+                if let source = source {
+                    LazyImage(source: source, height: height, width: width, clipTo: Circle())
                 } else {
                     let baseUrl = viewState.http.baseURL
                     

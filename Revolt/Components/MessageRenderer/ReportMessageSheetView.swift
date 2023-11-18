@@ -136,6 +136,9 @@ struct ReportMessageSheetView_Preview: PreviewProvider {
         viewState: viewState,
         message: .constant(message),
         author: .constant(viewState.users[message.author]!),
+        member: .constant(viewState.members["0"]!["0"]),
+        server: .constant(viewState.servers["0"]),
+        channel: .constant(viewState.channels["0"]!),
         replies: .constant([Reply(message: message, mention: false)]),
         channelScrollPosition: .constant(nil)
     )
