@@ -97,13 +97,21 @@ struct MessageView: View {
                     }
                 }
                 HStack(alignment: .top) {
-                    Avatar(user: viewModel.author, member: viewModel.member, masquerade: viewModel.message.masquerade, width: 32, height: 32)
-                        .padding(.trailing, 8)
-                        .onTapGesture {
-                            if !isStatic {
-                                showMemberSheet.toggle()
-                            }
+                    ZStack(alignment: .topLeading) {
+                        Avatar(user: viewModel.author, member: viewModel.member, masquerade: viewModel.message.masquerade, width: 32, height: 32)
+
+                        if viewModel.message.masquerade != nil {
+                            Avatar(user: viewModel.author, member: viewModel.member, width: 16, height: 16)
+                                .padding(.leading, -4)
+                                .padding(.top, -4)
                         }
+                    }
+                    .padding(.trailing, 8)
+                    .onTapGesture {
+                        if !isStatic {
+                            showMemberSheet.toggle()
+                        }
+                    }
                     
                     VStack(alignment: .leading) {
                         HStack {
