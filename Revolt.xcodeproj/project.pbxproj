@@ -8,12 +8,12 @@
 
 /* Begin PBXBuildFile section */
 		1718FB542AF8470400E9C511 /* ReportMessageSheetView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1718FB532AF8470400E9C511 /* ReportMessageSheetView.swift */; };
+		1739DB962B08E53B00D23DAD /* MessageBadge.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1739DB952B08E53B00D23DAD /* MessageBadge.swift */; };
 		1750EF6E2B0585B300DD3EB3 /* ResendEmail.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1750EF6D2B0585B300DD3EB3 /* ResendEmail.swift */; };
 		175E01DE2ADAB3F6004F6431 /* LazyImage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 175E01DD2ADAB3F6004F6431 /* LazyImage.swift */; };
 		175E01E02ADAB554004F6431 /* Avatar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 175E01DF2ADAB554004F6431 /* Avatar.swift */; };
 		1777DD842ADC24CE003D6C72 /* ReversedSrollView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1777DD832ADC24CE003D6C72 /* ReversedSrollView.swift */; };
 		1777DD892ADC3C31003D6C72 /* Markdown.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1777DD882ADC3C31003D6C72 /* Markdown.swift */; };
-		1777DD8C2ADC3C4E003D6C72 /* MarkdownKit in Frameworks */ = {isa = PBXBuildFile; productRef = 1777DD8B2ADC3C4E003D6C72 /* MarkdownKit */; };
 		1777DD8E2ADC4336003D6C72 /* RemoteImageTextAttachment.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1777DD8D2ADC4336003D6C72 /* RemoteImageTextAttachment.swift */; };
 		178BB10C2B02D84C001143A4 /* HCaptcha in Frameworks */ = {isa = PBXBuildFile; productRef = 178BB10B2B02D84C001143A4 /* HCaptcha */; };
 		178BB10E2B02D84C001143A4 /* HCaptcha_RxSwift in Frameworks */ = {isa = PBXBuildFile; productRef = 178BB10D2B02D84C001143A4 /* HCaptcha_RxSwift */; };
@@ -76,6 +76,7 @@
 
 /* Begin PBXFileReference section */
 		1718FB532AF8470400E9C511 /* ReportMessageSheetView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReportMessageSheetView.swift; sourceTree = "<group>"; };
+		1739DB952B08E53B00D23DAD /* MessageBadge.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageBadge.swift; sourceTree = "<group>"; };
 		1750EF6D2B0585B300DD3EB3 /* ResendEmail.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ResendEmail.swift; sourceTree = "<group>"; };
 		175E01DD2ADAB3F6004F6431 /* LazyImage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LazyImage.swift; sourceTree = "<group>"; };
 		175E01DF2ADAB554004F6431 /* Avatar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Avatar.swift; sourceTree = "<group>"; };
@@ -139,7 +140,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				DAAA4BF429F2274A00F41E52 /* Collections in Frameworks */,
-				1777DD8C2ADC3C4E003D6C72 /* MarkdownKit in Frameworks */,
 				17D9C2BD2ADCA48D00426857 /* Kingfisher in Frameworks */,
 				17B51A682AFAFA8E0018C967 /* CodableWrapper in Frameworks */,
 				178BB10C2B02D84C001143A4 /* HCaptcha in Frameworks */,
@@ -251,6 +251,7 @@
 				17E019D62AF1998300AB4663 /* MessageAttachment.swift */,
 				17E019D92AF199A600AB4663 /* MessageReply.swift */,
 				1718FB532AF8470400E9C511 /* ReportMessageSheetView.swift */,
+				1739DB952B08E53B00D23DAD /* MessageBadge.swift */,
 			);
 			path = MessageRenderer;
 			sourceTree = "<group>";
@@ -353,7 +354,6 @@
 				DAAA4BF729F2274A00F41E52 /* OrderedCollections */,
 				DAF84FFC2A0EFE1B00B01682 /* Starscream */,
 				17CCCF6D2ADA173B00D78D7A /* ULID */,
-				1777DD8B2ADC3C4E003D6C72 /* MarkdownKit */,
 				17D9C2BC2ADCA48D00426857 /* Kingfisher */,
 				17FDBA702AEAFEAC00CB7637 /* WrappingHStack */,
 				17B51A672AFAFA8E0018C967 /* CodableWrapper */,
@@ -396,8 +396,6 @@
 				DAAA4BF229F2274A00F41E52 /* XCRemoteSwiftPackageReference "swift-collections" */,
 				DAF84FFB2A0EFE1B00B01682 /* XCRemoteSwiftPackageReference "Starscream" */,
 				17CCCF6C2ADA173B00D78D7A /* XCRemoteSwiftPackageReference "ULID" */,
-				1777DD852ADC3A7A003D6C72 /* XCRemoteSwiftPackageReference "swift-markdown-ui" */,
-				1777DD8A2ADC3C4E003D6C72 /* XCRemoteSwiftPackageReference "MarkdownKit" */,
 				17D9C2B82ADCA1A000426857 /* XCRemoteSwiftPackageReference "swiftui-cached-async-image" */,
 				17D9C2BB2ADCA48D00426857 /* XCRemoteSwiftPackageReference "Kingfisher" */,
 				17FDBA6F2AEAFEAC00CB7637 /* XCRemoteSwiftPackageReference "WrappingHStack" */,
@@ -439,6 +437,7 @@
 				DAAA4C0329F2548400F41E52 /* MessageBox.swift in Sources */,
 				17BC3EFC2AD82A1B0029D820 /* Member.swift in Sources */,
 				17E28E082AF319D500F6069F /* JoinServer.swift in Sources */,
+				1739DB962B08E53B00D23DAD /* MessageBadge.swift in Sources */,
 				175E01DE2ADAB3F6004F6431 /* LazyImage.swift in Sources */,
 				17E019DC2AF1B25100AB4663 /* SessionsSettings.swift in Sources */,
 				17CCCF6B2ADA14CB00D78D7A /* Role.swift in Sources */,

@@ -122,6 +122,10 @@ struct MessageView: View {
                                         showMemberSheet.toggle()
                                     }
                                 }
+                            
+                            if viewModel.author.bot != nil {
+                                MessageBadge(text: "Bot", color: viewState.theme.accent.color)
+                            }
 
                             Text(createdAt(id: viewModel.message.id).formatted())
                                 .font(.caption2)
