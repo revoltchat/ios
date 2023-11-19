@@ -63,31 +63,44 @@ struct Home: View {
                     }
                     .listRowBackground(viewState.theme.background2.color)
                     
-                    Button {
-                        showJoinServerSheet.toggle()
-                    } label: {
-                        HStack(spacing: 12) {
-                            Image(systemName: "plus")
-                                .resizable()
-                                .frame(width: 16, height: 16)
-                                .frame(width: 24, height: 24)
-                            
-                            Text("Add a server")
+                    Section {
+                        Button {
+                            showJoinServerSheet.toggle()
+                        } label: {
+                            HStack(spacing: 12) {
+                                Image(systemName: "plus")
+                                    .resizable()
+                                    .frame(width: 16, height: 16)
+                                    .frame(width: 24, height: 24)
+                                
+                                Text("Add a server")
+                            }
+                        }
+                        
+                        NavigationLink(destination: Discovery.init) {
+                            HStack(spacing: 12) {
+                                Image(systemName: "safari.fill")
+                                    .resizable()
+                                    .frame(width: 16, height: 16)
+                                    .frame(width: 24, height: 24)
+                                
+                                Text("Discover")
+                            }
+                        }
+                        
+                        NavigationLink(destination: Settings.init) {
+                            HStack(spacing: 12) {
+                                Image(systemName: "gearshape.fill")
+                                    .resizable()
+                                    .frame(width: 16, height: 16)
+                                    .frame(width: 24, height: 24)
+                                
+                                Text("Settings")
+                            }
                         }
                     }
                     .listRowBackground(viewState.theme.background2.color)
-                    
-                    NavigationLink(destination: Settings.init) {
-                        HStack(spacing: 12) {
-                            Image(systemName: "gearshape.fill")
-                                .resizable()
-                                .frame(width: 16, height: 16)
-                                .frame(width: 24, height: 24)
-                            
-                            Text("Settings")
-                        }
-                    }
-                    .listRowBackground(viewState.theme.background2.color)
+
                     
                 }
                 .scrollContentBackground(.hidden)
