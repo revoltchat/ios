@@ -15,6 +15,7 @@
 		1777DD842ADC24CE003D6C72 /* ReversedSrollView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1777DD832ADC24CE003D6C72 /* ReversedSrollView.swift */; };
 		1777DD892ADC3C31003D6C72 /* Markdown.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1777DD882ADC3C31003D6C72 /* Markdown.swift */; };
 		1777DD8E2ADC4336003D6C72 /* RemoteImageTextAttachment.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1777DD8D2ADC4336003D6C72 /* RemoteImageTextAttachment.swift */; };
+		1782F5E62B08F60B00759D40 /* Discovery.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1782F5E52B08F60B00759D40 /* Discovery.swift */; };
 		178BB10C2B02D84C001143A4 /* HCaptcha in Frameworks */ = {isa = PBXBuildFile; productRef = 178BB10B2B02D84C001143A4 /* HCaptcha */; };
 		178BB10E2B02D84C001143A4 /* HCaptcha_RxSwift in Frameworks */ = {isa = PBXBuildFile; productRef = 178BB10D2B02D84C001143A4 /* HCaptcha_RxSwift */; };
 		178BB1102B02D89A001143A4 /* HCaptchaView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 178BB10F2B02D89A001143A4 /* HCaptchaView.swift */; };
@@ -83,6 +84,7 @@
 		1777DD832ADC24CE003D6C72 /* ReversedSrollView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReversedSrollView.swift; sourceTree = "<group>"; };
 		1777DD882ADC3C31003D6C72 /* Markdown.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Markdown.swift; sourceTree = "<group>"; };
 		1777DD8D2ADC4336003D6C72 /* RemoteImageTextAttachment.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemoteImageTextAttachment.swift; sourceTree = "<group>"; };
+		1782F5E52B08F60B00759D40 /* Discovery.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Discovery.swift; sourceTree = "<group>"; };
 		178BB10F2B02D89A001143A4 /* HCaptchaView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HCaptchaView.swift; sourceTree = "<group>"; };
 		178BB1132B02E475001143A4 /* CreateAccount.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateAccount.swift; sourceTree = "<group>"; };
 		178BB1162B02E63A001143A4 /* LoadingSpinnerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoadingSpinnerView.swift; sourceTree = "<group>"; };
@@ -215,6 +217,7 @@
 				17E28E072AF319D500F6069F /* JoinServer.swift */,
 				17F555262AFC229900958F2F /* ServerSettings.swift */,
 				17B7128C2B03E9D700CFF61C /* FriendsList.swift */,
+				1782F5E52B08F60B00759D40 /* Discovery.swift */,
 			);
 			path = Pages;
 			sourceTree = "<group>";
@@ -465,6 +468,7 @@
 				D49B705329C4D3FE009494A5 /* RevoltApp.swift in Sources */,
 				DA99EC4C29D5F35500419FDA /* ViewState.swift in Sources */,
 				17E019C92AF1279100AB4663 /* AppearanceSettings.swift in Sources */,
+				1782F5E62B08F60B00759D40 /* Discovery.swift in Sources */,
 				17C444582B06CC5400F97E4A /* ForgotPassword.swift in Sources */,
 				17CE2E142AE709CE0059FB3A /* UserSheet.swift in Sources */,
 				17966B652AE0842A00BAEC58 /* ChannelIcon.swift in Sources */,
@@ -695,22 +699,6 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
-		1777DD852ADC3A7A003D6C72 /* XCRemoteSwiftPackageReference "swift-markdown-ui" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/gonzalezreal/swift-markdown-ui";
-			requirement = {
-				kind = upToNextMajorVersion;
-				minimumVersion = 2.2.0;
-			};
-		};
-		1777DD8A2ADC3C4E003D6C72 /* XCRemoteSwiftPackageReference "MarkdownKit" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/bmoliveira/MarkdownKit";
-			requirement = {
-				kind = upToNextMajorVersion;
-				minimumVersion = 1.7.1;
-			};
-		};
 		178BB10A2B02D84C001143A4 /* XCRemoteSwiftPackageReference "HCaptcha-ios-sdk" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/hCaptcha/HCaptcha-ios-sdk";
@@ -786,11 +774,6 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
-		1777DD8B2ADC3C4E003D6C72 /* MarkdownKit */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 1777DD8A2ADC3C4E003D6C72 /* XCRemoteSwiftPackageReference "MarkdownKit" */;
-			productName = MarkdownKit;
-		};
 		178BB10B2B02D84C001143A4 /* HCaptcha */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = 178BB10A2B02D84C001143A4 /* XCRemoteSwiftPackageReference "HCaptcha-ios-sdk" */;

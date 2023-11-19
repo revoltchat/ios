@@ -236,4 +236,8 @@ struct HTTPClient {
     func sendFriendRequest(username: String) async -> Result<User, AFError> {
         await req(method: .post, route: "/users/friend", parameters: ["username": username])
     }
+    
+    func openDm(user: String) async -> Result<Channel, AFError> {
+        await req(method: .get, route: "/users/\(user)/dm")
+    }
 }

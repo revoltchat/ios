@@ -32,7 +32,7 @@ struct UserSheet: View {
     var body: some View {
         VStack(alignment: .leading) {
             if let profile = profile {
-                ZStack(alignment: .bottomLeading) {
+                ZStack {
                     if let banner = profile.background {
                         ZStack {
                             LazyImage(source: .file(banner), height: 100, clipTo: RoundedRectangle(cornerRadius: 10))
@@ -57,9 +57,47 @@ struct UserSheet: View {
                             + Text("#\(user.discriminator)")
                                 .foregroundStyle(.gray)
                         }
+                        
+                        Spacer()
+                        
+                        switch user.relationship ?? .None {
+                            case .Blocked:
+                                EmptyView()  // TODO: unblock
+                            case .BlockedOther, .User:
+                                EmptyView()
+                            case .Friend:
+                                Button {
+                                    Task {
+                                        await viewState.openDm(with: user.id)
+                                    }
+                                } label: {
+                                    Image(systemName: "message.fill")
+                                        .resizable()
+                                        .frame(width: 32, height: 32)
+                                }
+                            case .Incoming, .None:
+                                Button {
+                                    Task {
+                                        await viewState.http.sendFriendRequest(username: user.username)
+                                    }
+                                } label: {
+                                    Image(systemName: "person.badge.plus")
+                                        .resizable()
+                                        .frame(width: 32, height: 32)
+                                }
+                            case .Outgoing:
+                                Button {
+                                    Task {
+                                        await viewState.http.removeFriend(user: user.id)
+                                    }
+                                } label: {
+                                    Image(systemName: "person.badge.clock")
+                                        .resizable()
+                                        .frame(width: 32, height: 32)
+                                }
+                        }
                     }
-                    .padding(.bottom, 8)
-                    .padding(.leading, 8)
+                    .padding(8)
                 }
 
                 if let badges = user.badges {

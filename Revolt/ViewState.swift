@@ -424,6 +424,23 @@ public class ViewState: ObservableObject {
         
         return response
     }
+    
+    func openDm(with user: String) async {
+        var channel = dms.first(where: { switch $0 {
+            case .dm_channel(let dm):
+                return dm.recipients.contains(user)
+            case _:
+                return false
+        } })
+        
+        if channel == nil {
+            channel = try! await http.openDm(user: user).get()
+            dms.append(channel!)
+        }
+        
+        currentServer = .dms
+        currentChannel = .channel(channel!.id)
+    }
 }
 
 extension Dictionary {
