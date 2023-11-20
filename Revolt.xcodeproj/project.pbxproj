@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		1718F3D02B0BCAA50018E524 /* UnreadCounter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1718F3CF2B0BCAA50018E524 /* UnreadCounter.swift */; };
 		1718FB542AF8470400E9C511 /* ReportMessageSheetView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1718FB532AF8470400E9C511 /* ReportMessageSheetView.swift */; };
 		1739DB962B08E53B00D23DAD /* MessageBadge.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1739DB952B08E53B00D23DAD /* MessageBadge.swift */; };
 		1750EF6E2B0585B300DD3EB3 /* ResendEmail.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1750EF6D2B0585B300DD3EB3 /* ResendEmail.swift */; };
@@ -76,6 +77,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		1718F3CF2B0BCAA50018E524 /* UnreadCounter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UnreadCounter.swift; sourceTree = "<group>"; };
 		1718FB532AF8470400E9C511 /* ReportMessageSheetView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReportMessageSheetView.swift; sourceTree = "<group>"; };
 		1739DB952B08E53B00D23DAD /* MessageBadge.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageBadge.swift; sourceTree = "<group>"; };
 		1750EF6D2B0585B300DD3EB3 /* ResendEmail.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ResendEmail.swift; sourceTree = "<group>"; };
@@ -174,6 +176,7 @@
 				17CE2E132AE709CE0059FB3A /* UserSheet.swift */,
 				17E019CC2AF136B100AB4663 /* PresenceIndicator.swift */,
 				17E019D02AF14EC000AB4663 /* ServerIcon.swift */,
+				1718F3CF2B0BCAA50018E524 /* UnreadCounter.swift */,
 			);
 			path = Components;
 			sourceTree = "<group>";
@@ -462,6 +465,7 @@
 				DAAA4BFF29F251ED00F41E52 /* User.swift in Sources */,
 				DAAA4BFB29F2518900F41E52 /* MessageView.swift in Sources */,
 				17E019D12AF14EC000AB4663 /* ServerIcon.swift in Sources */,
+				1718F3D02B0BCAA50018E524 /* UnreadCounter.swift in Sources */,
 				17BC3EFA2AD826970029D820 /* File.swift in Sources */,
 				17D9D2B72B0843DE00D57812 /* PermissionsCalculator.swift in Sources */,
 				178BB1142B02E475001143A4 /* CreateAccount.swift in Sources */,

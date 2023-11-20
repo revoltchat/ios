@@ -2,11 +2,20 @@ import SwiftUI
 import OrderedCollections
 
 struct ChannelNavigationLink: View {
+    @EnvironmentObject var viewState: ViewState
     var channel: Channel
     
     var body: some View {
         NavigationLink(value: ChannelSelection.channel(channel.id)) {
-            ChannelIcon(channel: channel)
+            HStack {
+                ChannelIcon(channel: channel)
+                
+                Spacer()
+                
+                if let unread = viewState.getUnreadCountFor(channel: channel) {
+                    UnreadCounter(unread: unread)
+                }
+            }
         }
     }
 }
@@ -57,6 +66,12 @@ struct Home: View {
                                 HStack(spacing: 12) {
                                     ServerIcon(server: elem.value, height: 32, width: 32)
                                     Text(elem.value.name)
+                                    
+                                    Spacer()
+                                    
+                                    if let unread = viewState.getUnreadCountFor(server: elem.value) {
+                                        UnreadCounter(unread: unread)
+                                    }
                                 }
                             }
                         }

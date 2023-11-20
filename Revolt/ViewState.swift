@@ -441,6 +441,53 @@ public class ViewState: ObservableObject {
         currentServer = .dms
         currentChannel = .channel(channel!.id)
     }
+    
+    func getUnreadCountFor(channel: Channel) -> UnreadCount? {
+        if let unread = unreads[channel.id] {
+            if let mentions = unread.mentions {
+                return .mentions(mentions.count)
+            }
+            
+            if let last_unread_id = unread.last_id, let last_message_id = channel.last_message_id {
+                if last_unread_id < last_message_id {
+                    return .unread
+                }
+            }
+        }
+ 
+        return nil
+    }
+    
+    func getUnreadCountFor(server: Server) -> UnreadCount? {
+        let channelUnreads = server.channels.compactMap({ channels[$0] }).map({ getUnreadCountFor(channel: $0) })
+        
+        var mentionCount = 0
+        var hasUnread = false
+
+        for unread in channelUnreads {
+            if let unread = unread {
+                switch unread {
+                    case .unread:
+                        hasUnread = true
+                    case .mentions(let count):
+                        mentionCount += count
+                }
+            }
+        }
+        
+        if mentionCount > 0 {
+            return .mentions(mentionCount)
+        } else if hasUnread {
+            return .unread
+        }
+        
+        return nil
+    }
+}
+
+enum UnreadCount {
+    case unread
+    case mentions(Int)
 }
 
 extension Dictionary {

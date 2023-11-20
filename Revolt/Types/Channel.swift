@@ -131,6 +131,19 @@ enum Channel: Identifiable, Equatable {
         }
     }
     
+    var last_message_id: String? {
+        switch self {
+            case .dm_channel(let c):
+                c.last_message_id
+            case .group_dm_channel(let c):
+                c.last_message_id
+            case .text_channel(let c):
+                c.last_message_id
+            default:
+                nil
+        }
+    }
+    
     @MainActor
     func getName(_ viewState: ViewState) -> String {
         switch self {
