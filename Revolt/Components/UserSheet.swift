@@ -30,117 +30,144 @@ struct UserSheet: View {
     @State var profile: Profile?
 
     var body: some View {
-        VStack(alignment: .leading) {
-            if let profile = profile {
-                ZStack {
-                    if let banner = profile.background {
+        Spacer()
+            .frame(maxHeight: 10)
+        ScrollView {
+            Group {
+                VStack(alignment: .leading) {
+                    if let profile = profile {
                         ZStack {
-                            LazyImage(source: .file(banner), height: 100, clipTo: RoundedRectangle(cornerRadius: 10))
-                            LinearGradient(colors: [.clear, .black], startPoint: .top, endPoint: .bottom)
-                                .frame(height: 100)
-                                .clipShape(RoundedRectangle(cornerRadius: 10))
-                        }
-                    }
-                    
-                    HStack(alignment: .center) {
-                        Avatar(user: user, width: 48, height: 48, withPresence: true)
-                        
-                        VStack(alignment: .leading) {
-                            if let display_name = user.display_name {
-                                Text(display_name)
-                                    .foregroundStyle(.white)
-                                    .bold()
+                            ZStack {
+                                if let banner = profile.background {
+                                    LazyImage(source: .file(banner), height: 150, clipTo: RoundedRectangle(cornerRadius: 10))
+                                } else {
+                                    Rectangle()
+                                        .fill(viewState.theme.background.color)
+                                        .frame(height: 150)
+                                }
+                                LinearGradient(colors: [.clear, .black], startPoint: .top, endPoint: .bottom)
+                                    .frame(height: 150)
+                                    .clipShape(RoundedRectangle(cornerRadius: 10))
                             }
                             
-                            Text("\(user.username)")
-                                .foregroundStyle(.white)
-                            + Text("#\(user.discriminator)")
-                                .foregroundStyle(.gray)
-                        }
-                        
-                        Spacer()
-                        
-                        switch user.relationship ?? .None {
-                            case .Blocked:
-                                EmptyView()  // TODO: unblock
-                            case .BlockedOther, .User:
-                                EmptyView()
-                            case .Friend:
-                                Button {
-                                    Task {
-                                        await viewState.openDm(with: user.id)
-                                    }
-                                } label: {
-                                    Image(systemName: "message.fill")
-                                        .resizable()
-                                        .frame(width: 32, height: 32)
-                                }
-                            case .Incoming, .None:
-                                Button {
-                                    Task {
-                                        await viewState.http.sendFriendRequest(username: user.username)
-                                    }
-                                } label: {
-                                    Image(systemName: "person.badge.plus")
-                                        .resizable()
-                                        .frame(width: 32, height: 32)
-                                }
-                            case .Outgoing:
-                                Button {
-                                    Task {
-                                        await viewState.http.removeFriend(user: user.id)
-                                    }
-                                } label: {
-                                    Image(systemName: "person.badge.clock")
-                                        .resizable()
-                                        .frame(width: 32, height: 32)
-                                }
-                        }
-                    }
-                    .padding(8)
-                }
-
-                if let badges = user.badges {
-                    HStack {
-                        ForEach(Badges.allCases, id: \.self) { value in
-                            Badge(badges: badges, filename: String(describing: value), value: value.rawValue)
-                        }
-                    }
-                }
-                
-                if let member = member {
-                    let server = viewState.servers[member.id.server]!
-
-                    if let roles = member.roles {
-                        Text("Roles")
-                            .font(.caption)
-                        
-                        VStack(alignment: .leading) {
-                            WrappingHStack(roles, id: \.self, spacing: .constant(8), lineSpacing: 4) { roleId in
-                                let role = server.roles![roleId]!
+                            
+                            VStack(alignment: .leading) {
+                                Spacer()
+                                    .frame(maxHeight: 30)
                                 
-                                Text(role.name)
+                                HStack(alignment: .center) {
+                                    Avatar(user: user, width: 48, height: 48, withPresence: true)
+                                    
+                                    VStack(alignment: .leading) {
+                                        if let display_name = user.display_name {
+                                            Text(display_name)
+                                                .foregroundStyle(.white)
+                                                .bold()
+                                        }
+                                        
+                                        Text("\(user.username)")
+                                            .foregroundStyle(.white)
+                                        + Text("#\(user.discriminator)")
+                                            .foregroundStyle(.gray)
+                                    }
+                                    
+                                    Spacer()
+                                        .frame(maxHeight: 20)
+                                    
+                                    switch user.relationship ?? .None {
+                                        case .Blocked:
+                                            EmptyView()  // TODO: unblock
+                                        case .BlockedOther, .User:
+                                            EmptyView()
+                                        case .Friend:
+                                            Button {
+                                                Task {
+                                                    await viewState.openDm(with: user.id)
+                                                }
+                                            } label: {
+                                                Image(systemName: "message.fill")
+                                                    .resizable()
+                                                    .frame(width: 32, height: 32)
+                                            }
+                                        case .Incoming, .None:
+                                            Button {
+                                                Task {
+                                                    await viewState.http.sendFriendRequest(username: user.username)
+                                                }
+                                            } label: {
+                                                Image(systemName: "person.badge.plus")
+                                                    .resizable()
+                                                    .frame(width: 32, height: 32)
+                                            }
+                                        case .Outgoing:
+                                            Button {
+                                                Task {
+                                                    await viewState.http.removeFriend(user: user.id)
+                                                }
+                                            } label: {
+                                                Image(systemName: "person.badge.clock")
+                                                    .resizable()
+                                                    .frame(width: 32, height: 32)
+                                            }
+                                    }
+                                }
+                                
+                                if let badges = user.badges {
+                                    HStack {
+                                        ForEach(Badges.allCases, id: \.self) { value in
+                                            Badge(badges: badges, filename: String(describing: value), value: value.rawValue)
+                                        }
+                                    }
                                     .padding(8)
-                                    .background(RoundedRectangle(cornerRadius: 5).foregroundStyle(.gray))
+                                    .background(.ultraThinMaterial.opacity(0.4))
+                                    .clipShape(RoundedRectangle(cornerRadius: 5))
+                                    .padding(.vertical)
+                                }
                             }
+                            .padding(8)
                         }
+
+                        Group {
+                            if let member = member {
+                                let server = viewState.servers[member.id.server]!
+                                
+                                if let roles = member.roles {
+                                    Text("Roles")
+                                        .font(.caption)
+                                    
+                                    VStack(alignment: .leading) {
+                                        WrappingHStack(roles, id: \.self, spacing: .constant(8), lineSpacing: 4) { roleId in
+                                            let role = server.roles![roleId]!
+                                            
+                                            Text(role.name)
+                                                .font(.caption)
+                                                .padding(6)
+                                                .background(RoundedRectangle(cornerRadius: 5).foregroundStyle(.gray))
+                                        }
+                                    }
+                                    
+                                    //.frame(maxHeight: .infinity)
+                                }
+                            }
+                            
+                            if let bio = profile.content {
+                                Text("Bio")
+                                    .font(.caption)
+                                
+                                Text(bio)
+                            }
+                            
+                            Spacer()
+                        }
+                        .padding(4)
                         
-                        //.frame(maxHeight: .infinity)
+                    } else {
+                        Text("Loading...")
                     }
                 }
-                
-                if let bio = profile.content {
-                    Text("Bio")
-                        .font(.caption)
-                    
-                    Text(bio)
-                }
-                
-                Spacer()
-            } else {
-                Text("Loading...")
             }
         }
+        .scrollBounceBehavior(.basedOnSize, axes: .vertical)
         .frame(maxWidth: .infinity)
         .padding(.horizontal, 16)
         .background(viewState.theme.background.color)
@@ -176,7 +203,10 @@ struct UserSheetPreview: PreviewProvider {
     @StateObject static var viewState: ViewState = ViewState.preview()
         
     static var previews: some View {
-        UserSheet(user: Binding($viewState.users["0"])!, member: .constant(nil))
+        Text("foo")
+            .sheet(isPresented: .constant(true), content: {
+                UserSheet(user: Binding($viewState.users["0"])!, member: .constant(nil))
+            })
             .applyPreviewModifiers(withState: viewState)
     }
 }
