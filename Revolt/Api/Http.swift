@@ -235,4 +235,12 @@ struct HTTPClient {
     func openDm(user: String) async -> Result<Channel, AFError> {
         await req(method: .get, route: "/users/\(user)/dm")
     }
+    
+    func fetchUnreads() async -> Result<[Unread], AFError> {
+        await req(method: .get, route: "/sync/unreads")
+    }
+    
+    func ackMessage(channel: String, message: String) async -> Result<EmptyResponse, AFError> {
+        await req(method: .put, route: "/channels/\(channel)/ack/\(message)")
+    }
 }

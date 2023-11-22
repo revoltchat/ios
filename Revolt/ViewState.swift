@@ -348,6 +348,12 @@ public class ViewState: ObservableObject {
                 for dm in dms {
                     channelMessages[dm.id] = []
                 }
+                
+                let unreads = try! await http.fetchUnreads().get()
+                
+                for unread in unreads {
+                    self.unreads[unread.id.channel] = unread
+                }
 
                 state = .connected
 

@@ -33,3 +33,19 @@ struct JoinResponse: Decodable {
     var channels: [Channel]
     var server: Server
 }
+
+struct Unread: Decodable, Identifiable {
+    struct Id: Decodable, Hashable {
+        var channel: String
+        var user: String
+    }
+    
+    var id: Id
+    var last_id: String?
+    var mentions: [String]?
+    
+    enum CodingKeys: String, CodingKey {
+        case id = "_id"
+        case last_id, mentions
+    }
+}
