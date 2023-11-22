@@ -99,16 +99,11 @@ struct HTTPClient {
         await req(method: .get, route: "/")
     }
     
-    func sendMessage(channel: String, replies: [ApiReply], content: String, attachments: [(URL, String)], nonce: String) async -> Result<Message, AFError> {
+    func sendMessage(channel: String, replies: [ApiReply], content: String, attachments: [(Data, String)], nonce: String) async -> Result<Message, AFError> {
         var attachmentIds: [String] = []
         
         for attachment in attachments {
-            let body = await session.request(attachment.0)
-                .serializingData()
-                .response
-                .data!
-            
-            let response = try! await uploadFile(data: body, name: attachment.1, category: .attachment).get()
+            let response = try! await uploadFile(data: attachment.0, name: attachment.1, category: .attachment).get()
             
             attachmentIds.append(response.id)
         }
