@@ -301,7 +301,7 @@ public class ViewState: ObservableObject {
         self.ws = ws
     }
     
-    func queueMessage(channel: String, replies: [Reply], content: String, attachments: [(URL, String)]) async {
+    func queueMessage(channel: String, replies: [Reply], content: String, attachments: [(Data, String)]) async {
         var queue = self.queuedMessages[channel]
         
         if queue == nil {
