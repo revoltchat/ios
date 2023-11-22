@@ -125,6 +125,7 @@ public class ViewState: ObservableObject {
     @Published var loadingMessages: Set<String> = Set()
     @Published var currentlyTyping: [String: [String]] = [:]
     @Published var isOnboarding: Bool = false
+    @Published var unreads: [String: Unread] = [:]
 
     @Published var currentServer: MainSelection? = nil {
         didSet {
