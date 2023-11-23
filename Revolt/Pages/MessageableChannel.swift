@@ -152,6 +152,20 @@ struct MessageableChannelView: View {
                                     }
                                 }
                             })
+                            
+                            if messageId.wrappedValue == viewState.unreads[viewModel.channel.id]?.last_id, messageId.wrappedValue != viewModel.messages.last {
+                                HStack(spacing: 0) {
+                                    Text("NEW")
+                                        .font(.caption)
+                                        .fontWeight(.bold)
+                                        .padding(.horizontal, 8)
+                                        .background(RoundedRectangle(cornerRadius: 100).fill(viewState.theme.accent.color))
+                                    
+                                    Rectangle()
+                                        .frame(height: 1)
+                                        .foregroundStyle(viewState.theme.accent.color)
+                                }
+                            }
                         }
                         .listRowInsets(EdgeInsets(top: 8, leading: 12, bottom: 8, trailing: 12))
                         .listRowBackground(viewState.theme.background.color)
