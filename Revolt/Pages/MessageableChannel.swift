@@ -193,7 +193,7 @@ struct MessageableChannelView: View {
                 
             }
             
-            MessageBox(channel: viewModel.channel, channelReplies: $viewModel.replies)
+            MessageBox(channel: viewModel.channel, server: viewModel.server, channelReplies: $viewModel.replies)
         }
         .toolbar {
             ToolbarItem(placement: .principal) {

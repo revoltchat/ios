@@ -79,9 +79,11 @@ struct MessageBox: View {
     @Binding var channelReplies: [Reply]
 
     let channel: Channel
+    let server: Server?
 
-    init(channel: Channel, channelReplies: Binding<[Reply]>) {
+    init(channel: Channel, server: Server?, channelReplies: Binding<[Reply]>) {
         self.channel = channel
+        self.server = server
         _channelReplies = channelReplies
     }
     
@@ -106,24 +108,39 @@ struct MessageBox: View {
         }
     }
     
+    func getCurrentlyTyping() -> [(User, Member?)]? {
+        viewState.currentlyTyping[channel.id]?.map({ user_id in
+            let user = viewState.users[user_id]!
+
+            var member: Member?
+            
+            if let server = server {
+                member = viewState.members[server.id]![user_id]
+            }
+            
+            return (user, member)
+        })
+    }
+    
+    func formatTypingIndicatorText(withUsers users: [(User, Member?)]) -> String {
+        let base = ListFormatter.localizedString(byJoining: users.map({ (user, member) in member?.nickname ?? user.display_name ?? user.username }))
+        
+        let ending = users.count == 1 ? "is typing" : "are typing"
+
+        return "\(base) \(ending)"
+    }
+    
     var body: some View {
         VStack(alignment: .leading) {
-            let typing = Binding($viewState.currentlyTyping[channel.id])
-
-            if let typing = typing {
-                var text: [String] = []
-
-                VStack {
+            if let users = getCurrentlyTyping(), !users.isEmpty {
+                HStack {
                     HStack(spacing: -12) {
-                        ForEach(typing, id: \.self) { typing in
-                            let user = viewState.users[typing.wrappedValue]!
-                            let _ = text.append(user.username)
-                            
-                            Avatar(user: user, width: 24, height: 24)
+                        ForEach(users, id: \.0.id) { (user, member) in
+                            Avatar(user: user, member: member, width: 24, height: 24)
                         }
                     }
 
-                    Text(text.joined(separator: ", "))
+                    Text(formatTypingIndicatorText(withUsers: users))
                 }
             }
             ForEach(Array(channelReplies.enumerated()), id: \.element.message.id) { reply in
@@ -246,8 +263,9 @@ struct MessageBox_Previews: PreviewProvider {
 
     static var previews: some View {
         let channel = viewState.channels["0"]!
+        let server = viewState.servers["0"]!
         
-        MessageBox(channel: channel, channelReplies: $replies)
+        MessageBox(channel: channel, server: server, channelReplies: $replies)
             .environmentObject(viewState)
             .previewLayout(.sizeThatFits)
 

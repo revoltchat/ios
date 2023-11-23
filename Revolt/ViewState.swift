@@ -364,6 +364,7 @@ public class ViewState: ObservableObject {
                 }
     
                 messages[m.id] = m
+                unreads[m.channel]?.last_id = channelMessages[m.channel]?.last
                 channelMessages[m.channel]?.append(m.id)
 
             case .message_update(let event):
@@ -383,12 +384,13 @@ public class ViewState: ObservableObject {
                 print("authenticated")
                 
             case .channel_start_typing(let e):
-                var typing = currentlyTyping.setDefault(key: e.channel, default: [])
-                
-                typing.append(e.id)
+                var typing = currentlyTyping[e.id] ?? []
+                typing.append(e.user)
+
+                currentlyTyping[e.id] = typing
                 
             case .channel_stop_typing(let e):
-                currentlyTyping[e.channel]?.removeAll(where: { $0 == e.id })
+                currentlyTyping[e.id]?.removeAll(where: { $0 == e.user })
                 
             case .message_delete(let e):
                 if var channel = channelMessages[e.channel] {
@@ -397,6 +399,10 @@ public class ViewState: ObservableObject {
                         channelMessages[e.channel] = channel
                     }
                 }
+            
+            case .channel_ack(let e):
+                unreads[e.id]?.last_id = nil
+                unreads[e.id]?.mentions?.removeAll { $0 <= e.message_id }
         }
     }
     

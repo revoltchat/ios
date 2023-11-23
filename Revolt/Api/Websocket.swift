@@ -16,6 +16,7 @@ enum WsMessage {
     case channel_start_typing(ChannelTyping)
     case channel_stop_typing(ChannelTyping)
     case message_delete(MessageDeleteEvent)
+    case channel_ack(ChannelAckEvent)
 }
 
 struct ReadyEvent: Decodable {
@@ -38,8 +39,8 @@ struct MessageUpdateEvent: Decodable {
 }
 
 struct ChannelTyping: Decodable {
-    var channel: String
     var id: String
+    var user: String
 }
 
 struct MessageDeleteEvent: Decodable {
@@ -47,9 +48,15 @@ struct MessageDeleteEvent: Decodable {
     var id: String
 }
 
+struct ChannelAckEvent: Decodable {
+    var id: String
+    var user_id: String
+    var message_id: String
+}
+
 extension WsMessage: Decodable {
     enum CodingKeys: String, CodingKey { case type }
-    enum Tag: String, Decodable { case Authenticated, Ready, Message, MessageUpdate, ChannelStartTyping, ChannelStopTyping, MessageDelete }
+    enum Tag: String, Decodable { case Authenticated, Ready, Message, MessageUpdate, ChannelStartTyping, ChannelStopTyping, MessageDelete, ChannelAck }
     
     init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
@@ -70,6 +77,8 @@ extension WsMessage: Decodable {
                 self = .channel_stop_typing(try singleValueContainer.decode(ChannelTyping.self))
             case .MessageDelete:
                 self = .message_delete(try singleValueContainer.decode(MessageDeleteEvent.self))
+            case .ChannelAck:
+                self = .channel_ack(try singleValueContainer.decode(ChannelAckEvent.self))
         }
     }
 }
