@@ -151,9 +151,9 @@ struct MessageView: View {
                         .padding(.horizontal)
                     }
                 }
-                .listRowSeparator(.hidden)
             }
         }
+        .listRowSeparator(.hidden)
         .sheet(isPresented: $showMemberSheet) {
             let user = Binding($viewState.users[viewModel.message.author])!
 
