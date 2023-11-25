@@ -16,6 +16,7 @@ struct RevoltApp: App {
 }
 
 struct ApplicationSwitcher: View {
+    @Environment(\.colorScheme) var colorScheme
     @EnvironmentObject var viewState: ViewState
 
     @ViewBuilder
@@ -24,6 +25,14 @@ struct ApplicationSwitcher: View {
             InnerApp()
                 .task {
                     await viewState.backgroundWsTask()
+                }
+                .onChange(of: colorScheme) { before, after in
+                    // automatically switch the color scheme if the user pressed "auto" in the preferences menu
+                    if viewState.theme.shouldFollowiOSTheme {
+                        withAnimation {
+                            _ = viewState.applySystemScheme(theme: after, followSystem: true)
+                        }
+                    }
                 }
         } else {
             Welcome()

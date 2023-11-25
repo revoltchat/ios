@@ -43,7 +43,7 @@ struct AppearanceSettings: View {
                 .frame(maxWidth: .infinity)
                 
                 Button {
-                    let _ = viewState.applySystemScheme(theme: colorScheme)
+                    let _ = viewState.applySystemScheme(theme: colorScheme, followSystem: true)
                 } label: {
                     Text("Auto")
                         .foregroundStyle(viewState.theme.accent.color)
@@ -101,7 +101,7 @@ struct AppearanceSettings: View {
             }
             
             ColorPicker(selection: $messageBoxBorder, label: {
-                Text("Message Box Background")
+                Text("Message Box Border")
             })
             .onChange(of: messageBoxBorder) {
                 let resolved = messageBoxBorder.resolve(in: environment)

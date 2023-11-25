@@ -177,8 +177,10 @@ public class ViewState: ObservableObject {
         self.http.token = self.sessionToken
     }
 
-    func applySystemScheme(theme: ColorScheme) -> Self {
-        self.theme = theme == .dark ? .dark : .light
+    func applySystemScheme(theme: ColorScheme, followSystem: Bool = false) -> Self {
+        var theme: Theme = theme == .dark ? .dark : .light
+        theme.shouldFollowiOSTheme = followSystem
+        self.theme = theme
         return self
     }
     

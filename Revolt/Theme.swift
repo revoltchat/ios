@@ -86,6 +86,7 @@ struct Theme: Codable, Equatable {
     var messageBoxBackground: ThemeColor = ThemeColor.white
     var topBar: ThemeColor = ThemeColor(hex: "#FFFFFFAA")
     var messageBoxBorder: ThemeColor = ThemeColor.black
+    var shouldFollowiOSTheme: Bool = false
     
     static var light: Theme {
         Theme(
@@ -97,7 +98,8 @@ struct Theme: Codable, Equatable {
             messageBox: ThemeColor.white,
             messageBoxBackground: ThemeColor.white,
             topBar: ThemeColor(hex: "#FFFFFFAA"),
-            messageBoxBorder: ThemeColor.black
+            messageBoxBorder: ThemeColor.black,
+            shouldFollowiOSTheme: false
         )
     }
 
@@ -111,7 +113,8 @@ struct Theme: Codable, Equatable {
             messageBox: ThemeColor(hex:"#363636FF"),
             messageBoxBackground: ThemeColor(hex:"#363636FF"),
             topBar: ThemeColor(hex: "#191919AA"),
-            messageBoxBorder: ThemeColor.white
+            messageBoxBorder: ThemeColor.white,
+            shouldFollowiOSTheme: false
         )
     }
 }
