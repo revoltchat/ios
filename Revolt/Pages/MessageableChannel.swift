@@ -8,6 +8,14 @@
 import Foundation
 import SwiftUI
 
+var isPreview: Bool {
+#if DEBUG
+    ProcessInfo.processInfo.environment["XCODE_RUNNING_FOR_PREVIEWS"] == "1"
+#else
+    false
+#endif
+}
+
 @MainActor
 class MessageableChannelViewModel: ObservableObject {
     @ObservedObject var viewState: ViewState
@@ -34,7 +42,9 @@ class MessageableChannelViewModel: ObservableObject {
         }
     }
 
-    func loadMoreMessages(before: String? = nil) async -> FetchHistory {
+    func loadMoreMessages(before: String? = nil) async -> FetchHistory? {
+        if isPreview { return nil }
+        
         let result = try! await viewState.http.fetchHistory(channel: channel.id, limit: 50, before: before).get()
 
         for user in result.users {
@@ -116,7 +126,9 @@ struct MessageableChannelView: View {
                             Text("Loading more messages...")
                                 .onAppear {
                                     Task {
-                                        foundAllMessages = await viewModel.loadMoreMessages(before: viewModel.$messages.wrappedValue.first).messages.count < 50
+                                        if let new = await viewModel.loadMoreMessages(before: viewModel.$messages.wrappedValue.first) {
+                                            foundAllMessages = new.messages.count < 50
+                                        }
                                     }
                                 }
                                 .listRowBackground(viewState.theme.background.color)

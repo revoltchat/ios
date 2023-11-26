@@ -44,13 +44,11 @@ struct InnerApp: View {
     @EnvironmentObject var viewState: ViewState
     
     var body: some View {
-        NavigationStack(path: $viewState.path) {
-            switch viewState.state {
-                case .connecting:
-                    Text("Connecting...")
-                case .connected:
-                    Home()
-            }
+        switch viewState.state {
+            case .connecting:
+                Text("Connecting...")
+            case .connected:
+                HomeRewritten()
         }
     }
 }

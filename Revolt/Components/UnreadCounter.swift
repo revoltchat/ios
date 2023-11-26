@@ -11,13 +11,15 @@ import SwiftUI
 struct UnreadCounter: View {
     @EnvironmentObject var viewState: ViewState
     var unread: UnreadCount
+    var mentionSize: CGFloat = 24
+    var unreadSize: CGFloat = 8
     
     var body: some View {
         switch unread {
             case .mentions(let count):
                 ZStack(alignment: .center) {
                     Circle()
-                        .frame(width: 24, height: 24)
+                        .frame(width: mentionSize, height: mentionSize)
                         .foregroundStyle(.red)
                     Text("\(count)")
                         .foregroundStyle(.white)
@@ -25,7 +27,7 @@ struct UnreadCounter: View {
                 
             case .unread:
                 Circle()
-                    .frame(width: 8, height: 8)
+                    .frame(width: unreadSize, height: unreadSize)
                     .foregroundStyle(viewState.theme.foreground.color)
         }
     }
