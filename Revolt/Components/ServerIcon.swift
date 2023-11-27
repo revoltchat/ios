@@ -9,19 +9,20 @@ import Foundation
 import SwiftUI
 
 
-struct ServerIcon: View {
+struct ServerIcon<S: Shape>: View {
     var server: Server
     var height: CGFloat? = nil
     var width: CGFloat? = nil
+    var clipTo: S
     
     var body: some View {
         if let icon = server.icon {
-            LazyImage(source: .file(icon), height: height, width: height, clipTo: Circle())
+            LazyImage(source: .file(icon), height: height, width: height, clipTo: clipTo)
         } else {
             ZStack(alignment: .center) {
                 let firstChar = server.name.first!
                 
-                Circle()
+                clipTo
                     .fill(.gray)  // TODO: background3
                     .frame(width: width, height: height)
 
@@ -37,25 +38,12 @@ struct ServerListIcon: View {
     var height: CGFloat? = nil
     var width: CGFloat? = nil
     
-    @Binding var currentSelection: MainSelection?
+    @Binding var currentSelection: MainSelection
     
     var body: some View {
-        if let icon = server.icon {
-            if currentSelection == .server(server.id) {
-                LazyImage(source: .file(icon), height: height, width: height, clipTo: Rectangle())
-            } else {
-                LazyImage(source: .file(icon), height: height, width: height, clipTo: Circle())
-            }
-        } else {
-            ZStack(alignment: .center) {
-                let firstChar = server.name.first!
-                
-                Circle()
-                    .fill(.gray)  // TODO: background3
-                    .frame(width: width, height: height)
-
-                Text(verbatim: "\(firstChar)")
-            }
-        }
+        ServerIcon(server: server, height: height, width: width, clipTo: Rectangle())
+        .if(currentSelection == .server(server.id),
+            content: { $0.clipShape(RoundedRectangle(cornerRadius: 12)) },
+            else: { $0.clipShape(Circle()) })
     }
 }

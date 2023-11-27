@@ -22,18 +22,6 @@ struct DMList: View {
     var body: some View {
         NavigationSplitView {
             List(selection: $currentDm) {
-                NavigationLink(value: Destination.friends) {
-                    HStack(spacing: 12) {
-                        Image(systemName: "person.fill")
-                            .symbolRenderingMode(.hierarchical)
-                            .resizable()
-                            .frame(width: 16, height: 16)
-                            .frame(width: 24, height: 24)
-                        
-                        Text("Friends")
-                    }
-                }
-                .listRowBackground(viewState.theme.background2.color)
 
                 let savedMessagesChannel: SavedMessages = viewState.dms.compactMap { channel in
                     if case .saved_messages(let c) = channel {
@@ -67,7 +55,7 @@ struct DMList: View {
                         let channel = viewState.channels[id]!
                         let messages = Binding($viewState.channelMessages[id])!
                         
-                        MessageableChannelView(viewModel: MessageableChannelViewModel(viewState: viewState, channel: channel, server: nil, messages: messages))
+                        MessageableChannelView(viewModel: MessageableChannelViewModel(viewState: viewState, channel: channel, server: nil, messages: messages), showSidebar: .constant(false))  // TODO: showSidebar
 
                     case .friends:
                         FriendsList()

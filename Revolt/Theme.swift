@@ -97,7 +97,7 @@ struct Theme: Codable, Equatable {
             foreground2: ThemeColor(hex: "#1F1F1FFF"),
             messageBox: ThemeColor.white,
             messageBoxBackground: ThemeColor.white,
-            topBar: ThemeColor(hex: "#FFFFFFAA"),
+            topBar: ThemeColor(hex: "#FFFFFFEE"),
             messageBoxBorder: ThemeColor.black,
             shouldFollowiOSTheme: false
         )
@@ -112,7 +112,7 @@ struct Theme: Codable, Equatable {
             foreground2: ThemeColor(hex: "#C8C8C8FF"),
             messageBox: ThemeColor(hex:"#363636FF"),
             messageBoxBackground: ThemeColor(hex:"#363636FF"),
-            topBar: ThemeColor(hex: "#191919AA"),
+            topBar: ThemeColor(hex: "#191919EE"),
             messageBoxBorder: ThemeColor.white,
             shouldFollowiOSTheme: false
         )

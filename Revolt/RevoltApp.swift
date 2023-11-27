@@ -48,7 +48,7 @@ struct InnerApp: View {
             case .connecting:
                 Text("Connecting...")
             case .connected:
-                HomeRewritten()
+                HomeRewritten(currentSelection: $viewState.currentServer, currentChannel: $viewState.currentChannel)
         }
     }
 }
@@ -100,4 +100,20 @@ extension Bundle {
     var buildVersionNumber: String? {
         return infoDictionary?["CFBundleVersion"] as? String
     }
+}
+
+extension UIDevice {
+    static var isIPad: Bool {
+        UIDevice.current.userInterfaceIdiom == .pad
+    }
+    
+    static var isIPhone: Bool {
+        UIDevice.current.userInterfaceIdiom == .phone
+    }
+    
+    #if os(macOS)
+    static var isMac = true
+    #else
+    static var isMac = false
+    #endif
 }

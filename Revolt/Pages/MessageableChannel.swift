@@ -89,6 +89,8 @@ struct MessageableChannelView: View {
     @State var showSheet = false
     @State var foundAllMessages = false
     @State var scrollPosition: String?
+    
+    @Binding var showSidebar: Bool
 
     func viewMembers() {
         
@@ -187,37 +189,40 @@ struct MessageableChannelView: View {
                     .listRowSeparator(.hidden)
                     .background(viewState.theme.background.color)
                     
-                    
-                    if let last_id = viewState.unreads[viewModel.channel.id]?.last_id, let last_message_id = viewModel.channel.last_message_id {
-                        if last_id < last_message_id {
-                            
-                            Text("New messages since \(formatRelative(id: last_id))")
-                                .padding(4)
-                                .frame(maxWidth: .infinity)
-                                .background(viewState.theme.accent.color)
-                                .clipShape(UnevenRoundedRectangle(bottomLeadingRadius: 5, bottomTrailingRadius: 5))
-                                .onTapGesture {
-                                    proxy.scrollTo(last_id)
-                                }
+                    VStack {
+                        PageToolbar(showSidebar: $showSidebar) {
+                            Button {
+                                showSheet.toggle()
+                            } label: {
+                                ChannelIcon(channel: viewModel.channel)
+                                Image(systemName: "chevron.right")
+                                    .frame(height: 4)
+                            }
+                        }
+                        
+                        if let last_id = viewState.unreads[viewModel.channel.id]?.last_id, let last_message_id = viewModel.channel.last_message_id {
+                            if last_id < last_message_id {
+                                
+                                Text("New messages since \(formatRelative(id: last_id))")
+                                    .padding(4)
+                                    .frame(maxWidth: .infinity)
+                                    .background(viewState.theme.accent.color)
+                                    .clipShape(UnevenRoundedRectangle(bottomLeadingRadius: 5, bottomTrailingRadius: 5))
+                                    .onTapGesture {
+                                        proxy.scrollTo(last_id)
+                                    }
+                            }
                         }
                     }
+                    .frame(maxWidth: .infinity)
+                    .background(viewState.theme.topBar.color)
                 }
                 
             }
             
             MessageBox(channel: viewModel.channel, server: viewModel.server, channelReplies: $viewModel.replies)
         }
-        .toolbar {
-            ToolbarItem(placement: .principal) {
-                Button(action: { showSheet.toggle() }) {
-                    ChannelIcon(channel: viewModel.channel)
-                    Image(systemName: "chevron.right")
-                        .frame(height: 4)
-                }
-            }
-        }
         .toolbarBackground(viewState.theme.topBar.color, for: .automatic)
-        .navigationBarTitleDisplayMode(.inline)
         .sheet(isPresented: $showSheet) {
             VStack(alignment: .leading, spacing: 12) {
                 HStack(alignment: .center) {

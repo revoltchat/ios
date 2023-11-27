@@ -11,6 +11,7 @@ import SwiftUI
 struct ChannelListItem: View {
     @EnvironmentObject var viewState: ViewState
     var channel: Channel
+    var isSelected: Bool
     
     var body: some View {
         Button(action: {
@@ -26,8 +27,11 @@ struct ChannelListItem: View {
                         .padding(.trailing)
                 }
             }
+            .padding(8)
         }
+        .background((isSelected ? viewState.theme.background : viewState.theme.background2).color)
         .foregroundStyle(viewState.theme.foreground.color)
+        .clipShape(RoundedRectangle(cornerRadius: 5))
     }
 }
 
@@ -39,22 +43,18 @@ struct CategoryListItem: View {
     var body: some View {
         VStack(alignment: .leading) {
             Text(category.title)
-                .font(.title3)
+            
             ForEach(category.channels.compactMap({ viewState.channels[$0] }), id: \.id) { channel in
-                ChannelListItem(channel: channel)
-                    .padding(.vertical, 5)
-                    .background((selectedChannel == channel.id ? viewState.theme.background : viewState.theme.background2).color)
-                    .clipShape(RoundedRectangle(cornerSize: CGSize(width: 10, height: 10)))
+                ChannelListItem(channel: channel, isSelected: selectedChannel == channel.id)
             }
         }
-
     }
 }
 
 struct ServerChannelScrollView: View {
     @EnvironmentObject var viewState: ViewState
-    @Binding var currentSelection: MainSelection?
-    @Binding var currentChannel: ChannelSelection?
+    @Binding var currentSelection: MainSelection
+    @Binding var currentChannel: ChannelSelection
     
     var body: some View {
         let maybeSelectedServer: Server? = switch currentSelection {
@@ -64,69 +64,60 @@ struct ServerChannelScrollView: View {
 
         if maybeSelectedServer != nil {
             let selectedServer = maybeSelectedServer!
+            
             let selectedChannel: String? = switch currentChannel {
-            case .channel(let channelId): channelId
-            case .server_settings: selectedServer.id
-            case nil: nil
+                case .channel(let channelId): channelId
+                case .server_settings: selectedServer.id
+                default: nil
             }
+            
             let categoryChannels = selectedServer.categories?.flatMap(\.channels) ?? []
             let nonCategoryChannels = selectedServer.channels.filter({ !categoryChannels.contains($0) })
-            VStack {
-                HStack {
-                    ServerIcon(server: selectedServer, height: 32, width: 32)
-                    Text(selectedServer.name)
+            
+            ScrollView {
+                if let banner = selectedServer.banner {
+                    ZStack(alignment: .bottomLeading) {
+                        ZStack {
+                            LazyImage(source: .file(banner), height: 100, clipTo: UnevenRoundedRectangle(topLeadingRadius: 5, topTrailingRadius: 5))
+                            
+                            LinearGradient(colors: [.clear, .clear, .clear, viewState.theme.background2.color], startPoint: .top, endPoint: .bottom)
+                                .frame(height: 100)
+                        }
+                        
+                        HStack {
+                            Text(selectedServer.name)
+                            
+                            Spacer()
+                            
+                            Button(action: {
+                                viewState.currentChannel = .server_settings
+                            }) {
+                                HStack(spacing: 12) {
+                                    Image(systemName: "gearshape.fill")
+                                        .resizable()
+                                        .frame(width: 16, height: 16)
+                                        .frame(width: 24, height: 24)
+                                }
+                            }
+                            .foregroundStyle(viewState.theme.foreground2.color)
+                        }
+                        .frame(maxWidth: .infinity)
+                        .padding(.horizontal, 8)
+                        .padding(.bottom, 8)
+                    }
+                    .padding(.bottom, 10)
+
                 }
-                ScrollView {
-                    if let banner = selectedServer.banner {
-                        if nonCategoryChannels.isEmpty {
-                            LazyImage(source: .file(banner), height: 100, clipTo: RoundedRectangle(cornerRadius: 10))
-                                .listRowBackground(viewState.theme.background.color)
-                                .listRowInsets(EdgeInsets(top: 0, leading: 0, bottom: 0, trailing: 0))
-                            
-                        } else {
-                            LazyImage(source: .file(banner), height: 100, clipTo: UnevenRoundedRectangle(topLeadingRadius: 10, bottomLeadingRadius: 0, bottomTrailingRadius: 0, topTrailingRadius: 10, style: .continuous))
-                                .listRowBackground(viewState.theme.background.color)
-                                .listRowInsets(EdgeInsets(top: 0, leading: 0, bottom: 0, trailing: 0))
-                        }
-                    }
-                    
-                    ForEach(nonCategoryChannels.compactMap({ viewState.channels[$0] })) { channel in
-                        ChannelListItem(channel: channel)
-                            .padding(.vertical, 5)
-                            .background((selectedChannel == channel.id ? viewState.theme.background2 : viewState.theme.background).color)
-                            .clipShape(RoundedRectangle(cornerSize: CGSize(width: 10, height: 10)))
-                    }
-                    
-                    ForEach(selectedServer.categories ?? []) { category in
-                        VStack {
-                            Divider()
-                            CategoryListItem(category: category, selectedChannel: selectedChannel)
-                            Spacer()
-                                .frame(maxHeight: 10)
-                        }
-                    }
-                    
-                    Divider()
-                    
-                    Button(action: {
-                        viewState.currentChannel = .server_settings
-                    }) {
-                        HStack(spacing: 12) {
-                            Image(systemName: "gearshape.fill")
-                                .resizable()
-                                .frame(width: 16, height: 16)
-                                .frame(width: 24, height: 24)
-                            
-                            Text("Settings")
-                            Spacer()
-                        }
-                    }
-                    .foregroundStyle(viewState.theme.foreground.color)
-                    .padding(.vertical, 5)
-                    .background((selectedChannel == selectedServer.id ? viewState.theme.background : viewState.theme.background2).color)
-                    .clipShape(RoundedRectangle(cornerSize: CGSize(width: 10, height: 10)))
+                                
+                ForEach(nonCategoryChannels.compactMap({ viewState.channels[$0] })) { channel in
+                    ChannelListItem(channel: channel, isSelected: selectedChannel == channel.id)
+                }
+                
+                ForEach(selectedServer.categories ?? []) { category in
+                    CategoryListItem(category: category, selectedChannel: selectedChannel)
                 }
             }
+            .padding(.horizontal, 8)
             .scrollContentBackground(.hidden)
             .scrollIndicators(.hidden)
             .background(viewState.theme.background2.color)

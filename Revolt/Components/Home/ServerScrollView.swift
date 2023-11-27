@@ -13,7 +13,6 @@ struct ServerScrollView: View {
     
     @EnvironmentObject var viewState: ViewState
     @Binding var showJoinServerSheet: Bool
-    @Binding var currentSelection: MainSelection?
     
     var body: some View {
         ScrollView {
@@ -25,25 +24,26 @@ struct ServerScrollView: View {
             }
             
             Divider()
-                .frame(height: 30)
+                .frame(height: 12)
 
             Section {
                 ForEach(viewState.servers.elements, id: \.key) { elem in
                     Button(action: {
                         viewState.currentServer = .server(elem.value.id)
                     }) {
-                        ZStack(alignment: .bottomTrailing) {
-                            ServerListIcon(server: elem.value, height: buttonSize, width: buttonSize, currentSelection: $currentSelection)
+                        ZStack(alignment: .topTrailing) {
+                            ServerListIcon(server: elem.value, height: buttonSize, width: buttonSize, currentSelection: $viewState.currentServer)
                             if let unread = viewState.getUnreadCountFor(server: elem.value) {
                                 UnreadCounter(unread: unread, mentionSize: buttonSize / 2.5, unreadSize: buttonSize / 3)
                             }
                         }
                     }
+                    .padding(.vertical, 2)
                 }
             }
             
             Divider()
-                .frame(height: 30)
+                .frame(height: 12)
             
             Section {
                 Button(action: {
@@ -56,15 +56,15 @@ struct ServerScrollView: View {
                         .font(.system(size: buttonSize))
                 }
                 
-                Button(action: {}) {
+                Button(action: { viewState.currentChannel = .discover }) {
                     Image(systemName: "safari.fill")
                         .symbolRenderingMode(.palette)
-                        .foregroundStyle(viewState.theme.background2.color, Color("themePrimary"))
+                        .foregroundStyle(Color("themePrimary"), viewState.theme.background2.color)
                         .frame(width: buttonSize, height: buttonSize)
                         .font(.system(size: buttonSize))
                 }
                 
-                Button(action: {}) {
+                Button(action: { viewState.currentChannel = .settings }) {
                     Image(systemName: "gearshape.circle.fill")
                         .symbolRenderingMode(.palette)
                         .foregroundStyle(Color("themePrimary"), viewState.theme.background2.color)
@@ -76,12 +76,13 @@ struct ServerScrollView: View {
             
         }
         .scrollContentBackground(.hidden)
+        .scrollIndicators(.hidden)
         .padding(.horizontal, viewWidth - buttonSize)
         .background(viewState.theme.background.color)
     }
 }
 
 #Preview(traits: .fixedLayout(width: 60, height: 500)) {
-    ServerScrollView(showJoinServerSheet: .constant(false), currentSelection: .constant(MainSelection.server("0")))
+    ServerScrollView(showJoinServerSheet: .constant(false))
         .environmentObject(ViewState.preview())
 }

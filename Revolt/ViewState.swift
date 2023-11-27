@@ -45,11 +45,11 @@ enum LoginResponse {
 extension LoginResponse: Decodable {
     enum CodingKeys: String, CodingKey { case result }
     enum Tag: String, Decodable { case Success, MFA, Disabled }
-    
+
     init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
         let singleValueContainer = try decoder.singleValueContainer()
-        
+
         switch try container.decode(Tag.self, forKey: .result) {
             case .Success:
                 self = .Success(try singleValueContainer.decode(LoginSuccess.self))
@@ -72,10 +72,10 @@ struct QueuedMessage {
     var content: String
 }
 
-enum MainSelection: Hashable {
+enum MainSelection: Hashable, Codable {
     case server(String)
     case dms
-    
+
     var id: String? {
         switch self {
             case .server(let id):
@@ -86,16 +86,17 @@ enum MainSelection: Hashable {
     }
 }
 
-enum ChannelSelection: Hashable {
+enum ChannelSelection: Hashable, Codable {
     case channel(String)
     case server_settings
-    
+    case settings
+    case home
+    case discover
+
     var id: String? {
         switch self {
-            case .channel(let id):
-                id
-            case .server_settings:
-                nil
+            case .channel(let id): id
+            default: nil
         }
     }
 }
@@ -118,27 +119,27 @@ public class ViewState: ObservableObject {
     @Published var channelMessages: [String: [String]] = [:]
     @Published var members: [String: [String: Member]] = [:]
     @Published var dms: [Channel] = []
-    
+
     @Published var state: ConnectionState = .connecting
     @Published var queuedMessages: Dictionary<String, [QueuedMessage]> = [:]
     @Published var currentUser: User? = nil
     @Published var loadingMessages: Set<String> = Set()
-    @Published var currentlyTyping: [String: [String]] = [:]
+    @Published var currentlyTyping: [String: OrderedSet<String>] = [:]
     @Published var isOnboarding: Bool = false
     @Published var unreads: [String: Unread] = [:]
 
-    @Published var currentServer: MainSelection? = nil {
+    @Published var currentServer: MainSelection = .dms {
         didSet {
-            UserDefaults.standard.set(currentServer?.id, forKey: "currentServer")
+            UserDefaults.standard.set(try! JSONEncoder().encode(currentServer), forKey: "currentServer")
         }
     }
 
-    @Published var currentChannel: ChannelSelection? = nil {
+    @Published var currentChannel: ChannelSelection = .home {
         didSet {
-            UserDefaults.standard.set(currentChannel?.id, forKey: "currentChannel")
+            UserDefaults.standard.set(try! JSONEncoder().encode(currentChannel), forKey: "currentChannel")
         }
     }
-    
+
     @Published var currentSessionId: String? = nil {
         didSet {
             UserDefaults.standard.set(currentSessionId, forKey: "currentSessionId")
@@ -151,22 +152,26 @@ public class ViewState: ObservableObject {
     }
 
     @Published var path: NavigationPath = NavigationPath()
-    
+
     init() {
         let decoder = JSONDecoder()
 
         self.sessionToken = UserDefaults.standard.string(forKey: "sessionToken")
-    
-        if let currentServer = UserDefaults.standard.string(forKey: "currentServer") {
-            self.currentServer = .server(currentServer)
+
+        if let currentServer = UserDefaults.standard.data(forKey: "currentServer") {
+            self.currentServer = try! decoder.decode(MainSelection.self, from: currentServer)
+        } else {
+            self.currentServer = .dms
         }
-    
-        if let currentChannel = UserDefaults.standard.string(forKey: "currentChannel") {
-            self.currentChannel = .channel(currentChannel)
+
+        if let currentChannel = UserDefaults.standard.data(forKey: "currentChannel") {
+            self.currentChannel = try! decoder.decode(ChannelSelection.self, from: currentChannel)
+        } else {
+            self.currentChannel = .home
         }
 
         self.currentSessionId = UserDefaults.standard.string(forKey: "currentSessionId")
-    
+
         if let themeData = UserDefaults.standard.data(forKey: "theme") {
             self.theme = try! decoder.decode(Theme.self, from: themeData)
         } else {
@@ -183,7 +188,7 @@ public class ViewState: ObservableObject {
         self.theme = theme
         return self
     }
-    
+
     class func preview() -> ViewState {
         let this = ViewState()
         this.state = .connected
@@ -197,18 +202,18 @@ public class ViewState: ObservableObject {
         this.members["0"] = ["0": Member(id: MemberId(server: "0", user: "0"), joined_at: "")]
         this.currentServer = .server("0")
         this.currentChannel = .channel("0")
-        
+
         for i in (1...9) {
             this.users["\(i)"] = User(id: "i", username: "\(i)", discriminator: "\(i)\(i)\(i)\(i)")
         }
-        
+
         this.currentlyTyping["0"] = ["0", "1", "2", "3", "4"]
-        
+
         this.apiInfo = ApiInfo(revolt: "0.6.6", features: ApiFeatures(captcha: CaptchaFeature(enabled: true, key: "3daae85e-09ab-4ff6-9f24-e8f4f335e433"), email: true, invite_only: false, autumn: RevoltFeature(enabled: true, url: "https://autumn.revolt.chat"), january: RevoltFeature(enabled: true, url: "https://jan.revolt.chat"), voso: VortexFeature(enabled: true, url: "https://vortex.revolt.chat", ws: "wss://vortex.revolt.chat")), ws: "wss://ws.revolt.chat", app: "https://app.revolt.chat", vapid: "BJto1I_OZi8hOkMfQNQJfod2osWBqcOO7eEOqFMvCfqNhqgxqOr7URnxYKTR4N6sR3sTPywfHpEsPXhrU9zfZgg=")
-        
+
         return this
     }
-    
+
     func signInWithVerify(code: String, email: String, password: String) async -> Bool {
         do {
             _ = try await self.http.createAccount_VerificationCode(code: code).get()
@@ -223,16 +228,16 @@ public class ViewState: ObservableObject {
 
     func signIn(mfa_ticket: String, mfa_response: [String: String], callback: @escaping((LoginState) -> ())) async {
         let body = ["mfa_ticket": mfa_ticket, "mfa_response": mfa_response, "friendly_name": "Revolt IOS"] as [String : Any]
-    
+
         await innerSignIn(body, callback)
     }
-    
+
     func signIn(email: String, password: String, callback: @escaping((LoginState) -> ())) async {
         let body = ["email": email, "password": password, "friendly_name": "Revolt IOS"]
 
         await innerSignIn(body, callback)
     }
-    
+
     private func innerSignIn(_ body: [String: Any], _ callback: @escaping((LoginState) -> ())) async {
         AF.request("\(http.baseURL)/auth/session/login", method: .post, parameters: body, encoding: JSONEncoding.default)
             .responseData { response in
@@ -250,7 +255,7 @@ public class ViewState: ObservableObject {
                                     self.currentSessionId = success._id
                                     self.sessionToken = success.token
                                     self.http.token = success.token
-                                    
+
                                     do {
                                         let onboardingState = try await self.http.checkOnboarding().get()
                                         if onboardingState.onboarding {
@@ -264,10 +269,10 @@ public class ViewState: ObservableObject {
                                         return callback(.Success) // if the onboard check dies, just try to go for it
                                     }
                                 }
-                                
+
                             case .Mfa(let mfa):
                                 return callback(.Mfa(ticket: mfa.ticket, methods: mfa.allowed_methods))
-                                
+
                             case .Disabled:
                                 return callback(.Disabled)
                         }
@@ -281,20 +286,20 @@ public class ViewState: ObservableObject {
         sessionToken = nil
         return .success(true)
     }
-    
+
     func formatUrl(with: File) -> String {
         "\(apiInfo!.features.autumn.url)/\(with.tag)/\(with.id)"
     }
-    
+
     func backgroundWsTask() async {
         if ws != nil {
             return
         }
-        
+
         guard let token = sessionToken else {
             return
         }
-        
+
         let apiInfo = try! await self.http.fetchApiInfo().get()
         self.http.apiInfo = apiInfo
         self.apiInfo = apiInfo
@@ -302,25 +307,25 @@ public class ViewState: ObservableObject {
         let ws = WebSocketStream(url: apiInfo.ws, token: token, onEvent: onEvent)
         self.ws = ws
     }
-    
+
     func queueMessage(channel: String, replies: [Reply], content: String, attachments: [(Data, String)]) async {
         var queue = self.queuedMessages[channel]
-        
+
         if queue == nil {
             queue = []
             self.queuedMessages[channel] = queue
         }
-        
+
         let nonce = ULID(timestamp: Date.now).ulidString
-        
+
         var r: [ApiReply] = []
-        
+
         for reply in replies {
             r.append(ApiReply(id: reply.message.id, mention: reply.mention))
         }
-        
+
         queue!.append(QueuedMessage(nonce: nonce, replies: r, content: content))
-        
+
         await http.sendMessage(channel: channel, replies: r, content: content, attachments: attachments, nonce: nonce)
     }
 
@@ -331,28 +336,28 @@ public class ViewState: ObservableObject {
                     channels[channel.id] = channel
                     channelMessages[channel.id] = []
                 }
-                
+
                 for server in event.servers {
                     servers[server.id] = server
                     members[server.id] = [:]
                 }
-                
+
                 for user in event.users {
                     if user.relationship == .User {
                         currentUser = user
                     }
-                    
+
                     users[user.id] = user
                 }
-                
+
                 dms = try! await http.fetchDms().get()
-                
+
                 for dm in dms {
                     channelMessages[dm.id] = []
                 }
-                
+
                 let unreads = try! await http.fetchUnreads().get()
-                
+
                 for unread in unreads {
                     self.unreads[unread.id.channel] = unread
                 }
@@ -364,36 +369,36 @@ public class ViewState: ObservableObject {
                     let user = try! await http.fetchUser(user: m.author).get()
                     users[m.author] = user
                 }
-    
+
                 messages[m.id] = m
                 unreads[m.channel]?.last_id = channelMessages[m.channel]?.last
                 channelMessages[m.channel]?.append(m.id)
 
             case .message_update(let event):
                 let message = messages[event.id]
-                
+
                 if var message = message {
                     message.edited = event.data.edited
 
                     if let content = event.data.content {
                         message.content = content
                     }
-                    
+
                     messages[event.id] = message
                 }
-                
+
             case .authenticated:
                 print("authenticated")
-                
+
             case .channel_start_typing(let e):
                 var typing = currentlyTyping[e.id] ?? []
                 typing.append(e.user)
 
                 currentlyTyping[e.id] = typing
-                
+
             case .channel_stop_typing(let e):
                 currentlyTyping[e.id]?.removeAll(where: { $0 == e.user })
-                
+
             case .message_delete(let e):
                 if var channel = channelMessages[e.channel] {
                     if let index = channel.firstIndex(of: e.id) {
@@ -401,18 +406,18 @@ public class ViewState: ObservableObject {
                         channelMessages[e.channel] = channel
                     }
                 }
-            
+
             case .channel_ack(let e):
                 unreads[e.id]?.last_id = nil
                 unreads[e.id]?.mentions?.removeAll { $0 <= e.message_id }
         }
     }
-    
+
     func logout() {
         currentUser = nil
         sessionToken = nil
-        currentServer = nil
-        currentChannel = nil
+        currentServer = .dms
+        currentChannel = .home
         currentlyTyping = [:]
         currentSessionId = nil
         users = [:]
@@ -426,20 +431,20 @@ public class ViewState: ObservableObject {
 
         ws?.stop()
     }
-    
+
     func joinServer(code: String) async -> JoinResponse {
         let response = try! await http.joinServer(code: code).get()
-        
+
         for channel in response.channels {
             channels[channel.id] = channel
             channelMessages[channel.id] = []
         }
-        
+
         servers[response.server.id] = response.server
-        
+
         return response
     }
-    
+
     func openDm(with user: String) async {
         var channel = dms.first(where: { switch $0 {
             case .dm_channel(let dm):
@@ -447,35 +452,35 @@ public class ViewState: ObservableObject {
             case _:
                 return false
         } })
-        
+
         if channel == nil {
             channel = try! await http.openDm(user: user).get()
             dms.append(channel!)
         }
-        
+
         currentServer = .dms
         currentChannel = .channel(channel!.id)
     }
-    
+
     func getUnreadCountFor(channel: Channel) -> UnreadCount? {
         if let unread = unreads[channel.id] {
             if let mentions = unread.mentions {
                 return .mentions(mentions.count)
             }
-            
+
             if let last_unread_id = unread.last_id, let last_message_id = channel.last_message_id {
                 if last_unread_id < last_message_id {
                     return .unread
                 }
             }
         }
- 
+
         return nil
     }
-    
+
     func getUnreadCountFor(server: Server) -> UnreadCount? {
         let channelUnreads = server.channels.compactMap({ channels[$0] }).map({ getUnreadCountFor(channel: $0) })
-        
+
         var mentionCount = 0
         var hasUnread = false
 
@@ -489,13 +494,13 @@ public class ViewState: ObservableObject {
                 }
             }
         }
-        
+
         if mentionCount > 0 {
             return .mentions(mentionCount)
         } else if hasUnread {
             return .unread
         }
-        
+
         return nil
     }
 }
@@ -508,12 +513,12 @@ enum UnreadCount {
 extension Dictionary {
     mutating func setDefault(key: Key, default def: Value) -> Value {
         var value = self[key]
-        
+
         if value == nil {
             value = def
             self[key] = value
         }
-        
+
         return value!
     }
 }
