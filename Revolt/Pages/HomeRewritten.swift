@@ -110,7 +110,30 @@ struct HomeRewritten: View {
                 let sidepanelWidth = min(geo.size.width * 0.85, 600)
                 let sidepanelOffset = showSidebar ? 0 : min(-sidepanelWidth + offset.width, 0)
                 
-                ZStack(alignment: .topLeading) {
+                HStack(alignment: .top, spacing: 0) {
+                    HStack(spacing: 8) {
+                        ServerScrollView(showJoinServerSheet: $showJoinServerSheet)
+                            .frame(maxWidth: 60)
+                        
+                        switch currentSelection {
+                            case .server(_):
+                                ServerChannelScrollView(currentSelection: $currentSelection, currentChannel: $currentChannel)
+                                    .padding(.horizontal, 8)
+                            case .dms:
+                                DMScrollView(currentChannel: $currentChannel)
+                        }
+                    }
+                    .frame(width: sidepanelWidth)
+                    .background(viewState.theme.background2.color)
+                    .transition(.move(edge: .leading))
+                    .offset(CGSize(width: sidepanelOffset, height: 0.0))
+                    .gesture(
+                        DragGesture()
+                            .onChanged({ g in
+                                offset = CGSize(width: max(min(g.translation.width, 0), -sidepanelWidth), height: offset.height)
+                            })
+                    )
+                    
                     MaybeChannelView(currentChannel: $currentChannel, currentSelection: $currentSelection, showSidebar: $showSidebar)
                         .frame(maxWidth: .infinity)
                         .disabled(sidepanelOffset == 0.0)
@@ -132,7 +155,7 @@ struct HomeRewritten: View {
                                             forceOpen = false
                                         }
                                         
-                                        offset = g.translation
+                                        offset = CGSize(width: max(g.translation.width, -sidepanelWidth), height: g.translation.height)
                                     }
                                 })
                                 .onEnded({ v in
@@ -146,29 +169,9 @@ struct HomeRewritten: View {
                                     }
                                 })
                         )
-                    
-                    HStack(spacing: 8) {
-                        ServerScrollView(showJoinServerSheet: $showJoinServerSheet)
-                            .frame(maxWidth: 60)
-                        
-                        switch currentSelection {
-                            case .server(_):
-                                ServerChannelScrollView(currentSelection: $currentSelection, currentChannel: $currentChannel)
-                                    .padding(.horizontal, 8)
-                            case .dms:
-                                DMScrollView(currentChannel: $currentChannel)
-                        }
-                    }
-                    .frame(maxWidth: sidepanelWidth, maxHeight: .infinity)
-                    .background(viewState.theme.background2.color)
-                    .transition(.move(edge: .leading))
-                    .offset(CGSize(width: sidepanelOffset, height: 0.0))
-                    .gesture(
-                        DragGesture()
-                            .onChanged({ g in
-                                offset = CGSize(width: offset.width + min(g.translation.width, 0), height: offset.height)
-                            })
-                    )
+                        .offset(x: offset.width - sidepanelWidth)
+                        //.ignoresSafeArea()
+                        .frame(width: geo.size.width)
                 }
             }
             .onChange(of: viewState.currentChannel, { before, after in
