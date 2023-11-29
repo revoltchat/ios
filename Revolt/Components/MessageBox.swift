@@ -109,8 +109,10 @@ struct MessageBox: View {
     }
     
     func getCurrentlyTyping() -> [(User, Member?)]? {
-        viewState.currentlyTyping[channel.id]?.map({ user_id in
-            let user = viewState.users[user_id]!
+        viewState.currentlyTyping[channel.id]?.compactMap({ user_id in
+            guard let user = viewState.users[user_id] else {
+                return nil
+            }
 
             var member: Member?
             
