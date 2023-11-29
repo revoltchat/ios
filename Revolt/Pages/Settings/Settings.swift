@@ -12,79 +12,67 @@ enum CurrentSettingsPage: Hashable {
     case profile
     case sessions
     case appearance
+    case language
     case about
 }
 
 struct Settings: View {
     @EnvironmentObject var viewState: ViewState
 
-    @State var currentPage: CurrentSettingsPage? = nil
+    @State var currentPage: CurrentSettingsPage? = .language
     
     var body: some View {
-        NavigationSplitView {
-            List(selection: $currentPage) {
-                Section("Revolt") {
-                    NavigationLink(value: CurrentSettingsPage.profile) {
-                        Image(systemName: "person.fill")
-                        Text("Profile")
-                    }
-                    
-                    NavigationLink(value: CurrentSettingsPage.sessions) {
-                        Image(systemName: "shield.fill")
-                        Text("Sessions")
-                    }
-                    
-                    NavigationLink(value: CurrentSettingsPage.appearance) {
-                        Image(systemName: "paintpalette.fill")
-                        Text("Appearance")
-                    }
+        VStack(alignment: .leading) {
+            Section("Revolt") {
+                NavigationLink(destination: ProfileSettings.init) {
+                    Image(systemName: "person.fill")
+                    Text("Profile")
                 }
-                .listRowBackground(viewState.theme.background2.color)
                 
-                Section("Misc") {
-                    NavigationLink(value: CurrentSettingsPage.about) {
-                        Image(systemName: "info.circle.fill")
-                        Text("About")
-                    }
-                    
-                    Button {
-                        viewState.logout()
-                    } label: {
-                        HStack {
-                            Image(systemName: "arrow.left.square")
-                                .foregroundStyle(.red)
-                            Text("Logout")
-                                .foregroundStyle(.red)
-                        }
-                    }
+                NavigationLink(destination: SessionsSettings.init) {
+                    Image(systemName: "shield.fill")
+                    Text("Sessions")
                 }
-                .listRowBackground(viewState.theme.background2.color)
+                
+                NavigationLink(destination: { AppearanceSettings(
+                    accent: viewState.theme.accent.color,
+                    background: viewState.theme.background.color,
+                    background2: viewState.theme.background2.color,
+                    textColor: viewState.theme.foreground.color,
+                    messageBox: viewState.theme.messageBox.color,
+                    messageBoxBackground: viewState.theme.messageBoxBackground.color,
+                    topBar: viewState.theme.topBar.color,
+                    messageBoxBorder: viewState.theme.messageBoxBorder.color
+                )}) {
+                    Image(systemName: "paintpalette.fill")
+                    Text("Appearance")
+                }
+                
+                NavigationLink(destination: LanguageSettings.init) {
+                    Image(systemName: "globe")
+                    Text("Language")
+                }
             }
-            .listStyle(.inset)
-            .scrollContentBackground(.hidden)
-            .background(viewState.theme.background.color)
-        } detail: {
-            if let page = currentPage {
-                switch page {
-                    case .profile:
-                        ProfileSettings()
-                    case .sessions:
-                        SessionsSettings()
-                    case .appearance:
-                        AppearanceSettings(
-                            accent: viewState.theme.accent.color,
-                            background: viewState.theme.background.color,
-                            background2: viewState.theme.background2.color,
-                            textColor: viewState.theme.foreground.color,
-                            messageBox: viewState.theme.messageBox.color,
-                            messageBoxBackground: viewState.theme.messageBoxBackground.color,
-                            topBar: viewState.theme.topBar.color,
-                            messageBoxBorder: viewState.theme.messageBoxBorder.color
-                        )
-                    case .about:
-                        About()
+            
+            Section("Misc") {
+                NavigationLink(destination: About.init) {
+                    Image(systemName: "info.circle.fill")
+                    Text("About")
+                }
+                
+                Button {
+                    viewState.logout()
+                } label: {
+                    HStack {
+                        Image(systemName: "arrow.left.square")
+                            .foregroundStyle(.red)
+                        Text("Logout")
+                            .foregroundStyle(.red)
+                    }
                 }
             }
         }
+        .frame(maxWidth: .infinity, maxHeight: .infinity)
+        .background(viewState.theme.background.color)
     }
 }

@@ -89,9 +89,7 @@ enum MainSelection: Hashable, Codable {
 enum ChannelSelection: Hashable, Codable {
     case channel(String)
     case server_settings
-    case settings
     case home
-    case discover
     case friends
 
     var id: String? {

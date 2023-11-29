@@ -40,38 +40,8 @@ struct MaybeChannelView: View {
                 ServerSettings(serverId: viewState.currentServer.id!)
             case .home:
                 HomeWelcome(showSidebar: $showSidebar)
-            case .settings:
-                VStack {
-                    PageToolbar(showSidebar: $showSidebar) {
-                        Image(systemName: "gearshape.circle.fill")
-                            .symbolRenderingMode(.palette)
-                            .foregroundStyle(Color("themePrimary"), viewState.theme.background2.color)
-                            .frame(width: 16, height: 16)
-                            .frame(width: 24, height: 24)
-                        
-                        Text("Settings")
-                    } trailing: {
-                        EmptyView()
-                    }
-                    
-                    Settings()
-                }
-            case .discover:
-                VStack {
-                    PageToolbar(showSidebar: $showSidebar) {
-                        Image(systemName: "gearshape.circle.fill")
-                            .frame(width: 16, height: 16)
-                            .frame(width: 24, height: 24)
-                        
-                        Text("Settings")
-                    } trailing: {
-                        EmptyView()
-                    }
-                    
-                    Discovery()
-                }
             case .friends:
-                VStack {
+                VStack(spacing: 0) {
                     PageToolbar(showSidebar: $showSidebar) {
                         Image(systemName: "person.3.sequence")
                             .frame(width: 16, height: 16)

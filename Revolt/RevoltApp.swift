@@ -46,11 +46,13 @@ struct InnerApp: View {
     @EnvironmentObject var viewState: ViewState
     
     var body: some View {
-        switch viewState.state {
-            case .connecting:
-                Text("Connecting...")
-            case .connected:
-                HomeRewritten(currentSelection: $viewState.currentServer, currentChannel: $viewState.currentChannel)
+        NavigationStack(path: $viewState.path) {
+            switch viewState.state {
+                case .connecting:
+                    Text("Connecting...")
+                case .connected:
+                    HomeRewritten(currentSelection: $viewState.currentServer, currentChannel: $viewState.currentChannel)
+            }
         }
     }
 }

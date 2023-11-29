@@ -56,7 +56,7 @@ struct ServerScrollView: View {
                         .font(.system(size: buttonSize))
                 }
                 
-                Button(action: { viewState.currentChannel = .discover }) {
+                NavigationLink(destination: Discovery.init) {
                     Image(systemName: "safari.fill")
                         .symbolRenderingMode(.palette)
                         .foregroundStyle(Color("themePrimary"), viewState.theme.background2.color)
@@ -64,7 +64,7 @@ struct ServerScrollView: View {
                         .font(.system(size: buttonSize))
                 }
                 
-                Button(action: { viewState.currentChannel = .settings }) {
+                NavigationLink(destination: Settings.init) {
                     Image(systemName: "gearshape.circle.fill")
                         .symbolRenderingMode(.palette)
                         .foregroundStyle(Color("themePrimary"), viewState.theme.background2.color)
