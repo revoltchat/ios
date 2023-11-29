@@ -2,6 +2,7 @@ import SwiftUI
 
 @main
 struct RevoltApp: App {
+    @Environment(\.locale) var systemLocale: Locale
     @StateObject var state = ViewState()
     
     var body: some Scene {
@@ -11,6 +12,7 @@ struct RevoltApp: App {
                 .tint(state.theme.accent.color)
                 .background(state.theme.background.color)
                 .foregroundStyle(state.theme.foreground.color)
+                .typesettingLanguage((state.currentLocale ?? systemLocale).language)
         }
     }
 }

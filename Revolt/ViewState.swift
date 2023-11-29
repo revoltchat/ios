@@ -151,6 +151,12 @@ public class ViewState: ObservableObject {
             UserDefaults.standard.set(try! JSONEncoder().encode(theme), forKey: "theme")
         }
     }
+    
+    @Published var currentLocale: Locale? {
+        didSet {
+            UserDefaults.standard.set(try! JSONEncoder().encode(currentLocale), forKey: "locale")
+        }
+    }
 
     @Published var path: NavigationPath = NavigationPath()
 
@@ -169,6 +175,12 @@ public class ViewState: ObservableObject {
             self.currentChannel = try! decoder.decode(ChannelSelection.self, from: currentChannel)
         } else {
             self.currentChannel = .home
+        }
+        
+        if let locale = UserDefaults.standard.data(forKey: "locale") {
+            self.currentLocale = try! decoder.decode(Locale?.self, from: locale)
+        } else {
+            self.currentLocale = nil
         }
 
         self.currentSessionId = UserDefaults.standard.string(forKey: "currentSessionId")

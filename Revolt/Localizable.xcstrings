@@ -1,0 +1,370 @@
+{
+  "sourceLanguage" : "en",
+  "strings" : {
+    "" : {
+
+    },
+    "(edited)" : {
+
+    },
+    "@" : {
+
+    },
+    "@ off" : {
+
+    },
+    "@ on" : {
+
+    },
+    "#%@" : {
+
+    },
+    "%@" : {
+
+    },
+    "%@ code" : {
+
+    },
+    "%lld" : {
+
+    },
+    "About" : {
+
+    },
+    "Accent" : {
+
+    },
+    "Active Sessions" : {
+
+    },
+    "Add a server" : {
+
+    },
+    "Add Friend" : {
+
+    },
+    "Appearance" : {
+
+    },
+    "Auto" : {
+
+    },
+    "Banner" : {
+
+    },
+    "Bio" : {
+
+    },
+    "Brought to you with ❤️ by the Revolt team." : {
+
+    },
+    "Cancel" : {
+
+    },
+    "Channel description" : {
+
+    },
+    "Code or link" : {
+
+    },
+    "Community Guidelines" : {
+
+    },
+    "Connecting..." : {
+
+    },
+    "Conversations" : {
+
+    },
+    "Copy contents" : {
+
+    },
+    "Create a new server" : {
+
+    },
+    "Create Account" : {
+
+    },
+    "Created %lld days ago" : {
+
+    },
+    "Created today" : {
+
+    },
+    "Dark" : {
+
+    },
+    "Delete" : {
+
+    },
+    "Didn't get an email?" : {
+
+    },
+    "Direct Messages" : {
+
+    },
+    "Discovery" : {
+
+    },
+    "Edit" : {
+
+    },
+    "Email" : {
+
+    },
+    "Email Token" : {
+
+    },
+    "enter" : {
+
+    },
+    "Enter the server's invite" : {
+
+    },
+    "Enter the verification code sent to your email" : {
+
+    },
+    "Enter your email, and if we've got you on record we'll send you another one" : {
+
+    },
+    "Enter your Username" : {
+
+    },
+    "Find your community, connect with the world." : {
+
+    },
+    "foo" : {
+
+    },
+    "Forgot Password" : {
+
+    },
+    "Forgot your password?" : {
+
+    },
+    "Friends" : {
+
+    },
+    "Get another code" : {
+
+    },
+    "Give us some detail" : {
+
+    },
+    "Home" : {
+
+    },
+    "How did you get here?" : {
+
+    },
+    "Invite" : {
+
+    },
+    "Join" : {
+
+    },
+    "Join by invite code or link" : {
+
+    },
+    "Join Server" : {
+
+    },
+    "Joined" : {
+
+    },
+    "Language" : {
+
+    },
+    "Let's fix that" : {
+
+    },
+    "Let's log you in" : {
+
+    },
+    "Let's sign you up" : {
+
+    },
+    "Light" : {
+
+    },
+    "Loading more messages..." : {
+
+    },
+    "Loading..." : {
+
+    },
+    "Log In" : {
+
+    },
+    "Logout" : {
+
+    },
+    "Manage notifications" : {
+
+    },
+    "Members" : {
+
+    },
+    "Message %@" : {
+
+    },
+    "Message Box" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Message Box"
+          }
+        }
+      }
+    },
+    "Message Box Background" : {
+
+    },
+    "Message Box Border" : {
+
+    },
+    "Misc" : {
+
+    },
+    "NEW" : {
+
+    },
+    "New messages since %@" : {
+
+    },
+    "New Password" : {
+
+    },
+    "One more thing" : {
+
+    },
+    "Open Profile" : {
+
+    },
+    "Options" : {
+
+    },
+    "Password" : {
+
+    },
+    "Pick a category" : {
+
+    },
+    "Please note that this does not get sent to this server's moderators" : {
+
+    },
+    "Primary Background" : {
+
+    },
+    "Privacy Policy" : {
+
+    },
+    "Profile" : {
+
+    },
+    "Profile Picture" : {
+
+    },
+    "Reply" : {
+
+    },
+    "Report" : {
+
+    },
+    "Report reason" : {
+
+    },
+    "Resend a verification email" : {
+
+    },
+    "Reset Password" : {
+
+    },
+    "Revolt" : {
+
+    },
+    "Revolt is one of the best ways to stay connected with your friends and community, anywhere, anytime." : {
+
+    },
+    "Revolt on IOS" : {
+
+    },
+    "Roles" : {
+
+    },
+    "Saved Messages" : {
+
+    },
+    "Secondary Background" : {
+
+    },
+    "Select File" : {
+
+    },
+    "Select Photo" : {
+
+    },
+    "Select Username" : {
+
+    },
+    "Sessions" : {
+
+    },
+    "Settings" : {
+
+    },
+    "Sign Up" : {
+
+    },
+    "Submit" : {
+
+    },
+    "Tell us what's wrong with this message" : {
+
+    },
+    "Terms of Service" : {
+
+    },
+    "Text Colour" : {
+
+    },
+    "This Device" : {
+
+    },
+    "This is the start of your conversation." : {
+
+    },
+    "Top Bar" : {
+
+    },
+    "unknown" : {
+
+    },
+    "Unknown message" : {
+
+    },
+    "use a %@ code" : {
+
+    },
+    "Username" : {
+
+    },
+    "Verification Code" : {
+
+    },
+    "Verify" : {
+
+    },
+    "Welcome to" : {
+
+    },
+    "What's wrong..." : {
+
+    },
+    "You've got 2FA enabled to keep your account extra-safe." : {
+
+    }
+  },
+  "version" : "1.0"
+}
