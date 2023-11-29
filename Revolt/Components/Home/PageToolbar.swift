@@ -30,6 +30,6 @@ struct PageToolbar<C: View>: View {
             
             Spacer()
         }
-        .padding(.horizontal, 8)
+        .padding(8)
     }
 }
