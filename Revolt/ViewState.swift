@@ -92,6 +92,7 @@ enum ChannelSelection: Hashable, Codable {
     case settings
     case home
     case discover
+    case friends
 
     var id: String? {
         switch self {

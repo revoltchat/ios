@@ -16,6 +16,8 @@ struct HomeWelcome: View {
         VStack {
             PageToolbar(showSidebar: $showSidebar) {
                 Text("Home")
+            } trailing: {
+                EmptyView()
             }
             
             Spacer()

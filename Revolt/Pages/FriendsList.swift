@@ -70,6 +70,7 @@ struct FriendsList: View {
                     }
                 }
             }
+            .listRowSeparator(.hidden)
             .listRowBackground(viewState.theme.background2.color)
 
             ForEach(arr, id: \.0) { (title, users) in
@@ -144,10 +145,11 @@ struct FriendsList: View {
                         Text("\(users.count)")
                     }
                 }
+                .listRowSeparator(.hidden)
                 .listRowBackground(viewState.theme.background2.color)
             }
         }
-        .listStyle(.insetGrouped)
+        .listStyle(.plain)
         .scrollContentBackground(.hidden)
         .background(viewState.theme.background.color)
         .sheet(item: $selectedUser, content: { user in

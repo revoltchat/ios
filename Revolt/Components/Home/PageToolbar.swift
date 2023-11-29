@@ -8,10 +8,11 @@
 import Foundation
 import SwiftUI
 
-struct PageToolbar<C: View>: View {
+struct PageToolbar<C: View, T: View>: View {
     @EnvironmentObject var viewState: ViewState
     @Binding var showSidebar: Bool
     @ViewBuilder var contents: () -> C
+    @ViewBuilder var trailing: () -> T
     
     var body: some View {
         HStack {
@@ -21,7 +22,9 @@ struct PageToolbar<C: View>: View {
                 }
             } label: {
                 Image(systemName: "line.3.horizontal")
-                    .frame(width: 24, height: 24)
+                    .resizable()
+                    .frame(width: 24, height: 14)
+                    .foregroundStyle(viewState.theme.foreground2.color)
             }
             
             Spacer()
@@ -29,8 +32,11 @@ struct PageToolbar<C: View>: View {
             contents()
             
             Spacer()
+            
+            trailing()
         }
-        .padding(8)
+        .padding(.horizontal, 12)
+        .padding(.vertical, 8)
         .background(viewState.theme.topBar.color)
     }
 }
@@ -38,6 +44,8 @@ struct PageToolbar<C: View>: View {
 #Preview {
     PageToolbar(showSidebar: .constant(false)) {
         Text("Placeholder")
+    } trailing: {
+        Text("Ending")
     }
     .applyPreviewModifiers(withState: ViewState.preview())
 }

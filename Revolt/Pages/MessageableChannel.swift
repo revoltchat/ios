@@ -198,6 +198,8 @@ struct MessageableChannelView: View {
                                 Image(systemName: "chevron.right")
                                     .frame(height: 4)
                             }
+                        } trailing: {
+                            EmptyView()
                         }
                         
                         if let last_id = viewState.unreads[viewModel.channel.id]?.last_id, let last_message_id = viewModel.channel.last_message_id {
