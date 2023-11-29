@@ -31,5 +31,13 @@ struct PageToolbar<C: View>: View {
             Spacer()
         }
         .padding(8)
+        .background(viewState.theme.topBar.color)
     }
+}
+
+#Preview {
+    PageToolbar(showSidebar: .constant(false)) {
+        Text("Placeholder")
+    }
+    .applyPreviewModifiers(withState: ViewState.preview())
 }

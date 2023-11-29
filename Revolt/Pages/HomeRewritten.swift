@@ -39,11 +39,7 @@ struct MaybeChannelView: View {
             case .server_settings:
                 ServerSettings(serverId: viewState.currentServer.id!)
             case .home:
-                VStack(alignment: .center) {
-                    Image("wide")
-                    Text("balls")
-                }
-                .frame(maxHeight: .infinity)
+                HomeWelcome(showSidebar: $showSidebar)
             case .settings:
                 VStack {
                     PageToolbar(showSidebar: $showSidebar) {
