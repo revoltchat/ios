@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import SwiftUI
 
 struct MemberId: Decodable {
     var server: String
@@ -23,5 +24,14 @@ struct Member: Decodable {
     enum CodingKeys: String, CodingKey {
         case id = "_id"
         case nickname, avatar, roles, joined_at, timeout
+    }
+    
+    func displayColour(server: Server) -> Color? {
+        roles?
+            .compactMap({ server.roles?[$0] })
+            .sorted(by: { $0.rank > $1.rank })
+            .compactMap(\.colour)
+            .last
+            .map({ ThemeColor(hex: $0).color } )
     }
 }

@@ -115,7 +115,8 @@ struct MessageView: View {
                     
                     VStack(alignment: .leading) {
                         HStack {
-                            Text(viewModel.message.masquerade?.name ?? viewModel.author.display_name ?? viewModel.author.username)
+                            Text(verbatim: viewModel.message.masquerade?.name ?? viewModel.author.display_name ?? viewModel.author.username)
+                                .foregroundStyle(viewModel.member?.displayColour(server: viewModel.server!) ?? viewState.theme.foreground.color)
                                 .fontWeight(.heavy)
                                 .onTapGesture {
                                     if !isStatic {
@@ -124,7 +125,7 @@ struct MessageView: View {
                                 }
                             
                             if viewModel.author.bot != nil {
-                                MessageBadge(text: "Bot", color: viewState.theme.accent.color)
+                                MessageBadge(text: String(localized: "Bot"), color: viewState.theme.accent.color)
                             }
 
                             Text(createdAt(id: viewModel.message.id).formatted())
@@ -139,7 +140,7 @@ struct MessageView: View {
                         }
                         
                         if let content = viewModel.message.content {
-                            Text(content)
+                            Text(verbatim: content)
                                 .font(.system(size: 16))
                         }
                         
