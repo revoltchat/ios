@@ -115,9 +115,7 @@ extension UIDevice {
         UIDevice.current.userInterfaceIdiom == .phone
     }
     
-    #if os(macOS)
-    static var isMac = true
-    #else
-    static var isMac = false
-    #endif
+    static var isMac: Bool {
+        UIDevice.current.userInterfaceIdiom == .mac
+    }
 }
