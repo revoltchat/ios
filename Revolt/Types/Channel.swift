@@ -159,6 +159,21 @@ enum Channel: Identifiable, Equatable {
                 c.name
         }
     }
+    
+    var nsfw: Bool {
+        switch self {
+            case .saved_messages(_):
+                false
+            case .dm_channel(_):
+                false
+            case .group_dm_channel(let c):
+                c.nsfw ?? false
+            case .text_channel(let c):
+                c.nsfw ?? false
+            case .voice_channel(let c):
+                c.nsfw ?? false
+        }
+    }
 }
 
 
