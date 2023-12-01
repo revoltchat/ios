@@ -93,9 +93,9 @@ struct HomeRewritten: View {
         } else {
             GeometryReader { geo in
                 let sidepanelWidth = min(geo.size.width * 0.85, 600)
-                let sidepanelOffset = showSidebar ? 0 : min(-sidepanelWidth + offset.width, 0)
+                let sidepanelOffset = min(-sidepanelWidth + offset.width, 0)
                 
-                HStack(alignment: .top, spacing: 0) {
+                ZStack(alignment: .topLeading) {
                     HStack(spacing: 0) {
                         ServerScrollView(showJoinServerSheet: $showJoinServerSheet)
                             .frame(maxWidth: 60)
@@ -112,7 +112,6 @@ struct HomeRewritten: View {
                     .background(viewState.theme.background2.color)
                     
                     MaybeChannelView(currentChannel: $currentChannel, currentSelection: $currentSelection, showSidebar: $showSidebar)
-                        .frame(maxWidth: .infinity)
                         .disabled(sidepanelOffset == 0.0)
                         .onTapGesture {
                             if sidepanelOffset == 0.0 {
@@ -146,8 +145,7 @@ struct HomeRewritten: View {
                                     }
                                 })
                         )
-                        .offset(x: offset.width - sidepanelWidth)
-                        //.ignoresSafeArea()
+                        .offset(x: min(max(offset.width, 0), sidepanelWidth))
                         .frame(width: geo.size.width)
                 }
             }
