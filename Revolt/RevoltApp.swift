@@ -13,6 +13,17 @@ struct RevoltApp: App {
                 .background(state.theme.background.color)
                 .foregroundStyle(state.theme.foreground.color)
                 .typesettingLanguage((state.currentLocale ?? systemLocale).language)
+                .onOpenURL { url in
+                    if let first = url.pathComponents[safe: 1] {
+                        switch first {
+                            case "app", "login":
+                                state.currentServer = .dms
+                                state.currentChannel = .home
+                            default:
+                                ()
+                        }
+                    }
+                }
         }
     }
 }
@@ -117,5 +128,11 @@ extension UIDevice {
     
     static var isMac: Bool {
         UIDevice.current.userInterfaceIdiom == .mac
+    }
+}
+
+extension Collection {
+    subscript (safe index: Index) -> Element? {
+        return indices.contains(index) ? self[index] : nil
     }
 }
