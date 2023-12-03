@@ -243,4 +243,15 @@ struct HTTPClient {
     func ackMessage(channel: String, message: String) async -> Result<EmptyResponse, AFError> {
         await req(method: .put, route: "/channels/\(channel)/ack/\(message)")
     }
+    
+    func uploadWebPushToken(token: String) async -> Result<EmptyResponse, AFError> {
+#if DEBUG
+        var server = "https://api.sandbox.push.apple.com"
+#else
+        var server = "https://api.push.apple.com"
+#endif
+
+        server += "/3/device/\(token)"
+        return await req(method: .post, route: "/push/subscribe", parameters: ["endpoint": server, "p256dh": "", "auth": token])
+    }
 }

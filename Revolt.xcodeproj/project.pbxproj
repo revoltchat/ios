@@ -60,6 +60,7 @@
 		17E019DA2AF199A600AB4663 /* MessageReply.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17E019D92AF199A600AB4663 /* MessageReply.swift */; };
 		17E019DC2AF1B25100AB4663 /* SessionsSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17E019DB2AF1B25100AB4663 /* SessionsSettings.swift */; };
 		17E28E082AF319D500F6069F /* JoinServer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17E28E072AF319D500F6069F /* JoinServer.swift */; };
+		17EB663F2B18355A0006CDF6 /* UiDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17EB663E2B18355A0006CDF6 /* UiDelegate.swift */; };
 		17F3EFB12B140E36002C34B5 /* Inter.ttf in Resources */ = {isa = PBXBuildFile; fileRef = DAF41CC129C516600004BFBE /* Inter.ttf */; };
 		17F555272AFC229900958F2F /* ServerSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17F555262AFC229900958F2F /* ServerSettings.swift */; };
 		17FDBA712AEAFEAC00CB7637 /* WrappingHStack in Frameworks */ = {isa = PBXBuildFile; productRef = 17FDBA702AEAFEAC00CB7637 /* WrappingHStack */; };
@@ -134,6 +135,7 @@
 		17E019D92AF199A600AB4663 /* MessageReply.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageReply.swift; sourceTree = "<group>"; };
 		17E019DB2AF1B25100AB4663 /* SessionsSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SessionsSettings.swift; sourceTree = "<group>"; };
 		17E28E072AF319D500F6069F /* JoinServer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JoinServer.swift; sourceTree = "<group>"; };
+		17EB663E2B18355A0006CDF6 /* UiDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UiDelegate.swift; sourceTree = "<group>"; };
 		17F555262AFC229900958F2F /* ServerSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ServerSettings.swift; sourceTree = "<group>"; };
 		D49B704F29C4D3FE009494A5 /* Revolt.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Revolt.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		D49B705229C4D3FE009494A5 /* RevoltApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RevoltApp.swift; sourceTree = "<group>"; };
@@ -195,6 +197,7 @@
 				17E019CC2AF136B100AB4663 /* PresenceIndicator.swift */,
 				17E019D02AF14EC000AB4663 /* ServerIcon.swift */,
 				1718F3CF2B0BCAA50018E524 /* UnreadCounter.swift */,
+				17EB663E2B18355A0006CDF6 /* UiDelegate.swift */,
 			);
 			path = Components;
 			sourceTree = "<group>";
@@ -474,6 +477,7 @@
 			files = (
 				178BB11B2B02FCDD001143A4 /* Responses.swift in Sources */,
 				17BF54CD2B1785E200178866 /* HomeWelcome.swift in Sources */,
+				17EB663F2B18355A0006CDF6 /* UiDelegate.swift in Sources */,
 				DAAA4C0729F2604A00F41E52 /* Server.swift in Sources */,
 				17C9A3502B0580D10043A387 /* Welcome.swift in Sources */,
 				17E019CF2AF146AD00AB4663 /* About.swift in Sources */,

@@ -1,9 +1,18 @@
 import SwiftUI
+#if os(macOS)
+import AppKit
+#endif
 
 @main
 struct RevoltApp: App {
     @Environment(\.locale) var systemLocale: Locale
-    @StateObject var state = ViewState()
+    @StateObject var state = ViewState.shared ?? ViewState()
+    
+#if os(iOS)
+    @UIApplicationDelegateAdaptor var appDelegate: AppDelegate
+#elseif os(macOS)
+    @NSApplicationDelegateAdaptor var appDelegate: AppDelegate
+#endif
     
     var body: some Scene {
         WindowGroup {
@@ -63,6 +72,17 @@ struct InnerApp: View {
                     Text("Connecting...")
                 case .connected:
                     HomeRewritten(currentSelection: $viewState.currentServer, currentChannel: $viewState.currentChannel)
+            }
+        }
+        .onAppear {
+            UNUserNotificationCenter.current().requestAuthorization(options: [.alert, .badge, .sound, .providesAppNotificationSettings]) { allowed, error in
+                if allowed {
+                    DispatchQueue.main.async {
+                        UIApplication.shared.registerForRemoteNotifications()
+                    }
+                } else {
+                    debugPrint(String(describing: error))
+                }
             }
         }
     }

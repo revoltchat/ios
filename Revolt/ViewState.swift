@@ -102,6 +102,8 @@ enum ChannelSelection: Hashable, Codable {
 
 @MainActor
 public class ViewState: ObservableObject {
+    static var shared: ViewState? = nil
+
     var http: HTTPClient = HTTPClient(token: nil, baseURL: "https://api.revolt.chat")
     var ws: WebSocketStream? = nil
     var apiInfo: ApiInfo? = nil
@@ -191,6 +193,8 @@ public class ViewState: ObservableObject {
 
         self.users["00000000000000000000000000"] = User(id: "00000000000000000000000000", username: "Revolt", discriminator: "0000")
         self.http.token = self.sessionToken
+        
+        ViewState.shared = self
     }
 
     func applySystemScheme(theme: ColorScheme, followSystem: Bool = false) -> Self {
