@@ -93,6 +93,8 @@ struct ResendEmail: View {
                 "Email",
                 text: $email
             )
+            .textContentType(.emailAddress)
+            .keyboardType(.emailAddress)
             .padding()
             .background((colorScheme == .light) ? Color(white: 0.851) : Color(white: 0.2))
             .clipShape(.rect(cornerRadius: 5))

@@ -66,6 +66,8 @@ struct LogIn: View {
                     "Email",
                     text: $email
                 )
+                    .keyboardType(.emailAddress)
+                    .textContentType(.emailAddress)
                     .padding()
                     .background((colorScheme == .light) ? Color(white: 0.851) : Color(white: 0.2))
                     .clipShape(.rect(cornerRadius: 5))
@@ -76,6 +78,7 @@ struct LogIn: View {
                         "Password",
                         text: $password
                     )
+                        .textContentType(.password)
                         .padding()
                         .background((colorScheme == .light) ? Color(white: 0.851) : Color(white: 0.2))
                         .clipShape(.rect(cornerRadius: 5))
@@ -89,6 +92,7 @@ struct LogIn: View {
                         "Password",
                         text: $password
                     )
+                        .textContentType(.password)
                         .padding()
                         .background((colorScheme == .light) ? Color(white: 0.851) : Color(white: 0.2))
                         .clipShape(.rect(cornerRadius: 5))

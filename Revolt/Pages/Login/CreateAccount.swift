@@ -57,6 +57,8 @@ struct CreateAccount: View {
                             "Email",
                             text: $email
                         )
+                        .textContentType(.emailAddress)
+                        .keyboardType(.emailAddress)
                         .padding()
                         .background((colorScheme == .light) ? Color(white: 0.851) : Color(white: 0.2))
                         .clipShape(.rect(cornerRadius: 5))
@@ -69,6 +71,7 @@ struct CreateAccount: View {
                                 "Password",
                                 text: $password
                             )
+                            .textContentType(.password)
                             .padding()
                             .background((colorScheme == .light) ? Color(white: 0.851) : Color(white: 0.2))
                             .clipShape(.rect(cornerRadius: 5))
@@ -83,6 +86,7 @@ struct CreateAccount: View {
                                 "Password",
                                 text: $password
                             )
+                            .textContentType(.password)
                             .padding()
                             .background((colorScheme == .light) ? Color(white: 0.851) : Color(white: 0.2))
                             .clipShape(.rect(cornerRadius: 5))
@@ -158,7 +162,7 @@ struct CreateAccount: View {
                             "Username",
                             text: $username
                         )
-                        .textContentType(.oneTimeCode)
+                        .textContentType(.username)
                         .padding()
                         .background((colorScheme == .light) ? Color(white: 0.851) : Color(white: 0.2))
                         .clipShape(.rect(cornerRadius: 5))
