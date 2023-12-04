@@ -1,0 +1,104 @@
+{
+  "pins" : [
+    {
+      "identity" : "alamofire",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/Alamofire/Alamofire",
+      "state" : {
+        "revision" : "b2fa556e4e48cbf06cf8c63def138c98f4b811fa",
+        "version" : "5.8.0"
+      }
+    },
+    {
+      "identity" : "codablewrapper",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/winddpan/CodableWrapper.git",
+      "state" : {
+        "revision" : "111470824723664f68b65e5e8e63adab7408308d",
+        "version" : "1.0.1"
+      }
+    },
+    {
+      "identity" : "hcaptcha-ios-sdk",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/hCaptcha/HCaptcha-ios-sdk",
+      "state" : {
+        "revision" : "2d6dff7cf7a24ebc34b3f487e52ecad29a4ea6f8",
+        "version" : "2.5.1"
+      }
+    },
+    {
+      "identity" : "kingfisher",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/onevcat/Kingfisher",
+      "state" : {
+        "revision" : "b6f62758f21a8c03cd64f4009c037cfa580a256e",
+        "version" : "7.9.1"
+      }
+    },
+    {
+      "identity" : "rxswift",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/ReactiveX/RxSwift",
+      "state" : {
+        "revision" : "9dcaa4b333db437b0fbfaf453fad29069044a8b4",
+        "version" : "6.6.0"
+      }
+    },
+    {
+      "identity" : "starscream",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/daltoniam/Starscream",
+      "state" : {
+        "revision" : "ac6c0fc9da221873e01bd1a0d4818498a71eef33",
+        "version" : "4.0.6"
+      }
+    },
+    {
+      "identity" : "swift-collections",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/apple/swift-collections.git",
+      "state" : {
+        "revision" : "a902f1823a7ff3c9ab2fba0f992396b948eda307",
+        "version" : "1.0.5"
+      }
+    },
+    {
+      "identity" : "swift-syntax",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/apple/swift-syntax",
+      "state" : {
+        "revision" : "6ad4ea24b01559dde0773e3d091f1b9e36175036",
+        "version" : "509.0.2"
+      }
+    },
+    {
+      "identity" : "swiftui-cached-async-image",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/lorenzofiamingo/swiftui-cached-async-image",
+      "state" : {
+        "revision" : "467a3d17479887943ab917a379e62bbaff60ac8a",
+        "version" : "2.1.1"
+      }
+    },
+    {
+      "identity" : "ulid.swift",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/yaslab/ULID.swift",
+      "state" : {
+        "revision" : "309acd503a35fc95650bf45d23cca2a3e24bad19",
+        "version" : "1.2.0"
+      }
+    },
+    {
+      "identity" : "wrappinghstack",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/dkk/WrappingHStack",
+      "state" : {
+        "revision" : "425d9488ba55f58f0b34498c64c054c77fc2a44b",
+        "version" : "2.2.11"
+      }
+    }
+  ],
+  "version" : 2
+}

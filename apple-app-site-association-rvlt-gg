@@ -1,0 +1,19 @@
+{
+    "applinks": {
+        "details": [
+            {
+                "appIDs": ["T23HBWQ54Y.chat.revolt.app"],
+                "components": [
+                    {
+                        "/": "/app",
+                        "comment": "root"
+                    },
+                    {
+                        "/": "/*",
+                        "comment": "invite"
+                    }
+                ]
+            }
+        ]
+    }
+}
