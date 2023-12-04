@@ -11,7 +11,6 @@ import SwiftUI
 struct LanguageSettings: View {
     @Environment(\.locale) var systemLocale: Locale
     @EnvironmentObject var viewState: ViewState
-    @Environment(\.editMode) var editMode: Binding<EditMode>?
 
     var currentLocale: Locale { viewState.currentLocale ?? systemLocale }
     

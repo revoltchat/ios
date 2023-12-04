@@ -117,19 +117,19 @@ extension Bundle {
     }
 }
 
-extension UIDevice {
-    static var isIPad: Bool {
-        UIDevice.current.userInterfaceIdiom == .pad
-    }
-    
-    static var isIPhone: Bool {
-        UIDevice.current.userInterfaceIdiom == .phone
-    }
-    
-    static var isMac: Bool {
-        UIDevice.current.userInterfaceIdiom == .mac
-    }
-}
+#if targetEnvironment(macCatalyst)
+let isIPad = UIDevice.current.userInterfaceIdiom == .pad
+let isIPhone = UIDevice.current.userInterfaceIdiom == .phone
+let isMac = true
+#elseif os(iOS)
+let isIPad = UIDevice.current.userInterfaceIdiom == .pad
+let isIPhone = UIDevice.current.userInterfaceIdiom == .phone
+let isMac = false
+#else
+let isIPad = false
+let isIPhone = false
+let isMac = true
+#endif
 
 extension Collection {
     subscript (safe index: Index) -> Element? {

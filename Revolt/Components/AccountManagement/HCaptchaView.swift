@@ -7,6 +7,7 @@
 // File provided under the MIT license by https://github.com/hCaptcha/HCaptcha-ios-sdk
 //
 
+#if os(iOS)
 import SwiftUI
 import HCaptcha
 
@@ -68,3 +69,5 @@ struct HCaptchaView: View {
     var viewState = ViewState.preview()
     return HCaptchaView(apiKey: viewState.apiInfo!.features.captcha.key, baseURL: "https://api.revolt.chat/", result: .constant(nil))
 }
+
+#endif

@@ -49,16 +49,18 @@ struct CreateAccount: View {
                 
                 if !isWaitingWithSpinner && onboardingStage == .Initial {
                     Group {
-                        if let error = errorMessage {
-                            Text(error)
-                                .foregroundStyle(Color.red)
-                        }
+//                        if let error = errorMessage {
+//                            Text(verbatim: error)
+//                                .foregroundStyle(.red)
+//                        }
                         TextField(
                             "Email",
                             text: $email
                         )
                         .textContentType(.emailAddress)
+                        #if os(iOS)
                         .keyboardType(.emailAddress)
+                        #endif
                         .padding()
                         .background((colorScheme == .light) ? Color(white: 0.851) : Color(white: 0.2))
                         .clipShape(.rect(cornerRadius: 5))
@@ -301,6 +303,7 @@ struct CreateAccount: View {
             
             if isWaitingWithSpinner && onboardingStage == .Initial {
                 VStack {
+                    #if canImport(UIKit)
                     HCaptchaView(apiKey: viewState.apiInfo!.features.captcha.key, baseURL: viewState.http.baseURL, result: $hCaptchaResult)
                         .onChange(of: hCaptchaResult) {
                             withAnimation {
@@ -325,6 +328,10 @@ struct CreateAccount: View {
                                 }
                             }
                     }
+                    
+                    #else
+                    Text("No hcapture support")
+                    #endif
                 }
             }
         }

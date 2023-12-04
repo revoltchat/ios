@@ -42,7 +42,7 @@ struct SessionsSettings: View {
             }
             .listRowBackground(viewState.theme.background2.color)
         }
-        .listStyle(.insetGrouped)
+        .listStyle(.inset)
         .scrollContentBackground(.hidden)
         .background(viewState.theme.background.color)
         .task {

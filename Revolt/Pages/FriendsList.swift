@@ -145,7 +145,6 @@ struct FriendsList: View {
                         Text("\(users.count)")
                     }
                 }
-                .listRowSeparator(.hidden)
                 .listRowBackground(viewState.theme.background2.color)
             }
         }

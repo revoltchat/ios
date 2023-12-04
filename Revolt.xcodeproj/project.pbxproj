@@ -17,8 +17,8 @@
 		1777DD892ADC3C31003D6C72 /* Markdown.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1777DD882ADC3C31003D6C72 /* Markdown.swift */; };
 		1777DD8E2ADC4336003D6C72 /* RemoteImageTextAttachment.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1777DD8D2ADC4336003D6C72 /* RemoteImageTextAttachment.swift */; };
 		1782F5E62B08F60B00759D40 /* Discovery.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1782F5E52B08F60B00759D40 /* Discovery.swift */; };
-		178BB10C2B02D84C001143A4 /* HCaptcha in Frameworks */ = {isa = PBXBuildFile; platformFilter = ios; productRef = 178BB10B2B02D84C001143A4 /* HCaptcha */; };
-		178BB10E2B02D84C001143A4 /* HCaptcha_RxSwift in Frameworks */ = {isa = PBXBuildFile; platformFilter = ios; productRef = 178BB10D2B02D84C001143A4 /* HCaptcha_RxSwift */; };
+		178BB10C2B02D84C001143A4 /* HCaptcha in Frameworks */ = {isa = PBXBuildFile; platformFilters = (ios, maccatalyst, ); productRef = 178BB10B2B02D84C001143A4 /* HCaptcha */; };
+		178BB10E2B02D84C001143A4 /* HCaptcha_RxSwift in Frameworks */ = {isa = PBXBuildFile; platformFilters = (ios, maccatalyst, ); productRef = 178BB10D2B02D84C001143A4 /* HCaptcha_RxSwift */; };
 		178BB1102B02D89A001143A4 /* HCaptchaView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 178BB10F2B02D89A001143A4 /* HCaptchaView.swift */; };
 		178BB1142B02E475001143A4 /* CreateAccount.swift in Sources */ = {isa = PBXBuildFile; fileRef = 178BB1132B02E475001143A4 /* CreateAccount.swift */; };
 		178BB1172B02E63B001143A4 /* LoadingSpinnerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 178BB1162B02E63A001143A4 /* LoadingSpinnerView.swift */; };
@@ -541,12 +541,18 @@
 /* Begin PBXTargetDependency section */
 		17F3EFAD2B13D042002C34B5 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
-			platformFilter = ios;
+			platformFilters = (
+				ios,
+				maccatalyst,
+			);
 			productRef = 17F3EFAC2B13D042002C34B5 /* HCaptcha */;
 		};
 		17F3EFAF2B13D042002C34B5 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
-			platformFilter = ios;
+			platformFilters = (
+				ios,
+				maccatalyst,
+			);
 			productRef = 17F3EFAE2B13D042002C34B5 /* HCaptcha_RxSwift */;
 		};
 /* End PBXTargetDependency section */
@@ -700,8 +706,8 @@
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator macosx";
-				SUPPORTS_MACCATALYST = NO;
-				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
+				SUPPORTS_MACCATALYST = YES;
+				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = YES;
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -739,6 +745,9 @@
 				PRODUCT_BUNDLE_IDENTIFIER = chat.revolt.app;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator macosx";
+				SUPPORTS_MACCATALYST = YES;
+				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = YES;
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";

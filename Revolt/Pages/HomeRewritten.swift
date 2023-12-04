@@ -72,7 +72,7 @@ struct HomeRewritten: View {
     @State var showSidebar = false
     
     var body: some View {
-        if UIDevice.isIPad || UIDevice.isMac {
+        if isIPad || isMac {
             HStack(spacing: 0) {
                 HStack(spacing: 0) {
                     ServerScrollView(showJoinServerSheet: $showJoinServerSheet)

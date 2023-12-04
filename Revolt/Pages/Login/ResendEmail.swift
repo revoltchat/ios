@@ -94,15 +94,21 @@ struct ResendEmail: View {
                 text: $email
             )
             .textContentType(.emailAddress)
+            #if os(iOS)
             .keyboardType(.emailAddress)
+            #endif
             .padding()
             .background((colorScheme == .light) ? Color(white: 0.851) : Color(white: 0.2))
-            .clipShape(.rect(cornerRadius: 5))
+            .clipShape(RoundedRectangle(cornerRadius: 5))
             .foregroundStyle((colorScheme == .light) ? Color.black : Color.white)
             .disabled(showSpinner)
             
             if showSpinner && captchaResult == nil && viewState.apiInfo!.features.captcha.enabled {
+                #if os(macOS)
+                Text("No hcaptcha support")
+                #else
                 HCaptchaView(apiKey: viewState.apiInfo!.features.captcha.key, baseURL: viewState.http.baseURL, result: $captchaResult)
+                #endif
             } else {
                 Spacer()
             }

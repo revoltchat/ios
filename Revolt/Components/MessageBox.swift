@@ -74,7 +74,26 @@ struct MessageBox: View {
     @State var content = ""
     
     @State var selectedPhotoItems = [PhotosPickerItem]()
-    @State var selectedPhotos = [(Data, UIImage?, UUID, String)]()
+
+    #if os(macOS)
+    struct Photo: Identifiable, Hashable {
+        let data: Data
+        let image: NSImage?
+        let id: UUID
+        let filename: String
+        
+    }
+    #else
+    struct Photo: Identifiable, Hashable {
+        let data: Data
+        let image: UIImage?
+        let id: UUID
+        let filename: String
+        
+    }
+    #endif
+    
+    @State var selectedPhotos: [Photo] = []
 
     @Binding var channelReplies: [Reply]
 
@@ -90,11 +109,9 @@ struct MessageBox: View {
     func sendMessage() {
         let c = content
         content = ""
-        let f = selectedPhotos.map({data, img, uid, name in (data, name)})
+        let f = selectedPhotos.map({ ($0.data, $0.filename) })
         selectedPhotos = []
         
-        
-
         Task {
             await viewState.queueMessage(channel: channel.id, replies: channelReplies, content: c, attachments: f)
         }
@@ -104,7 +121,14 @@ struct MessageBox: View {
         if case .success(let url) = res {
             let data = try? Data(contentsOf: url)
             guard let data = data else { return }
-            selectedPhotos.append((data, UIImage(data: data), UUID(), url.lastPathComponent))
+            
+            #if os(macOS)
+            let image = NSImage(data: data)
+            #else
+            let image = UIImage(data: data)
+            #endif
+            
+            selectedPhotos.append(Photo(data: data, image: image, id: UUID(), filename: url.lastPathComponent))
         }
     }
     
@@ -152,14 +176,24 @@ struct MessageBox: View {
             }
             ScrollView(.horizontal) {
                 HStack {
-                    ForEach(Array(selectedPhotos.enumerated()), id: \.element.1) { file in
+                    ForEach($selectedPhotos, id: \.self) { file in
+                        let file = file.wrappedValue
+                        
                         ZStack(alignment: .topTrailing) {
-                            if file.element.1 != nil {
-                                Image(uiImage: file.element.1!)
+                            if let image = file.image {
+                                #if os(iOS)
+                                Image(uiImage: image)
                                     .resizable()
                                     .scaledToFit()
                                     .frame( maxWidth: 100, maxHeight: 100 )
                                     .clipShape(RoundedRectangle(cornerRadius: 5.0, style: .circular))
+                                #else
+                                Image(nsImage: image)
+                                    .resizable()
+                                    .scaledToFit()
+                                    .frame( maxWidth: 100, maxHeight: 100 )
+                                    .clipShape(RoundedRectangle(cornerRadius: 5.0, style: .circular))
+                                #endif
                             } else {
                                 ZStack {
                                     Rectangle()
@@ -167,12 +201,12 @@ struct MessageBox: View {
                                         .foregroundStyle(viewState.theme.background.color)
                                         .clipShape(RoundedRectangle(cornerRadius: 5.0, style: .circular))
 
-                                    Text(file.element.3)
+                                    Text(verbatim: file.filename)
                                         .font(.caption)
                                         .foregroundStyle(viewState.theme.foreground.color)
                                 }
                             }
-                            Button(action: { selectedPhotos.remove(at: file.offset) }) {
+                            Button(action: { selectedPhotos.removeAll(where: { $0.id == file.id }) }) {
                                 Image(systemName: "xmark.app.fill")
                                     .resizable()
                                     .foregroundStyle(.gray)
@@ -218,10 +252,16 @@ struct MessageBox: View {
                         Task {
                             for item in after {
                                 if let data = try? await item.loadTransferable(type: Data.self) {
-                                    if let uiImage = UIImage(data: data) {
+                                    #if os(macOS)
+                                    let img = NSImage(data: data)
+                                    #else
+                                    let img = UIImage(data: data)
+                                    #endif
+                                    
+                                    if let img = img {
                                         let fileType = item.supportedContentTypes[0].preferredFilenameExtension!
                                         let fileName = (item.itemIdentifier ?? "Image") + ".\(fileType)"
-                                        selectedPhotos.append((data, uiImage, UUID(), fileName))
+                                        selectedPhotos.append(Photo(data: data, image: img, id: UUID(), filename: fileName))
                                     }
                                 }
                             }

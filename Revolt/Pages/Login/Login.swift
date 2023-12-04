@@ -58,15 +58,17 @@ struct LogIn: View {
 
             Group {
                 if let error = errorMessage {
-                    Text(error)
-                        .foregroundStyle(Color.red)
+                    Text(verbatim: error)
+                        .foregroundStyle(.red)
                 }
 
                 TextField(
                     "Email",
                     text: $email
                 )
+                    #if os(iOS)
                     .keyboardType(.emailAddress)
+                    #endif
                     .textContentType(.emailAddress)
                     .padding()
                     .background((colorScheme == .light) ? Color(white: 0.851) : Color(white: 0.2))

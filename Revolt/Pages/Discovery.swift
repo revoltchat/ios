@@ -9,6 +9,28 @@ import Foundation
 import SwiftUI
 import WebKit
 
+#if os(macOS)
+
+struct WebView: NSViewRepresentable {
+    @EnvironmentObject var viewState: ViewState
+    
+    let url: URL
+    
+    func makeNSView(context: Context) -> WKWebView {
+        let view = WKWebView()
+        // view.backgroundColor = .init(viewState.theme.background.color)
+        
+        return view
+    }
+    
+    func updateNSView(_ webView: WKWebView, context: Context) {
+        let request = URLRequest(url: url)
+        webView.load(request)
+    }
+
+}
+
+#else
 struct WebView: UIViewRepresentable {
     @EnvironmentObject var viewState: ViewState
 
@@ -26,7 +48,7 @@ struct WebView: UIViewRepresentable {
         webView.load(request)
     }
 }
-
+#endif
 
 struct Discovery: View {
     @EnvironmentObject var viewState: ViewState
