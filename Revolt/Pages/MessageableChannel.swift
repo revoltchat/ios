@@ -143,7 +143,7 @@ struct MessageableChannelView: View {
                                     Text("Loading more messages...")
                                         .onAppear {
                                             Task {
-                                                if let new = await viewModel.loadMoreMessages(before: viewModel.$messages.wrappedValue.first) {
+                                                if let new = await viewModel.loadMoreMessages(before: viewModel.messages.first) {
                                                     foundAllMessages = new.messages.count < 50
                                                 }
                                             }

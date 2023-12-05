@@ -10,16 +10,8 @@ struct MaybeChannelView: View {
     @EnvironmentObject var viewState: ViewState
     @Binding var currentChannel: ChannelSelection
     @Binding var currentSelection: MainSelection
+    @Binding var currentServer: Server?
     @Binding var showSidebar: Bool
-    
-    var server: Server? {
-        switch currentSelection {
-            case .server(let serverId):
-                return viewState.servers[serverId]!
-            case .dms:
-                return nil
-        }
-    }
     
     var body: some View {
         switch currentChannel {
@@ -31,13 +23,13 @@ struct MaybeChannelView: View {
                     viewModel: MessageableChannelViewModel(
                         viewState: viewState,
                         channel: channel,
-                        server: server,
+                        server: currentServer,
                         messages: messages
                     ),
                     showSidebar: $showSidebar
                 )
             case .server_settings:
-                ServerSettings(serverId: viewState.currentServer.id!)
+                ServerSettings(serverId: currentServer!.id)
             case .home:
                 HomeWelcome(showSidebar: $showSidebar)
             case .friends:
@@ -64,6 +56,8 @@ struct HomeRewritten: View {
     
     @Binding var currentSelection: MainSelection
     @Binding var currentChannel: ChannelSelection
+    @State var currentServer: Server?
+    
     @State var offset = CGSize.zero
     @State var forceOpen: Bool = false
     
@@ -87,7 +81,7 @@ struct HomeRewritten: View {
                 }
                 .frame(maxWidth: 300)
                 
-                MaybeChannelView(currentChannel: $currentChannel, currentSelection: $currentSelection, showSidebar: $showSidebar)
+                MaybeChannelView(currentChannel: $currentChannel, currentSelection: $currentSelection, currentServer: $currentServer, showSidebar: $showSidebar)
                     .frame(maxWidth: .infinity)
             }
         } else {
@@ -111,7 +105,7 @@ struct HomeRewritten: View {
                     .frame(width: sidepanelWidth)
                     .background(viewState.theme.background2.color)
                     
-                    MaybeChannelView(currentChannel: $currentChannel, currentSelection: $currentSelection, showSidebar: $showSidebar)
+                    MaybeChannelView(currentChannel: $currentChannel, currentSelection: $currentSelection, currentServer: $currentServer, showSidebar: $showSidebar)
                         .disabled(sidepanelOffset == 0.0)
                         .onTapGesture {
                             if sidepanelOffset == 0.0 {
@@ -151,6 +145,11 @@ struct HomeRewritten: View {
             }
             .onChange(of: viewState.currentChannel, { before, after in
                 withAnimation {
+                    // a seperate current server state is used to avoid setting the server to nil while switching to dms in the sidepanel but not switched channels yet
+                    // causing the state to be invalid as we have no server but inside a server channel, having a seperate state which only updates when switching channels
+                    // fixes this
+                    currentServer = currentSelection.id.flatMap { viewState.servers[$0] }
+                    
                     showSidebar = false
                     currentChannel = after
                     forceOpen = false
@@ -169,6 +168,6 @@ struct HomeRewritten: View {
 #Preview {
     @StateObject var state = ViewState.preview().applySystemScheme(theme: .dark)
     
-    return HomeRewritten(currentSelection: $state.currentServer, currentChannel: $state.currentChannel)
+    return HomeRewritten(currentSelection: $state.currentServer, currentChannel: $state.currentChannel, currentServer: nil)
             .environmentObject(state)
 }

@@ -62,7 +62,11 @@ struct InnerApp: View {
                 case .connecting:
                     Text("Connecting...")
                 case .connected:
-                    HomeRewritten(currentSelection: $viewState.currentServer, currentChannel: $viewState.currentChannel)
+                    HomeRewritten(
+                        currentSelection: $viewState.currentServer,
+                        currentChannel: $viewState.currentChannel,
+                        currentServer: viewState.currentServer.id.flatMap { viewState.servers[$0] }
+                    )
             }
         }
     }

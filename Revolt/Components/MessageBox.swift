@@ -67,6 +67,16 @@ struct ReplyView: View {
 }
 
 struct MessageBox: View {
+    enum AutocompleteType {
+        case user
+        case channel
+    }
+    
+    enum AutocompleteValues {
+        case channels([Channel])
+        case users([(User, Member?)])
+    }
+    
     @EnvironmentObject var viewState: ViewState
     
     @State var showingSelectFile = false
@@ -94,6 +104,8 @@ struct MessageBox: View {
     #endif
     
     @State var selectedPhotos: [Photo] = []
+    @State var autoCompleteType: AutocompleteType? = nil
+    @State var autocompleteSearchValue: String = ""
 
     @Binding var channelReplies: [Reply]
 
@@ -114,6 +126,40 @@ struct MessageBox: View {
         
         Task {
             await viewState.queueMessage(channel: channel.id, replies: channelReplies, content: c, attachments: f)
+        }
+    }
+    
+    func getAutocompleteValues(fromType type: AutocompleteType) -> AutocompleteValues {
+        switch type {
+            case .user:
+                let users: [(User, Member?)]
+                
+                switch channel {
+                    case .saved_messages(_):
+                        users = [(viewState.currentUser!, nil)]
+                        
+                    case .dm_channel(let dMChannel):
+                        users = dMChannel.recipients.map({ (viewState.users[$0]!, nil) })
+                        
+                    case .group_dm_channel(let groupDMChannel):
+                        users = groupDMChannel.recipients.map({ (viewState.users[$0]!, nil) })
+                        
+                    case .text_channel(_), .voice_channel(_):
+                        users = viewState.members[server!.id]!.values.map({ m in (viewState.users[m.id.user]!, m) })
+                }
+                
+                return AutocompleteValues.users(users)
+            case .channel:
+                let channels: [Channel]
+                
+                switch channel {
+                    case .saved_messages(_), .dm_channel(_), .group_dm_channel(_):
+                        channels = [channel]
+                    case .text_channel(_), .voice_channel(_):
+                        channels = server!.channels.compactMap({ viewState.channels[$0] })
+                }
+                
+                return AutocompleteValues.channels(channels)
         }
     }
     
@@ -157,7 +203,7 @@ struct MessageBox: View {
     }
     
     var body: some View {
-        VStack(alignment: .leading) {
+        VStack(alignment: .leading, spacing: 4) {
             if let users = getCurrentlyTyping(), !users.isEmpty {
                 HStack {
                     HStack(spacing: -12) {
@@ -219,83 +265,147 @@ struct MessageBox: View {
                     }
                 }
             }
-            HStack {
-                // MARK: image/file picker
-                Image(systemName: "plus.circle")
-                    .resizable()
-                    .foregroundStyle(.gray)
-                    .scaledToFit()
-                    .frame(width: 28, height: 28)
-                
-                    .photosPicker(isPresented: $showingSelectPhoto, selection: $selectedPhotoItems)
-                    .photosPickerStyle(.presentation)
-                
-                    .fileImporter(isPresented: $showingSelectFile, allowedContentTypes: [.item], onCompletion: onFileCompletion)
-                
-                    .onTapGesture {
-                        showingSelectPhoto = true
-                    }
-                    .contextMenu {
-                        Button(action: {
-                            showingSelectFile = true
-                        }) {
-                            Text("Select File")
+            
+            VStack(spacing: 8) {
+                if let type = autoCompleteType {
+                    let values = getAutocompleteValues(fromType: type)
+                    
+                    ScrollView(.horizontal) {
+                        LazyHStack {
+                            switch values {
+                                case .users(let users):
+                                    ForEach(users, id: \.0.id) { (user, member) in
+                                        Button {
+                                            withAnimation {
+                                                content = String(content.dropLast())
+                                                content.append("<@\(user.id)>")
+                                                autoCompleteType = nil
+                                            }
+                                        } label: {
+                                            HStack(spacing: 4) {
+                                                Avatar(user: user, member: member)
+                                                Text(verbatim: member?.nickname ?? user.display_name ?? user.username)
+                                            }
+                                            .padding(6)
+                                        }
+                                        .background(viewState.theme.background2.color)
+                                        .clipShape(RoundedRectangle(cornerRadius: 8))
+                                    }
+                                case .channels(let channels):
+                                    ForEach(channels) { channel in
+                                        Button {
+                                            withAnimation {
+                                                content = String(content.dropLast())
+                                                content.append("<#\(channel.id)>")
+                                                autoCompleteType = nil
+                                            }
+                                        } label: {
+                                            ChannelIcon(channel: channel)
+                                                .padding(6)
+                                        }
+                                        .background(viewState.theme.background2.color)
+                                        .clipShape(RoundedRectangle(cornerRadius: 8))
+                                    }
+                            }
                         }
-                        Button(action: {
+                        .frame(height: 42)
+                    }
+                    .frame(maxWidth: .infinity)
+                }
+                
+                HStack {
+                    // MARK: image/file picker
+                    Image(systemName: "plus.circle")
+                        .resizable()
+                        .foregroundStyle(viewState.theme.foreground2.color)
+                        .frame(width: 24, height: 24)
+                    
+                        .photosPicker(isPresented: $showingSelectPhoto, selection: $selectedPhotoItems)
+                        .photosPickerStyle(.presentation)
+                    
+                        .fileImporter(isPresented: $showingSelectFile, allowedContentTypes: [.item], onCompletion: onFileCompletion)
+                    
+                        .onTapGesture {
                             showingSelectPhoto = true
-                        }) {
-                            Text("Select Photo")
                         }
-                    }
-                    .onChange(of: selectedPhotoItems) { before, after in
-                        if after.isEmpty { return }
-                        Task {
-                            for item in after {
-                                if let data = try? await item.loadTransferable(type: Data.self) {
-                                    #if os(macOS)
-                                    let img = NSImage(data: data)
-                                    #else
-                                    let img = UIImage(data: data)
-                                    #endif
-                                    
-                                    if let img = img {
-                                        let fileType = item.supportedContentTypes[0].preferredFilenameExtension!
-                                        let fileName = (item.itemIdentifier ?? "Image") + ".\(fileType)"
-                                        selectedPhotos.append(Photo(data: data, image: img, id: UUID(), filename: fileName))
+                        .contextMenu {
+                            Button(action: {
+                                showingSelectFile = true
+                            }) {
+                                Text("Select File")
+                            }
+                            Button(action: {
+                                showingSelectPhoto = true
+                            }) {
+                                Text("Select Photo")
+                            }
+                        }
+                        .onChange(of: selectedPhotoItems) { before, after in
+                            if after.isEmpty { return }
+                            Task {
+                                for item in after {
+                                    if let data = try? await item.loadTransferable(type: Data.self) {
+#if os(macOS)
+                                        let img = NSImage(data: data)
+#else
+                                        let img = UIImage(data: data)
+#endif
+                                        
+                                        if let img = img {
+                                            let fileType = item.supportedContentTypes[0].preferredFilenameExtension!
+                                            let fileName = (item.itemIdentifier ?? "Image") + ".\(fileType)"
+                                            selectedPhotos.append(Photo(data: data, image: img, id: UUID(), filename: fileName))
+                                        }
                                     }
                                 }
+                                selectedPhotoItems.removeAll()
                             }
-                            selectedPhotoItems.removeAll()
                         }
-                    }
-            
-                ZStack(alignment: .bottomTrailing) {
+                    
                     TextField("", text: $content)
                         .placeholder(when: content.isEmpty) {
                             Text("Message \(channel.getName(viewState))")
                         }
-                        .foregroundStyle(viewState.theme.foreground.color)
-                        .padding([.vertical, .leading, .trailing], 8)
-                        .background(RoundedRectangle(cornerRadius: 16)
-                            .fill(viewState.theme.messageBox.color)
-                            .stroke(viewState.theme.messageBoxBorder.color, lineWidth: 1)
-                        )
+                        .onChange(of: content) { _, value in
+                            withAnimation {
+                                if let last = value.split(separator: " ").last {
+                                    let pre = last.first ?? Character("-")
+                                    autocompleteSearchValue = String(last[last.index(last.startIndex, offsetBy: 1)...])
+                                    
+                                    switch pre {
+                                        case "@":
+                                            autoCompleteType = .user
+                                        case "#":
+                                            autoCompleteType = .channel
+                                        default:
+                                            autoCompleteType = nil
+                                    }
+                                } else {
+                                    autoCompleteType = nil
+                                }
+                            }
+                        }
                     
                     if !content.isEmpty || !selectedPhotos.isEmpty {
                         Button(action: sendMessage) {
                             Image(systemName: "arrow.up.circle.fill")
                                 .resizable()
-                                .scaledToFit()
-                                .frame(width: 28, height: 28)
-                                .padding(5)
+                                .frame(width: 24, height: 24)
+                                .foregroundStyle(viewState.theme.foreground2.color)
                         }
                     }
+                    
                 }
             }
+            .padding(8)
+            .background(RoundedRectangle(cornerRadius: 8)
+                .fill(viewState.theme.messageBox.color)
+                .stroke(viewState.theme.messageBoxBorder.color, lineWidth: 1)
+            )
         }
         .padding(.horizontal, 16)
         .padding(.bottom, 8)
-        .background(viewState.theme.messageBoxBackground.color)
+        .background(viewState.theme.background.color)
     }
 }
 
