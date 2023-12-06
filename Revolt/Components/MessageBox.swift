@@ -315,7 +315,7 @@ struct MessageBox: View {
                 
                 HStack {
                     // MARK: image/file picker
-                    Image(systemName: "plus.circle")
+                    Image(systemName: "plus.circle.fill")
                         .resizable()
                         .foregroundStyle(viewState.theme.foreground2.color)
                         .frame(width: 24, height: 24)
@@ -365,6 +365,7 @@ struct MessageBox: View {
                     TextField("", text: $content)
                         .placeholder(when: content.isEmpty) {
                             Text("Message \(channel.getName(viewState))")
+                                .foregroundStyle(viewState.theme.foreground2.color)
                         }
                         .onChange(of: content) { _, value in
                             withAnimation {
