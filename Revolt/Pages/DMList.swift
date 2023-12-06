@@ -31,14 +31,18 @@ struct DMList: View {
                     return nil
                 }.first!
                                 
-                NavigationLink(value: Destination.dm(savedMessagesChannel.id)) {
+                Button {
+                    viewState.currentChannel = .channel(savedMessagesChannel.id)
+                } label: {
                     ChannelIcon(channel: .saved_messages(savedMessagesChannel))
                 }
                 .listRowBackground(viewState.theme.background2.color)
 
                 Section("Conversations") {
                     ForEach(viewState.dms.filter { $0 != .saved_messages(savedMessagesChannel) }) { channel in
-                        NavigationLink(value: Destination.dm(channel.id)) {
+                        Button {
+                            viewState.currentChannel = .channel(channel.id)
+                        } label: {
                             ChannelIcon(channel: channel)
                         }
                     }

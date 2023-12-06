@@ -28,8 +28,6 @@ struct MaybeChannelView: View {
                     ),
                     showSidebar: $showSidebar
                 )
-            case .server_settings:
-                ServerSettings(serverId: currentServer!.id)
             case .home:
                 HomeWelcome(showSidebar: $showSidebar)
             case .friends:

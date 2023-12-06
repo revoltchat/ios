@@ -67,6 +67,23 @@ struct InnerApp: View {
                         currentChannel: $viewState.currentChannel,
                         currentServer: viewState.currentServer.id.flatMap { viewState.servers[$0] }
                     )
+                    .navigationDestination(for: NavigationDestination.self) { dest in
+                        switch dest {
+                            case .channel_info(let id):
+                                let channel =  Binding($viewState.channels[id])!
+                                ChannelInfo(channel: channel)
+                            case .channel_settings(let id):
+                                let channel =  Binding($viewState.channels[id])!
+                                ChannelInfo(channel: channel)  // TODO: channel settings
+                            case .discover:
+                                Discovery()
+                            case .server_settings(let id):
+                                let server = Binding($viewState.servers[id])!
+                                ServerSettings(server: server)
+                            case .settings:
+                                Settings()
+                        }
+                    }
             }
         }
     }

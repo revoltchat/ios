@@ -51,23 +51,23 @@ struct ServerScrollView: View {
                 }) {
                     Image(systemName: "plus.circle.fill")
                         .symbolRenderingMode(.palette)
-                        .foregroundStyle(Color("themePrimary"), viewState.theme.background2.color)
+                        .foregroundStyle(viewState.theme.accent.color, viewState.theme.background2.color)
                         .frame(width: buttonSize, height: buttonSize)
                         .font(.system(size: buttonSize))
                 }
                 
-                NavigationLink(destination: Discovery.init) {
+                NavigationLink(value: NavigationDestination.discover) {
                     Image(systemName: "safari.fill")
                         .symbolRenderingMode(.palette)
-                        .foregroundStyle(Color("themePrimary"), viewState.theme.background2.color)
+                        .foregroundStyle(viewState.theme.accent.color, viewState.theme.background2.color)
                         .frame(width: buttonSize, height: buttonSize)
                         .font(.system(size: buttonSize))
                 }
                 
-                NavigationLink(destination: Settings.init) {
+                NavigationLink(value: NavigationDestination.settings) {
                     Image(systemName: "gearshape.circle.fill")
                         .symbolRenderingMode(.palette)
-                        .foregroundStyle(Color("themePrimary"), viewState.theme.background2.color)
+                        .foregroundStyle(viewState.theme.accent.color, viewState.theme.background2.color)
                         .frame(width: buttonSize, height: buttonSize)
                         .font(.system(size: buttonSize))
                 }

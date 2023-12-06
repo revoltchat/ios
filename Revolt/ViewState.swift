@@ -88,7 +88,6 @@ enum MainSelection: Hashable, Codable {
 
 enum ChannelSelection: Hashable, Codable {
     case channel(String)
-    case server_settings
     case home
     case friends
 
@@ -98,6 +97,14 @@ enum ChannelSelection: Hashable, Codable {
             default: nil
         }
     }
+}
+
+enum NavigationDestination: Hashable, Codable {
+    case discover
+    case settings
+    case server_settings(String)
+    case channel_info(String)
+    case channel_settings(String)
 }
 
 @MainActor
@@ -164,13 +171,13 @@ public class ViewState: ObservableObject {
         self.sessionToken = UserDefaults.standard.string(forKey: "sessionToken")
 
         if let currentServer = UserDefaults.standard.data(forKey: "currentServer") {
-            self.currentServer = try! decoder.decode(MainSelection.self, from: currentServer)
+            self.currentServer = (try? decoder.decode(MainSelection.self, from: currentServer)) ?? .dms
         } else {
             self.currentServer = .dms
         }
 
         if let currentChannel = UserDefaults.standard.data(forKey: "currentChannel") {
-            self.currentChannel = try! decoder.decode(ChannelSelection.self, from: currentChannel)
+            self.currentChannel = (try? decoder.decode(ChannelSelection.self, from: currentChannel)) ?? .home
         } else {
             self.currentChannel = .home
         }

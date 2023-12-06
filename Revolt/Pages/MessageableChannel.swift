@@ -86,7 +86,6 @@ struct MessageableChannelView: View {
     @EnvironmentObject var viewState: ViewState
     @ObservedObject var viewModel: MessageableChannelViewModel
     
-    @State var showSheet = false
     @State var foundAllMessages = false
     @State var over18: Bool = false
     @State var scrollPosition: String? = nil
@@ -116,9 +115,7 @@ struct MessageableChannelView: View {
     var body: some View {
         VStack(spacing: 0) {
             PageToolbar(showSidebar: $showSidebar) {
-                Button {
-                    showSheet.toggle()
-                } label: {
+                NavigationLink(value: NavigationDestination.channel_settings(viewModel.channel.id)) {
                     ChannelIcon(channel: viewModel.channel)
                     Image(systemName: "chevron.right")
                         .frame(height: 4)
@@ -258,55 +255,8 @@ struct MessageableChannelView: View {
                 }
             }
         }
-        .sheet(isPresented: $showSheet) {
-            VStack(alignment: .leading, spacing: 12) {
-                HStack(alignment: .center) {
-                    ZStack {
-                        Circle()
-                            .frame(width: 40, height: 49)
-                        Image(systemName: "number")
-                            .colorInvert()
-                    }
-                    
-                    Text(viewModel.channel.getName(viewState))
-                        .font(.title2)
-                }
-                
-                if let description = viewModel.channel.description {
-                    Text("Channel description")
-                        .font(.caption)
-                        .bold()
-                    
-                    Text(description)
-                        .fixedSize(horizontal: false, vertical: true)
-                }
-                
-                VStack(alignment: .leading, spacing: 4) {
-                    Text("Options")
-                        .font(.caption)
-                        .bold()
-                    
-                    Button(action: viewMembers) {
-                        Image(systemName: "list.bullet")
-                        Text("Members")
-                    }
-                    
-                    Button(action: createInvite) {
-                        Image(systemName: "plus")
-                        Text("Invite")
-                    }
-                    
-                    Button(action: manageNotifs) {
-                        Image(systemName: "bell.fill")
-                        Text("Manage notifications")
-                    }
-                }
-                
-                Spacer()
-            }
-            .frame(maxWidth: .infinity)
-            .background(viewState.theme.background.color)
-            .presentationDetents([.fraction(0.4)])
-        }
+        .frame(maxWidth: .infinity)
+        .background(viewState.theme.background.color)
+        .presentationDetents([.fraction(0.4)])
     }
 }

@@ -10,11 +10,11 @@ import SwiftUI
 
 struct ServerSettings: View {
     @EnvironmentObject var viewState: ViewState
-    var serverId: String
+    @Binding var server: Server
     
     var body: some View {
         VStack {
-            Text("Settings")
+            Text(verbatim: server.name)
         }
         .background(viewState.theme.background.color)
     }

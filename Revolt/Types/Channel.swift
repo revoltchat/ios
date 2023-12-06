@@ -174,6 +174,21 @@ enum Channel: Identifiable, Equatable {
                 c.nsfw ?? false
         }
     }
+    
+    var server: String? {
+        switch self {
+            case .saved_messages(_):
+                nil
+            case .dm_channel(_):
+                nil
+            case .group_dm_channel(_):
+                nil
+            case .text_channel(let textChannel):
+                textChannel.server
+            case .voice_channel(let voiceChannel):
+                voiceChannel.server
+        }
+    }
 }
 
 

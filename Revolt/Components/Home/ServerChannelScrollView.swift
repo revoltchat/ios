@@ -62,12 +62,9 @@ struct ServerChannelScrollView: View {
             default: nil
         }
 
-        if maybeSelectedServer != nil {
-            let selectedServer = maybeSelectedServer!
-            
+        if let selectedServer = maybeSelectedServer {
             let selectedChannel: String? = switch currentChannel {
                 case .channel(let channelId): channelId
-                case .server_settings: selectedServer.id
                 default: nil
             }
             
@@ -89,9 +86,7 @@ struct ServerChannelScrollView: View {
                             
                             Spacer()
                             
-                            Button(action: {
-                                viewState.currentChannel = .server_settings
-                            }) {
+                            NavigationLink(value: NavigationDestination.server_settings(selectedServer.id)) {
                                 HStack(spacing: 12) {
                                     Image(systemName: "gearshape.fill")
                                         .resizable()
