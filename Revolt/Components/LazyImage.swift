@@ -12,6 +12,7 @@ import Kingfisher
 enum Source {
     case url(URL)
     case file(File)
+    case emoji(String)
 }
 
 struct LazyImage<S: Shape>: View {
@@ -22,17 +23,19 @@ struct LazyImage<S: Shape>: View {
     public var width: CGFloat?
     public var clipTo: S
 
+    var url: URL {
+        switch source {
+            case .url(let u):
+                return u
+            case .file(let file):
+                return URL(string: viewState.formatUrl(with: file))!
+            case .emoji(let id):
+                return URL(string: viewState.formatUrl(fromEmoji: id))!
+        }
+    }
+    
     @ViewBuilder
     var body: some View {
-        let url: URL
-        
-        let _ = switch source {
-            case .url(let u):
-                url = u
-            case .file(let file):
-                url = URL(string: viewState.formatUrl(with: file))!
-        }
-        
         KFImage.url(url)
             .placeholder { Color.clear }
             .resizable()
