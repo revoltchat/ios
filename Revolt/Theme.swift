@@ -10,7 +10,7 @@ import SwiftUI
 import CodableWrapper
 
 @Codable
-struct ThemeColor: Equatable {
+struct ThemeColor: Equatable, ShapeStyle {
     var r: Double
     var g: Double
     var b: Double
@@ -65,6 +65,10 @@ struct ThemeColor: Equatable {
             self.a = 1.0
         }
         
+    }
+    
+    func resolve(in environment: EnvironmentValues) -> Color.Resolved {
+        color.resolve(in: environment)
     }
     
     var color: Color {

@@ -85,23 +85,17 @@ struct MessageBox: View {
     
     @State var selectedPhotoItems = [PhotosPickerItem]()
 
-    #if os(macOS)
     struct Photo: Identifiable, Hashable {
         let data: Data
+        #if os(macOS)
         let image: NSImage?
-        let id: UUID
-        let filename: String
-        
-    }
-    #else
-    struct Photo: Identifiable, Hashable {
-        let data: Data
+        #else
         let image: UIImage?
+        #endif
         let id: UUID
         let filename: String
         
     }
-    #endif
     
     @State var selectedPhotos: [Photo] = []
     @State var autoCompleteType: AutocompleteType? = nil
@@ -213,6 +207,8 @@ struct MessageBox: View {
                     }
 
                     Text(formatTypingIndicatorText(withUsers: users))
+                        .font(.callout)
+                        .foregroundStyle(viewState.theme.foreground2)
                 }
             }
             ForEach(Array(channelReplies.enumerated()), id: \.element.message.id) { reply in
@@ -318,7 +314,7 @@ struct MessageBox: View {
                     Image(systemName: "plus.circle.fill")
                         .resizable()
                         .foregroundStyle(viewState.theme.foreground2.color)
-                        .frame(width: 24, height: 24)
+                        .frame(width: 20, height: 20)
                     
                         .photosPicker(isPresented: $showingSelectPhoto, selection: $selectedPhotoItems)
                         .photosPickerStyle(.presentation)
@@ -391,7 +387,7 @@ struct MessageBox: View {
                         Button(action: sendMessage) {
                             Image(systemName: "arrow.up.circle.fill")
                                 .resizable()
-                                .frame(width: 24, height: 24)
+                                .frame(width: 20, height: 20)
                                 .foregroundStyle(viewState.theme.foreground2.color)
                         }
                     }
@@ -406,7 +402,8 @@ struct MessageBox: View {
         }
         .padding(.horizontal, 16)
         .padding(.bottom, 8)
-        .background(viewState.theme.background.color)
+        .padding(.top, 4)
+        .background(viewState.theme.messageBoxBackground.color)
     }
 }
 

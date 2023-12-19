@@ -16,7 +16,7 @@ struct ReportMessageSheetView: View {
     @State var reason: ContentReportPayload.ContentReportReason = .NoneSpecified
     
     @Binding var showSheet: Bool
-    @ObservedObject var messageView: MessageViewModel
+    @ObservedObject var messageView: MessageContentsViewModel
     
     func submit() -> () {
         if reason == .NoneSpecified {
@@ -128,26 +128,26 @@ struct ReportMessageSheetView: View {
     }
 }
 
-struct ReportMessageSheetView_Preview: PreviewProvider {
-    @StateObject static var viewState = ViewState.preview()
-
-    static var message = viewState.messages["01HD4VQY398JNRJY60JDY2QHA5"]!
-    static var model = MessageViewModel(
-        viewState: viewState,
-        message: .constant(message),
-        author: .constant(viewState.users[message.author]!),
-        member: .constant(viewState.members["0"]!["0"]),
-        server: .constant(viewState.servers["0"]),
-        channel: .constant(viewState.channels["0"]!),
-        replies: .constant([Reply(message: message, mention: false)]),
-        channelScrollPosition: .constant(nil)
-    )
-    
-    static var previews: some View {
-        ReportMessageSheetView(showSheet: .constant(true), messageView: model)
-            .applyPreviewModifiers(withState: viewState.applySystemScheme(theme: .light))
-        
-        ReportMessageSheetView(showSheet: .constant(true), messageView: model)
-            .applyPreviewModifiers(withState: viewState.applySystemScheme(theme: .dark))
-    }
-}
+//struct ReportMessageSheetView_Preview: PreviewProvider {
+//    @StateObject static var viewState = ViewState.preview()
+//
+//    static var message = viewState.messages["01HD4VQY398JNRJY60JDY2QHA5"]!
+//    static var model = MessageViewModel(
+//        viewState: viewState,
+//        message: .constant(message),
+//        author: .constant(viewState.users[message.author]!),
+//        member: .constant(viewState.members["0"]!["0"]),
+//        server: .constant(viewState.servers["0"]),
+//        channel: .constant(viewState.channels["0"]!),
+//        replies: .constant([Reply(message: message, mention: false)]),
+//        channelScrollPosition: .constant(nil)
+//    )
+//    
+//    static var previews: some View {
+//        ReportMessageSheetView(showSheet: .constant(true), messageView: model)
+//            .applyPreviewModifiers(withState: viewState.applySystemScheme(theme: .light))
+//        
+//        ReportMessageSheetView(showSheet: .constant(true), messageView: model)
+//            .applyPreviewModifiers(withState: viewState.applySystemScheme(theme: .dark))
+//    }
+//}
