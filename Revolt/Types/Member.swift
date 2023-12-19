@@ -28,10 +28,10 @@ struct Member: Decodable {
     
     func displayColour(server: Server) -> Color? {
         roles?
-            .compactMap({ server.roles?[$0] })
+            .compactMap { server.roles?[$0] }
             .sorted(by: { $0.rank > $1.rank })
             .compactMap(\.colour)
             .last
-            .map({ ThemeColor(hex: $0).color } )
+            .map { ThemeColor(hex: $0).color }
     }
 }

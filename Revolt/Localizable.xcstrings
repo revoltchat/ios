@@ -64,9 +64,6 @@
     "Cancel" : {
 
     },
-    "Channel description" : {
-
-    },
     "Code or link" : {
 
     },
@@ -163,7 +160,7 @@
     "I confirm that i am at least 18 years old" : {
 
     },
-    "Invite" : {
+    "Invite Members" : {
 
     },
     "Join" : {
@@ -205,10 +202,7 @@
     "Logout" : {
 
     },
-    "Manage notifications" : {
-
-    },
-    "Members" : {
+    "Members - %lld" : {
 
     },
     "Message %@" : {
@@ -233,7 +227,7 @@
     "Misc" : {
 
     },
-    "NEW" : {
+    "Mute" : {
 
     },
     "New messages since %@" : {
@@ -252,9 +246,6 @@
 
     },
     "Open Profile" : {
-
-    },
-    "Options" : {
 
     },
     "Password" : {
@@ -306,6 +297,9 @@
 
     },
     "Saved Messages" : {
+
+    },
+    "Search" : {
 
     },
     "Secondary Background" : {
