@@ -43,6 +43,7 @@ struct CategoryListItem: View {
     var body: some View {
         VStack(alignment: .leading) {
             Text(category.title)
+                .fontWeight(.medium)
             
             ForEach(category.channels.compactMap({ viewState.channels[$0] }), id: \.id) { channel in
                 ChannelListItem(channel: channel, isSelected: selectedChannel == channel.id)
@@ -125,5 +126,5 @@ struct ServerChannelScrollView: View {
 #Preview {
     let state = ViewState.preview()
     return ServerChannelScrollView(currentSelection: .constant(MainSelection.server("0")), currentChannel: .constant(ChannelSelection.channel("2")))
-        .environmentObject(state)
+        .applyPreviewModifiers(withState: state)
 }
