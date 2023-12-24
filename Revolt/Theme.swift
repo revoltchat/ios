@@ -10,7 +10,7 @@ import SwiftUI
 import CodableWrapper
 
 @Codable
-struct ThemeColor: Equatable, ShapeStyle {
+struct ThemeColor: Equatable, ShapeStyle, View {
     var r: Double
     var g: Double
     var b: Double
