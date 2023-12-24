@@ -56,7 +56,7 @@ struct HomeRewritten: View {
     @Binding var currentChannel: ChannelSelection
     @State var currentServer: Server?
     
-    @State var offset = CGSize.zero
+    @State var offset = CGFloat.zero
     @State var forceOpen: Bool = false
     
     @State var showJoinServerSheet = false
@@ -84,8 +84,7 @@ struct HomeRewritten: View {
             }
         } else {
             GeometryReader { geo in
-                let sidepanelWidth = min(geo.size.width * 0.85, 600)
-                let sidepanelOffset = min(-sidepanelWidth + offset.width, 0)
+                let width = min(geo.size.width * 0.85, 600)
                 
                 ZStack(alignment: .topLeading) {
                     HStack(spacing: 0) {
@@ -100,13 +99,13 @@ struct HomeRewritten: View {
                                 DMScrollView(currentChannel: $currentChannel)
                         }
                     }
-                    .frame(width: sidepanelWidth)
+                    .frame(width: width)
                     .background(viewState.theme.background2.color)
                     
                     MaybeChannelView(currentChannel: $currentChannel, currentSelection: $currentSelection, currentServer: $currentServer, showSidebar: $showSidebar)
-                        .disabled(sidepanelOffset == 0.0)
+                        .disabled(offset != 0.0)
                         .onTapGesture {
-                            if sidepanelOffset == 0.0 {
+                            if offset == 0.0 {
                                 withAnimation {
                                     showSidebar = false
                                     offset = .zero
@@ -117,28 +116,34 @@ struct HomeRewritten: View {
                             DragGesture()
                                 .onChanged({ g in
                                     withAnimation {
-                                        if (-sidepanelWidth + offset.width) > -100 {
+                                        if offset > 100 {
                                             forceOpen = true
-                                        } else if (-sidepanelWidth + offset.width) <= -100, forceOpen {
+                                        } else if offset <= 100, forceOpen {
                                             forceOpen = false
                                         }
                                         
-                                        offset = CGSize(width: max(g.translation.width * 2, -sidepanelWidth), height: g.translation.height)
+                                        offset = min(max(g.translation.width, 0), width)
                                     }
                                 })
                                 .onEnded({ v in
                                     withAnimation {
-                                        if v.translation.width > 50 || forceOpen {
+                                        if v.translation.width > 100 || forceOpen {
                                             forceOpen = false
-                                            offset = CGSize(width: sidepanelWidth, height: 0)
+                                            offset = width
                                         } else {
                                             offset = .zero
                                         }
                                     }
                                 })
                         )
-                        .offset(x: min(max(offset.width, 0), sidepanelWidth))
+                        .offset(x: offset)
                         .frame(width: geo.size.width)
+                }
+                .onChange(of: showSidebar) { (_, after) in
+                    if after {
+                        offset = min(geo.size.width * 0.85, 600)
+                        showSidebar = false
+                    }
                 }
             }
             .onChange(of: viewState.currentChannel, { before, after in
