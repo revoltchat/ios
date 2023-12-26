@@ -12,8 +12,12 @@ struct ChannelIcon: View {
     @EnvironmentObject var viewState: ViewState
     var channel: Channel
     
+    var spacing: CGFloat = 8
+    var initialSize: (CGFloat, CGFloat) = (16, 16)
+    var frameSize: (CGFloat, CGFloat) = (24, 24)
+    
     var body: some View {
-        HStack(spacing: 8) {
+        HStack(spacing: spacing) {
             switch channel {
                 case .text_channel(let c):
                     if let icon = c.icon {
@@ -21,8 +25,8 @@ struct ChannelIcon: View {
                     } else {
                         Image(systemName: "number")
                             .resizable()
-                            .frame(width: 16, height: 16)
-                            .frame(width: 24, height: 24)
+                            .frame(width: initialSize.0, height: initialSize.1)
+                            .frame(width: frameSize.0, height: frameSize.1)
                     }
                     
                     Text(c.name)
@@ -34,8 +38,8 @@ struct ChannelIcon: View {
                         Image(systemName: "speaker.wave.2")
                             .symbolRenderingMode(.hierarchical)
                             .resizable()
-                            .frame(width: 16, height: 16)
-                            .frame(width: 24, height: 24)
+                            .frame(width: initialSize.0, height: initialSize.1)
+                            .frame(width: frameSize.0, height: frameSize.1)
                     }
                     
                     Text(c.name)
@@ -46,8 +50,8 @@ struct ChannelIcon: View {
                     } else {
                         Image(systemName: "number")
                             .resizable()
-                            .frame(width: 16, height: 16)
-                            .frame(width: 24, height: 24)
+                            .frame(width: initialSize.0, height: initialSize.1)
+                            .frame(width: frameSize.0, height: frameSize.1)
                     }
                     
                     Text(c.name)
@@ -56,16 +60,16 @@ struct ChannelIcon: View {
                     let recipient = viewState.users[c.recipients.first(where: { $0 != viewState.currentUser!.id })!]!
                     
                     Avatar(user: recipient)
-                        .frame(width: 16, height: 16)
-                        .frame(width: 24, height: 24)
+                        .frame(width: initialSize.0, height: initialSize.1)
+                        .frame(width: frameSize.0, height: frameSize.1)
 
                     Text(recipient.username)
 
                 case .saved_messages(_):
                     Image(systemName: "note.text")
                         .resizable()
-                        .frame(width: 16, height: 16)
-                        .frame(width: 24, height: 24)
+                        .frame(width: initialSize.0, height: initialSize.1)
+                        .frame(width: frameSize.0, height: frameSize.1)
                     
                     Text("Saved Messages")
             }
