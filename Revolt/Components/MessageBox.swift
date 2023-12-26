@@ -157,21 +157,6 @@ struct MessageBox: View {
         }
     }
     
-    func onFileCompletion(res: Result<URL, Error>) {
-        if case .success(let url) = res {
-            let data = try? Data(contentsOf: url)
-            guard let data = data else { return }
-            
-            #if os(macOS)
-            let image = NSImage(data: data)
-            #else
-            let image = UIImage(data: data)
-            #endif
-            
-            selectedPhotos.append(Photo(data: data, image: image, id: UUID(), filename: url.lastPathComponent))
-        }
-    }
-    
     func getCurrentlyTyping() -> [(User, Member?)]? {
         viewState.currentlyTyping[channel.id]?.compactMap({ user_id in
             guard let user = viewState.users[user_id] else {
@@ -310,54 +295,8 @@ struct MessageBox: View {
                 }
                 
                 HStack {
-                    // MARK: image/file picker
-                    Image(systemName: "plus.circle.fill")
-                        .resizable()
-                        .foregroundStyle(viewState.theme.foreground2.color)
-                        .frame(width: 20, height: 20)
-                    
-                        .photosPicker(isPresented: $showingSelectPhoto, selection: $selectedPhotoItems)
-                        .photosPickerStyle(.presentation)
-                    
-                        .fileImporter(isPresented: $showingSelectFile, allowedContentTypes: [.item], onCompletion: onFileCompletion)
-                    
-                        .onTapGesture {
-                            showingSelectPhoto = true
-                        }
-                        .contextMenu {
-                            Button(action: {
-                                showingSelectFile = true
-                            }) {
-                                Text("Select File")
-                            }
-                            Button(action: {
-                                showingSelectPhoto = true
-                            }) {
-                                Text("Select Photo")
-                            }
-                        }
-                        .onChange(of: selectedPhotoItems) { before, after in
-                            if after.isEmpty { return }
-                            Task {
-                                for item in after {
-                                    if let data = try? await item.loadTransferable(type: Data.self) {
-#if os(macOS)
-                                        let img = NSImage(data: data)
-#else
-                                        let img = UIImage(data: data)
-#endif
-                                        
-                                        if let img = img {
-                                            let fileType = item.supportedContentTypes[0].preferredFilenameExtension!
-                                            let fileName = (item.itemIdentifier ?? "Image") + ".\(fileType)"
-                                            selectedPhotos.append(Photo(data: data, image: img, id: UUID(), filename: fileName))
-                                        }
-                                    }
-                                }
-                                selectedPhotoItems.removeAll()
-                            }
-                        }
-                    
+                    UploadButton(showingSelectFile: $showingSelectFile, showingSelectPhoto: $showingSelectPhoto, selectedPhotoItems: $selectedPhotoItems, selectedPhotos: $selectedPhotos)
+
                     TextField("", text: $content)
                         .placeholder(when: content.isEmpty) {
                             Text("Message \(channel.getName(viewState))")
@@ -366,7 +305,7 @@ struct MessageBox: View {
                         .onChange(of: content) { _, value in
                             withAnimation {
                                 if let last = value.split(separator: " ").last {
-                                    let pre = last.first ?? Character("-")
+                                    let pre = last.first
                                     autocompleteSearchValue = String(last[last.index(last.startIndex, offsetBy: 1)...])
                                     
                                     switch pre {
@@ -391,7 +330,6 @@ struct MessageBox: View {
                                 .foregroundStyle(viewState.theme.foreground2.color)
                         }
                     }
-                    
                 }
             }
             .padding(8)
@@ -407,6 +345,79 @@ struct MessageBox: View {
     }
 }
 
+struct UploadButton: View {
+    @EnvironmentObject var viewState: ViewState
+    
+    @Binding var showingSelectFile: Bool
+    @Binding var showingSelectPhoto: Bool
+    @Binding var selectedPhotoItems: [PhotosPickerItem]
+    @Binding var selectedPhotos: [MessageBox.Photo]
+    
+    func onFileCompletion(res: Result<URL, Error>) {
+        if case .success(let url) = res {
+            let data = try? Data(contentsOf: url)
+            guard let data = data else { return }
+            
+#if os(macOS)
+            let image = NSImage(data: data)
+#else
+            let image = UIImage(data: data)
+#endif
+            
+            selectedPhotos.append(.init(data: data, image: image, id: UUID(), filename: url.lastPathComponent))
+        }
+    }
+    
+    var body: some View {
+        Image(systemName: "plus.circle.fill")
+            .resizable()
+            .foregroundStyle(viewState.theme.foreground2.color)
+            .frame(width: 20, height: 20)
+        
+            .photosPicker(isPresented: $showingSelectPhoto, selection: $selectedPhotoItems)
+            .photosPickerStyle(.presentation)
+        
+            .fileImporter(isPresented: $showingSelectFile, allowedContentTypes: [.item], onCompletion: onFileCompletion)
+        
+            .onTapGesture {
+                showingSelectPhoto = true
+            }
+            .contextMenu {
+                Button(action: {
+                    showingSelectFile = true
+                }) {
+                    Text("Select File")
+                }
+                Button(action: {
+                    showingSelectPhoto = true
+                }) {
+                    Text("Select Photo")
+                }
+            }
+            .onChange(of: selectedPhotoItems) { before, after in
+                if after.isEmpty { return }
+                Task {
+                    for item in after {
+                        if let data = try? await item.loadTransferable(type: Data.self) {
+#if os(macOS)
+                            let img = NSImage(data: data)
+#else
+                            let img = UIImage(data: data)
+#endif
+                            
+                            if let img = img {
+                                let fileType = item.supportedContentTypes[0].preferredFilenameExtension!
+                                let fileName = (item.itemIdentifier ?? "Image") + ".\(fileType)"
+                                selectedPhotos.append(.init(data: data, image: img, id: UUID(), filename: fileName))
+                            }
+                        }
+                    }
+                    selectedPhotoItems.removeAll()
+                }
+            }
+    }
+}
+
 struct MessageBox_Previews: PreviewProvider {
     static var viewState: ViewState = ViewState.preview()
     @State static var replies: [Reply] = []
@@ -416,8 +427,6 @@ struct MessageBox_Previews: PreviewProvider {
         let server = viewState.servers["0"]!
         
         MessageBox(channel: channel, server: server, channelReplies: $replies)
-            .environmentObject(viewState)
-            .previewLayout(.sizeThatFits)
-
+            .applyPreviewModifiers(withState: viewState)
     }
 }

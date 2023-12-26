@@ -91,12 +91,12 @@
       }
     },
     {
-      "identity" : "swiftui-cached-async-image",
+      "identity" : "swiftparsec",
       "kind" : "remoteSourceControl",
-      "location" : "https://github.com/lorenzofiamingo/swiftui-cached-async-image",
+      "location" : "https://github.com/davedufresne/SwiftParsec",
       "state" : {
-        "revision" : "467a3d17479887943ab917a379e62bbaff60ac8a",
-        "version" : "2.1.1"
+        "revision" : "00ae75a5e9e0fc790056a8b8ebdf2a1833e7117a",
+        "version" : "4.0.1"
       }
     },
     {
@@ -115,15 +115,6 @@
       "state" : {
         "revision" : "309acd503a35fc95650bf45d23cca2a3e24bad19",
         "version" : "1.2.0"
-      }
-    },
-    {
-      "identity" : "wrappinghstack",
-      "kind" : "remoteSourceControl",
-      "location" : "https://github.com/dkk/WrappingHStack",
-      "state" : {
-        "revision" : "425d9488ba55f58f0b34498c64c054c77fc2a44b",
-        "version" : "2.2.11"
       }
     }
   ],

@@ -78,7 +78,7 @@ struct MessageContentsView: View {
         
         VStack(alignment: .leading) {
             if let content = message.content {
-                Text(verbatim: content)
+                Contents(text: content)
                     .font(.system(size: 16))
             }
             

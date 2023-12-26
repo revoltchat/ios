@@ -8,12 +8,12 @@
 import Foundation
 import SwiftUI
 
-struct MemberId: Decodable {
+struct MemberId: Decodable, Equatable {
     var server: String
     var user: String
 }
 
-struct Member: Decodable {
+struct Member: Decodable, Equatable {
     var id: MemberId
     var nickname: String?
     var avatar: File?
