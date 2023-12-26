@@ -7,15 +7,15 @@
 
 import Foundation
 
-struct EmojiParentServer: Decodable {
+struct EmojiParentServer: Decodable, Equatable {
     var id: String
 }
 
-struct EmojiParentDetached: Decodable {
+struct EmojiParentDetached: Decodable, Equatable{
     
 }
 
-enum EmojiParent {
+enum EmojiParent: Equatable {
     case server(EmojiParentServer)
     case detached(EmojiParentDetached)
 }
@@ -37,7 +37,7 @@ extension EmojiParent: Decodable {
     }
 }
 
-struct Emoji: Decodable {
+struct Emoji: Decodable, Equatable {
     var id: String
     var parent: EmojiParent
     var creator_id: String

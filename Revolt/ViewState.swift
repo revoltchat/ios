@@ -125,6 +125,7 @@ public class ViewState: ObservableObject {
     @Published var channelMessages: [String: [String]] = [:]
     @Published var members: [String: [String: Member]] = [:]
     @Published var dms: [Channel] = []
+    @Published var emojis: [String: Emoji] = [:]
 
     @Published var state: ConnectionState = .connecting
     @Published var queuedMessages: Dictionary<String, [QueuedMessage]> = [:]
@@ -218,6 +219,7 @@ public class ViewState: ObservableObject {
         this.messages["01HDEX6M2E3SHY8AC2S6B9SEAW"] = Message(id: "01HDEX6M2E3SHY8AC2S6B9SEAW", content: "reply", author: "0", channel: "0")
         this.channelMessages["0"] = ["01HD4VQY398JNRJY60JDY2QHA5", "01HDEX6M2E3SHY8AC2S6B9SEAW"]
         this.members["0"] = ["0": Member(id: MemberId(server: "0", user: "0"), joined_at: "")]
+        this.emojis = ["0": Emoji(id: "01GX773A8JPQ0VP64NWGEBMQ1E", parent: .server(EmojiParentServer(id: "0")), creator_id: "0", name: "balls")]
         this.currentServer = .server("0")
         this.currentChannel = .channel("0")
 
@@ -382,6 +384,10 @@ public class ViewState: ObservableObject {
 
                 for unread in unreads {
                     self.unreads[unread.id.channel] = unread
+                }
+                
+                for emoji in event.emojis {
+                    self.emojis[emoji.id] = emoji
                 }
 
                 state = .connected

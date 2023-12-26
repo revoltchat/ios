@@ -46,7 +46,7 @@ struct MessageView: View {
                         }
                     }
                     
-                    VStack(alignment: .leading) {
+                    VStack(alignment: .leading, spacing: 0) {
                         HStack {
                             Text(verbatim: viewModel.message.masquerade?.name ?? viewModel.author.display_name ?? viewModel.author.username)
                                 .if(viewModel.author.id == "01FD58YK5W7QRV5H3D64KTQYX3") {
@@ -111,7 +111,7 @@ struct GhostMessageView: View {
                         .fontWeight(.heavy)
                     Text(createdAt(id: message.nonce).formatted())
                 }
-                Text(message.content)
+                Contents(text: message.content)
                 //.frame(maxWidth: .infinity, alignment: .leading)
             }
             //.frame(maxWidth: .infinity, alignment: .leading)

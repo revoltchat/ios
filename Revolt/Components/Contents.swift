@@ -14,12 +14,14 @@ enum ContentPart: Equatable {
     case text(AttributedString)
     case user_mention(User, Member?)
     case channel_mention(Channel)
+    case custom_emoji(Emoji)
 }
 
 enum Node {
     case user_mention(String)
     case channel_mention(String)
     case text(String)
+    case custom_emoji(String)
 }
 
 let character = StringParser.character
@@ -37,11 +39,17 @@ func mentionTemplate(_ c: Character) -> GenericParser<String, (), String> {
 let user_mention = mentionTemplate("@").map(Node.user_mention)
 let channel_mention = mentionTemplate("#").map(Node.channel_mention)
 
-let text = StringParser.anyCharacter.stringValue
+let mention = user_mention.attempt <|> channel_mention.attempt
 
-let node = user_mention.attempt <|>
-    channel_mention.attempt <|>
-    text.map(Node.text)
+let emoji = StringParser.noneOf(":").many1.stringValue.between(character(":"), character(":")).map(Node.custom_emoji)
+let custom_element = mention <|> emoji
+
+let text = (
+    StringParser.anyCharacter.manyTill(custom_element.attempt.lookAhead).attempt <|>
+    StringParser.anyCharacter.many1)
+    .stringValue.map(Node.text)
+
+let node = custom_element.attempt <|> text
 
 let parser = node.many1
 
@@ -56,7 +64,8 @@ struct Contents: View {
     
     func parseText(content: String, currentServer: String? = nil) -> [ContentPart] {
         var parts: [ContentPart] = []
-        let content = try! AttributedString(markdown: content)
+        let content = try! AttributedString(markdown: content, options: .init(allowsExtendedAttributes: true,
+interpretedSyntax: .full, failurePolicy: .returnPartiallyParsedIfPossible))
         
         for run in content.runs {
             let innerContent = content.characters[run.range].map { String($0) }.joined(separator: "")
@@ -86,6 +95,12 @@ struct Contents: View {
                         } else {
                             parts.append(.text(AttributedString("<@\(id)>", attributes: run.attributes)))
                         }
+                    case .custom_emoji(let id):
+                        if let emoji = viewState.emojis[id] {
+                            parts.append(.custom_emoji(emoji))
+                        } else {
+                            parts.append(.text(AttributedString(":\(id):", attributes: run.attributes)))
+                        }
                 }
             }
         }
@@ -93,24 +108,34 @@ struct Contents: View {
         return parts
     }
     
+    func memberColour(member: Member?) -> Color? {
+        return member.flatMap {
+            let server = viewState.servers[$0.id.server]!
+            return $0.displayColour(server: server)
+        }
+    }
+    
     var body: some View {
         let parts = parseText(content: text)
         HFlow(spacing: 0) {
             ForEach(Array(parts.enumerated()), id: \.offset) { part in
                 switch part.element {
-                    case .text(let text):
-                        Text(text)
+                    case .text(let attr):
+                        Text(attr)
                     case .user_mention(let user, let member):
                         HStack(spacing: 2) {
                             Avatar(user: user, member: member, width: 16, height: 16)
                             Text(verbatim: member?.nickname ?? user.display_name ?? user.username)
                                 .bold()
+                                .foregroundStyle(memberColour(member: member) ?? viewState.theme.foreground.color)
+
                         }
                         .contentShape(Capsule())
-                        //.background(viewState.theme.background)
                     case .channel_mention(let channel):
-                        ChannelIcon(channel: channel, spacing: 0, initialSize: (14.0, 14.0), frameSize: (16, 16))
+                        ChannelIcon(channel: channel, spacing: 0, initialSize: (14, 14), frameSize: (16, 16))
                             .bold()
+                    case .custom_emoji(let emoji):
+                        LazyImage(source: .emoji(emoji.id), height: 16, width: 18, clipTo: Rectangle())
                 }
             }
         }
@@ -121,8 +146,7 @@ struct ParserPreview: PreviewProvider {
     static let viewState = ViewState.preview().applySystemScheme(theme: .light)
     
     static var previews: some View {
-        Contents(text: "Hello <@0>, *checkout* <#0>!")
-            .background(.white)
+        Contents(text: "# Hey <@0> check <#0> :0:")
             .applyPreviewModifiers(withState: viewState)
     }
 }
