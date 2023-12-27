@@ -36,9 +36,9 @@ struct LazyImage<S: Shape>: View {
     
     @ViewBuilder
     var body: some View {
-        KFImage.url(url)
+        KFAnimatedImage.url(url)
             .placeholder { Color.clear }
-            .resizable()
+            .scaledToFit()
             .aspectRatio(contentMode: .fill)
             .frame(width: width, height: height)
             .clipped()

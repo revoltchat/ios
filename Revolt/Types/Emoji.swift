@@ -37,7 +37,7 @@ extension EmojiParent: Decodable {
     }
 }
 
-struct Emoji: Decodable, Equatable {
+struct Emoji: Decodable, Equatable, Identifiable {
     var id: String
     var parent: EmojiParent
     var creator_id: String

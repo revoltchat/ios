@@ -36,25 +36,32 @@ func mentionTemplate(_ c: Character) -> GenericParser<String, (), String> {
         )
 }
 
-let user_mention = mentionTemplate("@").map(Node.user_mention)
-let channel_mention = mentionTemplate("#").map(Node.channel_mention)
+let userMention = mentionTemplate("@").map(Node.user_mention)
+let channelMention = mentionTemplate("#").map(Node.channel_mention)
 
-let mention = user_mention.attempt <|> channel_mention.attempt
+let mention = userMention.attempt <|> channelMention.attempt
 
-let emoji = StringParser.noneOf(":").many1.stringValue.between(character(":"), character(":")).map(Node.custom_emoji)
-let custom_element = mention <|> emoji
+let emojiRaw = StringParser.noneOf(":").many1.stringValue.between(character(":"), character(":"))
+let emoji = emojiRaw.map(Node.custom_emoji)
+let customElement = mention <|> emoji
 
 let text = (
-    StringParser.anyCharacter.manyTill(custom_element.attempt.lookAhead).attempt <|>
+    StringParser.anyCharacter.manyTill(customElement.attempt.lookAhead).attempt <|>
     StringParser.anyCharacter.many1)
     .stringValue.map(Node.text)
 
-let node = custom_element.attempt <|> text
+let node = customElement.attempt <|> text
 
 let parser = node.many1
+let emojiOnlyParser = emojiRaw.separatedBy1(character(" ").many).optional
 
 func parseMentions(text: String) -> [Node] {
-    try! parser.run(sourceName: "<input>", input: text)
+    // if it fails just default back to regular text
+    (try? parser.run(sourceName: "<input>", input: text)) ?? [.text(text)]
+}
+
+func parseEmojisOnly(text: String) -> [String]? {
+    (try? emojiOnlyParser.run(sourceName: "<input>", input: text)) ?? nil
 }
 
 struct Contents: View {
@@ -119,35 +126,50 @@ interpretedSyntax: .full, failurePolicy: .returnPartiallyParsedIfPossible))
     
     var body: some View {
         let parts = parseText(content: text)
+    
         HFlow(spacing: 0) {
-            ForEach(Array(parts.enumerated()), id: \.offset) { part in
-                switch part.element {
-                    case .text(let attr):
-                        Text(attr)
-                    case .user_mention(let user, let member):
-                        HStack(spacing: 2) {
-                            Avatar(user: user, member: member, width: 16, height: 16)
-                            Text(verbatim: member?.nickname ?? user.display_name ?? user.username)
-                                .bold()
-                                .foregroundStyle(memberColour(member: member) ?? viewState.theme.foreground.color)
-
-                        }
-                        .contentShape(Capsule())
-                        .onTapGesture {
-                            showMemberSheet = true
-                        }
-                        .sheet(isPresented: $showMemberSheet) {
-                            UserSheet(user: .constant(user), member: .constant(member))
-                        }
-                    case .channel_mention(let channel):
-                        ChannelIcon(channel: channel, spacing: 0, initialSize: (14, 14), frameSize: (16, 16))
-                            .bold()
-                            .onTapGesture {
-                                viewState.currentServer = channel.server != nil ? .server(channel.server!) : .dms
-                                viewState.currentChannel = .channel(channel.id)
+            let emojis = parts.compactMap { part -> Emoji? in
+                if case .custom_emoji(let emoji) = part {
+                    return emoji
+                } else {
+                    return nil
+                }
+            }
+            
+            if let emojis = parseEmojisOnly(text: text) {
+                ForEach(emojis.compactMap { viewState.emojis[$0] }) { emoji in
+                    LazyImage(source: .emoji(emoji.id), height: 32, width: 32, clipTo: Rectangle())
+                }
+            } else {
+                ForEach(Array(parts.enumerated()), id: \.offset) { part in
+                    switch part.element {
+                        case .text(let attr):
+                            Text(attr)
+                        case .user_mention(let user, let member):
+                            HStack(spacing: 2) {
+                                Avatar(user: user, member: member, width: 16, height: 16)
+                                Text(verbatim: member?.nickname ?? user.display_name ?? user.username)
+                                    .bold()
+                                    .foregroundStyle(memberColour(member: member) ?? viewState.theme.foreground.color)
+                                
                             }
-                    case .custom_emoji(let emoji):
-                        LazyImage(source: .emoji(emoji.id), height: 16, width: 18, clipTo: Rectangle())
+                            .contentShape(Capsule())
+                            .onTapGesture {
+                                showMemberSheet = true
+                            }
+                            .sheet(isPresented: $showMemberSheet) {
+                                UserSheet(user: .constant(user), member: .constant(member))
+                            }
+                        case .channel_mention(let channel):
+                            ChannelIcon(channel: channel, spacing: 0, initialSize: (14, 14), frameSize: (16, 16))
+                                .bold()
+                                .onTapGesture {
+                                    viewState.currentServer = channel.server != nil ? .server(channel.server!) : .dms
+                                    viewState.currentChannel = .channel(channel.id)
+                                }
+                        case .custom_emoji(let emoji):
+                            LazyImage(source: .emoji(emoji.id), height: 16, width: 16, clipTo: Rectangle())
+                    }
                 }
             }
         }
@@ -158,7 +180,10 @@ struct ParserPreview: PreviewProvider {
     static let viewState = ViewState.preview().applySystemScheme(theme: .light)
     
     static var previews: some View {
-        Contents(text: "# Hey <@0> check <#0> :0:")
-            .applyPreviewModifiers(withState: viewState)
+        VStack(alignment: .leading) {
+            Contents(text: "# Hey <@0> check <#0> :0:")
+            Contents(text: ":0: :0:")
+        }
+        .applyPreviewModifiers(withState: viewState)
     }
 }
