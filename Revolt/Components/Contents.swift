@@ -62,6 +62,8 @@ struct Contents: View {
 
     var text: String
     
+    @State var showMemberSheet: Bool = false
+    
     func parseText(content: String, currentServer: String? = nil) -> [ContentPart] {
         var parts: [ContentPart] = []
         let content = try! AttributedString(markdown: content, options: .init(allowsExtendedAttributes: true,
@@ -131,9 +133,19 @@ interpretedSyntax: .full, failurePolicy: .returnPartiallyParsedIfPossible))
 
                         }
                         .contentShape(Capsule())
+                        .onTapGesture {
+                            showMemberSheet = true
+                        }
+                        .sheet(isPresented: $showMemberSheet) {
+                            UserSheet(user: .constant(user), member: .constant(member))
+                        }
                     case .channel_mention(let channel):
                         ChannelIcon(channel: channel, spacing: 0, initialSize: (14, 14), frameSize: (16, 16))
                             .bold()
+                            .onTapGesture {
+                                viewState.currentServer = channel.server != nil ? .server(channel.server!) : .dms
+                                viewState.currentChannel = .channel(channel.id)
+                            }
                     case .custom_emoji(let emoji):
                         LazyImage(source: .emoji(emoji.id), height: 16, width: 18, clipTo: Rectangle())
                 }

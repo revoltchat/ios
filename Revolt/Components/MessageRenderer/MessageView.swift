@@ -39,27 +39,24 @@ struct MessageView: View {
                                 .padding(.top, -4)
                         }
                     }
-                    .padding(.trailing, 8)
                     .onTapGesture {
                         if !isStatic {
                             showMemberSheet.toggle()
                         }
                     }
+                    .padding(.trailing, 8)
                     
                     VStack(alignment: .leading, spacing: 0) {
                         HStack {
                             Text(verbatim: viewModel.message.masquerade?.name ?? viewModel.author.display_name ?? viewModel.author.username)
-                                .if(viewModel.author.id == "01FD58YK5W7QRV5H3D64KTQYX3") {
-                                    $0.shiny()
-                                } else: {
-                                    $0.foregroundStyle(viewModel.member?.displayColour(server: viewModel.server!) ?? viewState.theme.foreground.color)
-                                }
-                                .fontWeight(.heavy)
                                 .onTapGesture {
                                     if !isStatic {
                                         showMemberSheet.toggle()
                                     }
                                 }
+                                .foregroundStyle(viewModel.member?.displayColour(server: viewModel.server!) ?? viewState.theme.foreground.color)
+                                .fontWeight(.heavy)
+
                             
                             if viewModel.author.bot != nil {
                                 MessageBadge(text: String(localized: "Bot"), color: viewState.theme.accent.color)
