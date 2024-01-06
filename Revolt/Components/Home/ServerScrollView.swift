@@ -15,68 +15,75 @@ struct ServerScrollView: View {
     @Binding var showJoinServerSheet: Bool
     
     var body: some View {
-        ScrollView {
-            Button(action: {
-                viewState.currentServer = .dms
-            }) {
-                Avatar(user: viewState.currentUser!, width: buttonSize, height: buttonSize, withPresence: true)
-                    .frame(width: buttonSize, height: buttonSize)
-            }
-            
-            Divider()
-                .frame(height: 12)
-
-            Section {
-                ForEach(viewState.servers.elements, id: \.key) { elem in
-                    Button(action: {
-                        viewState.currentServer = .server(elem.value.id)
-                    }) {
-                        ZStack(alignment: .topTrailing) {
-                            ServerListIcon(server: elem.value, height: buttonSize, width: buttonSize, currentSelection: $viewState.currentServer)
-                            if let unread = viewState.getUnreadCountFor(server: elem.value) {
-                                UnreadCounter(unread: unread, mentionSize: buttonSize / 2.5, unreadSize: buttonSize / 3)
+        ZStack(alignment: .top) {
+            ScrollView {
+                Spacer()
+                    .frame(height: buttonSize + 12 + 8)
+                Section {
+                    ForEach(viewState.servers.elements, id: \.key) { elem in
+                        Button(action: {
+                            viewState.currentServer = .server(elem.value.id)
+                        }) {
+                            ZStack(alignment: .topTrailing) {
+                                ServerListIcon(server: elem.value, height: buttonSize, width: buttonSize, currentSelection: $viewState.currentServer)
+                                if let unread = viewState.getUnreadCountFor(server: elem.value) {
+                                    UnreadCounter(unread: unread, mentionSize: buttonSize / 2.5, unreadSize: buttonSize / 3)
+                                        .background(viewState.theme.background)
+                                }
                             }
                         }
+                        .padding(.vertical, 2)
                     }
-                    .padding(.vertical, 2)
                 }
+                
+                Divider()
+                    .frame(height: 12)
+                
+                Section {
+                    Button(action: {
+                        showJoinServerSheet.toggle()
+                    }) {
+                        Image(systemName: "plus.circle.fill")
+                            .symbolRenderingMode(.palette)
+                            .foregroundStyle(viewState.theme.accent.color, viewState.theme.background2.color)
+                            .frame(width: buttonSize, height: buttonSize)
+                            .font(.system(size: buttonSize))
+                    }
+                    
+                    NavigationLink(value: NavigationDestination.discover) {
+                        Image(systemName: "safari.fill")
+                            .symbolRenderingMode(.palette)
+                            .foregroundStyle(viewState.theme.accent.color, viewState.theme.background2.color)
+                            .frame(width: buttonSize, height: buttonSize)
+                            .font(.system(size: buttonSize))
+                    }
+                    
+                    NavigationLink(value: NavigationDestination.settings) {
+                        Image(systemName: "gearshape.circle.fill")
+                            .symbolRenderingMode(.palette)
+                            .foregroundStyle(viewState.theme.accent.color, viewState.theme.background2.color)
+                            .frame(width: buttonSize, height: buttonSize)
+                            .font(.system(size: buttonSize))
+                    }
+                }
+                
+                
             }
+            .scrollContentBackground(.hidden)
+            .scrollIndicators(.hidden)
             
-            Divider()
-                .frame(height: 12)
-            
-            Section {
+            VStack {
                 Button(action: {
-                    showJoinServerSheet.toggle()
+                    viewState.currentServer = .dms
                 }) {
-                    Image(systemName: "plus.circle.fill")
-                        .symbolRenderingMode(.palette)
-                        .foregroundStyle(viewState.theme.accent.color, viewState.theme.background2.color)
+                    Avatar(user: viewState.currentUser!, width: buttonSize, height: buttonSize, withPresence: true)
                         .frame(width: buttonSize, height: buttonSize)
-                        .font(.system(size: buttonSize))
                 }
                 
-                NavigationLink(value: NavigationDestination.discover) {
-                    Image(systemName: "safari.fill")
-                        .symbolRenderingMode(.palette)
-                        .foregroundStyle(viewState.theme.accent.color, viewState.theme.background2.color)
-                        .frame(width: buttonSize, height: buttonSize)
-                        .font(.system(size: buttonSize))
-                }
-                
-                NavigationLink(value: NavigationDestination.settings) {
-                    Image(systemName: "gearshape.circle.fill")
-                        .symbolRenderingMode(.palette)
-                        .foregroundStyle(viewState.theme.accent.color, viewState.theme.background2.color)
-                        .frame(width: buttonSize, height: buttonSize)
-                        .font(.system(size: buttonSize))
-                }
+                Divider()
             }
-
-            
+            .background(viewState.theme.background)
         }
-        .scrollContentBackground(.hidden)
-        .scrollIndicators(.hidden)
         .padding(.horizontal, viewWidth - buttonSize)
         .background(viewState.theme.background.color)
     }
@@ -84,5 +91,5 @@ struct ServerScrollView: View {
 
 #Preview(traits: .fixedLayout(width: 60, height: 500)) {
     ServerScrollView(showJoinServerSheet: .constant(false))
-        .environmentObject(ViewState.preview())
+        .applyPreviewModifiers(withState: ViewState.preview().applySystemScheme(theme: .light))
 }

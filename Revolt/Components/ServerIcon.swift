@@ -34,6 +34,8 @@ struct ServerIcon<S: Shape>: View {
 
 
 struct ServerListIcon: View {
+    @EnvironmentObject var viewState: ViewState
+    
     var server: Server
     var height: CGFloat? = nil
     var width: CGFloat? = nil
@@ -42,8 +44,10 @@ struct ServerListIcon: View {
     
     var body: some View {
         ServerIcon(server: server, height: height, width: width, clipTo: Rectangle())
-        .if(currentSelection == .server(server.id),
-            content: { $0.clipShape(RoundedRectangle(cornerRadius: 12)) },
-            else: { $0.clipShape(Circle()) })
+            .if(currentSelection == .server(server.id)) {
+                $0.clipShape(RoundedRectangle(cornerRadius: 12))
+            } else: {
+                $0.clipShape(Circle())
+            }
     }
 }

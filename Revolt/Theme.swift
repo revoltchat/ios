@@ -85,7 +85,8 @@ struct Theme: Codable, Equatable {
     var background: ThemeColor = ThemeColor.white
     var background2: ThemeColor = ThemeColor.white
     var foreground: ThemeColor = ThemeColor.black
-    var foreground2: ThemeColor = ThemeColor(hex: "#1F1F1FFF")
+    var foreground2: ThemeColor = ThemeColor(hex: "#3A3A3AFF")
+    var foreground3: ThemeColor = ThemeColor(hex: "#1F1F1FFF")
     var messageBox: ThemeColor = ThemeColor.white
     var messageBoxBackground: ThemeColor = ThemeColor.white
     var topBar: ThemeColor = ThemeColor(hex: "#FFFFFFAA")
@@ -99,6 +100,7 @@ struct Theme: Codable, Equatable {
             background2: ThemeColor(hex: "#F5F5F5FF"),
             foreground: ThemeColor.black,
             foreground2: ThemeColor(hex: "#1F1F1FFF"),
+            foreground3: ThemeColor(hex: "#3A3A3AFF"),
             messageBox: ThemeColor.white,
             messageBoxBackground: ThemeColor.white,
             topBar: ThemeColor(hex: "#FFFFFFEE"),
@@ -114,6 +116,7 @@ struct Theme: Codable, Equatable {
             background2: ThemeColor(hex:"#242424FF"),
             foreground: ThemeColor.white,
             foreground2: ThemeColor(hex: "#C8C8C8FF"),
+            foreground3: ThemeColor(hex: "#848484FF"),
             messageBox: ThemeColor(hex:"#363636FF"),
             messageBoxBackground: ThemeColor(hex:"#363636FF"),
             topBar: ThemeColor(hex: "#191919EE"),

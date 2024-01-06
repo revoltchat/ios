@@ -11,9 +11,14 @@ import SwiftUI
 struct ChannelListItem: View {
     @EnvironmentObject var viewState: ViewState
     var channel: Channel
-    var isSelected: Bool
     
     var body: some View {
+        let isSelected = viewState.currentChannel.id == channel.id
+        let unread = viewState.getUnreadCountFor(channel: channel)
+
+        let foregroundColor = isSelected || unread != nil ? viewState.theme.foreground : viewState.theme.foreground2
+        let backgroundColor = isSelected ? viewState.theme.background : viewState.theme.background2
+        
         Button(action: {
             viewState.currentChannel = .channel(channel.id)
         }) {
@@ -22,15 +27,15 @@ struct ChannelListItem: View {
                 
                 Spacer()
                 
-                if let unread = viewState.getUnreadCountFor(channel: channel) {
+                if let unread = unread {
                     UnreadCounter(unread: unread)
                         .padding(.trailing)
                 }
             }
             .padding(8)
         }
-        .background((isSelected ? viewState.theme.background : viewState.theme.background2).color)
-        .foregroundStyle(viewState.theme.foreground.color)
+        .background(backgroundColor)
+        .foregroundStyle(foregroundColor)
         .clipShape(RoundedRectangle(cornerRadius: 5))
     }
 }
@@ -43,10 +48,12 @@ struct CategoryListItem: View {
     var body: some View {
         VStack(alignment: .leading) {
             Text(category.title)
+                .font(.subheadline)
                 .fontWeight(.medium)
+                .padding(.leading, 4)
             
             ForEach(category.channels.compactMap({ viewState.channels[$0] }), id: \.id) { channel in
-                ChannelListItem(channel: channel, isSelected: selectedChannel == channel.id)
+                ChannelListItem(channel: channel)
             }
         }
     }
@@ -64,11 +71,6 @@ struct ServerChannelScrollView: View {
         }
 
         if let selectedServer = maybeSelectedServer {
-            let selectedChannel: String? = switch currentChannel {
-                case .channel(let channelId): channelId
-                default: nil
-            }
-            
             let categoryChannels = selectedServer.categories?.flatMap(\.channels) ?? []
             let nonCategoryChannels = selectedServer.channels.filter({ !categoryChannels.contains($0) })
             
@@ -106,11 +108,11 @@ struct ServerChannelScrollView: View {
                 }
                                 
                 ForEach(nonCategoryChannels.compactMap({ viewState.channels[$0] })) { channel in
-                    ChannelListItem(channel: channel, isSelected: selectedChannel == channel.id)
+                    ChannelListItem(channel: channel)
                 }
                 
                 ForEach(selectedServer.categories ?? []) { category in
-                    CategoryListItem(category: category, selectedChannel: selectedChannel)
+                    CategoryListItem(category: category)
                 }
             }
             .padding(.horizontal, 8)
