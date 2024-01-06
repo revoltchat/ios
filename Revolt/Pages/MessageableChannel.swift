@@ -45,7 +45,7 @@ class MessageableChannelViewModel: ObservableObject {
     func loadMoreMessages(before: String? = nil) async -> FetchHistory? {
         if isPreview { return nil }
         
-        let result = try! await viewState.http.fetchHistory(channel: channel.id, limit: 50, before: before).get()
+        let result = (try? await viewState.http.fetchHistory(channel: channel.id, limit: 50, before: before).get()) ?? FetchHistory(messages: [], users: [])  // haha ratelimited
 
         for user in result.users {
             viewState.users[user.id] = user
