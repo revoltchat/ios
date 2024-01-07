@@ -40,6 +40,9 @@
     "Add a server" : {
 
     },
+    "Add a topic..." : {
+
+    },
     "Add Friend" : {
 
     },
@@ -52,6 +55,9 @@
     "Banner" : {
 
     },
+    "Bans" : {
+
+    },
     "Bio" : {
 
     },
@@ -62,6 +68,9 @@
 
     },
     "Cancel" : {
+
+    },
+    "Categories" : {
 
     },
     "Code or link" : {
@@ -91,10 +100,16 @@
     "Created today" : {
 
     },
+    "Customisation" : {
+
+    },
     "Dark" : {
 
     },
     "Delete" : {
+
+    },
+    "Delete server" : {
 
     },
     "Didn't get an email?" : {
@@ -113,6 +128,9 @@
 
     },
     "Email Token" : {
+
+    },
+    "Emojis" : {
 
     },
     "enter" : {
@@ -163,6 +181,9 @@
     "Invite Members" : {
 
     },
+    "Invites" : {
+
+    },
     "Join" : {
 
     },
@@ -200,6 +221,9 @@
 
     },
     "Logout" : {
+
+    },
+    "Members" : {
 
     },
     "Members - %lld" : {
@@ -246,6 +270,9 @@
 
     },
     "Open Profile" : {
+
+    },
+    "Overview" : {
 
     },
     "Password" : {
@@ -296,6 +323,9 @@
     "Roles" : {
 
     },
+    "Save" : {
+
+    },
     "Saved Messages" : {
 
     },
@@ -312,6 +342,15 @@
 
     },
     "Select Username" : {
+
+    },
+    "Server Description" : {
+
+    },
+    "Server Icon" : {
+
+    },
+    "Server Name" : {
 
     },
     "Sessions" : {
@@ -344,6 +383,9 @@
     "This is the start of your conversation." : {
 
     },
+    "Todo" : {
+
+    },
     "Top Bar" : {
 
     },
@@ -354,6 +396,9 @@
 
     },
     "use a %@ code" : {
+
+    },
+    "User Management" : {
 
     },
     "Username" : {

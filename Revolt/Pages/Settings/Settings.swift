@@ -22,7 +22,7 @@ struct Settings: View {
     @State var currentPage: CurrentSettingsPage? = .language
     
     var body: some View {
-        VStack(alignment: .leading) {
+        List {
             Section("Revolt") {
                 NavigationLink(destination: ProfileSettings.init) {
                     Image(systemName: "person.fill")
@@ -53,6 +53,7 @@ struct Settings: View {
                     Text("Language")
                 }
             }
+            .listRowBackground(viewState.theme.background2)
             
             Section("Misc") {
                 NavigationLink(destination: About.init) {
@@ -71,8 +72,16 @@ struct Settings: View {
                     }
                 }
             }
+            .listRowBackground(viewState.theme.background2)
         }
+        .scrollContentBackground(.hidden)
         .frame(maxWidth: .infinity, maxHeight: .infinity)
-        .background(viewState.theme.background.color)
+        .background(viewState.theme.background)
     }
+}
+
+
+#Preview {
+    Settings()
+        .applyPreviewModifiers(withState: ViewState.preview())
 }

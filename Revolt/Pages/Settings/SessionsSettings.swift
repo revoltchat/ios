@@ -42,7 +42,6 @@ struct SessionsSettings: View {
             }
             .listRowBackground(viewState.theme.background2.color)
         }
-        .listStyle(.inset)
         .scrollContentBackground(.hidden)
         .background(viewState.theme.background.color)
         .task {
@@ -66,7 +65,7 @@ struct SessionView: View {
             Image(systemName: "lock")
                 .resizable()
                 .aspectRatio(contentMode: .fit)
-                .frame(width: 24, height: 24)
+                .frame(width: 28, height: 28)
             
             VStack(alignment: .leading) {
                 Text(session.name)

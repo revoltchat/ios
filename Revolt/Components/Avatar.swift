@@ -19,7 +19,7 @@ struct Avatar: View {
     public var height: CGFloat = 32
     public var withPresence: Bool = false
 
-    var source: Source? {
+    var source: LazyImageSource? {
         if let url = masquerade?.avatar {
             return .url(URL(string: url)!)
         } else if let file = member?.avatar ?? user.avatar {
