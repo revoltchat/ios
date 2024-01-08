@@ -15,15 +15,16 @@ struct LanguageSettings: View {
     var currentLocale: Locale { viewState.currentLocale ?? systemLocale }
     
     var body: some View {
-        ScrollView {
+        List {
             Button {
                 viewState.currentLocale = nil
             } label: {
                 Text("Auto")
             }
             .frame(maxWidth: .infinity, maxHeight: 30)
-            .padding()
-            .background(viewState.currentLocale == nil ? viewState.theme.background.color : viewState.theme.background2.color)
+            .padding(8)
+            .foregroundStyle(viewState.currentLocale == nil ? viewState.theme.accent : viewState.theme.foreground)
+            .listRowBackground(viewState.theme.background2)
             
             ForEach(Locale.availableIdentifiers.sorted(), id: \.self) { ident in
                 let locale = Locale(identifier: ident)
@@ -32,11 +33,29 @@ struct LanguageSettings: View {
                     viewState.currentLocale = locale
                 } label: {
                     Text(currentLocale.localizedString(forIdentifier: ident) ?? "Unknown")
+                        .foregroundStyle(locale == currentLocale ? viewState.theme.accent : viewState.theme.foreground)
                 }
                 .frame(maxWidth: .infinity, maxHeight: 30)
-                .padding()
-                .background(locale == currentLocale ? viewState.theme.background.color : viewState.theme.background2.color)
+                .padding(8)
+                .listRowBackground(viewState.theme.background2)
+
             }
         }
+        .scrollContentBackground(.hidden)
+        .background(viewState.theme.background)
+        .toolbar {
+            ToolbarItem(placement: .principal) {
+                Text("Sessions")
+            }
+        }
+        .toolbarBackground(viewState.theme.topBar.color, for: .automatic)
     }
+}
+
+
+#Preview {
+    return NavigationStack {
+        LanguageSettings()
+    }
+        .applyPreviewModifiers(withState: ViewState.preview())
 }

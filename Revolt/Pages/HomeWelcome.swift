@@ -9,6 +9,7 @@ import Foundation
 import SwiftUI
 
 struct HomeWelcome: View {
+    @Environment(\.openURL) var openURL: OpenURLAction
     @EnvironmentObject var viewState: ViewState
     @Binding var showSidebar: Bool
 
@@ -37,7 +38,7 @@ struct HomeWelcome: View {
                             .resizable()
                             .frame(width: 32, height: 32)
                     } handle: {
-                        
+                        viewState.path.append(NavigationDestination.discover)
                     }
                     HomeButton(title: "Go to the testers server", description: "You can report issues and discuss improvements with us directly here") {
                         Image(systemName: "arrow.right.circle.fill")
@@ -52,7 +53,7 @@ struct HomeWelcome: View {
                             .resizable()
                             .frame(width: 32, height: 20)
                     } handle: {
-                        
+                        openURL(URL(string: "https://insrt.uk/donate")!)
                     }
                     
                     HomeButton(title: "Open Settings", description: "You can also open settings from the bottom of the server list") {
@@ -60,7 +61,7 @@ struct HomeWelcome: View {
                             .resizable()
                             .frame(width: 32, height: 32)
                     } handle: {
-                        
+                        viewState.path.append(NavigationDestination.settings)
                     }
                 }
             }

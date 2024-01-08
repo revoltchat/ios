@@ -76,6 +76,13 @@ struct Settings: View {
         }
         .scrollContentBackground(.hidden)
         .frame(maxWidth: .infinity, maxHeight: .infinity)
+        .toolbar {
+            ToolbarItem(placement: .principal) {
+                Text("Settings")
+            }
+        }
+        .toolbarBackground(viewState.theme.topBar.color, for: .automatic)
+
         .background(viewState.theme.background)
     }
 }

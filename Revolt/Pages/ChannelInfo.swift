@@ -33,9 +33,7 @@ struct ChannelInfo: View {
     
     var body: some View {
         VStack(alignment: .center) {
-            VStack(spacing: 12) {
-                ChannelIcon(channel: channel)
-                
+            VStack {
                 if let description = channel.description {
                     Text(verbatim: description)
                         .font(.footnote)
@@ -71,9 +69,7 @@ struct ChannelInfo: View {
                     
                     Spacer()
                     
-                    Button {
-                        
-                    } label: {
+                    NavigationLink(value: NavigationDestination.channel_settings(channel.id)) {
                         VStack(alignment: .center) {
                             Image(systemName: "gearshape.circle.fill")
                                 .resizable()
@@ -129,6 +125,20 @@ struct ChannelInfo: View {
             .scrollContentBackground(.hidden)
             .background(viewState.theme.background.color)
         }
+        .toolbar {
+            ToolbarItem(placement: .principal) {
+                ChannelIcon(channel: channel)
+            }
+        }
+        .toolbarBackground(viewState.theme.topBar.color, for: .automatic)
         .background(viewState.theme.background.color)
     }
+}
+
+
+#Preview {
+    let viewState = ViewState.preview()
+
+    return ChannelInfo(channel: .constant(viewState.channels["0"]!))
+        .applyPreviewModifiers(withState: viewState)
 }

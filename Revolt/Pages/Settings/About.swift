@@ -27,6 +27,13 @@ struct About: View {
                 .font(.footnote)
                 .foregroundStyle(.gray)
         }
+        .toolbar {
+            ToolbarItem(placement: .principal) {
+                Text("About")
+            }
+        }
+        .toolbarBackground(viewState.theme.topBar.color, for: .automatic)
+
         .frame(maxWidth: .infinity, maxHeight: .infinity)
         .background(viewState.theme.background.color)
     }

@@ -73,6 +73,9 @@
     "Categories" : {
 
     },
+    "Channel Icon" : {
+
+    },
     "Code or link" : {
 
     },
@@ -107,6 +110,9 @@
 
     },
     "Delete" : {
+
+    },
+    "Delete channel" : {
 
     },
     "Delete server" : {
@@ -276,6 +282,9 @@
 
     },
     "Password" : {
+
+    },
+    "Permissions" : {
 
     },
     "Pick a category" : {

@@ -216,6 +216,7 @@ public class ViewState: ObservableObject {
         this.servers["0"] = Server(id: "0", owner: "0", name: "Testing Server", channels: ["0"], default_permissions: Permissions.all, categories: [Category(id: "0", title: "Channels", channels: ["0", "1"])])
         this.channels["0"] = .text_channel(TextChannel(id: "0", server: "0", name: "General"))
         this.channels["1"] = .voice_channel(VoiceChannel(id: "1", server: "0", name: "Voice General"))
+        this.channels["2"] = .saved_messages(SavedMessages(id: "2", user: "0"))
         this.messages["01HD4VQY398JNRJY60JDY2QHA5"] = Message(id: "01HD4VQY398JNRJY60JDY2QHA5", content: "Hello World", author: "0", channel: "0", mentions: ["0"], replies: ["01HDEX6M2E3SHY8AC2S6B9SEAW"])
         this.messages["01HDEX6M2E3SHY8AC2S6B9SEAW"] = Message(id: "01HDEX6M2E3SHY8AC2S6B9SEAW", content: "reply", author: "0", channel: "0")
         this.channelMessages["0"] = ["01HD4VQY398JNRJY60JDY2QHA5", "01HDEX6M2E3SHY8AC2S6B9SEAW"]
@@ -223,6 +224,7 @@ public class ViewState: ObservableObject {
         this.emojis = ["0": Emoji(id: "01GX773A8JPQ0VP64NWGEBMQ1E", parent: .server(EmojiParentServer(id: "0")), creator_id: "0", name: "balls")]
         this.currentServer = .server("0")
         this.currentChannel = .channel("0")
+        this.dms.append(this.channels["2"]!)
 
         for i in (1...9) {
             this.users["\(i)"] = User(id: "i", username: "\(i)", discriminator: "\(i)\(i)\(i)\(i)")

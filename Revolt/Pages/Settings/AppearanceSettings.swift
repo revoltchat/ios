@@ -118,6 +118,13 @@ struct AppearanceSettings: View {
             
             Spacer()
         }
+        .toolbar {
+            ToolbarItem(placement: .principal) {
+                Text("Appearance")
+            }
+        }
+        .toolbarBackground(viewState.theme.topBar.color, for: .automatic)
+
         .padding(.horizontal, 16)
         .background(viewState.theme.background.color)
         .animation(.easeInOut, value: viewState.theme)

@@ -148,11 +148,16 @@ struct FriendsList: View {
                 .listRowBackground(viewState.theme.background2.color)
             }
         }
-        .listStyle(.plain)
         .scrollContentBackground(.hidden)
         .background(viewState.theme.background.color)
         .sheet(item: $selectedUser, content: { user in
             UserSheet(user: .constant(user), member: .constant(nil))
         })
     }
+}
+
+
+#Preview {
+    return FriendsList()
+        .applyPreviewModifiers(withState: ViewState.preview())
 }

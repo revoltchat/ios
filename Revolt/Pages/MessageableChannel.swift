@@ -115,7 +115,7 @@ struct MessageableChannelView: View {
     var body: some View {
         VStack(spacing: 0) {
             PageToolbar(showSidebar: $showSidebar) {
-                NavigationLink(value: NavigationDestination.channel_settings(viewModel.channel.id)) {
+                NavigationLink(value: NavigationDestination.channel_info(viewModel.channel.id)) {
                     ChannelIcon(channel: viewModel.channel)
                     Image(systemName: "chevron.right")
                         .frame(height: 4)

@@ -36,7 +36,7 @@ struct PageToolbar<C: View, T: View>: View {
             trailing()
         }
         .padding(.horizontal, 12)
-        .padding(.vertical, 8)
+        .padding(.vertical, 6)
         .background(viewState.theme.topBar.color)
     }
 }

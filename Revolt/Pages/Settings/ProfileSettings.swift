@@ -72,5 +72,12 @@ struct ProfileSettings: View {
                 profile = try! await viewState.http.fetchProfile(user: viewState.currentUser!.id).get()
             }
         }
+        .toolbar {
+            ToolbarItem(placement: .principal) {
+                Text("Profile")
+            }
+        }
+        .toolbarBackground(viewState.theme.topBar.color, for: .automatic)
+
     }
 }

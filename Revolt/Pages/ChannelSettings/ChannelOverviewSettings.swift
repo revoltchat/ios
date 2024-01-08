@@ -1,5 +1,5 @@
 //
-//  ServerOverviewSettings.swift
+//  ChannelOverviewSettings.swift
 //  Revolt
 //
 //  Created by Angelo on 07/01/2024.
@@ -9,7 +9,7 @@ import Foundation
 import SwiftUI
 import PhotosUI
 
-struct ServerOverviewSettings: View {
+struct ChannelOverviewSettings: View {
     @EnvironmentObject var viewState: ViewState
     
     enum Icon: Equatable {
@@ -17,49 +17,39 @@ struct ServerOverviewSettings: View {
         case local(Data)
     }
     
-    struct ServerSettingsValues: Equatable {
+    struct ChannelSettingsValues: Equatable {
         var icon: Icon
-        var name: String
         var description: String
     }
     
-    @State var currentValues: ServerSettingsValues
+    @State var currentValues: ChannelSettingsValues
     @State var showSaveButton: Bool = false
     @State var showIconPhotoPicker: Bool = false
     @State var serverIconPhoto: PhotosPickerItem?
     
-    @Binding var server: Server
+    @Binding var channel: Channel
     
     @MainActor
-    static func fromState(viewState: ViewState, server s: Binding<Server>) -> Self {
-        let settings = ServerSettingsValues(
-            icon: .remote(s.icon.wrappedValue),
-            name: s.name.wrappedValue,
-            description: s.description.wrappedValue ?? ""
+    static func fromState(viewState: ViewState, channel c: Binding<Channel>) -> Self {
+        let settings = ChannelSettingsValues(
+            icon: .remote(c.wrappedValue.icon),
+            description: c.wrappedValue.description ?? ""
         )
         
-        return .init(currentValues: settings, server: s)
+        return .init(currentValues: settings, channel: c)
     }
     
     var body: some View {
         List {
-            Section("Server Icon") {
+            Section("Channel Icon") {
                 VStack {
                     switch currentValues.icon {
                         case .remote(let file):
                             if let file = file {
                                 AnyView(LazyImage(source: .file(file), height: 48, width: 48, clipTo: Circle()))
                             } else {
-                                AnyView(ZStack(alignment: .center) {
-                                    let firstChar = server.name.first!
-                                    
-                                    Circle()
-                                        .fill(.gray)  // TODO: background3
-                                        .frame(width: 48, height: 48)
-                                    
-                                    Text(verbatim: "\(firstChar)")
-                                        .font(.title2)
-                                })
+                                Circle()
+                                    .fill(viewState.theme.background2)
                             }
                         case .local(let data):
                             LazyImage(source: .local(data), height: 48, width: 48, clipTo: Circle())
@@ -79,14 +69,7 @@ struct ServerOverviewSettings: View {
                 
             }
             .listRowBackground(viewState.theme.background)
-            
-            Section("Server Name") {
-                TextField(text: $currentValues.name) {
-                    Text("Server Name")
-                }
-            }
-            .listRowBackground(viewState.theme.background2)
-            
+                        
             Section("Server Description") {
                 TextField(text: $currentValues.description) {
                     Text("Add a topic...")
@@ -123,10 +106,10 @@ struct ServerOverviewSettings: View {
 
 #Preview {
     let viewState = ViewState.preview()
-    let server = viewState.servers["0"]!
+    let channel = viewState.channels["0"]!
     
     return NavigationStack {
-        ServerOverviewSettings.fromState(viewState: viewState, server: .constant(server))
+        ChannelOverviewSettings.fromState(viewState: viewState, channel: .constant(channel))
     }
     .applyPreviewModifiers(withState: viewState)
 }

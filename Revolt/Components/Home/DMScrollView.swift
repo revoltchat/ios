@@ -88,6 +88,16 @@ struct DMScrollView: View {
         .frame(maxWidth: .infinity)
         .scrollContentBackground(.hidden)
         .background(viewState.theme.background2.color)
-        .listStyle(.plain)
+        .listStyle(.grouped)
+    }
+}
+
+
+struct DMScrollView_Previews: PreviewProvider {
+    @StateObject static var viewState = ViewState.preview()
+
+    static var previews: some View {
+        DMScrollView(currentChannel: $viewState.currentChannel)
+            .applyPreviewModifiers(withState: viewState)
     }
 }
