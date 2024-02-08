@@ -151,7 +151,7 @@ struct FriendsList: View {
         .scrollContentBackground(.hidden)
         .background(viewState.theme.background.color)
         .sheet(item: $selectedUser, content: { user in
-            UserSheet(user: .constant(user), member: .constant(nil))
+            UserSheet(user: user, member: nil)
         })
     }
 }

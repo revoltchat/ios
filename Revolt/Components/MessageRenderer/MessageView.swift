@@ -48,7 +48,9 @@ struct MessageView: View {
                     
                     VStack(alignment: .leading, spacing: 0) {
                         HStack {
-                            Text(verbatim: viewModel.message.masquerade?.name ?? viewModel.author.display_name ?? viewModel.author.username)
+                            let name = viewModel.message.masquerade?.name ?? viewModel.member?.nickname ?? viewModel.author.display_name ?? viewModel.author.username
+                            let _ = print(name)
+                            Text(verbatim: name)
                                 .onTapGesture {
                                     if !isStatic {
                                         showMemberSheet.toggle()
@@ -80,15 +82,15 @@ struct MessageView: View {
         }
         .listRowSeparator(.hidden)
         .sheet(isPresented: $showMemberSheet) {
-            let user = viewModel.$author
+            let user = viewModel.author
             
             if case .server(let serverId) = viewState.currentServer {
-                let serverMembers = Binding($viewState.members[serverId])!
-                let member = serverMembers[user.id]
+                let serverMembers = viewState.members[serverId]
+                let member = serverMembers?[user.id]
                 
                 UserSheet(user: user, member: member)
             } else {
-                UserSheet(user: user, member: Binding.constant(nil))
+                UserSheet(user: user, member: nil)
             }
         }
     }

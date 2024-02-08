@@ -50,8 +50,9 @@ struct InnerMessageReplyView: View {
         if let message = message {
             HStack(spacing: 4) {
                 let author = viewState.users[message.author] ?? User(id: "0", username: "Unknown User", discriminator: "0000")
+                let member = viewState.currentServer.id.flatMap { viewState.members[$0] }.flatMap { $0[message.author] }
                 
-                Avatar(user: author, width: 16, height: 16)
+                Avatar(user: author, member: member, masquerade: message.masquerade, width: 16, height: 16)
                 
                 HStack(spacing: 0) {
                     if mentions?.contains(message.author) == true {
@@ -59,7 +60,7 @@ struct InnerMessageReplyView: View {
                             .font(.caption)
                     }
                     
-                    Text(author.username)
+                    Text(message.masquerade?.name ?? member?.nickname ?? author.display_name ?? author.username)
                         .font(.caption)
                 }
                 
