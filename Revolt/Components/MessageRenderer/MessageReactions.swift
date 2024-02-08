@@ -24,8 +24,12 @@ struct MessageReactions: View {
                             .font(.footnote)
                             .foregroundStyle(viewState.theme.foreground.color)
                         
-                        LazyImage(source: .emoji(emoji), height: 16, width: 16, clipTo: Rectangle())
-                            .environmentObject(viewState)
+                        if emoji.count == 26 {
+                            LazyImage(source: .emoji(emoji), height: 16, width: 16, clipTo: Rectangle())
+                        } else {
+                            Text(verbatim: emoji)
+                                .font(.system(size: 16))
+                        }
                     }
                     .padding(8)
                     .background(RoundedRectangle(cornerRadius: 5)
