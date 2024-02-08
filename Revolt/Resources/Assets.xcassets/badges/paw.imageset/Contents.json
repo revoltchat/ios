@@ -1,0 +1,17 @@
+{
+  "images" : [
+    {
+      "filename" : "paw.pdf",
+      "idiom" : "universal"
+    }
+  ],
+  "info" : {
+    "author" : "xcode",
+    "version" : 1
+  },
+  "properties" : {
+    "on-demand-resource-tags" : [
+      "Resources"
+    ]
+  }
+}

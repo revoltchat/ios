@@ -7,11 +7,13 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		1713035A2B6166B700B66050 /* Localizable.xcstrings in Resources */ = {isa = PBXBuildFile; fileRef = 171303592B6166B700B66050 /* Localizable.xcstrings */; settings = {ASSET_TAGS = (Resources, ); }; };
 		171594C32B4B2A0D00D7C3C3 /* ServerOverviewSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 171594C22B4B2A0D00D7C3C3 /* ServerOverviewSettings.swift */; };
 		1718F3D02B0BCAA50018E524 /* UnreadCounter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1718F3CF2B0BCAA50018E524 /* UnreadCounter.swift */; };
 		1718FB542AF8470400E9C511 /* ReportMessageSheetView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1718FB532AF8470400E9C511 /* ReportMessageSheetView.swift */; };
 		172754C92B399092002223FE /* Contents.swift in Sources */ = {isa = PBXBuildFile; fileRef = 172754C82B399092002223FE /* Contents.swift */; };
 		172754CC2B39989E002223FE /* SwiftParsec in Frameworks */ = {isa = PBXBuildFile; productRef = 172754CB2B39989E002223FE /* SwiftParsec */; };
+		173190032B754D4700B6DA49 /* EmojiPickerContent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 173190022B754D4700B6DA49 /* EmojiPickerContent.swift */; };
 		1739DB962B08E53B00D23DAD /* MessageBadge.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1739DB952B08E53B00D23DAD /* MessageBadge.swift */; };
 		17429D972B4C91170036105A /* ChannelSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17429D962B4C91170036105A /* ChannelSettings.swift */; };
 		17429D992B4C931D0036105A /* ChannelOverviewSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17429D982B4C931D0036105A /* ChannelOverviewSettings.swift */; };
@@ -40,10 +42,10 @@
 		17966B672AE08C3000BAEC58 /* DMList.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17966B662AE08C3000BAEC58 /* DMList.swift */; };
 		17B51A682AFAFA8E0018C967 /* CodableWrapper in Frameworks */ = {isa = PBXBuildFile; productRef = 17B51A672AFAFA8E0018C967 /* CodableWrapper */; };
 		17B7128D2B03E9D700CFF61C /* FriendsList.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17B7128C2B03E9D700CFF61C /* FriendsList.swift */; };
+		17BADE012B7019270021BB62 /* EmojiPicker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17BADE002B7019270021BB62 /* EmojiPicker.swift */; };
 		17BC3EFA2AD826970029D820 /* File.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17BC3EF92AD826970029D820 /* File.swift */; };
 		17BC3EFC2AD82A1B0029D820 /* Member.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17BC3EFB2AD82A1B0029D820 /* Member.swift */; };
 		17BF54CD2B1785E200178866 /* HomeWelcome.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17BF54CC2B1785E200178866 /* HomeWelcome.swift */; };
-		17BF54CF2B17AE7700178866 /* Localizable.xcstrings in Resources */ = {isa = PBXBuildFile; fileRef = 17BF54CE2B17AE7700178866 /* Localizable.xcstrings */; };
 		17BF54D12B17B24200178866 /* LanguageSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17BF54D02B17B24200178866 /* LanguageSettings.swift */; };
 		17C444582B06CC5400F97E4A /* ForgotPassword.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17C444572B06CC5400F97E4A /* ForgotPassword.swift */; };
 		17C9A3502B0580D10043A387 /* Welcome.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17C9A34F2B0580D10043A387 /* Welcome.swift */; };
@@ -72,7 +74,6 @@
 		17E019DA2AF199A600AB4663 /* MessageReply.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17E019D92AF199A600AB4663 /* MessageReply.swift */; };
 		17E019DC2AF1B25100AB4663 /* SessionsSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17E019DB2AF1B25100AB4663 /* SessionsSettings.swift */; };
 		17E28E082AF319D500F6069F /* JoinServer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17E28E072AF319D500F6069F /* JoinServer.swift */; };
-		17F3EFB12B140E36002C34B5 /* Inter.ttf in Resources */ = {isa = PBXBuildFile; fileRef = DAF41CC129C516600004BFBE /* Inter.ttf */; };
 		17F555272AFC229900958F2F /* ServerSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17F555262AFC229900958F2F /* ServerSettings.swift */; };
 		D49B705329C4D3FE009494A5 /* RevoltApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = D49B705229C4D3FE009494A5 /* RevoltApp.swift */; };
 		D49B705729C4D3FE009494A5 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = D49B705629C4D3FE009494A5 /* Assets.xcassets */; };
@@ -97,6 +98,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		171303592B6166B700B66050 /* Localizable.xcstrings */ = {isa = PBXFileReference; lastKnownFileType = text.json.xcstrings; path = Localizable.xcstrings; sourceTree = "<group>"; };
 		171594C22B4B2A0D00D7C3C3 /* ServerOverviewSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ServerOverviewSettings.swift; sourceTree = "<group>"; };
 		1718F3CF2B0BCAA50018E524 /* UnreadCounter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UnreadCounter.swift; sourceTree = "<group>"; };
 		1718FB532AF8470400E9C511 /* ReportMessageSheetView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReportMessageSheetView.swift; sourceTree = "<group>"; };
@@ -123,10 +125,10 @@
 		17966B642AE0842A00BAEC58 /* ChannelIcon.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChannelIcon.swift; sourceTree = "<group>"; };
 		17966B662AE08C3000BAEC58 /* DMList.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DMList.swift; sourceTree = "<group>"; };
 		17B7128C2B03E9D700CFF61C /* FriendsList.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FriendsList.swift; sourceTree = "<group>"; };
+		17BADE002B7019270021BB62 /* EmojiPicker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmojiPicker.swift; sourceTree = "<group>"; };
 		17BC3EF92AD826970029D820 /* File.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = File.swift; sourceTree = "<group>"; };
 		17BC3EFB2AD82A1B0029D820 /* Member.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Member.swift; sourceTree = "<group>"; };
 		17BF54CC2B1785E200178866 /* HomeWelcome.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeWelcome.swift; sourceTree = "<group>"; };
-		17BF54CE2B17AE7700178866 /* Localizable.xcstrings */ = {isa = PBXFileReference; lastKnownFileType = text.json.xcstrings; path = Localizable.xcstrings; sourceTree = "<group>"; };
 		17BF54D02B17B24200178866 /* LanguageSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LanguageSettings.swift; sourceTree = "<group>"; };
 		17C444572B06CC5400F97E4A /* ForgotPassword.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ForgotPassword.swift; sourceTree = "<group>"; };
 		17C9A34F2B0580D10043A387 /* Welcome.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Welcome.swift; sourceTree = "<group>"; };
@@ -171,7 +173,6 @@
 		DAAA4C0A29F2CF1200F41E52 /* Websocket.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Websocket.swift; sourceTree = "<group>"; };
 		DAAA4C0C29F2D16B00F41E52 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		DAAA4C0D29F2D37800F41E52 /* Api.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Api.swift; sourceTree = "<group>"; };
-		DAF41CC129C516600004BFBE /* Inter.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = Inter.ttf; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -208,6 +209,15 @@
 			path = ServerSettings;
 			sourceTree = "<group>";
 		};
+		173190012B754BB900B6DA49 /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				D49B705629C4D3FE009494A5 /* Assets.xcassets */,
+				D49B705829C4D3FE009494A5 /* Preview Content */,
+			);
+			path = Resources;
+			sourceTree = "<group>";
+		};
 		17429D952B4C91080036105A /* ChannelSettings */ = {
 			isa = PBXGroup;
 			children = (
@@ -236,6 +246,8 @@
 				17E019D02AF14EC000AB4663 /* ServerIcon.swift */,
 				1718F3CF2B0BCAA50018E524 /* UnreadCounter.swift */,
 				172754C82B399092002223FE /* Contents.swift */,
+				17BADE002B7019270021BB62 /* EmojiPicker.swift */,
+				173190022B754D4700B6DA49 /* EmojiPickerContent.swift */,
 			);
 			path = Components;
 			sourceTree = "<group>";
@@ -343,6 +355,7 @@
 		D49B704629C4D3FE009494A5 = {
 			isa = PBXGroup;
 			children = (
+				171303592B6166B700B66050 /* Localizable.xcstrings */,
 				D49B705129C4D3FE009494A5 /* Revolt */,
 				D49B705029C4D3FE009494A5 /* Products */,
 				DAFC10FE29CFC3B400D2C2F9 /* Frameworks */,
@@ -360,18 +373,15 @@
 		D49B705129C4D3FE009494A5 /* Revolt */ = {
 			isa = PBXGroup;
 			children = (
+				173190012B754BB900B6DA49 /* Resources */,
 				17DFB4622AE06A3200E1D417 /* Api */,
 				17DFB4612AE06A0F00E1D417 /* Pages */,
 				175E01DC2ADAB3EA004F6431 /* Components */,
 				DAAA4C0C29F2D16B00F41E52 /* Info.plist */,
 				DAAA4BFD29F251DF00F41E52 /* Types */,
-				DAF41CC029C5164A0004BFBE /* Fonts */,
 				D49B705229C4D3FE009494A5 /* RevoltApp.swift */,
 				DA99EC4B29D5F35500419FDA /* ViewState.swift */,
 				17E019D42AF1937400AB4663 /* Theme.swift */,
-				D49B705629C4D3FE009494A5 /* Assets.xcassets */,
-				D49B705829C4D3FE009494A5 /* Preview Content */,
-				17BF54CE2B17AE7700178866 /* Localizable.xcstrings */,
 			);
 			path = Revolt;
 			sourceTree = "<group>";
@@ -399,14 +409,6 @@
 				17CCCF6A2ADA14CB00D78D7A /* Role.swift */,
 			);
 			path = Types;
-			sourceTree = "<group>";
-		};
-		DAF41CC029C5164A0004BFBE /* Fonts */ = {
-			isa = PBXGroup;
-			children = (
-				DAF41CC129C516600004BFBE /* Inter.ttf */,
-			);
-			path = Fonts;
 			sourceTree = "<group>";
 		};
 		DAFC10FE29CFC3B400D2C2F9 /* Frameworks */ = {
@@ -462,8 +464,7 @@
 			attributes = {
 				BuildIndependentTargetsInParallel = 1;
 				KnownAssetTags = (
-					Inter,
-					New,
+					Resources,
 				);
 				LastSwiftUpdateCheck = 1420;
 				LastUpgradeCheck = 1500;
@@ -508,10 +509,9 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				17F3EFB12B140E36002C34B5 /* Inter.ttf in Resources */,
 				D49B705A29C4D3FE009494A5 /* Preview Assets.xcassets in Resources */,
-				17BF54CF2B17AE7700178866 /* Localizable.xcstrings in Resources */,
 				D49B705729C4D3FE009494A5 /* Assets.xcassets in Resources */,
+				1713035A2B6166B700B66050 /* Localizable.xcstrings in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -579,11 +579,13 @@
 				DAAA4C0529F2560800F41E52 /* Channel.swift in Sources */,
 				175E01E02ADAB554004F6431 /* Avatar.swift in Sources */,
 				17DFB4662AE06AB900E1D417 /* MessageableChannel.swift in Sources */,
+				173190032B754D4700B6DA49 /* EmojiPickerContent.swift in Sources */,
 				17B7128D2B03E9D700CFF61C /* FriendsList.swift in Sources */,
 				17BF54D12B17B24200178866 /* LanguageSettings.swift in Sources */,
 				17E019CD2AF136B100AB4663 /* PresenceIndicator.swift in Sources */,
 				17CCCF702ADA17B600D78D7A /* Utils.swift in Sources */,
 				178E26BC2B1542820015CAC7 /* PageToolbar.swift in Sources */,
+				17BADE012B7019270021BB62 /* EmojiPicker.swift in Sources */,
 				171594C32B4B2A0D00D7C3C3 /* ServerOverviewSettings.swift in Sources */,
 				1718FB542AF8470400E9C511 /* ReportMessageSheetView.swift in Sources */,
 				DAAA4C0129F251FC00F41E52 /* Message.swift in Sources */,
@@ -740,7 +742,7 @@
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_ASSET_PATHS = "\"Revolt/Preview Content\"";
+				DEVELOPMENT_ASSET_PATHS = "Revolt/Resources/Preview\\ Content";
 				DEVELOPMENT_TEAM = T23HBWQ54Y;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
@@ -759,6 +761,7 @@
 				);
 				MARKETING_VERSION = 0.0.1;
 				NEW_SETTING = "";
+				ON_DEMAND_RESOURCES_INITIAL_INSTALL_TAGS = Resources;
 				PRODUCT_BUNDLE_IDENTIFIER = chat.revolt.app;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
@@ -780,7 +783,7 @@
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_ASSET_PATHS = "\"Revolt/Preview Content\"";
+				DEVELOPMENT_ASSET_PATHS = "Revolt/Resources/Preview\\ Content";
 				DEVELOPMENT_TEAM = T23HBWQ54Y;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
@@ -799,6 +802,7 @@
 				);
 				MARKETING_VERSION = 0.0.1;
 				NEW_SETTING = "";
+				ON_DEMAND_RESOURCES_INITIAL_INSTALL_TAGS = Resources;
 				PRODUCT_BUNDLE_IDENTIFIER = chat.revolt.app;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";

@@ -22,7 +22,7 @@ class ReplyViewModel: ObservableObject {
     func remove() {
         replies.remove(at: idx)
     }
-    
+
     internal init(idx: Int, replies: Binding<[Reply]>) {
         self.idx = idx
         _replies = replies
@@ -32,13 +32,13 @@ class ReplyViewModel: ObservableObject {
 struct ReplyView: View {
     @EnvironmentObject var viewState: ViewState
     @ObservedObject var viewModel: ReplyViewModel
-    
+
     var id: String
-    
+
     @ViewBuilder
     var body: some View {
         let reply = viewModel.replies[viewModel.idx]
-        
+
         let author = viewState.users[reply.message.author]!
 
         HStack {
@@ -71,37 +71,39 @@ struct MessageBox: View {
         case user
         case channel
     }
-    
+
     enum AutocompleteValues {
         case channels([Channel])
         case users([(User, Member?)])
     }
-    
-    @EnvironmentObject var viewState: ViewState
-    
-    @State var showingSelectFile = false
-    @State var showingSelectPhoto = false
-    @State var content = ""
-    
-    @State var selectedPhotoItems = [PhotosPickerItem]()
 
     struct Photo: Identifiable, Hashable {
         let data: Data
-        #if os(macOS)
+#if os(macOS)
         let image: NSImage?
-        #else
+#else
         let image: UIImage?
-        #endif
+#endif
         let id: UUID
         let filename: String
-        
     }
-    
-    @State var selectedPhotos: [Photo] = []
-    @State var autoCompleteType: AutocompleteType? = nil
-    @State var autocompleteSearchValue: String = ""
+
+    @EnvironmentObject var viewState: ViewState
 
     @Binding var channelReplies: [Reply]
+
+    @State var showingSelectFile = false
+    @State var showingSelectPhoto = false
+    @State var showingSelectEmoji = false
+
+    @State var content = ""
+
+    @State var selectedPhotos: [Photo] = []
+    @State var selectedPhotoItems: [PhotosPickerItem] = []
+    @State var selectedEmoji: String = ""
+
+    @State var autoCompleteType: AutocompleteType? = nil
+    @State var autocompleteSearchValue: String = ""
 
     let channel: Channel
     let server: Server?
@@ -111,52 +113,52 @@ struct MessageBox: View {
         self.server = server
         _channelReplies = channelReplies
     }
-    
+
     func sendMessage() {
         let c = content
         content = ""
         let f = selectedPhotos.map({ ($0.data, $0.filename) })
         selectedPhotos = []
-        
+
         Task {
             await viewState.queueMessage(channel: channel.id, replies: channelReplies, content: c, attachments: f)
         }
     }
-    
+
     func getAutocompleteValues(fromType type: AutocompleteType) -> AutocompleteValues {
         switch type {
             case .user:
                 let users: [(User, Member?)]
-                
+
                 switch channel {
                     case .saved_messages(_):
                         users = [(viewState.currentUser!, nil)]
-                        
+
                     case .dm_channel(let dMChannel):
                         users = dMChannel.recipients.map({ (viewState.users[$0]!, nil) })
-                        
+
                     case .group_dm_channel(let groupDMChannel):
                         users = groupDMChannel.recipients.map({ (viewState.users[$0]!, nil) })
-                        
+
                     case .text_channel(_), .voice_channel(_):
                         users = viewState.members[server!.id]!.values.map({ m in (viewState.users[m.id.user]!, m) })
                 }
-                
+
                 return AutocompleteValues.users(users)
             case .channel:
                 let channels: [Channel]
-                
+
                 switch channel {
                     case .saved_messages(_), .dm_channel(_), .group_dm_channel(_):
                         channels = [channel]
                     case .text_channel(_), .voice_channel(_):
                         channels = server!.channels.compactMap({ viewState.channels[$0] })
                 }
-                
+
                 return AutocompleteValues.channels(channels)
         }
     }
-    
+
     func getCurrentlyTyping() -> [(User, Member?)]? {
         viewState.currentlyTyping[channel.id]?.compactMap({ user_id in
             guard let user = viewState.users[user_id] else {
@@ -164,23 +166,23 @@ struct MessageBox: View {
             }
 
             var member: Member?
-            
+
             if let server = server {
                 member = viewState.members[server.id]![user_id]
             }
-            
+
             return (user, member)
         })
     }
-    
+
     func formatTypingIndicatorText(withUsers users: [(User, Member?)]) -> String {
         let base = ListFormatter.localizedString(byJoining: users.map({ (user, member) in member?.nickname ?? user.display_name ?? user.username }))
-        
+
         let ending = users.count == 1 ? "is typing" : "are typing"
 
         return "\(base) \(ending)"
     }
-    
+
     var body: some View {
         VStack(alignment: .leading, spacing: 4) {
             if let users = getCurrentlyTyping(), !users.isEmpty {
@@ -205,7 +207,7 @@ struct MessageBox: View {
                 HStack {
                     ForEach($selectedPhotos, id: \.self) { file in
                         let file = file.wrappedValue
-                        
+
                         ZStack(alignment: .topTrailing) {
                             if let image = file.image {
                                 #if os(iOS)
@@ -246,11 +248,11 @@ struct MessageBox: View {
                     }
                 }
             }
-            
+
             VStack(spacing: 8) {
                 if let type = autoCompleteType {
                     let values = getAutocompleteValues(fromType: type)
-                    
+
                     ScrollView(.horizontal) {
                         LazyHStack {
                             switch values {
@@ -293,11 +295,11 @@ struct MessageBox: View {
                     }
                     .frame(maxWidth: .infinity)
                 }
-                
+
                 HStack {
                     UploadButton(showingSelectFile: $showingSelectFile, showingSelectPhoto: $showingSelectPhoto, selectedPhotoItems: $selectedPhotoItems, selectedPhotos: $selectedPhotos)
 
-                    TextField("", text: $content)
+                    TextField("", text: $content.animation())
                         .placeholder(when: content.isEmpty) {
                             Text("Message \(channel.getName(viewState))")
                                 .foregroundStyle(viewState.theme.foreground2.color)
@@ -307,7 +309,7 @@ struct MessageBox: View {
                                 if let last = value.split(separator: " ").last {
                                     let pre = last.first
                                     autocompleteSearchValue = String(last[last.index(last.startIndex, offsetBy: 1)...])
-                                    
+
                                     switch pre {
                                         case "@":
                                             autoCompleteType = .user
@@ -321,7 +323,19 @@ struct MessageBox: View {
                                 }
                             }
                         }
-                    
+
+                    Button {
+                        withAnimation {
+                            showingSelectEmoji.toggle()
+                        }
+                    } label: {
+                        Image(systemName: "face.smiling")
+                            .resizable()
+                            .frame(width: 20, height: 20)
+                            .foregroundStyle(viewState.theme.foreground2.color)
+                    }
+
+
                     if !content.isEmpty || !selectedPhotos.isEmpty {
                         Button(action: sendMessage) {
                             Image(systemName: "arrow.up.circle.fill")
@@ -330,6 +344,20 @@ struct MessageBox: View {
                                 .foregroundStyle(viewState.theme.foreground2.color)
                         }
                     }
+                }
+
+                if showingSelectEmoji {
+                    EmojiPicker() { emoji in
+                        if let id = emoji.emojiId {
+                            content.append(":\(id):")
+                        } else {
+                            content.append(String(String.UnicodeScalarView(emoji.base.compactMap(Unicode.Scalar.init))))
+                        }
+
+                        showingSelectEmoji = false
+                    }
+                    .transition(MoveTransition(edge: .bottom).combined(with: OpacityTransition()))
+                    .frame(maxHeight: 300)
                 }
             }
             .padding(8)
@@ -347,38 +375,38 @@ struct MessageBox: View {
 
 struct UploadButton: View {
     @EnvironmentObject var viewState: ViewState
-    
+
     @Binding var showingSelectFile: Bool
     @Binding var showingSelectPhoto: Bool
     @Binding var selectedPhotoItems: [PhotosPickerItem]
     @Binding var selectedPhotos: [MessageBox.Photo]
-    
+
     func onFileCompletion(res: Result<URL, Error>) {
         if case .success(let url) = res {
             let data = try? Data(contentsOf: url)
             guard let data = data else { return }
-            
+
 #if os(macOS)
             let image = NSImage(data: data)
 #else
             let image = UIImage(data: data)
 #endif
-            
+
             selectedPhotos.append(.init(data: data, image: image, id: UUID(), filename: url.lastPathComponent))
         }
     }
-    
+
     var body: some View {
         Image(systemName: "plus.circle.fill")
             .resizable()
             .foregroundStyle(viewState.theme.foreground2.color)
             .frame(width: 20, height: 20)
-        
+
             .photosPicker(isPresented: $showingSelectPhoto, selection: $selectedPhotoItems)
             .photosPickerStyle(.presentation)
-        
+
             .fileImporter(isPresented: $showingSelectFile, allowedContentTypes: [.item], onCompletion: onFileCompletion)
-        
+
             .onTapGesture {
                 showingSelectPhoto = true
             }
@@ -404,7 +432,7 @@ struct UploadButton: View {
 #else
                             let img = UIImage(data: data)
 #endif
-                            
+
                             if let img = img {
                                 let fileType = item.supportedContentTypes[0].preferredFilenameExtension!
                                 let fileName = (item.itemIdentifier ?? "Image") + ".\(fileType)"
@@ -425,7 +453,7 @@ struct MessageBox_Previews: PreviewProvider {
     static var previews: some View {
         let channel = viewState.channels["0"]!
         let server = viewState.servers["0"]!
-        
+
         MessageBox(channel: channel, server: server, channelReplies: $replies)
             .applyPreviewModifiers(withState: viewState)
     }
