@@ -103,6 +103,7 @@
 		1718F3CF2B0BCAA50018E524 /* UnreadCounter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UnreadCounter.swift; sourceTree = "<group>"; };
 		1718FB532AF8470400E9C511 /* ReportMessageSheetView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReportMessageSheetView.swift; sourceTree = "<group>"; };
 		172754C82B399092002223FE /* Contents.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Contents.swift; sourceTree = "<group>"; };
+		173190022B754D4700B6DA49 /* EmojiPickerContent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmojiPickerContent.swift; sourceTree = "<group>"; };
 		1739DB952B08E53B00D23DAD /* MessageBadge.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageBadge.swift; sourceTree = "<group>"; };
 		17429D962B4C91170036105A /* ChannelSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChannelSettings.swift; sourceTree = "<group>"; };
 		17429D982B4C931D0036105A /* ChannelOverviewSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChannelOverviewSettings.swift; sourceTree = "<group>"; };

@@ -14,14 +14,33 @@ struct RevoltApp: App {
                 .foregroundStyle(state.theme.foreground.color)
                 .typesettingLanguage((state.currentLocale ?? systemLocale).language)
                 .onOpenURL { url in
-                    if let first = url.pathComponents[safe: 1] {
-                        switch first {
-                            case "app", "login":
-                                state.currentServer = .dms
-                                state.currentChannel = .home
-                            default:
-                                ()
-                        }
+                    print(url)
+                    let components = NSURLComponents(string: url.absoluteString)
+                    switch url.scheme {
+                        case "http", "https":
+                                switch url.pathComponents[safe: 1] {
+                                    case "app", "login":
+                                        state.currentServer = .dms
+                                        state.currentChannel = .home
+                                    default:
+                                        ()
+                                }
+                        case "revoltchat":
+                            var queryItems: [String: String] = [:]
+                            
+                            for item in components?.queryItems ?? [] {
+                                queryItems[item.name] = item.value?.removingPercentEncoding
+                            }
+                            switch url.host() {
+                                case "user":
+                                    if let id = queryItems["user"] {
+                                        state.openUserSheet(withId: id, server: queryItems["server"])
+                                    }
+                                default:
+                                    ()
+                            }
+                        default:
+                            ()
                     }
                 }
         }
@@ -83,6 +102,9 @@ struct InnerApp: View {
                             case .settings:
                                 Settings()
                         }
+                    }
+                    .sheet(item: $viewState.currentUserSheet) { (v) in
+                        UserSheet(user: v.user, member: v.member)
                     }
             }
         }

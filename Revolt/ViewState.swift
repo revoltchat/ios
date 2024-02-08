@@ -107,6 +107,13 @@ enum NavigationDestination: Hashable, Codable {
     case channel_settings(String)
 }
 
+struct UserMaybeMember: Identifiable {
+    var user: User
+    var member: Member?
+    
+    var id: String { user.id }
+}
+
 @MainActor
 public class ViewState: ObservableObject {
     var http: HTTPClient = HTTPClient(token: nil, baseURL: "https://api.revolt.chat")
@@ -134,6 +141,7 @@ public class ViewState: ObservableObject {
     @Published var currentlyTyping: [String: OrderedSet<String>] = [:]
     @Published var isOnboarding: Bool = false
     @Published var unreads: [String: Unread] = [:]
+    @Published var currentUserSheet: UserMaybeMember? = nil
 
     @Published var currentServer: MainSelection = .dms {
         didSet {
@@ -533,6 +541,16 @@ public class ViewState: ObservableObject {
         }
 
         return nil
+    }
+    
+    func openUserSheet(withId id: String, server: String?) {
+        if let user = users[id] {
+            let member = server
+                .flatMap { members[$0] }
+                .flatMap { $0[id] }
+            
+            currentUserSheet = UserMaybeMember(user: user, member: member)
+        }
     }
 }
 

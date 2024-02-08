@@ -25,8 +25,8 @@ enum Badges: Int, CaseIterable {
 
 struct UserSheetHeader: View {
     @EnvironmentObject var viewState: ViewState
-    @Binding var user: User
-    @Binding var member: Member?
+    var user: User
+    var member: Member?
     var profile: Profile
 
     var body: some View {
@@ -125,8 +125,9 @@ struct UserSheetHeader: View {
 
 struct UserSheet: View {
     @EnvironmentObject var viewState: ViewState
-    @Binding var user: User
-    @Binding var member: Member?
+    
+    var user: User
+    var member: Member?
     @State var profile: Profile?
 
     var body: some View {
@@ -136,7 +137,7 @@ struct UserSheet: View {
             Group {
                 VStack(alignment: .leading) {
                     if let profile = profile {
-                        UserSheetHeader(user: $user, member: $member, profile: profile)
+                        UserSheetHeader(user: user, member: member, profile: profile)
                         
                         Group {
                             if let member = member {
@@ -220,7 +221,7 @@ struct UserSheetPreview: PreviewProvider {
     static var previews: some View {
         Text("foo")
             .sheet(isPresented: .constant(true), content: {
-                UserSheet(user: Binding($viewState.users["0"])!, member: .constant(nil))
+                UserSheet(user: viewState.users["0"]!, member: nil)
             })
             .applyPreviewModifiers(withState: viewState)
     }
