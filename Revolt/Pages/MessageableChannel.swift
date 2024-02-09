@@ -232,6 +232,7 @@ struct MessageableChannelView: View {
                                 .listRowInsets(EdgeInsets(top: 0, leading: 12, bottom: 0, trailing: 12))
                                 .listRowBackground(viewState.theme.background.color)
                             }
+                            .safeAreaPadding(EdgeInsets(top: 0, leading: 0, bottom: 28, trailing: 0))
                             .scrollPosition(id: $scrollPosition)
                             .listStyle(.plain)
                             .listRowSeparator(.hidden)
