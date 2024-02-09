@@ -41,8 +41,7 @@ struct LazyImage<S: Shape>: View {
     var body: some View {
         KFAnimatedImage.init(source: _source)
             .placeholder { Color.clear }
-            .scaledToFit()
-            // .aspectRatio(contentMode: .fill)
+            .aspectRatio(contentMode: .fill)
             .frame(width: width, height: height)
             .clipped()
             .clipShape(clipTo)
