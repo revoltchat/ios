@@ -122,7 +122,7 @@ struct HomeRewritten: View {
                                             forceOpen = false
                                         }
                                         
-                                        offset = min(max(g.translation.width, 0), width)
+                                        offset = min(max(g.translation.width - 50, 0), width)
                                     }
                                 })
                                 .onEnded({ v in
