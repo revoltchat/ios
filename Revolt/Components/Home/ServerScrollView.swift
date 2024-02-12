@@ -29,6 +29,7 @@ struct ServerScrollView: View {
                                 if let unread = viewState.getUnreadCountFor(server: elem.value) {
                                     UnreadCounter(unread: unread, mentionSize: buttonSize / 2.5, unreadSize: buttonSize / 3)
                                         .background(viewState.theme.background)
+                                        .containerShape(Circle())
                                 }
                             }
                         }
