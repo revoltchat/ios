@@ -57,6 +57,7 @@ jobs:
         run: |
           xcodebuild -scheme Revolt \
           -skipPackagePluginValidation
+          -skipMacroValidation
           -archivePath $RUNNER_TEMP/Revolt.xcarchive \
           -sdk iphoneos \
           -configuration Debug \
