@@ -155,15 +155,14 @@ struct MessageableChannelView: View {
                                 }
                                 .reduce([]) { (messages: [[Binding<Message>]], $msg) in
                                     if let lastMessage = messages.last?.last?.wrappedValue {
-                                        if lastMessage.id != viewState.unreads[viewModel.channel.id]?.last_id,
-                                           lastMessage.author == msg.author {
+                                        if lastMessage.author == msg.author && (msg.replies?.count ?? 0) == 0 {
                                             return messages.prefix(upTo: messages.endIndex - 1) + [messages.last! + [$msg]]
-                                        } else {
-                                            return messages + [[$msg]]
                                         }
-                                    } else {
-                                        return [[$msg]]
+                                    
+                                        return messages + [[$msg]]
                                     }
+                                    
+                                    return [[$msg]]
                                 }
                                 .map { msgs in
                                     return msgs.map { msg -> MessageContentsViewModel in
@@ -181,7 +180,7 @@ struct MessageableChannelView: View {
                                         )
                                     }
                                 }
-                                
+
                                 ForEach(messages, id: \.last!.message.id) { group in
                                     let first = group.first!
                                     let rest = group.dropFirst()

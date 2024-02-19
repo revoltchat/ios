@@ -189,12 +189,12 @@ struct MessageBox: View {
                 HStack {
                     HStack(spacing: -12) {
                         ForEach(users, id: \.0.id) { (user, member) in
-                            Avatar(user: user, member: member, width: 24, height: 24)
+                            Avatar(user: user, member: member, width: 16, height: 16)
                         }
                     }
 
                     Text(formatTypingIndicatorText(withUsers: users))
-                        .font(.callout)
+                        .font(.footnote)
                         .foregroundStyle(viewState.theme.foreground2)
                 }
             }
@@ -203,53 +203,55 @@ struct MessageBox: View {
                 ReplyView(viewModel: model, id: reply.element.message.id)
                     .padding(.horizontal, 16)
             }
-            ScrollView(.horizontal) {
-                HStack {
-                    ForEach($selectedPhotos, id: \.self) { file in
-                        let file = file.wrappedValue
-
-                        ZStack(alignment: .topTrailing) {
-                            if let image = file.image {
-                                #if os(iOS)
-                                Image(uiImage: image)
-                                    .resizable()
-                                    .scaledToFit()
-                                    .frame( maxWidth: 100, maxHeight: 100 )
-                                    .clipShape(RoundedRectangle(cornerRadius: 5.0, style: .circular))
-                                #else
-                                Image(nsImage: image)
-                                    .resizable()
-                                    .scaledToFit()
-                                    .frame( maxWidth: 100, maxHeight: 100 )
-                                    .clipShape(RoundedRectangle(cornerRadius: 5.0, style: .circular))
-                                #endif
-                            } else {
-                                ZStack {
-                                    Rectangle()
-                                        .frame(width: 100, height: 100)
-                                        .foregroundStyle(viewState.theme.background.color)
-                                        .clipShape(RoundedRectangle(cornerRadius: 5.0, style: .circular))
-
-                                    Text(verbatim: file.filename)
-                                        .font(.caption)
-                                        .foregroundStyle(viewState.theme.foreground.color)
+            VStack(spacing: 8) {
+                if selectedPhotos.count > 0 {
+                    ScrollView(.horizontal) {
+                        HStack {
+                            ForEach($selectedPhotos, id: \.self) { file in
+                                let file = file.wrappedValue
+                                
+                                ZStack(alignment: .topTrailing) {
+                                    if let image = file.image {
+#if os(iOS)
+                                        Image(uiImage: image)
+                                            .resizable()
+                                            .scaledToFit()
+                                            .frame( maxWidth: 100, maxHeight: 100 )
+                                            .clipShape(RoundedRectangle(cornerRadius: 5.0, style: .circular))
+#else
+                                        Image(nsImage: image)
+                                            .resizable()
+                                            .scaledToFit()
+                                            .frame( maxWidth: 100, maxHeight: 100 )
+                                            .clipShape(RoundedRectangle(cornerRadius: 5.0, style: .circular))
+#endif
+                                    } else {
+                                        ZStack {
+                                            Rectangle()
+                                                .frame(width: 100, height: 100)
+                                                .foregroundStyle(viewState.theme.background.color)
+                                                .clipShape(RoundedRectangle(cornerRadius: 5.0, style: .circular))
+                                            
+                                            Text(verbatim: file.filename)
+                                                .font(.caption)
+                                                .foregroundStyle(viewState.theme.foreground.color)
+                                        }
+                                    }
+                                    Button(action: { selectedPhotos.removeAll(where: { $0.id == file.id }) }) {
+                                        Image(systemName: "xmark.app.fill")
+                                            .resizable()
+                                            .foregroundStyle(.gray)
+                                            .symbolRenderingMode(.hierarchical)
+                                            .opacity(0.9)
+                                            .frame(width: 16, height: 16)
+                                            .frame(width: 24, height: 24)
+                                    }
                                 }
-                            }
-                            Button(action: { selectedPhotos.removeAll(where: { $0.id == file.id }) }) {
-                                Image(systemName: "xmark.app.fill")
-                                    .resizable()
-                                    .foregroundStyle(.gray)
-                                    .symbolRenderingMode(.hierarchical)
-                                    .opacity(0.9)
-                                    .frame(width: 16, height: 16)
-                                    .frame(width: 24, height: 24)
                             }
                         }
                     }
                 }
-            }
 
-            VStack(spacing: 8) {
                 if let type = autoCompleteType {
                     let values = getAutocompleteValues(fromType: type)
 

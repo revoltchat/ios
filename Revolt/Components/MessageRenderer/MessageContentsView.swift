@@ -62,7 +62,7 @@ struct MessageContentsView: View {
     }
     
     private var isModeratorInChannel: Bool {
-        return false // TODO: need bit op stuff
+        return true // TODO: need bit op stuff
     }
     
     private var isMessageAuthor: Bool {

@@ -17,11 +17,11 @@
 		1739DB962B08E53B00D23DAD /* MessageBadge.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1739DB952B08E53B00D23DAD /* MessageBadge.swift */; };
 		17429D972B4C91170036105A /* ChannelSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17429D962B4C91170036105A /* ChannelSettings.swift */; };
 		17429D992B4C931D0036105A /* ChannelOverviewSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17429D982B4C931D0036105A /* ChannelOverviewSettings.swift */; };
+		1746CF5A2B83C6750051FD47 /* CodableWrapper in Frameworks */ = {isa = PBXBuildFile; productRef = 1746CF592B83C6750051FD47 /* CodableWrapper */; };
 		1748B2072B1FB88B00AA2D47 /* MessageReactions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1748B2062B1FB88B00AA2D47 /* MessageReactions.swift */; };
 		1750EF6E2B0585B300DD3EB3 /* ResendEmail.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1750EF6D2B0585B300DD3EB3 /* ResendEmail.swift */; };
 		175997192B2FB90700C39CF6 /* Flow in Frameworks */ = {isa = PBXBuildFile; productRef = 175997182B2FB90700C39CF6 /* Flow */; };
 		1759971B2B2FB90700C39CF6 /* Renderer in Frameworks */ = {isa = PBXBuildFile; productRef = 1759971A2B2FB90700C39CF6 /* Renderer */; };
-		1759971D2B2FB98200C39CF6 /* Shiny in Frameworks */ = {isa = PBXBuildFile; productRef = 1759971C2B2FB98200C39CF6 /* Shiny */; };
 		1759C39A2B291A75006E6BBE /* MessageContentsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1759C3992B291A75006E6BBE /* MessageContentsView.swift */; };
 		1759C39C2B291E2F006E6BBE /* SystemMessageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1759C39B2B291E2F006E6BBE /* SystemMessageView.swift */; };
 		175E01DE2ADAB3F6004F6431 /* LazyImage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 175E01DD2ADAB3F6004F6431 /* LazyImage.swift */; };
@@ -40,7 +40,6 @@
 		178E26BC2B1542820015CAC7 /* PageToolbar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 178E26BB2B1542820015CAC7 /* PageToolbar.swift */; };
 		17966B652AE0842A00BAEC58 /* ChannelIcon.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17966B642AE0842A00BAEC58 /* ChannelIcon.swift */; };
 		17966B672AE08C3000BAEC58 /* DMList.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17966B662AE08C3000BAEC58 /* DMList.swift */; };
-		17B51A682AFAFA8E0018C967 /* CodableWrapper in Frameworks */ = {isa = PBXBuildFile; productRef = 17B51A672AFAFA8E0018C967 /* CodableWrapper */; };
 		17B7128D2B03E9D700CFF61C /* FriendsList.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17B7128C2B03E9D700CFF61C /* FriendsList.swift */; };
 		17BADE012B7019270021BB62 /* EmojiPicker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17BADE002B7019270021BB62 /* EmojiPicker.swift */; };
 		17BC3EFA2AD826970029D820 /* File.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17BC3EF92AD826970029D820 /* File.swift */; };
@@ -75,6 +74,7 @@
 		17E019DC2AF1B25100AB4663 /* SessionsSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17E019DB2AF1B25100AB4663 /* SessionsSettings.swift */; };
 		17E28E082AF319D500F6069F /* JoinServer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17E28E072AF319D500F6069F /* JoinServer.swift */; };
 		17F555272AFC229900958F2F /* ServerSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17F555262AFC229900958F2F /* ServerSettings.swift */; };
+		36D461CF77D84B97B94929A9 /* Sentry in Frameworks */ = {isa = PBXBuildFile; productRef = 03268FCCFC7D4D1F8B6E9F6F /* Sentry */; };
 		D49B705329C4D3FE009494A5 /* RevoltApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = D49B705229C4D3FE009494A5 /* RevoltApp.swift */; };
 		D49B705729C4D3FE009494A5 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = D49B705629C4D3FE009494A5 /* Assets.xcassets */; };
 		D49B705A29C4D3FE009494A5 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = D49B705929C4D3FE009494A5 /* Preview Assets.xcassets */; };
@@ -183,9 +183,9 @@
 			files = (
 				DAAA4BF429F2274A00F41E52 /* Collections in Frameworks */,
 				175997192B2FB90700C39CF6 /* Flow in Frameworks */,
+				1746CF5A2B83C6750051FD47 /* CodableWrapper in Frameworks */,
 				17D9C2BD2ADCA48D00426857 /* Kingfisher in Frameworks */,
 				1759971B2B2FB90700C39CF6 /* Renderer in Frameworks */,
-				17B51A682AFAFA8E0018C967 /* CodableWrapper in Frameworks */,
 				172754CC2B39989E002223FE /* SwiftParsec in Frameworks */,
 				178BB10C2B02D84C001143A4 /* HCaptcha in Frameworks */,
 				DA99EC5329D6148200419FDA /* Alamofire in Frameworks */,
@@ -193,8 +193,8 @@
 				17CCCF6E2ADA173B00D78D7A /* ULID in Frameworks */,
 				DAAA4BF829F2274A00F41E52 /* OrderedCollections in Frameworks */,
 				DAF84FFD2A0EFE1B00B01682 /* Starscream in Frameworks */,
-				1759971D2B2FB98200C39CF6 /* Shiny in Frameworks */,
 				DAAA4BF629F2274A00F41E52 /* DequeModule in Frameworks */,
+				36D461CF77D84B97B94929A9 /* Sentry in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -445,13 +445,13 @@
 				DAF84FFC2A0EFE1B00B01682 /* Starscream */,
 				17CCCF6D2ADA173B00D78D7A /* ULID */,
 				17D9C2BC2ADCA48D00426857 /* Kingfisher */,
-				17B51A672AFAFA8E0018C967 /* CodableWrapper */,
 				178BB10B2B02D84C001143A4 /* HCaptcha */,
 				178BB10D2B02D84C001143A4 /* HCaptcha_RxSwift */,
 				175997182B2FB90700C39CF6 /* Flow */,
 				1759971A2B2FB90700C39CF6 /* Renderer */,
-				1759971C2B2FB98200C39CF6 /* Shiny */,
 				172754CB2B39989E002223FE /* SwiftParsec */,
+				03268FCCFC7D4D1F8B6E9F6F /* Sentry */,
+				1746CF592B83C6750051FD47 /* CodableWrapper */,
 			);
 			productName = Revolt;
 			productReference = D49B704F29C4D3FE009494A5 /* Revolt.app */;
@@ -490,11 +490,11 @@
 				DAF84FFB2A0EFE1B00B01682 /* XCRemoteSwiftPackageReference "Starscream" */,
 				17CCCF6C2ADA173B00D78D7A /* XCRemoteSwiftPackageReference "ULID" */,
 				17D9C2BB2ADCA48D00426857 /* XCRemoteSwiftPackageReference "Kingfisher" */,
-				17B51A662AFAFA8E0018C967 /* XCRemoteSwiftPackageReference "CodableWrapper" */,
 				178BB10A2B02D84C001143A4 /* XCRemoteSwiftPackageReference "HCaptcha-ios-sdk" */,
-				175997162B2FB8B900C39CF6 /* XCRemoteSwiftPackageReference "shiny" */,
 				175997172B2FB90600C39CF6 /* XCRemoteSwiftPackageReference "SwiftUI-Flow" */,
 				172754CA2B39989E002223FE /* XCRemoteSwiftPackageReference "SwiftParsec" */,
+				6DCF7E838FEB4C359405B802 /* XCRemoteSwiftPackageReference "sentry-cocoa" */,
+				1746CF582B83C6750051FD47 /* XCRemoteSwiftPackageReference "CodableWrapper" */,
 			);
 			productRefGroup = D49B705029C4D3FE009494A5 /* Products */;
 			projectDirPath = "";
@@ -862,12 +862,12 @@
 				minimumVersion = 4.0.1;
 			};
 		};
-		175997162B2FB8B900C39CF6 /* XCRemoteSwiftPackageReference "shiny" */ = {
+		1746CF582B83C6750051FD47 /* XCRemoteSwiftPackageReference "CodableWrapper" */ = {
 			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/maustinstar/shiny.git";
+			repositoryURL = "https://github.com/winddpan/CodableWrapper";
 			requirement = {
-				branch = master;
-				kind = branch;
+				kind = upToNextMajorVersion;
+				minimumVersion = 1.0.3;
 			};
 		};
 		175997172B2FB90600C39CF6 /* XCRemoteSwiftPackageReference "SwiftUI-Flow" */ = {
@@ -886,14 +886,6 @@
 				minimumVersion = 2.5.1;
 			};
 		};
-		17B51A662AFAFA8E0018C967 /* XCRemoteSwiftPackageReference "CodableWrapper" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/winddpan/CodableWrapper";
-			requirement = {
-				kind = upToNextMajorVersion;
-				minimumVersion = 1.0.1;
-			};
-		};
 		17CCCF6C2ADA173B00D78D7A /* XCRemoteSwiftPackageReference "ULID" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/yaslab/ULID.swift";
@@ -908,6 +900,14 @@
 			requirement = {
 				kind = upToNextMajorVersion;
 				minimumVersion = 7.9.1;
+			};
+		};
+		6DCF7E838FEB4C359405B802 /* XCRemoteSwiftPackageReference "sentry-cocoa" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/getsentry/sentry-cocoa/";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 8.0.0;
 			};
 		};
 		DA99EC5129D6148200419FDA /* XCRemoteSwiftPackageReference "Alamofire" */ = {
@@ -937,10 +937,20 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
+		03268FCCFC7D4D1F8B6E9F6F /* Sentry */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 6DCF7E838FEB4C359405B802 /* XCRemoteSwiftPackageReference "sentry-cocoa" */;
+			productName = Sentry;
+		};
 		172754CB2B39989E002223FE /* SwiftParsec */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = 172754CA2B39989E002223FE /* XCRemoteSwiftPackageReference "SwiftParsec" */;
 			productName = SwiftParsec;
+		};
+		1746CF592B83C6750051FD47 /* CodableWrapper */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 1746CF582B83C6750051FD47 /* XCRemoteSwiftPackageReference "CodableWrapper" */;
+			productName = CodableWrapper;
 		};
 		175997182B2FB90700C39CF6 /* Flow */ = {
 			isa = XCSwiftPackageProductDependency;
@@ -952,11 +962,6 @@
 			package = 175997172B2FB90600C39CF6 /* XCRemoteSwiftPackageReference "SwiftUI-Flow" */;
 			productName = Renderer;
 		};
-		1759971C2B2FB98200C39CF6 /* Shiny */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 175997162B2FB8B900C39CF6 /* XCRemoteSwiftPackageReference "shiny" */;
-			productName = Shiny;
-		};
 		178BB10B2B02D84C001143A4 /* HCaptcha */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = 178BB10A2B02D84C001143A4 /* XCRemoteSwiftPackageReference "HCaptcha-ios-sdk" */;
@@ -966,11 +971,6 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 178BB10A2B02D84C001143A4 /* XCRemoteSwiftPackageReference "HCaptcha-ios-sdk" */;
 			productName = HCaptcha_RxSwift;
-		};
-		17B51A672AFAFA8E0018C967 /* CodableWrapper */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 17B51A662AFAFA8E0018C967 /* XCRemoteSwiftPackageReference "CodableWrapper" */;
-			productName = CodableWrapper;
 		};
 		17CCCF6D2ADA173B00D78D7A /* ULID */ = {
 			isa = XCSwiftPackageProductDependency;

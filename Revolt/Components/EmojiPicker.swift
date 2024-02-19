@@ -170,13 +170,17 @@ struct EmojiPicker: View {
                                     if let id = emoji.emojiId {
                                         LazyImage(source: .emoji(id), height: 24, width: 24, clipTo: Rectangle())
                                     } else {
+//                                        let base = emoji.base.map { String(format: "%02x", $0) }.joined(separator: "")
+//                                        let url = "https://raw.githubusercontent.com/jdecked/twemoji/master/assets/72x72/\(base).png"
+//                                        
+//                                        LazyImage(source: .url(URL(string: url)!), height: 24, width: 24, clipTo: Rectangle())
                                         
                                         let emojiString = String(String.UnicodeScalarView(emoji.base.compactMap(Unicode.Scalar.init)))
-                                        
                                         let image = convertEmojiToImage(text: emojiString)
 
                                         Image(uiImage: image)
                                             .resizable()
+                                            .aspectRatio(contentMode: .fit)
                                             .frame(width: 24, height: 24)
                                     }
                                 }

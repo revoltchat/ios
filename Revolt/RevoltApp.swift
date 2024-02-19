@@ -1,9 +1,20 @@
 import SwiftUI
+import Sentry
+
 
 @main
 struct RevoltApp: App {
     @Environment(\.locale) var systemLocale: Locale
     @StateObject var state = ViewState()
+    
+    init() {
+        SentrySDK.start { options in
+            options.dsn = "https://4049414032e74d9098a44e67779aa648@sentry.revolt.chat/7"
+            options.tracesSampleRate = 0.5
+            options.enableTracing = true
+            options.attachViewHierarchy = true
+        }
+    }
     
     var body: some Scene {
         WindowGroup {
@@ -159,6 +170,36 @@ extension Bundle {
     }
     var buildVersionNumber: String? {
         return infoDictionary?["CFBundleVersion"] as? String
+    }
+}
+
+extension IteratorProtocol {
+    mutating func next(n: Int) -> [Self.Element] {
+        var values: [Self.Element] = []
+        
+        for _ in 0...n {
+            if let v = self.next() {
+                values.append(v)
+            }
+        }
+        
+        return values
+    }
+    
+    mutating func groups(n: Int) -> [[Self.Element]] {
+        var values: [[Self.Element]] = []
+        
+        while true {
+            let group = self.next(n: n)
+            
+            if group.count > 0 {
+                values.append(group)
+            }
+            
+            if group.count != n {
+                return values
+            }
+        }
     }
 }
 

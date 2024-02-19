@@ -14,8 +14,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/winddpan/CodableWrapper",
       "state" : {
-        "revision" : "480916e2a6c56b8195324a4615ffd269aa539bb9",
-        "version" : "1.0.2"
+        "revision" : "80707b3e69831ad07289e98d62ebf09bff8e9896",
+        "version" : "1.0.3"
       }
     },
     {
@@ -46,12 +46,12 @@
       }
     },
     {
-      "identity" : "shiny",
+      "identity" : "sentry-cocoa",
       "kind" : "remoteSourceControl",
-      "location" : "https://github.com/maustinstar/shiny.git",
+      "location" : "https://github.com/getsentry/sentry-cocoa/",
       "state" : {
-        "branch" : "master",
-        "revision" : "862360b8ab6b9ea9eb1156569a30f154b22625a5"
+        "revision" : "b847a202a517a90763e8fd0656d8028aeee7b78d",
+        "version" : "8.20.0"
       }
     },
     {
@@ -86,8 +86,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/apple/swift-syntax",
       "state" : {
-        "revision" : "6ad4ea24b01559dde0773e3d091f1b9e36175036",
-        "version" : "509.0.2"
+        "revision" : "64889f0c732f210a935a0ad7cda38f77f876262d",
+        "version" : "509.1.1"
       }
     },
     {
