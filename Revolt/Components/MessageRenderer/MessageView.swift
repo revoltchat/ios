@@ -7,7 +7,6 @@
 
 import Foundation
 import SwiftUI
-import Shiny
 
 struct MessageView: View {
     @StateObject var viewModel: MessageContentsViewModel
@@ -49,7 +48,7 @@ struct MessageView: View {
                     VStack(alignment: .leading, spacing: 0) {
                         HStack {
                             let name = viewModel.message.masquerade?.name ?? viewModel.member?.nickname ?? viewModel.author.display_name ?? viewModel.author.username
-                            let _ = print(name)
+
                             Text(verbatim: name)
                                 .onTapGesture {
                                     if !isStatic {
