@@ -8,7 +8,7 @@
 import Foundation
 import SwiftUI
 
-class MessageContentsViewModel: ObservableObject {
+class MessageContentsViewModel: ObservableObject, Equatable {
     var viewState: ViewState
 
     @Binding var message: Message
@@ -28,6 +28,10 @@ class MessageContentsViewModel: ObservableObject {
         self._channel = channel
         self._channelReplies = replies
         self._channelScrollPosition = channelScrollPosition
+    }
+    
+    static func == (lhs: MessageContentsViewModel, rhs: MessageContentsViewModel) -> Bool {
+        lhs.message.id == rhs.message.id
     }
     
     func delete() async {

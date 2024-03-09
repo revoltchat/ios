@@ -16,6 +16,11 @@ var isPreview: Bool {
 #endif
 }
 
+struct VisibleKey: PreferenceKey {
+    static var defaultValue: Bool = false
+    static func reduce(value: inout Bool, nextValue: () -> Bool) { }
+}
+
 @MainActor
 class MessageableChannelViewModel: ObservableObject {
     @ObservedObject var viewState: ViewState
@@ -89,6 +94,7 @@ struct MessageableChannelView: View {
     @State var foundAllMessages = false
     @State var over18: Bool = false
     @State var scrollPosition: String? = nil
+    @State var atBottom: Bool = false
     
     @Binding var showSidebar: Bool
 
@@ -126,136 +132,155 @@ struct MessageableChannelView: View {
             
             ZStack {
                 VStack(spacing: 0) {
-                    ScrollViewReader { proxy in
-                        ZStack(alignment: .top) {
-                            List {
-                                if foundAllMessages {
-                                    VStack(alignment: .leading) {
-                                        Text("#\(viewModel.channel.getName(viewState))")
-                                            .font(.title)
-                                        Text("This is the start of your conversation.")
-                                    }
-                                    .listRowBackground(viewState.theme.background.color)
-                                } else {
-                                    Text("Loading more messages...")
-                                        .onAppear {
-                                            Task {
-                                                if let new = await viewModel.loadMoreMessages(before: viewModel.messages.first) {
-                                                    foundAllMessages = new.messages.count < 50
-                                                }
-                                            }
+                    GeometryReader { geoProxy in
+                        ScrollViewReader { proxy in
+                            ZStack(alignment: .top) {
+                                List {
+                                    if foundAllMessages {
+                                        VStack(alignment: .leading) {
+                                            Text("#\(viewModel.channel.getName(viewState))")
+                                                .font(.title)
+                                            Text("This is the start of your conversation.")
                                         }
                                         .listRowBackground(viewState.theme.background.color)
-                                }
-                                
-                                let messages = $viewModel.messages.map { $messageId -> Binding<Message> in
-                                    let message = Binding($viewState.messages[messageId])!
-                                    
-                                    return message
-                                }
-                                .reduce([]) { (messages: [[Binding<Message>]], $msg) in
-                                    if let lastMessage = messages.last?.last?.wrappedValue {
-                                        if lastMessage.author == msg.author && (msg.replies?.count ?? 0) == 0 {
-                                            return messages.prefix(upTo: messages.endIndex - 1) + [messages.last! + [$msg]]
-                                        }
-                                    
-                                        return messages + [[$msg]]
+                                    } else {
+                                        Text("Loading more messages...")
+                                            .onAppear {
+                                                Task {
+                                                    if let new = await viewModel.loadMoreMessages(before: viewModel.messages.first) {
+                                                        foundAllMessages = new.messages.count < 50
+                                                    }
+                                                }
+                                            }
+                                            .listRowBackground(viewState.theme.background.color)
                                     }
                                     
-                                    return [[$msg]]
-                                }
-                                .map { msgs in
-                                    return msgs.map { msg -> MessageContentsViewModel in
-                                        let author = Binding($viewState.users[msg.author.wrappedValue])!
-
-                                        return MessageContentsViewModel(
-                                            viewState: viewState,
-                                            message: msg,
-                                            author: author,
-                                            member: viewModel.getMember(message: msg.wrappedValue),
-                                            server: $viewModel.server,
-                                            channel: $viewModel.channel,
-                                            replies: $viewModel.replies,
-                                            channelScrollPosition: $scrollPosition
+                                    let messages = $viewModel.messages.map { $messageId -> Binding<Message> in
+                                        let message = Binding($viewState.messages[messageId])!
+                                        
+                                        return message
+                                    }
+                                        .reduce([]) { (messages: [[Binding<Message>]], $msg) in
+                                            if let lastMessage = messages.last?.last?.wrappedValue {
+                                                if lastMessage.author == msg.author && (msg.replies?.count ?? 0) == 0 {
+                                                    return messages.prefix(upTo: messages.endIndex - 1) + [messages.last! + [$msg]]
+                                                }
+                                                
+                                                return messages + [[$msg]]
+                                            }
+                                            
+                                            return [[$msg]]
+                                        }
+                                        .map { msgs in
+                                            return msgs.map { msg -> MessageContentsViewModel in
+                                                let author = Binding($viewState.users[msg.author.wrappedValue])!
+                                                
+                                                return MessageContentsViewModel(
+                                                    viewState: viewState,
+                                                    message: msg,
+                                                    author: author,
+                                                    member: viewModel.getMember(message: msg.wrappedValue),
+                                                    server: $viewModel.server,
+                                                    channel: $viewModel.channel,
+                                                    replies: $viewModel.replies,
+                                                    channelScrollPosition: $scrollPosition
+                                                )
+                                            }
+                                        }
+                                    
+                                    ForEach(messages, id: \.last!.message.id) { group in
+                                        let first = group.first!
+                                        let rest = group.dropFirst()
+                                        
+                                        MessageView(
+                                            viewModel: first,
+                                            isStatic: false
                                         )
-                                    }
-                                }
-
-                                ForEach(messages, id: \.last!.message.id) { group in
-                                    let first = group.first!
-                                    let rest = group.dropFirst()
-                                    
-                                    MessageView(
-                                        viewModel: first,
-                                        isStatic: false
-                                    )
-                                    .padding(.top, 8)
-                                    
-                                    ForEach(rest, id: \.message.id) { message in
-                                        MessageContentsView(viewModel: message, isStatic: false)
-                                    }
-                                    .padding(.leading, 40)
-                                    .listRowSeparator(.hidden)
-                                    .listRowInsets(EdgeInsets(top: 0, leading: 12, bottom: 0, trailing: 12))
-                                    
-//                                    .if(lastMessage.id == viewModel.messages.last, content: {
-//                                        $0.onAppear {
-//                                            let message = group.last!.message
-//                                            if var unread = viewState.unreads[viewModel.channel.id] {
-//                                                unread.last_id = lastMessage.id
-//                                                viewState.unreads[viewModel.channel.id] = unread
-//                                            } else {
-//                                                viewState.unreads[viewModel.channel.id] = Unread(id: Unread.Id(channel: viewModel.channel.id, user: viewState.currentUser!.id), last_id: lastMessage.id)
-//                                            }
-//                                            
-//                                            Task {
-//                                                await viewState.http.ackMessage(channel: viewModel.channel.id, message: message.id)
-//                                            }
-//                                        }
-//                                    })
-//                                    
-//                                    if lastMessage.id == viewState.unreads[viewModel.channel.id]?.last_id, lastMessage.id != viewModel.messages.last {
-//                                        HStack(spacing: 0) {
-//                                            Text("NEW")
-//                                                .font(.caption)
-//                                                .fontWeight(.bold)
-//                                                .padding(.horizontal, 8)
-//                                                .background(RoundedRectangle(cornerRadius: 100).fill(viewState.theme.accent.color))
-//                                            
-//                                            Rectangle()
-//                                                .frame(height: 1)
-//                                                .foregroundStyle(viewState.theme.accent.color)
-//                                        }
-//                                    }
-                                }
-                                .listRowInsets(EdgeInsets(top: 0, leading: 12, bottom: 0, trailing: 12))
-                                .listRowBackground(viewState.theme.background.color)
-                            }
-                            .safeAreaPadding(EdgeInsets(top: 0, leading: 0, bottom: 28, trailing: 0))
-                            .scrollPosition(id: $scrollPosition)
-                            .listStyle(.plain)
-                            .listRowSeparator(.hidden)
-                            .environment(\.defaultMinListRowHeight, 0)
-                            .background(viewState.theme.background.color)
-                            
-                            if let last_id = viewState.unreads[viewModel.channel.id]?.last_id, let last_message_id = viewModel.channel.last_message_id {
-                                if last_id < last_message_id {
-                                    
-                                    Text("New messages since \(formatRelative(id: last_id))")
-                                        .padding(4)
-                                        .frame(maxWidth: .infinity)
-                                        .background(viewState.theme.accent.color)
-                                        .clipShape(UnevenRoundedRectangle(bottomLeadingRadius: 5, bottomTrailingRadius: 5))
-                                        .onTapGesture {
-                                            proxy.scrollTo(last_id)
+                                        .padding(.top, 8)
+                                        
+                                        ForEach(rest, id: \.message.id) { message in
+                                            MessageContentsView(viewModel: message, isStatic: false)
                                         }
+                                        .padding(.leading, 40)
+                                        .listRowSeparator(.hidden)
+                                        .listRowInsets(EdgeInsets(top: 0, leading: 12, bottom: 0, trailing: 12))
+                                        
+                                        //                                    .if(lastMessage.id == viewModel.messages.last, content: {
+                                        //                                        $0.onAppear {
+                                        //                                            let message = group.last!.message
+                                        //                                            if var unread = viewState.unreads[viewModel.channel.id] {
+                                        //                                                unread.last_id = lastMessage.id
+                                        //                                                viewState.unreads[viewModel.channel.id] = unread
+                                        //                                            } else {
+                                        //                                                viewState.unreads[viewModel.channel.id] = Unread(id: Unread.Id(channel: viewModel.channel.id, user: viewState.currentUser!.id), last_id: lastMessage.id)
+                                        //                                            }
+                                        //
+                                        //                                            Task {
+                                        //                                                await viewState.http.ackMessage(channel: viewModel.channel.id, message: message.id)
+                                        //                                            }
+                                        //                                        }
+                                        //                                    })
+                                        //
+                                        //                                    if lastMessage.id == viewState.unreads[viewModel.channel.id]?.last_id, lastMessage.id != viewModel.messages.last {
+                                        //                                        HStack(spacing: 0) {
+                                        //                                            Text("NEW")
+                                        //                                                .font(.caption)
+                                        //                                                .fontWeight(.bold)
+                                        //                                                .padding(.horizontal, 8)
+                                        //                                                .background(RoundedRectangle(cornerRadius: 100).fill(viewState.theme.accent.color))
+                                        //
+                                        //                                            Rectangle()
+                                        //                                                .frame(height: 1)
+                                        //                                                .foregroundStyle(viewState.theme.accent.color)
+                                        //                                        }
+                                        //                                    }
+                                    }
+                                    .listRowInsets(EdgeInsets(top: 0, leading: 12, bottom: 0, trailing: 12))
+                                    .listRowBackground(viewState.theme.background.color)
+                                    
+                                    Color.clear
+                                        .listRowInsets(EdgeInsets(top: 0, leading: 0, bottom: 0, trailing: 0))
+                                        .listRowBackground(Color.clear)
+                                        .frame(height: 0)
+                                        .id("bottom")
+                                        .preference(
+                                            key: VisibleKey.self,
+                                            value: UIScreen.main.bounds.intersects(geoProxy.frame(in: .global))
+                                        )
+                                        .onPreferenceChange(VisibleKey.self) { isVisible in
+                                            atBottom = isVisible
+                                        }
+                                        .onChange(of: messages) { (_, _) in
+                                            scrollPosition = "bottom"
+                                        }
+                                    
+                                }
+                                .safeAreaPadding(EdgeInsets(top: 0, leading: 0, bottom: 20, trailing: 0))
+                                .scrollPosition(id: $scrollPosition, anchor: .bottom)
+                                .listStyle(.plain)
+                                .listRowSeparator(.hidden)
+                                .environment(\.defaultMinListRowHeight, 0)
+                                .background(viewState.theme.background.color)
+                                
+                                if let last_id = viewState.unreads[viewModel.channel.id]?.last_id, let last_message_id = viewModel.channel.last_message_id {
+                                    if last_id < last_message_id {
+                                        
+                                        Text("New messages since \(formatRelative(id: last_id))")
+                                            .padding(4)
+                                            .frame(maxWidth: .infinity)
+                                            .background(viewState.theme.accent.color)
+                                            .clipShape(UnevenRoundedRectangle(bottomLeadingRadius: 5, bottomTrailingRadius: 5))
+                                            .onTapGesture {
+                                                proxy.scrollTo(last_id)
+                                            }
+                                    }
                                 }
                             }
+                            
                         }
-                        
                     }
-                    MessageBox(channel: viewModel.channel, server: viewModel.server, channelReplies: $viewModel.replies)
                     
+                    MessageBox(channel: viewModel.channel, server: viewModel.server, channelReplies: $viewModel.replies)
                 }
                     
                 if viewModel.channel.nsfw {
