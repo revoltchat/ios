@@ -166,21 +166,19 @@ class WebSocketStream {
                 currentState = .Disconnected
 
             case .text(let string):
-                let e: WsMessage
 
                 do {
-                    e = try decoder.decode(WsMessage.self, from: string.data(using: .utf8)!)
+                    let e = try decoder.decode(WsMessage.self, from: string.data(using: .utf8)!)
+
+                    Task {
+                        await onEvent(e)
+                    }
                 } catch {
                     print(error)
-                    return
                 }
-                
-                Task {
-                    await onEvent(e)
-                }
-    
+
             case .error(let error):
-                print("error \(error)")
+                print("error \(String(describing: error))")
             default:
                 break
         }
