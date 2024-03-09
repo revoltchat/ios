@@ -273,7 +273,7 @@ struct Contents: View {
     var text: String
     
     func buildContent() -> AttributedString {
-        let font = UIFont.preferredFont(forTextStyle: .body)
+        let font = UIFont.systemFont(ofSize: 15.0, weight: .regular)
                 
         let parts = parseMentions(text: text)
         var str = AttributedString()
