@@ -105,6 +105,8 @@ enum NavigationDestination: Hashable, Codable {
     case server_settings(String)
     case channel_info(String)
     case channel_settings(String)
+    case add_friend
+    case create_group([String])
 }
 
 struct UserMaybeMember: Identifiable {
@@ -219,7 +221,7 @@ public class ViewState: ObservableObject {
     class func preview() -> ViewState {
         let this = ViewState()
         this.state = .connected
-        this.currentUser = User(id: "0", username: "Zomatree", discriminator: "0000", badges: Int.max, status: Status(text: "hello world", presence: "Busy"), profile: Profile(content: "hello world"))
+        this.currentUser = User(id: "0", username: "Zomatree", discriminator: "0000", badges: Int.max, status: Status(text: "hello world", presence: "Busy"), relationship: .User, profile: Profile(content: "hello world"))
         this.users["0"] = this.currentUser!
         this.servers["0"] = Server(id: "0", owner: "0", name: "Testing Server", channels: ["0"], default_permissions: Permissions.all, categories: [Category(id: "0", title: "Channels", channels: ["0", "1"])])
         this.channels["0"] = .text_channel(TextChannel(id: "0", server: "0", name: "General"))
@@ -235,7 +237,7 @@ public class ViewState: ObservableObject {
         this.dms.append(this.channels["2"]!)
 
         for i in (1...9) {
-            this.users["\(i)"] = User(id: "i", username: "\(i)", discriminator: "\(i)\(i)\(i)\(i)")
+            this.users["\(i)"] = User(id: "\(i)", username: "\(i)", discriminator: "\(i)\(i)\(i)\(i)", relationship: .Friend)
         }
 
         this.currentlyTyping["0"] = ["0", "1", "2", "3", "4"]

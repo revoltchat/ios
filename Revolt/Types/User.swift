@@ -7,15 +7,15 @@
 
 import Foundation
 
-struct UserBot: Decodable, Equatable {
+struct UserBot: Decodable, Equatable, Hashable {
     var owner: String
 }
 
-enum Presence: Codable, Equatable {
+enum Presence: Codable, Equatable, Hashable {
     case Busy, Idle, Invisible, Online, Focus
 }
 
-enum Relation: String, Codable, Equatable {
+enum Relation: String, Codable, Equatable, Hashable {
     case Blocked
     case BlockedOther
     case Friend
@@ -25,16 +25,16 @@ enum Relation: String, Codable, Equatable {
     case User
 }
 
-struct Status: Codable, Equatable {
+struct Status: Codable, Equatable, Hashable {
     var text: String?
     var presence: String?
 }
 
-struct UserRelation: Codable, Equatable {
+struct UserRelation: Codable, Equatable, Hashable {
     var status: String
 }
 
-struct User: Identifiable, Decodable, Equatable {
+struct User: Identifiable, Decodable, Equatable, Hashable {
     var id: String
     var username: String
     var discriminator: String
@@ -56,7 +56,7 @@ struct User: Identifiable, Decodable, Equatable {
     }
 }
 
-struct Profile: Decodable, Equatable {
+struct Profile: Decodable, Equatable, Hashable {
     var content: String?
     var background: File?
 }

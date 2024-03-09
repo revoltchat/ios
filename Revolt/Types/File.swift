@@ -7,14 +7,14 @@
 
 import Foundation
 
-struct SizedMetadata: Decodable, Equatable {
+struct SizedMetadata: Decodable, Equatable, Hashable {
     var height: Int
     var width: Int
 }
 
-struct SimpleMetadata: Decodable, Equatable {}
+struct SimpleMetadata: Decodable, Equatable, Hashable {}
 
-enum FileMetadata: Equatable {
+enum FileMetadata: Equatable, Hashable {
     case image(SizedMetadata)
     case video(SizedMetadata)
     case file(SimpleMetadata)
@@ -45,7 +45,7 @@ extension FileMetadata: Decodable {
     }
 }
 
-struct File: Decodable, Identifiable, Equatable {
+struct File: Decodable, Identifiable, Equatable, Hashable {
     var id: String
     var tag: String
     var size: Int64

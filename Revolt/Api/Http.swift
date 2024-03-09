@@ -243,4 +243,12 @@ struct HTTPClient {
     func ackMessage(channel: String, message: String) async -> Result<EmptyResponse, AFError> {
         await req(method: .put, route: "/channels/\(channel)/ack/\(message)")
     }
+    
+    func createGroup(name: String, users: [String]) async -> Result<Channel, AFError> {
+        await req(method: .post, route: "/channels/create", parameters: GroupChannelCreate(name: name, users: users))
+    }
+    
+    func createInvite(channel: String) async -> Result<Invite, AFError> {
+        await req(method: .post, route: "/channels/\(channel)/invites")
+    }
 }

@@ -28,6 +28,9 @@
     "%lld" : {
 
     },
+    "%lld of 100 members" : {
+
+    },
     "About" : {
 
     },
@@ -41,6 +44,9 @@
 
     },
     "Add a topic..." : {
+
+    },
+    "add friend" : {
 
     },
     "Add Friend" : {
@@ -91,10 +97,19 @@
     "Copy contents" : {
 
     },
+    "Copy Link" : {
+
+    },
+    "Create" : {
+
+    },
     "Create a new server" : {
 
     },
     "Create Account" : {
+
+    },
+    "Create Group" : {
 
     },
     "Created %lld days ago" : {
@@ -184,7 +199,16 @@
     "I confirm that i am at least 18 years old" : {
 
     },
-    "Invite Members" : {
+    "Invite" : {
+
+    },
+    "Invite another user" : {
+
+    },
+    "Invite Users" : {
+
+    },
+    "Invite your friends" : {
 
     },
     "Invites" : {
@@ -251,6 +275,9 @@
 
     },
     "Mute" : {
+
+    },
+    "New Group" : {
 
     },
     "New messages since %@" : {
@@ -328,6 +355,9 @@
     "Search" : {
 
     },
+    "Search for friends" : {
+
+    },
     "Secondary Background" : {
 
     },
@@ -353,6 +383,9 @@
 
     },
     "Settings" : {
+
+    },
+    "Share Invite" : {
 
     },
     "Sign Up" : {

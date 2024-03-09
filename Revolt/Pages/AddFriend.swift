@@ -6,3 +6,10 @@
 //
 
 import Foundation
+import SwiftUI
+
+struct AddFriend: View {
+    var body: some View {
+        Text("add friend")
+    }
+}

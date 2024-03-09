@@ -104,3 +104,8 @@ struct PasswordResetPayload: Encodable {
     var token: String
     var password: String
 }
+
+struct GroupChannelCreate: Encodable {
+    var name: String
+    var users: [String]
+}

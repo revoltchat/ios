@@ -112,6 +112,10 @@ struct InnerApp: View {
                                 ServerSettings(server: server)
                             case .settings:
                                 Settings()
+                            case .add_friend:
+                                AddFriend()
+                            case .create_group(let initial_users):
+                                CreateGroup(selectedUsers: Set(initial_users.compactMap { viewState.users[$0] }))
                         }
                     }
                     .sheet(item: $viewState.currentUserSheet) { (v) in
@@ -220,5 +224,27 @@ let isMac = true
 extension Collection {
     subscript (safe index: Index) -> Element? {
         return indices.contains(index) ? self[index] : nil
+    }
+}
+
+
+struct CheckboxStyle: ToggleStyle {
+    @EnvironmentObject var viewState: ViewState
+
+    func makeBody(configuration: Self.Configuration) -> some View {
+        return HStack {
+            configuration.label
+
+            Spacer()
+            
+            if configuration.isOn {
+                Image(systemName: "checkmark")
+                    .resizable()
+                    .frame(width: 16, height: 16)
+                    .foregroundColor(viewState.theme.accent.color)
+            }
+            
+        }
+        .onTapGesture { configuration.isOn.toggle() }
     }
 }

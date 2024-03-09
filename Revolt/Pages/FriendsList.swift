@@ -18,8 +18,6 @@ struct Friends {
 
 struct FriendsList: View {
     @EnvironmentObject var viewState: ViewState
-    
-    @State var selectedUser: User? = nil
 
     func getFriends() ->  Friends {
         var friends = Friends(outgoing: [], incoming: [], friends: [], blocked: [], blockedBy: [])
@@ -57,16 +55,25 @@ struct FriendsList: View {
             ].filter({ !$0.1.isEmpty })
             
             Section {
-                Button {
-                    
-                } label: {
-                    HStack {
+                NavigationLink(value: NavigationDestination.add_friend) {
+                    HStack(spacing: 12) {
                         Image(systemName: "person.crop.circle.fill.badge.plus")
                             .resizable()
-                            //.frame(width: 16, height: 16)
+                            .scaledToFit()
                             .frame(width: 24, height: 24)
                         
                         Text("Add Friend")
+                    }
+                }
+                
+                NavigationLink(destination: CreateGroup.init) {
+                    HStack(spacing: 12) {
+                        Image(systemName: "person.2")
+                            .resizable()
+                            .scaledToFit()
+                            .frame(width: 24, height: 24)
+                        
+                        Text("Create Group")
                     }
                 }
             }
@@ -77,14 +84,14 @@ struct FriendsList: View {
                 Section {
                     ForEach(users) { user in
                         Button {
-                            selectedUser = user
+                            viewState.openUserSheet(withId: user.id, server: nil)
                         } label: {
                             HStack(spacing: 12) {
                                 Avatar(user: user)
                                     .frame(width: 16, height: 16)
                                     .frame(width: 24, height: 24)
                                 
-                                Text(user.username)
+                                Text(user.display_name ?? user.username)
                                 
                                 Spacer()
                                 
@@ -150,9 +157,6 @@ struct FriendsList: View {
         }
         .scrollContentBackground(.hidden)
         .background(viewState.theme.background.color)
-        .sheet(item: $selectedUser, content: { user in
-            UserSheet(user: user, member: nil)
-        })
     }
 }
 
