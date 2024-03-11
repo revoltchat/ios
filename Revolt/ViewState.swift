@@ -554,6 +554,10 @@ public class ViewState: ObservableObject {
             currentUserSheet = UserMaybeMember(user: user, member: member)
         }
     }
+    
+    func openUserSheet(user: User, member: Member?) {
+        currentUserSheet = UserMaybeMember(user: user, member: member)
+    }
 }
 
 enum UnreadCount {
