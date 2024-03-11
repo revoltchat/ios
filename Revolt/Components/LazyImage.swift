@@ -23,6 +23,7 @@ struct LazyImage<S: Shape>: View {
     public var height: CGFloat?
     public var width: CGFloat?
     public var clipTo: S
+    public var contentMode: SwiftUI.ContentMode = .fill
 
     var _source: Source {
         switch source {
@@ -41,7 +42,7 @@ struct LazyImage<S: Shape>: View {
     var body: some View {
         KFAnimatedImage.init(source: _source)
             .placeholder { Color.clear }
-            .aspectRatio(contentMode: .fill)
+            .aspectRatio(contentMode: contentMode)
             .frame(width: width, height: height)
             .clipped()
             .clipShape(clipTo)
