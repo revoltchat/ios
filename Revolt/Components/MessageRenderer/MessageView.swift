@@ -13,7 +13,6 @@ struct MessageView: View {
     
     @EnvironmentObject var viewState: ViewState
     
-    @State var showMemberSheet: Bool = false
     @State var showReportSheet: Bool = false
     @State var isStatic: Bool
 
@@ -39,7 +38,7 @@ struct MessageView: View {
                 }
                 .onTapGesture {
                     if !isStatic {
-                        showMemberSheet.toggle()
+                        viewState.openUserSheet(withId: viewModel.author.id, server: viewModel.server?.id)
                     }
                 }
                 .padding(.trailing, 8)
@@ -51,10 +50,10 @@ struct MessageView: View {
                         Text(verbatim: name)
                             .onTapGesture {
                                 if !isStatic {
-                                    showMemberSheet.toggle()
+                                    viewState.openUserSheet(withId: viewModel.author.id, server: viewModel.server?.id)
                                 }
                             }
-                            .foregroundStyle(viewModel.member?.displayColour(server: viewModel.server!) ?? viewState.theme.foreground.color)
+                            .foregroundStyle(viewModel.member?.displayColour(theme: viewState.theme, server: viewModel.server!) ?? AnyShapeStyle(viewState.theme.foreground.color))
                             .fontWeight(.heavy)
 
                         
@@ -79,18 +78,6 @@ struct MessageView: View {
         }
         .font(Font.system(size: 14.0))
         .listRowSeparator(.hidden)
-        .sheet(isPresented: $showMemberSheet) {
-            let user = viewModel.author
-            
-            if case .server(let serverId) = viewState.currentServer {
-                let serverMembers = viewState.members[serverId]
-                let member = serverMembers?[user.id]
-                
-                UserSheet(user: user, member: member)
-            } else {
-                UserSheet(user: user, member: nil)
-            }
-        }
     }
 }
 

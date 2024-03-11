@@ -15,11 +15,128 @@ struct InviteUrl: Identifiable {
     }
 }
 
+struct UserDisplay: View {
+    @EnvironmentObject var viewState: ViewState
+    
+    var server: Server?
+    var user: User
+    var member: Member?
+    
+    var body: some View {
+        Button {
+            viewState.openUserSheet(user: user, member: member)
+        } label: {
+            HStack(spacing: 12) {
+                Avatar(user: user, member: member, withPresence: true)
+                
+                VStack(alignment: .leading) {
+                    Text(verbatim: member?.nickname ?? user.display_name ?? user.username)
+                        .fontWeight(.heavy)
+                        .foregroundStyle(member?.displayColour(theme: viewState.theme, server: server!) ?? AnyShapeStyle(viewState.theme.foreground.color))
+                    
+                    if let statusText = user.status?.text {
+                        Text(verbatim: statusText)
+                            .font(.caption)
+                            .foregroundStyle(viewState.theme.foreground2.color)
+                            .lineLimit(1)
+                            .truncationMode(.tail)
+                    } else {
+                        switch user.status?.presence {
+                            case .Busy:
+                                Text("Busy")
+                                    .font(.caption)
+                                    .foregroundStyle(viewState.theme.foreground2.color)
+                                
+                            case .Idle:
+                                Text("Idle")
+                                    .font(.caption)
+                                    .foregroundStyle(viewState.theme.foreground2.color)
+                                
+                            case .Invisible:
+                                Text("Invisible")
+                                    .font(.caption)
+                                    .foregroundStyle(viewState.theme.foreground2.color)
+                                
+                            case .Online:
+                                Text("Online")
+                                    .font(.caption)
+                                    .foregroundStyle(viewState.theme.foreground2.color)
+                                
+                            case .Focus:
+                                Text("Focus")
+                                    .font(.caption)
+                                    .foregroundStyle(viewState.theme.foreground2.color)
+                                
+                            case nil:
+                                Text("Offline")
+                                    .font(.caption)
+                                    .foregroundStyle(viewState.theme.foreground2.color)
+                                
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+
 struct ChannelInfo: View {
     @EnvironmentObject var viewState: ViewState
     
     @Binding var channel: Channel
     @State var showInviteSheet: InviteUrl? = nil
+    
+    func getRoleSectionHeaders() -> [(String, Role)] {
+        switch channel {
+            case .text_channel, .voice_channel:
+                let server = viewState.servers[channel.server!]!
+                
+                return (server.roles ?? [:])
+                    .filter { $0.value.hoist ?? false }
+                    .sorted(by: { (r1, r2) in r1.value.rank < r2.value.rank })
+
+            default:
+                return []
+        }
+    }
+    
+    func getRoleSectionContents(users: [(User, Member?)], role: String) -> [(User, Member?)] {
+        var role_members: [(User, Member?)] = []
+        let other_hoisted_roles = getRoleSectionHeaders().filter { $0.0 != role }
+        let server = viewState.servers[channel.server!]!
+        
+        for (user, member) in users {
+            let sorted_member_roles = member!.roles?.sorted(by: { (a, b) in server.roles![a]!.rank < server.roles![b]!.rank }) ?? []
+            
+            if let current_role_pos = sorted_member_roles.firstIndex(of: role),
+               other_hoisted_roles.allSatisfy({ other_role in (sorted_member_roles.firstIndex(of: other_role.0) ?? Int.max ) > current_role_pos })
+            {
+                role_members.append((user, member))
+            }
+        }
+        
+        return role_members
+    }
+    
+    func getNoRoleSectionContents(users: [(User, Member?)]) -> [(User, Member?)] {
+        switch channel {
+            case .text_channel, .voice_channel:
+                var no_role_members: [(User, Member?)] = []
+                let section_headers = getRoleSectionHeaders().map { $0.0 }
+                
+                for (user, member) in users {
+                    if (member?.roles ?? []).allSatisfy({ !section_headers.contains($0) }) {
+                        no_role_members.append((user, member))
+                    }
+                }
+                
+                return no_role_members
+                
+            default:
+                return users
+        }
+
+    }
     
     func getUsers() -> [(User, Member?)] {
         switch channel {
@@ -33,9 +150,7 @@ struct ChannelInfo: View {
                 return groupDMChannel.recipients.map { (viewState.users[$0]!, nil) }
 
             case .text_channel(_), .voice_channel(_):
-                let members = viewState.members[channel.server!]!
-                
-                return members.map { (viewState.users[$0]!, $1) }
+                return viewState.members[channel.server!]!.values.map { (viewState.users[$0.id.user]!, $0) }
         }
     }
     
@@ -131,27 +246,34 @@ struct ChannelInfo: View {
                 }
                 
                 let users = getUsers()
+                let sections = getRoleSectionHeaders()
                 
-                Section("Members - \(users.count)") {
-                    ForEach(users, id: \.0.id) { (user, member) in
-                        HStack(spacing: 12) {
-                            Avatar(user: user, member: member, withPresence: true)
-                            
-                            VStack(alignment: .leading) {
-                                Text(verbatim: member?.nickname ?? user.display_name ?? user.username)
-                                
-                                if let statusText = user.status?.text {
-                                    Text(verbatim: statusText)
-                                        .font(.caption)
-                                        .foregroundStyle(viewState.theme.foreground2.color)
-                                        .lineLimit(1)
-                                        .truncationMode(.tail)
-                                }
+                let server = channel.server.map { viewState.servers[$0]! }
+                
+                ForEach(sections, id: \.0) { (roleId, role) in
+                    let role_users = getRoleSectionContents(users: users, role: roleId)
+                    
+                    if !role_users.isEmpty {
+                        Section("\(role.name) - \(role_users.count)") {
+                            ForEach(role_users, id: \.0.id) { (user, member) in
+                                UserDisplay(server: server, user: user, member: member)
                             }
                         }
+                        .listRowBackground(viewState.theme.background2)
+                    } else {
+                        EmptyView()
                     }
                 }
-                .listRowBackground(viewState.theme.background2.color)
+                
+                let no_role = getNoRoleSectionContents(users: users)
+                
+                Section("Members - \(no_role.count)") {
+                    ForEach(no_role, id: \.0.id) { (user, member) in
+                        UserDisplay(server: server, user: user, member: member)
+                    }
+                }
+                .listRowBackground(viewState.theme.background2)
+                
             }
             .scrollContentBackground(.hidden)
             .background(viewState.theme.background.color)

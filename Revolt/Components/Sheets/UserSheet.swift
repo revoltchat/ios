@@ -31,19 +31,16 @@ struct UserSheetHeader: View {
 
     var body: some View {
         ZStack {
-            ZStack {
-                if let banner = profile.background {
+            if let banner = profile.background {
+                ZStack {
                     LazyImage(source: .file(banner), height: 150, clipTo: RoundedRectangle(cornerRadius: 10))
-                } else {
-                    Rectangle()
-                        .fill(viewState.theme.background.color)
+                    
+                    LinearGradient(colors: [.clear, .black], startPoint: .top, endPoint: .bottom)
                         .frame(height: 150)
+                        .clipShape(RoundedRectangle(cornerRadius: 10))
+                    
                 }
-                LinearGradient(colors: [.clear, .black], startPoint: .top, endPoint: .bottom)
-                    .frame(height: 150)
-                    .clipShape(RoundedRectangle(cornerRadius: 10))
             }
-            
             
             VStack(alignment: .leading) {
                 Spacer()
@@ -106,7 +103,7 @@ struct UserSheetHeader: View {
                     }
                 }
                 
-                if let badges = user.badges {
+                if let badges = user.badges, badges != 0 {
                     HStack {
                         ForEach(Badges.allCases, id: \.self) { value in
                             Badge(badges: badges, filename: String(describing: value), value: value.rawValue)

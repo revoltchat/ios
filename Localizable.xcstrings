@@ -22,6 +22,16 @@
     "%@" : {
 
     },
+    "%@ - %lld" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "%1$@ - %2$lld"
+          }
+        }
+      }
+    },
     "%@ code" : {
 
     },
@@ -71,6 +81,9 @@
 
     },
     "Brought to you with ❤️ by the Revolt team." : {
+
+    },
+    "Busy" : {
 
     },
     "Cancel" : {
@@ -172,6 +185,9 @@
     "Find your community, connect with the world." : {
 
     },
+    "Focus" : {
+
+    },
     "foo" : {
 
     },
@@ -197,6 +213,12 @@
 
     },
     "I confirm that i am at least 18 years old" : {
+
+    },
+    "Idle" : {
+
+    },
+    "Invisible" : {
 
     },
     "Invite" : {
@@ -286,7 +308,13 @@
     "New Password" : {
 
     },
+    "Offline" : {
+
+    },
     "One more thing" : {
+
+    },
+    "Online" : {
 
     },
     "Open Profile" : {

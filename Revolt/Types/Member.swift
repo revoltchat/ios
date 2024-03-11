@@ -26,12 +26,15 @@ struct Member: Decodable, Equatable {
         case nickname, avatar, roles, joined_at, timeout
     }
     
-    func displayColour(server: Server) -> Color? {
+    func displayColour(theme: Theme, server: Server) -> AnyShapeStyle? {
         roles?
             .compactMap { server.roles?[$0] }
             .sorted(by: { $0.rank > $1.rank })
             .compactMap(\.colour)
             .last
-            .map { ThemeColor(hex: $0).color }
+            .map {
+                print($0)
+                return parseCSSColor(currentTheme: theme, input: $0)
+            }
     }
 }

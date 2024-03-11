@@ -19,6 +19,7 @@
 		17429D992B4C931D0036105A /* ChannelOverviewSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17429D982B4C931D0036105A /* ChannelOverviewSettings.swift */; };
 		1746CF5A2B83C6750051FD47 /* CodableWrapper in Frameworks */ = {isa = PBXBuildFile; productRef = 1746CF592B83C6750051FD47 /* CodableWrapper */; };
 		1748B2072B1FB88B00AA2D47 /* MessageReactions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1748B2062B1FB88B00AA2D47 /* MessageReactions.swift */; };
+		174DA9E82B9E4D70001BC330 /* Parsing in Frameworks */ = {isa = PBXBuildFile; productRef = 174DA9E72B9E4D70001BC330 /* Parsing */; };
 		1750EF6E2B0585B300DD3EB3 /* ResendEmail.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1750EF6D2B0585B300DD3EB3 /* ResendEmail.swift */; };
 		175997192B2FB90700C39CF6 /* Flow in Frameworks */ = {isa = PBXBuildFile; productRef = 175997182B2FB90700C39CF6 /* Flow */; };
 		1759971B2B2FB90700C39CF6 /* Renderer in Frameworks */ = {isa = PBXBuildFile; productRef = 1759971A2B2FB90700C39CF6 /* Renderer */; };
@@ -198,6 +199,7 @@
 				178BB10C2B02D84C001143A4 /* HCaptcha in Frameworks */,
 				DA99EC5329D6148200419FDA /* Alamofire in Frameworks */,
 				178BB10E2B02D84C001143A4 /* HCaptcha_RxSwift in Frameworks */,
+				174DA9E82B9E4D70001BC330 /* Parsing in Frameworks */,
 				17CCCF6E2ADA173B00D78D7A /* ULID in Frameworks */,
 				DAAA4BF829F2274A00F41E52 /* OrderedCollections in Frameworks */,
 				DAF84FFD2A0EFE1B00B01682 /* Starscream in Frameworks */,
@@ -472,6 +474,7 @@
 				172754CB2B39989E002223FE /* SwiftParsec */,
 				03268FCCFC7D4D1F8B6E9F6F /* Sentry */,
 				1746CF592B83C6750051FD47 /* CodableWrapper */,
+				174DA9E72B9E4D70001BC330 /* Parsing */,
 			);
 			productName = Revolt;
 			productReference = D49B704F29C4D3FE009494A5 /* Revolt.app */;
@@ -515,6 +518,7 @@
 				172754CA2B39989E002223FE /* XCRemoteSwiftPackageReference "SwiftParsec" */,
 				6DCF7E838FEB4C359405B802 /* XCRemoteSwiftPackageReference "sentry-cocoa" */,
 				1746CF582B83C6750051FD47 /* XCRemoteSwiftPackageReference "CodableWrapper" */,
+				174DA9E62B9E4D70001BC330 /* XCRemoteSwiftPackageReference "swift-parsing" */,
 			);
 			productRefGroup = D49B705029C4D3FE009494A5 /* Products */;
 			projectDirPath = "";
@@ -894,6 +898,14 @@
 				minimumVersion = 1.0.3;
 			};
 		};
+		174DA9E62B9E4D70001BC330 /* XCRemoteSwiftPackageReference "swift-parsing" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/pointfreeco/swift-parsing/";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 0.13.0;
+			};
+		};
 		175997172B2FB90600C39CF6 /* XCRemoteSwiftPackageReference "SwiftUI-Flow" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/tevelee/SwiftUI-Flow.git";
@@ -975,6 +987,11 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 1746CF582B83C6750051FD47 /* XCRemoteSwiftPackageReference "CodableWrapper" */;
 			productName = CodableWrapper;
+		};
+		174DA9E72B9E4D70001BC330 /* Parsing */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 174DA9E62B9E4D70001BC330 /* XCRemoteSwiftPackageReference "swift-parsing" */;
+			productName = Parsing;
 		};
 		175997182B2FB90700C39CF6 /* Flow */ = {
 			isa = XCSwiftPackageProductDependency;
