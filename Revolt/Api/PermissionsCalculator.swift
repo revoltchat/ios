@@ -16,7 +16,7 @@ struct UserPermissions: OptionSet {
     static let invite = UserPermissions(rawValue: 1 << 3)
     
     static let all = UserPermissions(arrayLiteral: [.access, .viewProfile, .sendMessage, .invite])
-    static let none = UserPermissions(rawValue: 0)
+    static let none = UserPermissions([])
 }
 
 extension UserPermissions: Codable {
