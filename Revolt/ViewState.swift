@@ -221,7 +221,7 @@ public class ViewState: ObservableObject {
     class func preview() -> ViewState {
         let this = ViewState()
         this.state = .connected
-        this.currentUser = User(id: "0", username: "Zomatree", discriminator: "0000", badges: Int.max, status: Status(text: "hello world", presence: "Busy"), relationship: .User, profile: Profile(content: "hello world"))
+        this.currentUser = User(id: "0", username: "Zomatree", discriminator: "0000", badges: Int.max, status: Status(text: "hello world", presence: .Busy), relationship: .User, profile: Profile(content: "hello world"))
         this.users["0"] = this.currentUser!
         this.servers["0"] = Server(id: "0", owner: "0", name: "Testing Server", channels: ["0"], default_permissions: Permissions.all, categories: [Category(id: "0", title: "Channels", channels: ["0", "1"])])
         this.channels["0"] = .text_channel(TextChannel(id: "0", server: "0", name: "General"))

@@ -8,17 +8,17 @@
 import Foundation
 import SwiftUI
 
-let colours: [String?: Color] = [
-    "Online": Color(.green),
-    "Busy": Color(.red),
-    "Idle": Color(.yellow),
-    "Focus": Color(.blue),
-    "Invisible": Color(.gray),
+let colours: [Presence?: Color] = [
+    .Online: Color(.green),
+    .Busy: Color(.red),
+    .Idle: Color(.yellow),
+    .Focus: Color(.blue),
+    .Invisible: Color(.gray),
     nil: Color(.gray)
 ]
 
 struct PresenceIndicator: View {
-    var presence: String?
+    var presence: Presence?
     var width: CGFloat? = nil
     var height: CGFloat? = nil
     

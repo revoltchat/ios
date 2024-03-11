@@ -11,8 +11,12 @@ struct UserBot: Decodable, Equatable, Hashable {
     var owner: String
 }
 
-enum Presence: Codable, Equatable, Hashable {
-    case Busy, Idle, Invisible, Online, Focus
+enum Presence: String, Codable, Equatable, Hashable {
+    case Busy
+    case Idle
+    case Invisible
+    case Online
+    case Focus
 }
 
 enum Relation: String, Codable, Equatable, Hashable {
@@ -27,7 +31,7 @@ enum Relation: String, Codable, Equatable, Hashable {
 
 struct Status: Codable, Equatable, Hashable {
     var text: String?
-    var presence: String?
+    var presence: Presence?
 }
 
 struct UserRelation: Codable, Equatable, Hashable {
