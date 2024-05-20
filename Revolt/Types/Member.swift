@@ -32,9 +32,6 @@ struct Member: Decodable, Equatable {
             .sorted(by: { $0.rank > $1.rank })
             .compactMap(\.colour)
             .last
-            .map {
-                print($0)
-                return parseCSSColor(currentTheme: theme, input: $0)
-            }
+            .map { parseCSSColor(currentTheme: theme, input: $0) }
     }
 }

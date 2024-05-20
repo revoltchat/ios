@@ -58,7 +58,8 @@ let emojiOnlyParser = emojiRaw.separatedBy1(character(" ").many).optional
 
 func parseMentions(text: String) -> [Node] {
     // if it fails just default back to regular text
-    (try? parser.run(sourceName: "<input>", input: text)) ?? [.text(text)]
+    [.text(text)]
+    // (try? parser.run(sourceName: "<input>", input: text)) ?? [.text(text)]
 }
 
 func parseEmojisOnly(text: String) -> [String]? {

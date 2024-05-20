@@ -3,6 +3,7 @@ import SwiftUI
 import Alamofire
 import ULID
 import Collections
+import Sentry
 
 enum UserStateError: Error {
     case signInError
@@ -121,6 +122,8 @@ public class ViewState: ObservableObject {
     var http: HTTPClient = HTTPClient(token: nil, baseURL: "https://api.revolt.chat")
     var ws: WebSocketStream? = nil
     var apiInfo: ApiInfo? = nil
+    
+    var launchTransaction: any Sentry.Span
 
     @Published var sessionToken: String? = nil {
         didSet {
@@ -177,6 +180,7 @@ public class ViewState: ObservableObject {
     @Published var path: NavigationPath = NavigationPath()
 
     init() {
+        launchTransaction = SentrySDK.startTransaction(name: "launch", operation: "launch")
         let decoder = JSONDecoder()
 
         self.sessionToken = UserDefaults.standard.string(forKey: "sessionToken")
@@ -337,9 +341,13 @@ public class ViewState: ObservableObject {
             return
         }
 
+        let fetchApiInfoSpan = launchTransaction.startChild(operation: "fetchApiInfo")
+        
         let apiInfo = try! await self.http.fetchApiInfo().get()
         self.http.apiInfo = apiInfo
         self.apiInfo = apiInfo
+        
+        fetchApiInfoSpan.finish()
 
         let ws = WebSocketStream(url: apiInfo.ws, token: token, onEvent: onEvent)
         self.ws = ws
@@ -369,6 +377,8 @@ public class ViewState: ObservableObject {
     func onEvent(_ event: WsMessage) async {
         switch event {
             case .ready(let event):
+                let processReadySpan = launchTransaction.startChild(operation: "processReady")
+                
                 for channel in event.channels {
                     channels[channel.id] = channel
                     channelMessages[channel.id] = []
@@ -404,6 +414,9 @@ public class ViewState: ObservableObject {
                 }
 
                 state = .connected
+                
+                processReadySpan.finish()
+                launchTransaction.finish()
 
             case .message(let m):
                 if users[m.author] == nil {
