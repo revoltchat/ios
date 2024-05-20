@@ -44,7 +44,7 @@ struct Avatar: View {
                 } else {
                     let baseUrl = viewState.http.baseURL
                     
-                    KFImage.url(URL(string: "\(baseUrl)/users/\(user)/default_avatar"))
+                    KFImage.url(URL(string: "\(baseUrl)/users/\(user.id)/default_avatar"))
                         .placeholder { Color.clear }
                         .resizable()
                         .aspectRatio(contentMode: .fill)
