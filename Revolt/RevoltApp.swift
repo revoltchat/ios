@@ -43,9 +43,21 @@ struct RevoltApp: App {
                                 queryItems[item.name] = item.value?.removingPercentEncoding
                             }
                             switch url.host() {
-                                case "user":
+                                case "users":
                                     if let id = queryItems["user"] {
                                         state.openUserSheet(withId: id, server: queryItems["server"])
+                                    }
+                                case "channels":
+                                    if let id = queryItems["channel"] {
+                                        if let channel = state.channels[id] {
+                                            if let server = channel.server {
+                                                state.currentServer = .server(server)
+                                            } else {
+                                                state.currentServer = .dms
+                                            }
+                                            
+                                            state.currentChannel = .channel(id)
+                                        }
                                     }
                                 default:
                                     ()

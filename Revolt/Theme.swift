@@ -338,7 +338,7 @@ func parseCSSColor(currentTheme: Theme, input: String) -> AnyShapeStyle {
                         end = .bottom
                 }
 
-                var colors = grad.stops.map { resolveColor(color: $0.color) }
+                let colors = grad.stops.map { resolveColor(color: $0.color) }
                 
                 return AnyShapeStyle(LinearGradient(colors: colors, startPoint: start, endPoint: end))
         }

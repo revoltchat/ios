@@ -289,7 +289,7 @@ struct Contents: View {
                         
                         let name = member?.nickname ?? user.display_name ?? user.username
                                                                         
-                        mention.append(AttributedString("@\(name)", attributes: AttributeContainer([.foregroundColor: UIColor(viewState.theme.accent.color), .font: boldFont, .link: "revoltchat://user?user=\(string)"])
+                        mention.append(AttributedString("@\(name)", attributes: AttributeContainer([.foregroundColor: UIColor(viewState.theme.accent.color), .font: boldFont, .link: "revoltchat://users?user=\(string)"])
 ))
                     } else {
                         let container = AttributeContainer([.foregroundColor: UIColor(viewState.theme.accent.color), .font: boldFont])
