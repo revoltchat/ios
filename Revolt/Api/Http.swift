@@ -253,6 +253,10 @@ struct HTTPClient {
         await req(method: .post, route: "/channels/\(channel)/invites")
     }
     
+    func joinVoiceChannel(channel: String) async -> Result<VoiceChannelToken, AFError> {
+        await req(method: .post, route: "/channels/\(channel)/join_call")
+    }
+    
     func fetchMember(server: String, member: String) async -> Result<Member, AFError> {
         await req(method: .get, route: "/servers/\(server)/members/\(member)")
     }

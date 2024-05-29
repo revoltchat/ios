@@ -17,7 +17,7 @@ struct AccountCreatePayload: Encodable {
 
 
 struct EmptyResponse {
-    
+
 }
 
 struct FetchHistory: Decodable {
@@ -69,28 +69,28 @@ struct ContentReportPayload: Encodable {
         case Malware = "Malware"
         /// Harassment or abuse targeted at another user
         case Harassment = "Harassment"
-        
+
         func encode(to encoder: Encoder) throws {
             var container = encoder.singleValueContainer()
             try container.encode(String(describing: self))
         }
     }
-    
+
     enum ContentReportType: String, Encodable {
         case Message = "Message"
         case Server = "Server"
         case User = "User"
     }
-    
+
     struct NestedContentReportPayload: Encodable {
         var type: ContentReportType
         var id: String
         var report_reason: ContentReportReason
     }
-    
+
     var content: NestedContentReportPayload
     var additional_context: String
-    
+
     init(type: ContentReportType, contentId: String, reason: ContentReportReason, userContext: String) {
         self.content = NestedContentReportPayload(type: type, id: contentId, report_reason: reason)
         self.additional_context = userContext
@@ -119,12 +119,12 @@ struct ServerEdit: Encodable {
         case icon = "Icon"
         case banner = "Banner"
     }
-    
+
     var name: String?
     var description: String?
     var icon: String?
     var banner: String?
-    var categories: [Category]?
+    var categories: [Types.Category]?
     var system_messages: SystemMessages?
     var flags: Int?
     var discoverable: Bool?

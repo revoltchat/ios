@@ -19,6 +19,8 @@ enum WsMessage {
     case channel_stop_typing(ChannelTyping)
     case message_delete(MessageDeleteEvent)
     case channel_ack(ChannelAckEvent)
+    case voice_channel_join(VoiceChannelJoin)
+    case voice_channel_leave(VoiceChannelLeave)
 }
 
 struct ReadyEvent: Decodable {
@@ -27,6 +29,20 @@ struct ReadyEvent: Decodable {
     var channels: [Channel]
     var members: [Member]
     var emojis: [Emoji]
+    var voice_states: [ChannelVoiceState]
+}
+
+struct UserVoiceState: Decodable, Identifiable {
+    var id: String
+    var can_receive: Bool
+    var can_publish: Bool
+    var screensharing: Bool
+    var camera: Bool
+}
+
+struct ChannelVoiceState: Decodable, Identifiable {
+    var id: String
+    var participants: [UserVoiceState]
 }
 
 struct MessageUpdateEventData: Decodable {
@@ -56,14 +72,24 @@ struct ChannelAckEvent: Decodable {
     var message_id: String
 }
 
+struct VoiceChannelJoin: Decodable {
+    var id: String
+    var state: UserVoiceState
+}
+
+struct VoiceChannelLeave: Decodable {
+    var id: String
+    var user: String
+}
+
 extension WsMessage: Decodable {
     enum CodingKeys: String, CodingKey { case type }
-    enum Tag: String, Decodable { case Authenticated, InvalidSession, Ready, Message, MessageUpdate, ChannelStartTyping, ChannelStopTyping, MessageDelete, ChannelAck }
-    
+    enum Tag: String, Decodable { case Authenticated, InvalidSession, Ready, Message, MessageUpdate, ChannelStartTyping, ChannelStopTyping, MessageDelete, ChannelAck, VoiceChannelJoin, VoiceChannelLeave }
+
     init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
         let singleValueContainer = try decoder.singleValueContainer()
-        
+
         switch try container.decode(Tag.self, forKey: .type) {
             case .Authenticated:
                 self = .authenticated
@@ -83,6 +109,10 @@ extension WsMessage: Decodable {
                 self = .message_delete(try singleValueContainer.decode(MessageDeleteEvent.self))
             case .ChannelAck:
                 self = .channel_ack(try singleValueContainer.decode(ChannelAckEvent.self))
+            case .VoiceChannelJoin:
+                self = .voice_channel_join(try singleValueContainer.decode(VoiceChannelJoin.self))
+            case .VoiceChannelLeave:
+                self = .voice_channel_leave(try singleValueContainer.decode(VoiceChannelLeave.self))
         }
     }
 }
@@ -95,7 +125,7 @@ enum WsState {
 
 class SendWsMessage: Encodable {
     var type: String
-    
+
     init(type: String) {
         self.type = type
     }
@@ -105,18 +135,18 @@ class Authenticate: SendWsMessage, CustomStringConvertible {
     private enum CodingKeys: String, CodingKey { case type, token }
 
     var token: String
-    
+
     init(token: String) {
         self.token = token
         super.init(type: "Authenticate")
     }
-    
+
     override func encode(to encoder: Encoder) throws {
         var container = encoder.container(keyedBy: CodingKeys.self)
         try container.encode(token, forKey: .token)
         try container.encode(type, forKey: .type)
     }
-    
+
     var description: String {
         return "Authenticate(token: \(token))"
     }
@@ -152,7 +182,7 @@ class WebSocketStream {
     public func stop() {
         client.disconnect(closeCode: .zero)
     }
-    
+
     public func didReceive(event: WebSocketEvent) {
         switch event {
             case .connected(_):
@@ -164,7 +194,7 @@ class WebSocketStream {
                     let s = try encoder.encode(payload)
                     client.write(string: String(data: s, encoding: .utf8)!)
                 } catch {}
-                    
+
             case .disconnected(let reason, _):
                 print("disconnect \(reason)")
                 currentState = .Disconnected

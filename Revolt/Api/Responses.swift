@@ -50,3 +50,7 @@ struct Unread: Decodable, Identifiable {
         case last_id, mentions
     }
 }
+
+struct VoiceChannelToken: Decodable {
+    var token: String
+}

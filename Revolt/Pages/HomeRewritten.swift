@@ -14,13 +14,20 @@ struct MaybeChannelView: View {
     @Binding var currentServer: Server?
     @Binding var showSidebar: Bool
     
-    var body: some View {
-        switch currentChannel {
-            case .channel(let channelId):
-                let channel = viewState.channels[channelId]!
-                let messages = Binding($viewState.channelMessages[channelId])!
-                    
-                MessageableChannelView(
+    func getRawChannelView(channel: Channel) -> AnyView {
+        let messages = Binding($viewState.channelMessages[channel.id])!
+        
+        switch channel {
+            case .voice_channel:
+                return AnyView(VoiceChannelView(channel: channel, showSidebar: $showSidebar))
+            case .text_channel(let tc):
+                if tc.voice != nil {
+                    return AnyView(VoiceChannelView(channel: channel, showSidebar: $showSidebar))
+                } else {
+                    fallthrough
+                }
+            default:
+                return AnyView(MessageableChannelView(
                     viewModel: MessageableChannelViewModel(
                         viewState: viewState,
                         channel: channel,
@@ -28,7 +35,42 @@ struct MaybeChannelView: View {
                         messages: messages
                     ),
                     showSidebar: $showSidebar
-                )
+                ))
+        }
+    }
+    
+    var body: some View {
+        switch currentChannel {
+            case .channel(let channelId):
+                if let channel = viewState.channels[channelId] {
+                    getRawChannelView(channel: channel)
+                } else {
+                    Text("Unknown Channel")
+                        .onAppear {
+                            currentChannel = .home
+                        }
+                }
+                
+            case .force_textchannel(let channelId):
+                if let channel = viewState.channels[channelId] {
+                    let messages = Binding($viewState.channelMessages[channelId])!
+                    
+                    MessageableChannelView(
+                        viewModel: MessageableChannelViewModel(
+                            viewState: viewState,
+                            channel: channel,
+                            server: currentServer,
+                            messages: messages
+                        ),
+                        showSidebar: $showSidebar
+                    )
+                } else {
+                    Text("Unknown Channel")
+                        .onAppear {
+                            currentChannel = .home
+                        }
+                }
+            
             case .home:
                 HomeWelcome(showSidebar: $showSidebar)
             case .friends:
@@ -59,7 +101,7 @@ struct HomeRewritten: View {
     
     @State var offset = CGFloat.zero
     @State var forceOpen: Bool = false
-    
+        
     @State var showSidebar = false
     
     var body: some View {
@@ -141,8 +183,8 @@ struct HomeRewritten: View {
                 .onChange(of: showSidebar) { (_, after) in
                     if after {
                         withAnimation {
-                        offset = min(geo.size.width * 0.85, 600)
-                        showSidebar = false
+                            offset = min(geo.size.width * 0.85, 600)
+                            showSidebar = false
                         }
                     }
                 }

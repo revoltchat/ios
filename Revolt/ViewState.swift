@@ -4,6 +4,7 @@ import Alamofire
 import ULID
 import Collections
 import Sentry
+import LiveKit
 import Types
 
 enum UserStateError: Error {
@@ -90,6 +91,7 @@ enum MainSelection: Hashable, Codable {
 
 enum ChannelSelection: Hashable, Codable {
     case channel(String)
+    case force_textchannel(String)
     case home
     case friends
 
@@ -115,16 +117,16 @@ enum NavigationDestination: Hashable, Codable {
 struct UserMaybeMember: Identifiable {
     var user: Types.User
     var member: Member?
-    
+
     var id: String { user.id }
 }
 
 @MainActor
 public class ViewState: ObservableObject {
-    var http: HTTPClient = HTTPClient(token: nil, baseURL: "https://api.revolt.chat")
+    var http: HTTPClient = HTTPClient(token: nil, baseURL: "http://192.168.1.3:8000")
     var ws: WebSocketStream? = nil
     var apiInfo: ApiInfo? = nil
-    
+
     var launchTransaction: any Sentry.Span
 
     @Published var sessionToken: String? = nil {
@@ -140,6 +142,7 @@ public class ViewState: ObservableObject {
     @Published var members: [String: [String: Member]] = [:]
     @Published var dms: [Channel] = []
     @Published var emojis: [String: Emoji] = [:]
+    @Published var voiceStates: [String: ChannelVoiceState] = [:]
 
     @Published var state: ConnectionState = .connecting
     @Published var queuedMessages: Dictionary<String, [QueuedMessage]> = [:]
@@ -149,6 +152,8 @@ public class ViewState: ObservableObject {
     @Published var isOnboarding: Bool = false
     @Published var unreads: [String: Unread] = [:]
     @Published var currentUserSheet: UserMaybeMember? = nil
+    @Published var currentVoiceChannel: String? = nil
+    @Published var currentVoice: Room? = nil
 
     @Published var currentServer: MainSelection = .dms {
         didSet {
@@ -172,7 +177,7 @@ public class ViewState: ObservableObject {
             UserDefaults.standard.set(try! JSONEncoder().encode(theme), forKey: "theme")
         }
     }
-    
+
     @Published var currentLocale: Locale? {
         didSet {
             UserDefaults.standard.set(try! JSONEncoder().encode(currentLocale), forKey: "locale")
@@ -185,7 +190,7 @@ public class ViewState: ObservableObject {
         launchTransaction = SentrySDK.startTransaction(name: "launch", operation: "launch")
         let decoder = JSONDecoder()
 
-        self.sessionToken = UserDefaults.standard.string(forKey: "sessionToken")
+        self.sessionToken = "2Aj-9dSullwKLXQ9_c71czw6DA45-ZJ4lT-9IxzZNiArZLnqQniVZBHk6sOI4iPf" //UserDefaults.standard.string(forKey: "sessionToken")
 
         if let currentServer = UserDefaults.standard.data(forKey: "currentServer") {
             self.currentServer = (try? decoder.decode(MainSelection.self, from: currentServer)) ?? .dms
@@ -198,7 +203,7 @@ public class ViewState: ObservableObject {
         } else {
             self.currentChannel = .home
         }
-        
+
         if let locale = UserDefaults.standard.data(forKey: "locale") {
             self.currentLocale = try! decoder.decode(Locale?.self, from: locale)
         } else {
@@ -236,7 +241,7 @@ public class ViewState: ObservableObject {
         this.messages["01HD4VQY398JNRJY60JDY2QHA5"] = Message(id: "01HD4VQY398JNRJY60JDY2QHA5", content: "Hello World", author: "0", channel: "0", mentions: ["0"])
         this.messages["01HDEX6M2E3SHY8AC2S6B9SEAW"] = Message(id: "01HDEX6M2E3SHY8AC2S6B9SEAW", content: "reply", author: "0", channel: "0", replies: ["01HD4VQY398JNRJY60JDY2QHA5"])
         this.channelMessages["0"] = ["01HD4VQY398JNRJY60JDY2QHA5", "01HDEX6M2E3SHY8AC2S6B9SEAW"]
-        this.members["0"] = ["0": Member(id: MemberId(server: "0", user: "0"), joined_at: "")]
+        this.members["0"] = ["0": Member(id: MemberId(server: "0", user: "0"), joined_at: "", can_publish: true, can_receive: true)]
         this.emojis = ["0": Emoji(id: "01GX773A8JPQ0VP64NWGEBMQ1E", parent: .server(EmojiParentServer(id: "0")), creator_id: "0", name: "balls")]
         this.currentServer = .server("0")
         this.currentChannel = .channel("0")
@@ -248,7 +253,7 @@ public class ViewState: ObservableObject {
 
         this.currentlyTyping["0"] = ["0", "1", "2", "3", "4"]
 
-        this.apiInfo = ApiInfo(revolt: "0.6.6", features: ApiFeatures(captcha: CaptchaFeature(enabled: true, key: "3daae85e-09ab-4ff6-9f24-e8f4f335e433"), email: true, invite_only: false, autumn: RevoltFeature(enabled: true, url: "https://autumn.revolt.chat"), january: RevoltFeature(enabled: true, url: "https://jan.revolt.chat"), voso: VortexFeature(enabled: true, url: "https://vortex.revolt.chat", ws: "wss://vortex.revolt.chat")), ws: "wss://ws.revolt.chat", app: "https://app.revolt.chat", vapid: "BJto1I_OZi8hOkMfQNQJfod2osWBqcOO7eEOqFMvCfqNhqgxqOr7URnxYKTR4N6sR3sTPywfHpEsPXhrU9zfZgg=")
+        this.apiInfo = ApiInfo(revolt: "0.6.6", features: ApiFeatures(captcha: CaptchaFeature(enabled: true, key: "3daae85e-09ab-4ff6-9f24-e8f4f335e433"), email: true, invite_only: false, autumn: RevoltFeature(enabled: true, url: "https://autumn.revolt.chat"), january: RevoltFeature(enabled: true, url: "https://jan.revolt.chat"), livekit: LiveKitFeature(enabled: true, url: "https://vortex.revolt.chat")), ws: "wss://ws.revolt.chat", app: "https://app.revolt.chat", vapid: "BJto1I_OZi8hOkMfQNQJfod2osWBqcOO7eEOqFMvCfqNhqgxqOr7URnxYKTR4N6sR3sTPywfHpEsPXhrU9zfZgg=")
 
         return this
     }
@@ -329,7 +334,7 @@ public class ViewState: ObservableObject {
     func formatUrl(with: File) -> String {
         "\(apiInfo!.features.autumn.url)/\(with.tag)/\(with.id)"
     }
-    
+
     func formatUrl(fromEmoji emojiId: String) -> String {
         "\(apiInfo!.features.autumn.url)/emojis/\(emojiId)"
     }
@@ -344,11 +349,11 @@ public class ViewState: ObservableObject {
         }
 
         let fetchApiInfoSpan = launchTransaction.startChild(operation: "fetchApiInfo")
-        
+
         let apiInfo = try! await self.http.fetchApiInfo().get()
         self.http.apiInfo = apiInfo
         self.apiInfo = apiInfo
-        
+
         fetchApiInfoSpan.finish()
 
         let ws = WebSocketStream(url: apiInfo.ws, token: token, onEvent: onEvent)
@@ -380,7 +385,7 @@ public class ViewState: ObservableObject {
         switch event {
             case .ready(let event):
                 let processReadySpan = launchTransaction.startChild(operation: "processReady")
-                
+
                 for channel in event.channels {
                     channels[channel.id] = channel
                     channelMessages[channel.id] = []
@@ -410,13 +415,17 @@ public class ViewState: ObservableObject {
                 for unread in unreads {
                     self.unreads[unread.id.channel] = unread
                 }
-                
+
                 for emoji in event.emojis {
                     self.emojis[emoji.id] = emoji
                 }
 
+                for voiceState in event.voice_states {
+                    self.voiceStates[voiceState.id] = voiceState
+                }
+
                 state = .connected
-                
+
                 processReadySpan.finish()
                 launchTransaction.finish()
 
@@ -469,6 +478,22 @@ public class ViewState: ObservableObject {
             case .channel_ack(let e):
                 unreads[e.id]?.last_id = nil
                 unreads[e.id]?.mentions?.removeAll { $0 <= e.message_id }
+
+            case .voice_channel_join(let e):
+                if voiceStates[e.id] == nil {
+                    voiceStates[e.id] = ChannelVoiceState(id: e.id, participants: [e.state])
+                } else {
+                    voiceStates[e.id]!.participants.append(e.state)
+                }
+
+            case .voice_channel_leave(let e):
+                if var voiceState = voiceStates[e.id] {
+                    voiceState.participants.removeAll(where: { $0.id == e.user })
+
+                    if voiceState.participants.isEmpty {
+                        voiceStates.removeValue(forKey: e.id)
+                    }
+                }
         }
     }
 
@@ -562,17 +587,17 @@ public class ViewState: ObservableObject {
 
         return nil
     }
-    
+
     func openUserSheet(withId id: String, server: String?) {
         if let user = users[id] {
             let member = server
                 .flatMap { members[$0] }
                 .flatMap { $0[id] }
-            
+
             currentUserSheet = UserMaybeMember(user: user, member: member)
         }
     }
-    
+
     func openUserSheet(user: Types.User, member: Member?) {
         currentUserSheet = UserMaybeMember(user: user, member: member)
     }
