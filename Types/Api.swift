@@ -27,24 +27,26 @@ public struct RevoltFeature: Codable {
     public var url: String
 }
 
-public struct LiveKitFeature: Codable {
-    public init(enabled: Bool, url: String) {
+public struct VortexFeature: Codable {
+    public init(enabled: Bool, url: String, ws: String) {
         self.enabled = enabled
         self.url = url
+        self.ws = ws
     }
     
     public var enabled: Bool
     public var url: String
+    public var ws: String
 }
 
 public struct ApiFeatures: Codable {
-    public init(captcha: CaptchaFeature, email: Bool, invite_only: Bool, autumn: RevoltFeature, january: RevoltFeature, livekit: LiveKitFeature) {
+    public init(captcha: CaptchaFeature, email: Bool, invite_only: Bool, autumn: RevoltFeature, january: RevoltFeature, voso: VortexFeature) {
         self.captcha = captcha
         self.email = email
         self.invite_only = invite_only
         self.autumn = autumn
         self.january = january
-        self.livekit = livekit
+        self.voso = voso
     }
     
     public var captcha: CaptchaFeature
@@ -52,7 +54,7 @@ public struct ApiFeatures: Codable {
     public var invite_only: Bool
     public var autumn: RevoltFeature
     public var january: RevoltFeature
-    public var livekit: LiveKitFeature
+    public var voso: VortexFeature
 }
 
 public struct ApiInfo: Codable {

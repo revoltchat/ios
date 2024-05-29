@@ -95,9 +95,6 @@
     "Channel Icon" : {
 
     },
-    "Click the join button to connect" : {
-
-    },
     "Code or link" : {
 
     },
@@ -245,16 +242,10 @@
     "Join by invite code or link" : {
 
     },
-    "Join Call" : {
-
-    },
     "Joined" : {
 
     },
     "Language" : {
-
-    },
-    "Leave Call" : {
 
     },
     "Let's fix that" : {
@@ -312,9 +303,6 @@
 
     },
     "New Password" : {
-
-    },
-    "Not Connected" : {
 
     },
     "Offline" : {
@@ -467,7 +455,7 @@
     "unknown" : {
 
     },
-    "Unknown Channel" : {
+    "Unknown Channel :(" : {
 
     },
     "Unknown message" : {

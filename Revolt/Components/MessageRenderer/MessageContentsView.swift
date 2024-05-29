@@ -98,6 +98,7 @@ struct MessageContentsView: View {
         .sheet(isPresented: $showReactSheet) {
             EmojiPicker(background: AnyView(viewState.theme.background)) { emoji in
                 Task {
+                    showReactSheet = false
                     await viewState.http.reactMessage(channel: message.channel, message: message.id, emoji: emoji.id)
                 }
             }

@@ -468,7 +468,6 @@ extension Member {
             .compactMap(\.colour)
             .last
             .map {
-                print($0)
                 return parseCSSColor(currentTheme: theme, input: $0)
             }
     }

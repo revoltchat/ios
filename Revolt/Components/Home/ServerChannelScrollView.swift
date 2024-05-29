@@ -67,7 +67,7 @@ struct ServerChannelScrollView: View {
     
     var body: some View {
         let maybeSelectedServer: Server? = switch currentSelection {
-            case .server(let serverId): viewState.servers[serverId]!
+            case .server(let serverId): viewState.servers[serverId]
             default: nil
         }
 

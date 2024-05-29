@@ -469,6 +469,16 @@ public class ViewState: ObservableObject {
             case .channel_ack(let e):
                 unreads[e.id]?.last_id = nil
                 unreads[e.id]?.mentions?.removeAll { $0 <= e.message_id }
+            
+            case .message_react(let e):
+                if var message = messages[e.id] {
+                    var reactions = message.reactions ?? [:]
+                    var users = reactions[e.emoji_id] ?? []
+                    users.append(e.user_id)
+                    reactions[e.emoji_id] = users
+                    message.reactions = reactions
+                    messages[e.id] = message
+                }
         }
     }
 

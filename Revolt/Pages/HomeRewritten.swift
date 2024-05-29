@@ -17,18 +17,22 @@ struct MaybeChannelView: View {
     var body: some View {
         switch currentChannel {
             case .channel(let channelId):
-                let channel = viewState.channels[channelId]!
-                let messages = Binding($viewState.channelMessages[channelId])!
+                if let channel = viewState.channels[channelId] {
+                    let messages = Binding($viewState.channelMessages[channelId])!
                     
-                MessageableChannelView(
-                    viewModel: MessageableChannelViewModel(
-                        viewState: viewState,
-                        channel: channel,
-                        server: currentServer,
-                        messages: messages
-                    ),
-                    showSidebar: $showSidebar
-                )
+                    MessageableChannelView(
+                        viewModel: MessageableChannelViewModel(
+                            viewState: viewState,
+                            channel: channel,
+                            server: currentServer,
+                            messages: messages
+                        ),
+                        showSidebar: $showSidebar
+                    )
+
+                } else {
+                    Text("Unknown Channel :(")
+                }
             case .home:
                 HomeWelcome(showSidebar: $showSidebar)
             case .friends:

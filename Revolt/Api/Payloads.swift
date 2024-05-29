@@ -124,7 +124,7 @@ struct ServerEdit: Encodable {
     var description: String?
     var icon: String?
     var banner: String?
-    var categories: [Category]?
+    var categories: [Types.Category]?
     var system_messages: SystemMessages?
     var flags: Int?
     var discoverable: Bool?

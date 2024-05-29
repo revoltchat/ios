@@ -19,6 +19,7 @@ enum WsMessage {
     case channel_stop_typing(ChannelTyping)
     case message_delete(MessageDeleteEvent)
     case channel_ack(ChannelAckEvent)
+    case message_react(MessageReactEvent)
 }
 
 struct ReadyEvent: Decodable {
@@ -56,9 +57,16 @@ struct ChannelAckEvent: Decodable {
     var message_id: String
 }
 
+struct MessageReactEvent: Decodable {
+    var id: String
+    var channel_id: String
+    var user_id: String
+    var emoji_id: String
+}
+
 extension WsMessage: Decodable {
     enum CodingKeys: String, CodingKey { case type }
-    enum Tag: String, Decodable { case Authenticated, InvalidSession, Ready, Message, MessageUpdate, ChannelStartTyping, ChannelStopTyping, MessageDelete, ChannelAck }
+    enum Tag: String, Decodable { case Authenticated, InvalidSession, Ready, Message, MessageUpdate, ChannelStartTyping, ChannelStopTyping, MessageDelete, ChannelAck, MessageReact }
     
     init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
@@ -83,6 +91,8 @@ extension WsMessage: Decodable {
                 self = .message_delete(try singleValueContainer.decode(MessageDeleteEvent.self))
             case .ChannelAck:
                 self = .channel_ack(try singleValueContainer.decode(ChannelAckEvent.self))
+            case .MessageReact:
+                self = .message_react(try singleValueContainer.decode(MessageReactEvent.self))
         }
     }
 }
