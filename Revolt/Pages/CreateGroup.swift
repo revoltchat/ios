@@ -7,6 +7,7 @@
 
 import Foundation
 import SwiftUI
+import Types
 
 struct CreateGroup: View {
     @EnvironmentObject var viewState: ViewState

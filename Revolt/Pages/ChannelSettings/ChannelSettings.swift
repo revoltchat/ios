@@ -7,6 +7,7 @@
 
 import Foundation
 import SwiftUI
+import Types
 
 struct ChannelSettings: View {
     @EnvironmentObject var viewState: ViewState

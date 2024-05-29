@@ -7,6 +7,7 @@
 
 import Foundation
 import SwiftUI
+import Types
 
 struct HomeWelcome: View {
     @Environment(\.openURL) var openURL: OpenURLAction

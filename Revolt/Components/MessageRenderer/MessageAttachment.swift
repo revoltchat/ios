@@ -8,6 +8,7 @@
 import Foundation
 import SwiftUI
 import AVKit
+import Types
 
 var fmt = ByteCountFormatter()
 

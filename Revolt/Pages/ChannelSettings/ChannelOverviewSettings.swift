@@ -8,6 +8,7 @@
 import Foundation
 import SwiftUI
 import PhotosUI
+import Types
 
 struct ChannelOverviewSettings: View {
     @EnvironmentObject var viewState: ViewState

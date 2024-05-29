@@ -9,6 +9,7 @@ import Foundation
 import SwiftUI
 import CodableWrapper
 import Parsing
+import Types
 
 func parseHex(hex: String) -> (Double, Double, Double, Double) {
     let hex = hex.trimmingCharacters(in: CharacterSet.alphanumerics.inverted)
@@ -353,8 +354,8 @@ func parseCSSColor(currentTheme: Theme, input: String) -> AnyShapeStyle {
                     return AnyShapeStyle(LinearGradient(stops: stops, startPoint: start, endPoint: end))
                 } else {
                     let colors = grad.stops.map { resolveColor(color: $0.color) }
-                
-                return AnyShapeStyle(LinearGradient(colors: colors, startPoint: start, endPoint: end))
+
+                    return AnyShapeStyle(LinearGradient(colors: colors, startPoint: start, endPoint: end))
                 }
         }
     } catch {
@@ -459,3 +460,16 @@ public struct Theme: Codable, Equatable {
     }
 }
 
+extension Member {
+    public func displayColour(theme: Theme, server: Server) -> AnyShapeStyle? {
+        roles?
+            .compactMap { server.roles?[$0] }
+            .sorted(by: { $0.rank > $1.rank })
+            .compactMap(\.colour)
+            .last
+            .map {
+                print($0)
+                return parseCSSColor(currentTheme: theme, input: $0)
+            }
+    }
+}

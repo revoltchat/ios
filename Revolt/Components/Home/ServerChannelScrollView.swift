@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import Types
 
 
 struct ChannelListItem: View {
@@ -42,7 +43,7 @@ struct ChannelListItem: View {
 
 struct CategoryListItem: View {
     @EnvironmentObject var viewState: ViewState
-    var category: Category
+    var category: Types.Category
     var selectedChannel: String?
 
     var body: some View {

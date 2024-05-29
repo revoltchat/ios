@@ -8,6 +8,7 @@
 import Foundation
 import SwiftUI
 import Flow
+import Types
 
 enum Badges: Int, CaseIterable {
     case developer = 1
@@ -186,12 +187,11 @@ struct UserSheet: View {
         .background(viewState.theme.background.color)
         .presentationDetents([.fraction(0.4), .large])
         .task {
-            print(user)
             if let profile = user.profile {
                 self.profile = profile
             } else {
                 Task {
-                    profile = try! await viewState.http.fetchProfile(user: user.id).get()
+                    profile = try? await viewState.http.fetchProfile(user: user.id).get()
                 }
             }
         }

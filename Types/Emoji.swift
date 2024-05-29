@@ -7,15 +7,19 @@
 
 import Foundation
 
-struct EmojiParentServer: Decodable, Equatable {
-    var id: String
+public struct EmojiParentServer: Decodable, Equatable {
+    public init(id: String) {
+        self.id = id
+    }
+    
+    public var id: String
 }
 
-struct EmojiParentDetached: Decodable, Equatable{
+public struct EmojiParentDetached: Decodable, Equatable {
     
 }
 
-enum EmojiParent: Equatable {
+public enum EmojiParent: Equatable {
     case server(EmojiParentServer)
     case detached(EmojiParentDetached)
 }
@@ -24,7 +28,7 @@ extension EmojiParent: Decodable {
     enum CodingKeys: String, CodingKey { case type }
     enum Tag: String, Decodable { case Server, Detached }
     
-    init(from decoder: Decoder) throws {
+    public init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
         let singleValueContainer = try decoder.singleValueContainer()
         
@@ -37,13 +41,22 @@ extension EmojiParent: Decodable {
     }
 }
 
-struct Emoji: Decodable, Equatable, Identifiable {
-    var id: String
-    var parent: EmojiParent
-    var creator_id: String
-    var name: String
-    var animated: Bool?
-    var nsfw: Bool?
+public struct Emoji: Decodable, Equatable, Identifiable {
+    public init(id: String, parent: EmojiParent, creator_id: String, name: String, animated: Bool? = nil, nsfw: Bool? = nil) {
+        self.id = id
+        self.parent = parent
+        self.creator_id = creator_id
+        self.name = name
+        self.animated = animated
+        self.nsfw = nsfw
+    }
+    
+    public var id: String
+    public var parent: EmojiParent
+    public var creator_id: String
+    public var name: String
+    public var animated: Bool?
+    public var nsfw: Bool?
     
     enum CodingKeys: String, CodingKey {
         case id = "_id"

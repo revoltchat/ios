@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import Types
 
 struct ReportMessageSheetView: View {
     @EnvironmentObject var viewState: ViewState

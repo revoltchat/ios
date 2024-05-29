@@ -8,6 +8,7 @@
 import Foundation
 import SwiftUI
 import WebKit
+import Types
 
 #if os(macOS)
 

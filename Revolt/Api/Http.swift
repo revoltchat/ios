@@ -7,6 +7,7 @@
 
 import Foundation
 import Alamofire
+import Types
 import os
 
 struct HTTPClient {
@@ -168,7 +169,7 @@ struct HTTPClient {
             .result
     }
     
-    func fetchSessions() async -> Result<[Session], AFError> {
+    func fetchSessions() async -> Result<[Types.Session], AFError> {
         await req(method: .get, route: "/auth/session/all")
     }
     

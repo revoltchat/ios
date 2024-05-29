@@ -7,6 +7,7 @@
 
 import Foundation
 import SwiftUI
+import Types
 
 struct VisibleKey: PreferenceKey {
     static var defaultValue: Bool = false

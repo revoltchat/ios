@@ -8,6 +8,7 @@
 import Foundation
 import SwiftUI
 import Kingfisher
+import Types
 
 enum LazyImageSource {
     case url(URL)

@@ -8,6 +8,7 @@
 import Foundation
 import SwiftUI
 import PhotosUI
+import Types
 
 struct ServerOverviewSettings: View {
     @EnvironmentObject var viewState: ViewState
@@ -23,6 +24,7 @@ struct ServerOverviewSettings: View {
         var description: String
     }
     
+    @State var initial: ServerSettingsValues
     @State var currentValues: ServerSettingsValues
     @State var showSaveButton: Bool = false
     @State var showIconPhotoPicker: Bool = false

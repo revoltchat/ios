@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import Types
 
 struct ForgotPassword_Reset: View {
     @EnvironmentObject var viewState: ViewState

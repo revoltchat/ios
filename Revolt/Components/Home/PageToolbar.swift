@@ -7,6 +7,7 @@
 
 import Foundation
 import SwiftUI
+import Types
 
 struct PageToolbar<C: View, T: View>: View {
     @EnvironmentObject var viewState: ViewState

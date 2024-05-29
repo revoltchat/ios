@@ -7,66 +7,66 @@
 
 import Foundation
 
-struct Interactions: Codable {
-    var reactions: [String]?
-    var restrict_reactions: Bool?
+public struct Interactions: Codable {
+    public var reactions: [String]?
+    public var restrict_reactions: Bool?
 }
 
-struct Masquerade: Codable {
-    var name: String?
-    var avatar: String?
-    var colour: String?
+public struct Masquerade: Codable {
+    public var name: String?
+    public var avatar: String?
+    public var colour: String?
 }
 
-struct TextSystemMessageContent: Codable {
-    var content: String
+public struct TextSystemMessageContent: Codable {
+    public var content: String
 }
 
-struct UserAddedSystemContent: Codable {
-    var id: String
-    var by: String
+public struct UserAddedSystemContent: Codable {
+    public var id: String
+    public var by: String
 }
 
-struct UserRemovedSystemContent: Codable {
-    var id: String
-    var by: String
+public struct UserRemovedSystemContent: Codable {
+    public var id: String
+    public var by: String
 }
 
-struct UserJoinedSystemContent: Codable {
-    var id: String
+public struct UserJoinedSystemContent: Codable {
+    public var id: String
 }
 
-struct UserLeftSystemContent: Codable {
-    var id: String
+public struct UserLeftSystemContent: Codable {
+    public var id: String
 }
 
-struct UserKickedSystemContent: Codable {
-    var id: String
+public struct UserKickedSystemContent: Codable {
+    public var id: String
 }
 
-struct UserBannedSystemContent: Codable {
-    var id: String
+public struct UserBannedSystemContent: Codable {
+    public var id: String
 }
 
-struct ChannelRenamedSystemContent: Codable {
-    var name: String
-    var by: String
+public struct ChannelRenamedSystemContent: Codable {
+    public var name: String
+    public var by: String
 }
 
-struct ChannelDescriptionChangedSystemContent: Codable {
-    var by: String
+public struct ChannelDescriptionChangedSystemContent: Codable {
+    public var by: String
 }
 
-struct ChannelIconChangedSystemContent: Codable {
-    var by: String
+public struct ChannelIconChangedSystemContent: Codable {
+    public var by: String
 }
 
-struct ChannelOwnershipChangedSystemContent: Codable {
-    var from: String
-    var to: String
+public struct ChannelOwnershipChangedSystemContent: Codable {
+    public var from: String
+    public var to: String
 }
 
-enum SystemMessageContent {
+public enum SystemMessageContent {
     case text(TextSystemMessageContent)
     case user_added(UserAddedSystemContent)
     case user_removed(UserRemovedSystemContent)
@@ -84,7 +84,7 @@ extension SystemMessageContent: Decodable {
     enum CodingKeys: String, CodingKey { case type }
     enum Tag: String, Decodable { case text, user_added, user_remove, user_joined, user_left, user_kicked, user_banned, channel_renamed, channel_description_changed, channel_icon_changed, channel_ownership_changed }
     
-    init(from decoder: Decoder) throws {
+    public init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
         let singleValueContainer = try decoder.singleValueContainer()
         
@@ -115,20 +115,35 @@ extension SystemMessageContent: Decodable {
     }
 }
 
-struct Message: Identifiable, Decodable {
-    var id: String
-
-    var content: String?
-    var author: String
-    var channel: String
-    var system: SystemMessageContent?
-    var attachments: [File]?
-    var mentions: [String]?
-    var replies: [String]?
-    var edited: String?
-    var masquerade: Masquerade?
-    var interactions: Interactions?
-    var reactions: [String: [String]]?
+public struct Message: Identifiable, Decodable {
+    public init(id: String, content: String? = nil, author: String, channel: String, system: SystemMessageContent? = nil, attachments: [File]? = nil, mentions: [String]? = nil, replies: [String]? = nil, edited: String? = nil, masquerade: Masquerade? = nil, interactions: Interactions? = nil, reactions: [String : [String]]? = nil) {
+        self.id = id
+        self.content = content
+        self.author = author
+        self.channel = channel
+        self.system = system
+        self.attachments = attachments
+        self.mentions = mentions
+        self.replies = replies
+        self.edited = edited
+        self.masquerade = masquerade
+        self.interactions = interactions
+        self.reactions = reactions
+    }
+    
+    public var id: String
+    
+    public var content: String?
+    public var author: String
+    public var channel: String
+    public var system: SystemMessageContent?
+    public var attachments: [File]?
+    public var mentions: [String]?
+    public var replies: [String]?
+    public var edited: String?
+    public var masquerade: Masquerade?
+    public var interactions: Interactions?
+    public var reactions: [String: [String]]?
     
     enum CodingKeys: String, CodingKey {
         case id = "_id"

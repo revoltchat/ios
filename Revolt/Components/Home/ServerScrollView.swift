@@ -6,13 +6,13 @@
 //
 
 import SwiftUI
+import Types
 
 struct ServerScrollView: View {
     let buttonSize = 44.0
     let viewWidth = 60.0
     
     @EnvironmentObject var viewState: ViewState
-    @Binding var showJoinServerSheet: Bool
     
     var body: some View {
         ZStack(alignment: .top) {

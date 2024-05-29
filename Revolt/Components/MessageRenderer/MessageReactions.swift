@@ -8,6 +8,7 @@
 import Foundation
 import SwiftUI
 import Flow
+import Types
 
 struct MessageReactions: View {
     @EnvironmentObject var viewState: ViewState

@@ -10,6 +10,7 @@
 #if os(iOS)
 import SwiftUI
 import HCaptcha
+import Types
 
 struct HCaptchaUIViewWrapperView: UIViewRepresentable {
     var uiview = UIView()

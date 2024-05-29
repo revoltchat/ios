@@ -8,6 +8,7 @@
 import Foundation
 import SwiftUI
 import PhotosUI
+import Types
 
 struct Reply {
     var message: Message
@@ -95,7 +96,7 @@ struct MessageBox: View {
 
     @State var showingSelectFile = false
     @State var showingSelectPhoto = false
-    
+
     @State var reshowKeyboard = false
 
     @State var content = ""
@@ -213,7 +214,7 @@ struct MessageBox: View {
                         HStack {
                             ForEach($selectedPhotos, id: \.self) { file in
                                 let file = file.wrappedValue
-                                
+
                                 ZStack(alignment: .topTrailing) {
                                     if let image = file.image {
 #if os(iOS)
@@ -235,7 +236,7 @@ struct MessageBox: View {
                                                 .frame(width: 100, height: 100)
                                                 .foregroundStyle(viewState.theme.background.color)
                                                 .clipShape(RoundedRectangle(cornerRadius: 5.0, style: .circular))
-                                            
+
                                             Text(verbatim: file.filename)
                                                 .font(.caption)
                                                 .foregroundStyle(viewState.theme.foreground.color)
@@ -352,7 +353,7 @@ struct MessageBox: View {
                                 } else {
                                     content.append(String(String.UnicodeScalarView(emoji.base.compactMap(Unicode.Scalar.init))))
                                 }
-                                
+
                                 showingSelectEmoji = false
                             }
                             .padding([.top, .horizontal])
@@ -361,28 +362,28 @@ struct MessageBox: View {
                         }
 
                     Group {
-                    Button {
-                        withAnimation {
+                        Button {
+                            withAnimation {
                                 focusState.wrappedValue = false
-                            showingSelectEmoji.toggle()
-                        }
-                    } label: {
-                        Image(systemName: "face.smiling")
-                            .resizable()
+                                showingSelectEmoji.toggle()
+                            }
+                        } label: {
+                            Image(systemName: "face.smiling")
+                                .resizable()
                                 .frame(width: 24, height: 24)
                                 .foregroundStyle(viewState.theme.foreground3.color)
-                    }
+                        }
 
 
-                    if !content.isEmpty || !selectedPhotos.isEmpty {
-                        Button(action: sendMessage) {
-                            Image(systemName: "arrow.up.circle.fill")
-                                .resizable()
+                        if !content.isEmpty || !selectedPhotos.isEmpty {
+                            Button(action: sendMessage) {
+                                Image(systemName: "arrow.up.circle.fill")
+                                    .resizable()
                                     .frame(width: 24, height: 24)
                                     .foregroundStyle(viewState.theme.foreground3.color)
+                            }
                         }
                     }
-                }
                     .frame(alignment: .top)
                 }
             }

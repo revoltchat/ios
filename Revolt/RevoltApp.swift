@@ -1,12 +1,13 @@
 import SwiftUI
 import Sentry
+import Types
 
 
 @main
 struct RevoltApp: App {
     @Environment(\.locale) var systemLocale: Locale
     @StateObject var state = ViewState()
-    
+
     init() {
         SentrySDK.start { options in
             options.dsn = "https://4049414032e74d9098a44e67779aa648@sentry.revolt.chat/7"
@@ -18,7 +19,7 @@ struct RevoltApp: App {
             //options.enableMetrics = true
         }
     }
-    
+
     var body: some Scene {
         WindowGroup {
             ApplicationSwitcher()
@@ -41,7 +42,7 @@ struct RevoltApp: App {
                                 }
                         case "revoltchat":
                             var queryItems: [String: String] = [:]
-                            
+
                             for item in components?.queryItems ?? [] {
                                 queryItems[item.name] = item.value?.removingPercentEncoding
                             }
@@ -58,7 +59,7 @@ struct RevoltApp: App {
                                             } else {
                                                 state.currentServer = .dms
                                             }
-                                            
+
                                             state.currentChannel = .channel(id)
                                         }
                                     }
@@ -100,7 +101,7 @@ struct ApplicationSwitcher: View {
 
 struct InnerApp: View {
     @EnvironmentObject var viewState: ViewState
-    
+
     var body: some View {
         NavigationStack(path: $viewState.path) {
             switch viewState.state {
@@ -165,7 +166,7 @@ extension View {
             self
         }
     }
-    
+
     @ViewBuilder
     func `if`<Content: View, Else: View>(_ conditional: Bool, content: (Self) -> Content, else other: (Self) -> Else) -> some View {
         if conditional {
@@ -174,7 +175,7 @@ extension View {
             other(self)
         }
     }
-    
+
     @MainActor
     func applyPreviewModifiers(withState viewState: ViewState) -> some View {
         self.environmentObject(viewState)
@@ -197,26 +198,26 @@ extension Bundle {
 extension IteratorProtocol {
     mutating func next(n: Int) -> [Self.Element] {
         var values: [Self.Element] = []
-        
+
         for _ in 0...n {
             if let v = self.next() {
                 values.append(v)
             }
         }
-        
+
         return values
     }
-    
+
     mutating func groups(n: Int) -> [[Self.Element]] {
         var values: [[Self.Element]] = []
-        
+
         while true {
             let group = self.next(n: n)
-            
+
             if group.count > 0 {
                 values.append(group)
             }
-            
+
             if group.count != n {
                 return values
             }
@@ -253,14 +254,14 @@ struct CheckboxStyle: ToggleStyle {
             configuration.label
 
             Spacer()
-            
+
             if configuration.isOn {
                 Image(systemName: "checkmark")
                     .resizable()
                     .frame(width: 16, height: 16)
                     .foregroundColor(viewState.theme.accent.color)
             }
-            
+
         }
         .onTapGesture { configuration.isOn.toggle() }
     }

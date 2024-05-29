@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import Types
 
 struct CreateAccount: View {
     enum OnboardingStage {

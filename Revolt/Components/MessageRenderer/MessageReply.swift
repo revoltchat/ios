@@ -7,6 +7,7 @@
 
 import Foundation
 import SwiftUI
+import Types
 
 struct MessageReplyView: View {
     @EnvironmentObject var viewState: ViewState

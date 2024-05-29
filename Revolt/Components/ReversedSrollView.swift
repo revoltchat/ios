@@ -7,6 +7,7 @@
 
 import Foundation
 import SwiftUI
+import Types
 
 func minWidth(in proxy: GeometryProxy, for axis: Axis.Set) -> CGFloat? {
     axis.contains(.horizontal) ? proxy.size.width : nil

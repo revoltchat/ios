@@ -7,6 +7,7 @@
 
 import Foundation
 import SwiftUI
+import Types
 
 struct MessageView: View {
     @StateObject var viewModel: MessageContentsViewModel
@@ -117,7 +118,7 @@ struct MessageView_Previews: PreviewProvider {
     
     static var previews: some View {
         List {
-        MessageView(viewModel: MessageContentsViewModel(viewState: viewState, message: $message, author: $author, member: $member, server: $server, channel: $channel, replies: $replies, channelScrollPosition: $channelScrollPosition), isStatic: false)
+            MessageView(viewModel: MessageContentsViewModel(viewState: viewState, message: $message, author: $author, member: $member, server: $server, channel: $channel, replies: $replies, channelScrollPosition: $channelScrollPosition), isStatic: false)
         }
             .applyPreviewModifiers(withState: viewState)
     }

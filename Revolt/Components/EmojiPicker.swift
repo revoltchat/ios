@@ -9,6 +9,7 @@ import Foundation
 import SwiftUI
 import Flow
 import OrderedCollections
+import Types
 
 struct EmojiGroup: Decodable {
     var group: String
@@ -23,7 +24,7 @@ struct PickerEmoji: Decodable, Identifiable {
     var shortcodes: [String]
     var animated: Bool
     var directional: Bool
-    
+
     var id: String {
         if let id = emojiId {
             return id
@@ -38,18 +39,18 @@ enum PickerEmojiParent: Identifiable, Equatable, Hashable {
         switch (lhs, rhs) {
             case (.server(let s1), .server(let s2)):
                 return s1.id == s2.id
-                
+
             case (.unicode(let s1), .unicode(let s2)):
                 return s1 == s2
-            
+
             default:
                 return false
         }
     }
-    
+
     case server(Server)
     case unicode(String)
-    
+
     var id: String {
         switch self {
             case .server(let server):
@@ -58,7 +59,7 @@ enum PickerEmojiParent: Identifiable, Equatable, Hashable {
                 return name
         }
     }
-    
+
     var name: String {
         switch self {
             case .server(let server):
@@ -67,7 +68,7 @@ enum PickerEmojiParent: Identifiable, Equatable, Hashable {
                 return name
         }
     }
-    
+
     func hash(into hasher: inout Hasher) {
         hasher.combine(self.name)
     }
@@ -80,16 +81,16 @@ struct PickerEmojiCategory {
 struct EmojiPicker: View {
     @EnvironmentObject var viewState: ViewState
     var background: AnyView
-    
+
     var onClick: (PickerEmoji) -> ()
-    
+
     @State var scrollPosition: String?
-    
+
     func loadEmojis() -> OrderedDictionary<PickerEmojiParent, [PickerEmoji]> {
         let baseEmojis = try! JSONDecoder().decode([EmojiGroup].self, from: emojiPickerContent.data(using: .utf8)!)
-        
+
         var emojis: OrderedDictionary<PickerEmojiParent, [PickerEmoji]> = [:]
-        
+
         for emoji in viewState.emojis.values {
             if case .server(let id) = emoji.parent {
                 let server = viewState.servers[id.id]!
@@ -103,23 +104,23 @@ struct EmojiPicker: View {
                     animated: emoji.animated ?? false,
                     directional: false
                 )
-                
+
                 if emojis[parent] == nil {
                     emojis[parent] = []
                 }
-                
+
                 emojis[parent]!.append(emoji)
             }
         }
-        
+
         for category in baseEmojis {
             let parent = PickerEmojiParent.unicode(category.group)
             emojis[parent] = category.emoji
         }
-        
+
         return emojis
     }
-    
+
     func convertEmojiToImage(text: String) -> UIImage {
         let size = CGSize(width: 32, height: 32)
         UIGraphicsBeginImageContextWithOptions(size, false, 0)
@@ -131,10 +132,10 @@ struct EmojiPicker: View {
         UIGraphicsEndImageContext()
         return image!
     }
-    
+
     var body: some View {
         let emojis = loadEmojis()
-        
+
         ZStack(alignment: .top) {
             ScrollView(.horizontal) {
                 HStack(spacing: 8) {
@@ -148,7 +149,7 @@ struct EmojiPicker: View {
                                         .font(.caption)
                                 case .unicode(_):
                                     let emojiString = String(String.UnicodeScalarView(group.1.first!.base.compactMap(Unicode.Scalar.init)))
-                                    
+
                                     Image(uiImage: convertEmojiToImage(text: emojiString))
                                         .resizable()
                                         .aspectRatio(contentMode: .fit)
@@ -162,7 +163,7 @@ struct EmojiPicker: View {
             .padding(4)
             .background(background)
             .zIndex(1)
-        
+
             List {
                 ForEach(Array(emojis), id: \.0) { group in
                     Section(group.0.name) {
@@ -176,9 +177,9 @@ struct EmojiPicker: View {
                                     } else {
 //                                        let base = emoji.base.map { String(format: "%02x", $0) }.joined(separator: "")
 //                                        let url = "https://raw.githubusercontent.com/jdecked/twemoji/master/assets/72x72/\(base).png"
-//                                        
+//
 //                                        LazyImage(source: .url(URL(string: url)!), height: 24, width: 24, clipTo: Rectangle())
-                                        
+
                                         let emojiString = String(String.UnicodeScalarView(emoji.base.compactMap(Unicode.Scalar.init)))
                                         let image = convertEmojiToImage(text: emojiString)
 
@@ -202,7 +203,7 @@ struct EmojiPicker: View {
             .padding(.top, 30)
             .scrollContentBackground(.hidden)
             .background(background)
-            
+
         }
     }
 }
@@ -214,6 +215,6 @@ struct EmojiPicker: View {
 
     let box = MessageBox(channel: viewState.channels["0"]!, server: viewState.servers["0"], channelReplies: .constant([]), focusState: $focused, showingSelectEmoji: $showingSelectEmoji)
     box.showingSelectEmoji = true
-    
+
     return box.applyPreviewModifiers(withState: ViewState.preview().applySystemScheme(theme: .dark))
 }

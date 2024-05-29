@@ -7,6 +7,8 @@
 
 import Foundation
 import SwiftUI
+import Types
+
 struct AddServer: View {
     @EnvironmentObject var viewState: ViewState
 

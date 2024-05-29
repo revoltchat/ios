@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import Types
 
 struct AccountCreateVerifyResponse: Decodable {
     struct Inner: Decodable {

@@ -7,6 +7,7 @@
 
 import Foundation
 import SwiftUI
+import Types
 
 class MessageContentsViewModel: ObservableObject, Equatable {
     var viewState: ViewState
@@ -29,15 +30,15 @@ class MessageContentsViewModel: ObservableObject, Equatable {
         self._channelReplies = replies
         self._channelScrollPosition = channelScrollPosition
     }
-    
+
     static func == (lhs: MessageContentsViewModel, rhs: MessageContentsViewModel) -> Bool {
         lhs.message.id == rhs.message.id
     }
-    
+
     func delete() async {
         await viewState.http.deleteMessage(channel: channel.id, message: message.id)
     }
-    
+
     func reply() {
         if !channelReplies.contains(where: { $0.message.id == message.id }) && channelReplies.count < 5 {
             channelReplies.append(Reply(message: message))
@@ -48,12 +49,12 @@ class MessageContentsViewModel: ObservableObject, Equatable {
 struct MessageContentsView: View {
     @EnvironmentObject var viewState: ViewState
     @ObservedObject var viewModel: MessageContentsViewModel
-    
+
     @State var showMemberSheet: Bool = false
     @State var showReportSheet: Bool = false
     @State var showReactSheet: Bool = false
     @State var isStatic: Bool
-    
+
     func copyText() {
 #if os(macOS)
         NSPasteboard.general.setString(message.content ?? "", forType: .string)
@@ -61,34 +62,34 @@ struct MessageContentsView: View {
         UIPasteboard.general.string = viewModel.message.content
 #endif
     }
-    
+
     private var isModeratorInChannel: Bool {
         return true // TODO: need bit op stuff
     }
-    
+
     private var isMessageAuthor: Bool {
         viewModel.message.author == viewState.currentUser?.id
     }
-    
+
     private var canDeleteMessage: Bool {
         return isMessageAuthor || isModeratorInChannel
     }
-    
+
     var body: some View {
         let message = viewModel.message
-        
+
         VStack(alignment: .leading) {
             if let content = message.content {
                 Contents(text: content)
                     .font(.body)
             }
-            
+
             VStack(alignment: .leading) {
                 ForEach(message.attachments ?? []) { attachment in
                     MessageAttachment(attachment: attachment)
                 }
             }
-            
+
             MessageReactions(reactions: viewModel.$message.reactions, interactions: viewModel.$message.interactions)
         }
         .sheet(isPresented: $showReportSheet) {
@@ -114,25 +115,25 @@ struct MessageContentsView: View {
             } label: {
                 Label("React", systemImage: "face.smiling.inverse")
             }
-            
+
             Button(action: copyText, label: {
                 Label("Copy contents", systemImage: "doc.on.clipboard")
             })
-            
+
             Button(action: { showMemberSheet.toggle() }, label: {
                 Label("Open Profile", systemImage: "person.crop.circle")
             })
-            
+
             if isMessageAuthor {
                 Button(role: .destructive, action: {
                     Task {
-                        
+
                     }
                 }, label: {
                     Label("Edit", systemImage: "pencil")
                 })
             }
-            
+
             if canDeleteMessage {
                 Button(role: .destructive, action: {
                     Task {
@@ -142,7 +143,7 @@ struct MessageContentsView: View {
                     Label("Delete", systemImage: "trash")
                 })
             }
-            
+
             if !isMessageAuthor {
                 Button(role: .destructive, action: { showReportSheet.toggle() }, label: {
                     Label("Report", systemImage: "exclamationmark.triangle")

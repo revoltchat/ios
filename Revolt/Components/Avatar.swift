@@ -8,6 +8,7 @@
 import Foundation
 import SwiftUI
 import Kingfisher
+import Types
 
 struct Avatar: View {
     @EnvironmentObject var viewState: ViewState

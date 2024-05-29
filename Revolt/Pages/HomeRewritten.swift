@@ -5,6 +5,7 @@
 //  Created by Angelo on 25/11/2023.
 //
 import SwiftUI
+import Types
 
 struct MaybeChannelView: View {
     @EnvironmentObject var viewState: ViewState
@@ -58,8 +59,6 @@ struct HomeRewritten: View {
     
     @State var offset = CGFloat.zero
     @State var forceOpen: Bool = false
-    
-    @State var showJoinServerSheet = false
     
     @State var showSidebar = false
     

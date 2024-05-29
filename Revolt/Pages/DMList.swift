@@ -7,6 +7,7 @@
 
 import Foundation
 import SwiftUI
+import Types
 
 enum Destination: Hashable, Codable {
     case dm(String)

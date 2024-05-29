@@ -8,6 +8,7 @@
 import Foundation
 import SwiftUI
 import UIKit
+import Types
 
 struct ShareInviteSheet: View {
     @EnvironmentObject var viewState: ViewState

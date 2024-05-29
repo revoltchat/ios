@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import Types
 
 struct Welcome: View {
     @EnvironmentObject var viewState: ViewState

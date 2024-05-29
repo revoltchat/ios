@@ -4,6 +4,7 @@ import Alamofire
 import ULID
 import Collections
 import Sentry
+import Types
 
 enum UserStateError: Error {
     case signInError
@@ -112,7 +113,7 @@ enum NavigationDestination: Hashable, Codable {
 }
 
 struct UserMaybeMember: Identifiable {
-    var user: User
+    var user: Types.User
     var member: Member?
     
     var id: String { user.id }
@@ -131,7 +132,7 @@ public class ViewState: ObservableObject {
             UserDefaults.standard.set(sessionToken, forKey: "sessionToken")
         }
     }
-    @Published var users: [String: User] = [:]
+    @Published var users: [String: Types.User] = [:]
     @Published var servers: OrderedDictionary<String, Server> = [:]
     @Published var channels: [String: Channel] = [:]
     @Published var messages: [String: Message] = [:]
@@ -142,7 +143,7 @@ public class ViewState: ObservableObject {
 
     @Published var state: ConnectionState = .connecting
     @Published var queuedMessages: Dictionary<String, [QueuedMessage]> = [:]
-    @Published var currentUser: User? = nil
+    @Published var currentUser: Types.User? = nil
     @Published var loadingMessages: Set<String> = Set()
     @Published var currentlyTyping: [String: OrderedSet<String>] = [:]
     @Published var isOnboarding: Bool = false
@@ -228,12 +229,12 @@ public class ViewState: ObservableObject {
         this.state = .connected
         this.currentUser = User(id: "0", username: "Zomatree", discriminator: "0000", badges: Int.max, status: Status(text: "hello world", presence: .Busy), relationship: .User, profile: Profile(content: "hello world"))
         this.users["0"] = this.currentUser!
-        this.servers["0"] = Server(id: "0", owner: "0", name: "Testing Server", channels: ["0"], default_permissions: Permissions.all, categories: [Category(id: "0", title: "Channels", channels: ["0", "1"])])
+        this.servers["0"] = Server(id: "0", owner: "0", name: "Testing Server", channels: ["0"], default_permissions: Permissions.all, categories: [Types.Category(id: "0", title: "Channels", channels: ["0", "1"])])
         this.channels["0"] = .text_channel(TextChannel(id: "0", server: "0", name: "General"))
         this.channels["1"] = .voice_channel(VoiceChannel(id: "1", server: "0", name: "Voice General"))
         this.channels["2"] = .saved_messages(SavedMessages(id: "2", user: "0"))
-        this.messages["01HD4VQY398JNRJY60JDY2QHA5"] = Message(id: "01HD4VQY398JNRJY60JDY2QHA5", content: "Hello World", author: "0", channel: "0", mentions: ["0"], replies: ["01HDEX6M2E3SHY8AC2S6B9SEAW"])
-        this.messages["01HDEX6M2E3SHY8AC2S6B9SEAW"] = Message(id: "01HDEX6M2E3SHY8AC2S6B9SEAW", content: "reply", author: "0", channel: "0")
+        this.messages["01HD4VQY398JNRJY60JDY2QHA5"] = Message(id: "01HD4VQY398JNRJY60JDY2QHA5", content: "Hello World", author: "0", channel: "0", mentions: ["0"])
+        this.messages["01HDEX6M2E3SHY8AC2S6B9SEAW"] = Message(id: "01HDEX6M2E3SHY8AC2S6B9SEAW", content: "reply", author: "0", channel: "0", replies: ["01HD4VQY398JNRJY60JDY2QHA5"])
         this.channelMessages["0"] = ["01HD4VQY398JNRJY60JDY2QHA5", "01HDEX6M2E3SHY8AC2S6B9SEAW"]
         this.members["0"] = ["0": Member(id: MemberId(server: "0", user: "0"), joined_at: "")]
         this.emojis = ["0": Emoji(id: "01GX773A8JPQ0VP64NWGEBMQ1E", parent: .server(EmojiParentServer(id: "0")), creator_id: "0", name: "balls")]
@@ -572,7 +573,7 @@ public class ViewState: ObservableObject {
         }
     }
     
-    func openUserSheet(user: User, member: Member?) {
+    func openUserSheet(user: Types.User, member: Member?) {
         currentUserSheet = UserMaybeMember(user: user, member: member)
     }
 }
@@ -594,3 +595,22 @@ extension Dictionary {
         return value!
     }
 }
+
+extension Channel {
+    @MainActor
+    public func getName(_ viewState: ViewState) -> String {
+        switch self {
+            case .saved_messages(_):
+                "Saved Messages"
+            case .dm_channel(let c):
+                viewState.users[c.recipients.first(where: {$0 != viewState.currentUser!.id})!]!.username
+            case .group_dm_channel(let c):
+                c.name
+            case .text_channel(let c):
+                c.name
+            case .voice_channel(let c):
+                c.name
+        }
+    }
+}
+

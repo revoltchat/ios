@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import Types
 
 struct AccountCreatePayload: Encodable {
     var email: String

@@ -7,11 +7,11 @@
 
 import Foundation
 
-struct ServerInvite: Decodable, Identifiable {
-    var id: String
-    var server: String
-    var creator: String
-    var channel: String
+public struct ServerInvite: Decodable, Identifiable {
+    public var id: String
+    public var server: String
+    public var creator: String
+    public var channel: String
     
     enum CodingKeys: String, CodingKey {
         case id = "_id"
@@ -19,10 +19,10 @@ struct ServerInvite: Decodable, Identifiable {
     }
 }
 
-struct GroupInvite: Decodable, Identifiable {
-    var id: String
-    var creator: String
-    var channel: String
+public struct GroupInvite: Decodable, Identifiable {
+    public var id: String
+    public var creator: String
+    public var channel: String
     
     enum CodingKeys: String, CodingKey {
         case id = "_id"
@@ -30,11 +30,11 @@ struct GroupInvite: Decodable, Identifiable {
     }
 }
 
-enum Invite: Identifiable {
+public enum Invite: Identifiable {
     case server(ServerInvite)
     case group(GroupInvite)
     
-    var id: String {
+    public var id: String {
         switch self {
             case .server(let i):
                 return i.id
@@ -48,7 +48,7 @@ extension Invite: Decodable {
     enum CodingKeys: String, CodingKey { case type }
     enum Tag: String, Decodable { case Server, Group }
     
-    init(from decoder: Decoder) throws {
+    public init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
         let singleValueContainer = try decoder.singleValueContainer()
         

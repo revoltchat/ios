@@ -10,6 +10,7 @@ import SwiftUI
 import Flow
 import SwiftParsec
 import Kingfisher
+import Types
 
 enum ContentPart: Equatable {
     case text(AttributedString)

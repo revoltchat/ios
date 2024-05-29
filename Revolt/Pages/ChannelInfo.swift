@@ -7,6 +7,7 @@
 
 import Foundation
 import SwiftUI
+import Types
 
 struct InviteUrl: Identifiable {
     var url: URL

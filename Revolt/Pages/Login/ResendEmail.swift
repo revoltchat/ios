@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import Types
 
 struct ResendEmail: View {
     @EnvironmentObject var viewState: ViewState

@@ -7,6 +7,7 @@
 
 import Foundation
 import ULID
+import Types
 
 func createdAt(id: String) -> Date {
     ULID(ulidString: id)!.timestamp

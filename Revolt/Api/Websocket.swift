@@ -7,6 +7,7 @@
 
 import Foundation
 import Starscream
+import Types
 
 enum WsMessage {
     case authenticated
@@ -22,7 +23,7 @@ enum WsMessage {
 
 struct ReadyEvent: Decodable {
     var users: [User]
-    var servers: [Server]
+    var servers: [Types.Server]
     var channels: [Channel]
     var members: [Member]
     var emojis: [Emoji]
@@ -57,7 +58,7 @@ struct ChannelAckEvent: Decodable {
 
 extension WsMessage: Decodable {
     enum CodingKeys: String, CodingKey { case type }
-    enum Tag: String, Decodable { case Authenticated, Ready, Message, MessageUpdate, ChannelStartTyping, ChannelStopTyping, MessageDelete, ChannelAck }
+    enum Tag: String, Decodable { case Authenticated, InvalidSession, Ready, Message, MessageUpdate, ChannelStartTyping, ChannelStopTyping, MessageDelete, ChannelAck }
     
     init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)

@@ -7,6 +7,7 @@
 
 import Foundation
 import SwiftUI
+import Types
 
 let colours: [Presence?: Color] = [
     .Online: Color(.green),
