@@ -14,8 +14,8 @@ struct RevoltApp: App {
             options.profilesSampleRate = 1.0
             options.enableTracing = true
             options.attachViewHierarchy = true
-            options.enableAppLaunchProfiling = true
-            options.enableMetrics = true
+            //options.enableAppLaunchProfiling = true
+            //options.enableMetrics = true
         }
     }
     
@@ -131,6 +131,8 @@ struct InnerApp: View {
                                 AddFriend()
                             case .create_group(let initial_users):
                                 CreateGroup(selectedUsers: Set(initial_users.compactMap { viewState.users[$0] }))
+                            case .add_server:
+                                AddServer()
                         }
                     }
                     .sheet(item: $viewState.currentUserSheet) { (v) in
@@ -262,4 +264,13 @@ struct CheckboxStyle: ToggleStyle {
         }
         .onTapGesture { configuration.isOn.toggle() }
     }
+}
+
+
+var isPreview: Bool {
+#if DEBUG
+    ProcessInfo.processInfo.environment["XCODE_RUNNING_FOR_PREVIEWS"] == "1"
+#else
+    false
+#endif
 }

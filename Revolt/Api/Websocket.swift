@@ -10,6 +10,7 @@ import Starscream
 
 enum WsMessage {
     case authenticated
+    case invalid_session
     case ready(ReadyEvent)
     case message(Message)
     case message_update(MessageUpdateEvent)
@@ -65,6 +66,8 @@ extension WsMessage: Decodable {
         switch try container.decode(Tag.self, forKey: .type) {
             case .Authenticated:
                 self = .authenticated
+            case .InvalidSession:
+                self = .invalid_session
             case .Ready:
                 self = .ready(try singleValueContainer.decode(ReadyEvent.self))
             case .Message:

@@ -21,9 +21,10 @@ struct ChannelIcon: View {
             switch channel {
                 case .text_channel(let c):
                     if let icon = c.icon {
-                        LazyImage(source: .file(icon), height: 24, width: 24, clipTo: Rectangle())
+                        LazyImage(source: .file(icon), height: initialSize.0, width: initialSize.0, clipTo: Rectangle())
+                            .frame(width: frameSize.0, height: frameSize.1)
                     } else {
-                        Image(systemName: "number")
+                        Image(systemName: c.voice != nil ? "speaker.wave.2" : "number")
                             .resizable()
                             .frame(width: initialSize.0, height: initialSize.1)
                             .frame(width: frameSize.0, height: frameSize.1)
@@ -33,7 +34,8 @@ struct ChannelIcon: View {
                     
                 case .voice_channel(let c):
                     if let icon = c.icon {
-                        LazyImage(source: .file(icon), height: 24, width: 24, clipTo: Rectangle())
+                        LazyImage(source: .file(icon), height: initialSize.0, width: initialSize.0, clipTo: Rectangle())
+                            .frame(width: frameSize.0, height: frameSize.1)
                     } else {
                         Image(systemName: "speaker.wave.2")
                             .symbolRenderingMode(.hierarchical)
@@ -46,7 +48,8 @@ struct ChannelIcon: View {
                     
                 case .group_dm_channel(let c):
                     if let icon = c.icon {
-                        LazyImage(source: .file(icon), height: 24, width: 24, clipTo: Rectangle())
+                        LazyImage(source: .file(icon), height: initialSize.0, width: initialSize.0, clipTo: Rectangle())
+                            .frame(width: frameSize.0, height: frameSize.1)
                     } else {
                         Image(systemName: "number")
                             .resizable()

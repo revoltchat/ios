@@ -41,9 +41,7 @@ struct ServerScrollView: View {
                     .frame(height: 12)
                 
                 Section {
-                    Button(action: {
-                        showJoinServerSheet.toggle()
-                    }) {
+                    NavigationLink(value: NavigationDestination.add_server) {
                         Image(systemName: "plus.circle.fill")
                             .symbolRenderingMode(.palette)
                             .foregroundStyle(viewState.theme.accent.color, viewState.theme.background2.color)
@@ -91,6 +89,6 @@ struct ServerScrollView: View {
 }
 
 #Preview(traits: .fixedLayout(width: 60, height: 500)) {
-    ServerScrollView(showJoinServerSheet: .constant(false))
+    ServerScrollView()
         .applyPreviewModifiers(withState: ViewState.preview().applySystemScheme(theme: .light))
 }

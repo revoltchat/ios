@@ -59,7 +59,6 @@ struct ReplyView: View {
                         .foregroundColor(.accentColor)
                 } else {
                     Text("@ off")
-                        .foregroundColor(.black)
                 }
             }
         }
@@ -91,10 +90,13 @@ struct MessageBox: View {
     @EnvironmentObject var viewState: ViewState
 
     @Binding var channelReplies: [Reply]
+    var focusState: FocusState<Bool>.Binding
+    @Binding var showingSelectEmoji: Bool
 
     @State var showingSelectFile = false
     @State var showingSelectPhoto = false
-    @State var showingSelectEmoji = false
+    
+    @State var reshowKeyboard = false
 
     @State var content = ""
 
@@ -108,10 +110,12 @@ struct MessageBox: View {
     let channel: Channel
     let server: Server?
 
-    init(channel: Channel, server: Server?, channelReplies: Binding<[Reply]>) {
+    init(channel: Channel, server: Server?, channelReplies: Binding<[Reply]>, focusState f: FocusState<Bool>.Binding, showingSelectEmoji: Binding<Bool>) {
         self.channel = channel
         self.server = server
         _channelReplies = channelReplies
+        focusState = f
+        _showingSelectEmoji = showingSelectEmoji
     }
 
     func sendMessage() {
@@ -187,14 +191,14 @@ struct MessageBox: View {
         VStack(alignment: .leading, spacing: 4) {
             if let users = getCurrentlyTyping(), !users.isEmpty {
                 HStack {
-                    HStack(spacing: -12) {
+                    HStack(spacing: -10) {
                         ForEach(users, id: \.0.id) { (user, member) in
                             Avatar(user: user, member: member, width: 16, height: 16)
                         }
                     }
 
                     Text(formatTypingIndicatorText(withUsers: users))
-                        .font(.footnote)
+                        .font(.callout)
                         .foregroundStyle(viewState.theme.foreground2)
                 }
             }
@@ -268,7 +272,7 @@ struct MessageBox: View {
                                             }
                                         } label: {
                                             HStack(spacing: 4) {
-                                                Avatar(user: user, member: member)
+                                                Avatar(user: user, member: member, width: 24, height: 24)
                                                 Text(verbatim: member?.nickname ?? user.display_name ?? user.username)
                                             }
                                             .padding(6)
@@ -298,10 +302,12 @@ struct MessageBox: View {
                     .frame(maxWidth: .infinity)
                 }
 
-                HStack {
+                HStack(alignment: .top) {
                     UploadButton(showingSelectFile: $showingSelectFile, showingSelectPhoto: $showingSelectPhoto, selectedPhotoItems: $selectedPhotoItems, selectedPhotos: $selectedPhotos)
+                        .frame(alignment: .top)
 
-                    TextField("", text: $content.animation())
+                    TextField("", text: $content.animation(), axis: .vertical)
+                        .focused(focusState)
                         .placeholder(when: content.isEmpty) {
                             Text("Message \(channel.getName(viewState))")
                                 .foregroundStyle(viewState.theme.foreground2.color)
@@ -325,16 +331,46 @@ struct MessageBox: View {
                                 }
                             }
                         }
+                        .onChange(of: focusState.wrappedValue, { _, v in
+                            if v, showingSelectEmoji {
+                                withAnimation {
+                                    showingSelectEmoji = false
+                                }
+                            }
+                        })
+                        .onChange(of: showingSelectEmoji, { b, a in
+                            if b, !a {
+                                withAnimation {
+                                    focusState.wrappedValue = true
+                                }
+                            }
+                        })
+                        .sheet(isPresented: $showingSelectEmoji) {
+                            EmojiPicker(background: AnyView(viewState.theme.background)) { emoji in
+                                if let id = emoji.emojiId {
+                                    content.append(":\(id):")
+                                } else {
+                                    content.append(String(String.UnicodeScalarView(emoji.base.compactMap(Unicode.Scalar.init))))
+                                }
+                                
+                                showingSelectEmoji = false
+                            }
+                            .padding([.top, .horizontal])
+                            .background(viewState.theme.background.ignoresSafeArea(.all))
+                            .presentationDetents([.large])
+                        }
 
+                    Group {
                     Button {
                         withAnimation {
+                                focusState.wrappedValue = false
                             showingSelectEmoji.toggle()
                         }
                     } label: {
                         Image(systemName: "face.smiling")
                             .resizable()
-                            .frame(width: 20, height: 20)
-                            .foregroundStyle(viewState.theme.foreground2.color)
+                                .frame(width: 24, height: 24)
+                                .foregroundStyle(viewState.theme.foreground3.color)
                     }
 
 
@@ -342,35 +378,19 @@ struct MessageBox: View {
                         Button(action: sendMessage) {
                             Image(systemName: "arrow.up.circle.fill")
                                 .resizable()
-                                .frame(width: 20, height: 20)
-                                .foregroundStyle(viewState.theme.foreground2.color)
+                                    .frame(width: 24, height: 24)
+                                    .foregroundStyle(viewState.theme.foreground3.color)
                         }
                     }
                 }
-
-                if showingSelectEmoji {
-                    EmojiPicker() { emoji in
-                        if let id = emoji.emojiId {
-                            content.append(":\(id):")
-                        } else {
-                            content.append(String(String.UnicodeScalarView(emoji.base.compactMap(Unicode.Scalar.init))))
-                        }
-
-                        showingSelectEmoji = false
-                    }
-                    .transition(MoveTransition(edge: .bottom).combined(with: OpacityTransition()))
-                    .frame(maxHeight: 300)
+                    .frame(alignment: .top)
                 }
             }
-            .padding(8)
-            .background(RoundedRectangle(cornerRadius: 8)
-                .fill(viewState.theme.messageBox.color)
-                .stroke(viewState.theme.messageBoxBorder.color, lineWidth: 1)
-            )
+            .padding(.top, 8)
         }
-        .padding(.horizontal, 16)
-        .padding(.bottom, 8)
         .padding(.top, 4)
+        .padding(.horizontal, 12)
+        .padding(.bottom, 12)
         .background(viewState.theme.messageBoxBackground.color)
     }
 }
@@ -399,9 +419,10 @@ struct UploadButton: View {
     }
 
     var body: some View {
-        Image(systemName: "plus.circle.fill")
+        Image(systemName: "plus")
             .resizable()
-            .foregroundStyle(viewState.theme.foreground2.color)
+            .foregroundStyle(viewState.theme.foreground3.color)
+            .frame(width: 16, height: 16)
             .frame(width: 20, height: 20)
 
             .photosPicker(isPresented: $showingSelectPhoto, selection: $selectedPhotoItems)
@@ -449,14 +470,16 @@ struct UploadButton: View {
 }
 
 struct MessageBox_Previews: PreviewProvider {
-    static var viewState: ViewState = ViewState.preview()
+    static var viewState: ViewState = ViewState.preview().applySystemScheme(theme: .dark)
     @State static var replies: [Reply] = []
+    @State static var showingSelectEmoji = false
+    @FocusState static var focused: Bool
 
     static var previews: some View {
         let channel = viewState.channels["0"]!
         let server = viewState.servers["0"]!
 
-        MessageBox(channel: channel, server: server, channelReplies: $replies)
+        MessageBox(channel: channel, server: server, channelReplies: $replies, focusState: $focused, showingSelectEmoji: $showingSelectEmoji)
             .applyPreviewModifiers(withState: viewState)
     }
 }

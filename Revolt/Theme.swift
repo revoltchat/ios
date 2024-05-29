@@ -117,6 +117,15 @@ let percentageParser = Parse(input: Substring.self) {
 enum PercentageType {
     case length(Length)
     case percentage(Int)
+    
+    var toPercentage: Int? {
+        switch self {
+            case .length:
+                return nil
+            case .percentage(let p):
+                return p
+        }
+    }
 }
 
 struct ColorStop {
@@ -338,9 +347,15 @@ func parseCSSColor(currentTheme: Theme, input: String) -> AnyShapeStyle {
                         end = .bottom
                 }
 
-                let colors = grad.stops.map { resolveColor(color: $0.color) }
+                
+                if grad.stops.allSatisfy({ $0.percentage?.toPercentage != nil }) {
+                    let stops: [Gradient.Stop] = grad.stops.map { stop in Gradient.Stop(color: resolveColor(color: stop.color), location: CGFloat(Double(stop.percentage!.toPercentage!) / 100.0)) }
+                    return AnyShapeStyle(LinearGradient(stops: stops, startPoint: start, endPoint: end))
+                } else {
+                    let colors = grad.stops.map { resolveColor(color: $0.color) }
                 
                 return AnyShapeStyle(LinearGradient(colors: colors, startPoint: start, endPoint: end))
+                }
         }
     } catch {
         return AnyShapeStyle(Color.black)
@@ -348,17 +363,17 @@ func parseCSSColor(currentTheme: Theme, input: String) -> AnyShapeStyle {
 }
 
 @Codable
-struct ThemeColor: Equatable, ShapeStyle, View {
-    var r: Double
-    var g: Double
-    var b: Double
-    var a: Double
+public struct ThemeColor: Equatable, ShapeStyle, View {
+    public var r: Double
+    public var g: Double
+    public var b: Double
+    public var a: Double
 
-    init(hex: String) {
+    public init(hex: String) {
         (r, g, b, a) = parseHex(hex: hex)
     }
 
-    mutating func set(with: Color.Resolved) {
+    public mutating func set(with: Color.Resolved) {
         self.r = Double(with.red)
 
         if self.r == Double.infinity {
@@ -385,33 +400,33 @@ struct ThemeColor: Equatable, ShapeStyle, View {
 
     }
 
-    func resolve(in environment: EnvironmentValues) -> Color.Resolved {
+    public func resolve(in environment: EnvironmentValues) -> Color.Resolved {
         color.resolve(in: environment)
     }
 
-    var color: Color {
+    public var color: Color {
         Color(red: r, green: g, blue: b, opacity: a)
     }
 
-    static var white: ThemeColor = ThemeColor(hex: "#FFFFFFFF")
-    static var black: ThemeColor = ThemeColor(hex: "#000000FF")
+    public static var white: ThemeColor = ThemeColor(hex: "#FFFFFFFF")
+    public static var black: ThemeColor = ThemeColor(hex: "#000000FF")
 }
 
 @Codable
-struct Theme: Codable, Equatable {
-    var accent: ThemeColor = ThemeColor(hex: "#FD7771FF")
-    var background: ThemeColor = ThemeColor.white
-    var background2: ThemeColor = ThemeColor.white
-    var foreground: ThemeColor = ThemeColor.black
-    var foreground2: ThemeColor = ThemeColor(hex: "#3A3A3AFF")
-    var foreground3: ThemeColor = ThemeColor(hex: "#1F1F1FFF")
-    var messageBox: ThemeColor = ThemeColor.white
-    var messageBoxBackground: ThemeColor = ThemeColor.white
-    var topBar: ThemeColor = ThemeColor(hex: "#FFFFFFAA")
-    var messageBoxBorder: ThemeColor = ThemeColor.black
-    var shouldFollowiOSTheme: Bool = false
+public struct Theme: Codable, Equatable {
+    public var accent: ThemeColor = ThemeColor(hex: "#FD7771FF")
+    public var background: ThemeColor = ThemeColor.white
+    public var background2: ThemeColor = ThemeColor.white
+    public var foreground: ThemeColor = ThemeColor.black
+    public var foreground2: ThemeColor = ThemeColor(hex: "#3A3A3AFF")
+    public var foreground3: ThemeColor = ThemeColor(hex: "#1F1F1FFF")
+    public var messageBox: ThemeColor = ThemeColor.white
+    public var messageBoxBackground: ThemeColor = ThemeColor.white
+    public var topBar: ThemeColor = ThemeColor(hex: "#FFFFFFAA")
+    public var messageBoxBorder: ThemeColor = ThemeColor.black
+    public var shouldFollowiOSTheme: Bool = false
 
-    static var light: Theme {
+    public static var light: Theme {
         Theme(
             accent: ThemeColor(hex: "#FD7771FF"),
             background: ThemeColor.white,
@@ -427,7 +442,7 @@ struct Theme: Codable, Equatable {
         )
     }
 
-    static var dark: Theme {
+    public static var dark: Theme {
         Theme(
             accent: ThemeColor(hex: "#FD7771FF"),
             background: ThemeColor(hex: "#191919FF"),
@@ -443,3 +458,4 @@ struct Theme: Codable, Equatable {
         )
     }
 }
+

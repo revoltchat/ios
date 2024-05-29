@@ -95,6 +95,9 @@
     "Channel Icon" : {
 
     },
+    "Click the join button to connect" : {
+
+    },
     "Code or link" : {
 
     },
@@ -167,10 +170,10 @@
     "Emojis" : {
 
     },
-    "enter" : {
+    "Ending" : {
 
     },
-    "Enter the server's invite" : {
+    "enter" : {
 
     },
     "Enter the verification code sent to your email" : {
@@ -242,13 +245,16 @@
     "Join by invite code or link" : {
 
     },
-    "Join Server" : {
+    "Join Call" : {
 
     },
     "Joined" : {
 
     },
     "Language" : {
+
+    },
+    "Leave Call" : {
 
     },
     "Let's fix that" : {
@@ -308,6 +314,9 @@
     "New Password" : {
 
     },
+    "Not Connected" : {
+
+    },
     "Offline" : {
 
     },
@@ -332,6 +341,9 @@
     "Pick a category" : {
 
     },
+    "Placeholder" : {
+
+    },
     "Please note that this does not get sent to this server's moderators" : {
 
     },
@@ -345,6 +357,9 @@
 
     },
     "Profile Picture" : {
+
+    },
+    "React" : {
 
     },
     "Reply" : {
@@ -440,6 +455,9 @@
     "This is the start of your conversation." : {
 
     },
+    "todo" : {
+
+    },
     "Todo" : {
 
     },
@@ -447,6 +465,9 @@
 
     },
     "unknown" : {
+
+    },
+    "Unknown Channel" : {
 
     },
     "Unknown message" : {

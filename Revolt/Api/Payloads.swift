@@ -109,3 +109,24 @@ struct GroupChannelCreate: Encodable {
     var name: String
     var users: [String]
 }
+
+struct ServerEdit: Encodable {
+    enum Remove: String, Codable {
+        case description = "Description"
+        case categories = "Categories"
+        case system_messages = "SystemMessages"
+        case icon = "Icon"
+        case banner = "Banner"
+    }
+    
+    var name: String?
+    var description: String?
+    var icon: String?
+    var banner: String?
+    var categories: [Category]?
+    var system_messages: SystemMessages?
+    var flags: Int?
+    var discoverable: Bool?
+    var analytics: Bool?
+    var remove: [Remove]?
+}

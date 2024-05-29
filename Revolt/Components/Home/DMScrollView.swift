@@ -15,14 +15,6 @@ struct DMScrollView: View {
 
     var body: some View {
         List {
-            let savedMessagesChannel: SavedMessages = viewState.dms.compactMap { channel in
-                if case .saved_messages(let c) = channel {
-                    return c
-                }
-
-                return nil
-            }.first!
-
             Section {
                 Button {
                     viewState.currentChannel = .home
@@ -55,11 +47,18 @@ struct DMScrollView: View {
                 }
 
                 Button {
-                    viewState.currentChannel = .channel(savedMessagesChannel.id)
+                    Task {
+                        let channel = try! await viewState.http.openDm(user: viewState.currentUser!.id).get()
+                        viewState.currentChannel = .channel(channel.id)
+                    }
                 } label: {
-                    HStack {
-                        ChannelIcon(channel: .saved_messages(savedMessagesChannel))
-
+                    HStack(spacing: 8) {
+                        Image(systemName: "note.text")
+                            .resizable()
+                            .frame(width: 16, height: 16)
+                            .frame(width: 24, height: 24)
+                        
+                        Text("Saved Messages")
                         Spacer()
                     }
                 }
@@ -68,7 +67,7 @@ struct DMScrollView: View {
             .listRowBackground(viewState.theme.background2)
 
             Section("Conversations") {
-                ForEach(viewState.dms.filter { $0 != .saved_messages(savedMessagesChannel) }) { channel in
+                ForEach(viewState.dms.filter { switch $0 { case .saved_messages: return false; default: return true } }) { channel in
                     Button {
                         viewState.currentChannel = .channel(channel.id)
                     } label: {

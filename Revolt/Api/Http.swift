@@ -251,4 +251,16 @@ struct HTTPClient {
     func createInvite(channel: String) async -> Result<Invite, AFError> {
         await req(method: .post, route: "/channels/\(channel)/invites")
     }
+    
+    func fetchMember(server: String, member: String) async -> Result<Member, AFError> {
+        await req(method: .get, route: "/servers/\(server)/members/\(member)")
+    }
+    
+    func editServer(server: String, edits: ServerEdit) async -> Result<Server, AFError> {
+        await req(method: .patch, route: "/servers/\(server)", parameters: edits)
+    }
+    
+    func reactMessage(channel: String, message: String, emoji: String) async -> Result<EmptyResponse, AFError> {
+        await req(method: .put, route: "/channels/\(channel)/messages/\(message)/reactions/\(emoji)")
+    }
 }

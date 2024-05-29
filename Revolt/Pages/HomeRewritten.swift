@@ -67,7 +67,7 @@ struct HomeRewritten: View {
         if isIPad || isMac {
             HStack(spacing: 0) {
                 HStack(spacing: 0) {
-                    ServerScrollView(showJoinServerSheet: $showJoinServerSheet)
+                    ServerScrollView()
                         .frame(maxWidth: 60)
                     
                     switch currentSelection {
@@ -88,7 +88,7 @@ struct HomeRewritten: View {
                 
                 ZStack(alignment: .topLeading) {
                     HStack(spacing: 0) {
-                        ServerScrollView(showJoinServerSheet: $showJoinServerSheet)
+                        ServerScrollView()
                             .frame(maxWidth: 60)
                         
                         switch currentSelection {
@@ -105,7 +105,7 @@ struct HomeRewritten: View {
                     MaybeChannelView(currentChannel: $currentChannel, currentSelection: $currentSelection, currentServer: $currentServer, showSidebar: $showSidebar)
                         .disabled(offset != 0.0)
                         .onTapGesture {
-                            if offset == 0.0 {
+                            if offset != 0.0 {
                                 withAnimation {
                                     showSidebar = false
                                     offset = .zero
@@ -141,8 +141,10 @@ struct HomeRewritten: View {
                 }
                 .onChange(of: showSidebar) { (_, after) in
                     if after {
+                        withAnimation {
                         offset = min(geo.size.width * 0.85, 600)
                         showSidebar = false
+                        }
                     }
                 }
             }

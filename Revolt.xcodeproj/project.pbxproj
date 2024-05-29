@@ -21,16 +21,23 @@
 		1748B2072B1FB88B00AA2D47 /* MessageReactions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1748B2062B1FB88B00AA2D47 /* MessageReactions.swift */; };
 		174DA9E82B9E4D70001BC330 /* Parsing in Frameworks */ = {isa = PBXBuildFile; productRef = 174DA9E72B9E4D70001BC330 /* Parsing */; };
 		1750EF6E2B0585B300DD3EB3 /* ResendEmail.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1750EF6D2B0585B300DD3EB3 /* ResendEmail.swift */; };
+		1757A26D2BB7444D007EE8B9 /* LiveKit in Frameworks */ = {isa = PBXBuildFile; productRef = 1757A26C2BB7444D007EE8B9 /* LiveKit */; };
 		175997192B2FB90700C39CF6 /* Flow in Frameworks */ = {isa = PBXBuildFile; productRef = 175997182B2FB90700C39CF6 /* Flow */; };
 		1759971B2B2FB90700C39CF6 /* Renderer in Frameworks */ = {isa = PBXBuildFile; productRef = 1759971A2B2FB90700C39CF6 /* Renderer */; };
 		1759C39A2B291A75006E6BBE /* MessageContentsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1759C3992B291A75006E6BBE /* MessageContentsView.swift */; };
 		1759C39C2B291E2F006E6BBE /* SystemMessageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1759C39B2B291E2F006E6BBE /* SystemMessageView.swift */; };
 		175E01DE2ADAB3F6004F6431 /* LazyImage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 175E01DD2ADAB3F6004F6431 /* LazyImage.swift */; };
 		175E01E02ADAB554004F6431 /* Avatar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 175E01DF2ADAB554004F6431 /* Avatar.swift */; };
+		176062882BF96EDB00E73A00 /* WidgetKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 176062872BF96EDB00E73A00 /* WidgetKit.framework */; };
+		176062A32BF9870E00E73A00 /* Alamofire in Frameworks */ = {isa = PBXBuildFile; productRef = 176062A22BF9870E00E73A00 /* Alamofire */; };
+		176062AD2BF9871D00E73A00 /* ULID in Frameworks */ = {isa = PBXBuildFile; productRef = 176062AC2BF9871D00E73A00 /* ULID */; };
+		176062B92BF9873900E73A00 /* LiveKit in Frameworks */ = {isa = PBXBuildFile; productRef = 176062B82BF9873900E73A00 /* LiveKit */; };
 		1777DD842ADC24CE003D6C72 /* ReversedSrollView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1777DD832ADC24CE003D6C72 /* ReversedSrollView.swift */; };
 		1777DD892ADC3C31003D6C72 /* Markdown.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1777DD882ADC3C31003D6C72 /* Markdown.swift */; };
 		1777DD8E2ADC4336003D6C72 /* RemoteImageTextAttachment.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1777DD8D2ADC4336003D6C72 /* RemoteImageTextAttachment.swift */; };
 		1782F5E62B08F60B00759D40 /* Discovery.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1782F5E52B08F60B00759D40 /* Discovery.swift */; };
+		17849DE32BFD70E400825B53 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = D49B705629C4D3FE009494A5 /* Assets.xcassets */; };
+		17849DE42BFD70F700825B53 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = D49B705929C4D3FE009494A5 /* Preview Assets.xcassets */; };
 		178BB10C2B02D84C001143A4 /* HCaptcha in Frameworks */ = {isa = PBXBuildFile; platformFilters = (ios, maccatalyst, ); productRef = 178BB10B2B02D84C001143A4 /* HCaptcha */; };
 		178BB10E2B02D84C001143A4 /* HCaptcha_RxSwift in Frameworks */ = {isa = PBXBuildFile; platformFilters = (ios, maccatalyst, ); productRef = 178BB10D2B02D84C001143A4 /* HCaptcha_RxSwift */; };
 		178BB1102B02D89A001143A4 /* HCaptchaView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 178BB10F2B02D89A001143A4 /* HCaptchaView.swift */; };
@@ -75,7 +82,7 @@
 		17E019D72AF1998300AB4663 /* MessageAttachment.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17E019D62AF1998300AB4663 /* MessageAttachment.swift */; };
 		17E019DA2AF199A600AB4663 /* MessageReply.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17E019D92AF199A600AB4663 /* MessageReply.swift */; };
 		17E019DC2AF1B25100AB4663 /* SessionsSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17E019DB2AF1B25100AB4663 /* SessionsSettings.swift */; };
-		17E28E082AF319D500F6069F /* JoinServer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17E28E072AF319D500F6069F /* JoinServer.swift */; };
+		17E28E082AF319D500F6069F /* AddServer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17E28E072AF319D500F6069F /* AddServer.swift */; };
 		17F502542B9BFB1000A3022D /* AddFriend.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17F502532B9BFB1000A3022D /* AddFriend.swift */; };
 		17F502562B9BFB2800A3022D /* CreateGroup.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17F502552B9BFB2800A3022D /* CreateGroup.swift */; };
 		17F555272AFC229900958F2F /* ServerSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17F555262AFC229900958F2F /* ServerSettings.swift */; };
@@ -162,7 +169,7 @@
 		17E019D62AF1998300AB4663 /* MessageAttachment.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageAttachment.swift; sourceTree = "<group>"; };
 		17E019D92AF199A600AB4663 /* MessageReply.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageReply.swift; sourceTree = "<group>"; };
 		17E019DB2AF1B25100AB4663 /* SessionsSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SessionsSettings.swift; sourceTree = "<group>"; };
-		17E28E072AF319D500F6069F /* JoinServer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JoinServer.swift; sourceTree = "<group>"; };
+		17E28E072AF319D500F6069F /* AddServer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddServer.swift; sourceTree = "<group>"; };
 		17F502532B9BFB1000A3022D /* AddFriend.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddFriend.swift; sourceTree = "<group>"; };
 		17F502552B9BFB2800A3022D /* CreateGroup.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateGroup.swift; sourceTree = "<group>"; };
 		17F555262AFC229900958F2F /* ServerSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ServerSettings.swift; sourceTree = "<group>"; };
@@ -205,6 +212,7 @@
 				DAF84FFD2A0EFE1B00B01682 /* Starscream in Frameworks */,
 				DAAA4BF629F2274A00F41E52 /* DequeModule in Frameworks */,
 				36D461CF77D84B97B94929A9 /* Sentry in Frameworks */,
+				1757A26D2BB7444D007EE8B9 /* LiveKit in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -322,7 +330,7 @@
 				17CE783B2B129983006C1D2C /* HomeRewritten.swift */,
 				17DFB4652AE06AB900E1D417 /* MessageableChannel.swift */,
 				17966B662AE08C3000BAEC58 /* DMList.swift */,
-				17E28E072AF319D500F6069F /* JoinServer.swift */,
+				17E28E072AF319D500F6069F /* AddServer.swift */,
 				17B7128C2B03E9D700CFF61C /* FriendsList.swift */,
 				1782F5E52B08F60B00759D40 /* Discovery.swift */,
 				17BF54CC2B1785E200178866 /* HomeWelcome.swift */,
@@ -451,7 +459,7 @@
 				D49B704B29C4D3FE009494A5 /* Sources */,
 				D49B704C29C4D3FE009494A5 /* Frameworks */,
 				D49B704D29C4D3FE009494A5 /* Resources */,
-				179366C82BFAD17D00FC420D /* ShellScript */,
+				179366C82BFAD17D00FC420D /* Run Script */,
 			);
 			buildRules = (
 			);
@@ -476,6 +484,7 @@
 				03268FCCFC7D4D1F8B6E9F6F /* Sentry */,
 				1746CF592B83C6750051FD47 /* CodableWrapper */,
 				174DA9E72B9E4D70001BC330 /* Parsing */,
+1757A26C2BB7444D007EE8B9 /* LiveKit */,
 			);
 			productName = Revolt;
 			productReference = D49B704F29C4D3FE009494A5 /* Revolt.app */;
@@ -494,6 +503,13 @@
 				LastSwiftUpdateCheck = 1420;
 				LastUpgradeCheck = 1530;
 				TargetAttributes = {
+					176062852BF96EDB00E73A00 = {
+						CreatedOnToolsVersion = 15.3;
+					};
+					17DE7DB12BFAEC3F00C99188 = {
+						CreatedOnToolsVersion = 15.3;
+						LastSwiftMigration = 1530;
+					};
 					D49B704E29C4D3FE009494A5 = {
 						CreatedOnToolsVersion = 14.2;
 					};
@@ -520,6 +536,7 @@
 				6DCF7E838FEB4C359405B802 /* XCRemoteSwiftPackageReference "sentry-cocoa" */,
 				1746CF582B83C6750051FD47 /* XCRemoteSwiftPackageReference "CodableWrapper" */,
 				174DA9E62B9E4D70001BC330 /* XCRemoteSwiftPackageReference "swift-parsing" */,
+				1757A26B2BB7444D007EE8B9 /* XCRemoteSwiftPackageReference "client-sdk-swift" */,
 			);
 			productRefGroup = D49B705029C4D3FE009494A5 /* Products */;
 			projectDirPath = "";
@@ -531,6 +548,22 @@
 /* End PBXProject section */
 
 /* Begin PBXResourcesBuildPhase section */
+		176062842BF96EDB00E73A00 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				17849DE42BFD70F700825B53 /* Preview Assets.xcassets in Resources */,
+				17849DE32BFD70E400825B53 /* Assets.xcassets in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		17DE7DB02BFAEC3F00C99188 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		D49B704D29C4D3FE009494A5 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -544,7 +577,7 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
-		179366C82BFAD17D00FC420D /* ShellScript */ = {
+		179366C82BFAD17D00FC420D /* Run Script */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -555,13 +588,14 @@
 				"${DWARF_DSYM_FOLDER_PATH}/${DWARF_DSYM_FILE_NAME}/Contents/Resources/DWARF/${TARGET_NAME}",
 				"$(SRCROOT)/.sentryclirc",
 			);
+			name = "Run Script";
 			outputFileListPaths = (
 			);
 			outputPaths = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "export SENTRY_ORG=revolt\nexport SENTRY_PROJECT=apple-ios\nexport SENTRY_URL=https://sentry.revolt.chat/\nsentry-cli debug-files upload --include-sources \"$DWARF_DSYM_FOLDER_PATH\" --force-foreground\n\n";
+			shellScript = "export SENTRY_ORG=revolt\nexport SENTRY_PROJECT=apple-ios\nexport SENTRY_URL=https://sentry.revolt.chat/\n\nsentry-cli debug-files upload --include-sources \"$DWARF_DSYM_FOLDER_PATH\" --force-foreground\n\n";
 		};
 /* End PBXShellScriptBuildPhase section */
 
@@ -583,7 +617,7 @@
 				17BC3EFC2AD82A1B0029D820 /* Member.swift in Sources */,
 				17BC476D2B9CD53300A593DA /* Invite.swift in Sources */,
 				1748B2072B1FB88B00AA2D47 /* MessageReactions.swift in Sources */,
-				17E28E082AF319D500F6069F /* JoinServer.swift in Sources */,
+				17E28E082AF319D500F6069F /* AddServer.swift in Sources */,
 				17429D972B4C91170036105A /* ChannelSettings.swift in Sources */,
 				17BC476B2B9CB51200A593DA /* ShareInviteSheet.swift in Sources */,
 				1739DB962B08E53B00D23DAD /* MessageBadge.swift in Sources */,
@@ -705,6 +739,7 @@
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				COPY_PHASE_STRIP = NO;
 				DEBUG_INFORMATION_FORMAT = dwarf;
+				EMBED_ASSET_PACKS_IN_PRODUCT_BUNDLE = YES;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				ENABLE_TESTABILITY = YES;
 				ENABLE_USER_SCRIPT_SANDBOXING = NO;
@@ -767,6 +802,7 @@
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				COPY_PHASE_STRIP = NO;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				EMBED_ASSET_PACKS_IN_PRODUCT_BUNDLE = YES;
 				ENABLE_NS_ASSERTIONS = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				ENABLE_USER_SCRIPT_SANDBOXING = NO;
@@ -791,6 +827,7 @@
 		D49B707429C4D3FE009494A5 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				ASSETCATALOG_COMPILER_INCLUDE_ALL_APPICON_ASSETS = YES;
@@ -805,17 +842,21 @@
 				DEVELOPMENT_TEAM = "";
 				"DEVELOPMENT_TEAM[sdk=iphoneos*]" = T23HBWQ54Y;
 				"DEVELOPMENT_TEAM[sdk=macosx*]" = T23HBWQ54Y;
+				EMBED_ASSET_PACKS_IN_PRODUCT_BUNDLE = YES;
+				"ENABLE_HARDENED_RUNTIME[sdk=macosx*]" = YES;
+				ENABLE_ON_DEMAND_RESOURCES = NO;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = Revolt/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = Revolt;
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.social-networking";
+				INFOPLIST_KEY_NSSupportsLiveActivities = YES;
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
-				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.5;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -841,6 +882,7 @@
 		D49B707529C4D3FE009494A5 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				ASSETCATALOG_COMPILER_INCLUDE_ALL_APPICON_ASSETS = YES;
@@ -855,17 +897,21 @@
 				DEVELOPMENT_TEAM = "";
 				"DEVELOPMENT_TEAM[sdk=iphoneos*]" = T23HBWQ54Y;
 				"DEVELOPMENT_TEAM[sdk=macosx*]" = T23HBWQ54Y;
+				EMBED_ASSET_PACKS_IN_PRODUCT_BUNDLE = YES;
+				"ENABLE_HARDENED_RUNTIME[sdk=macosx*]" = YES;
+				ENABLE_ON_DEMAND_RESOURCES = NO;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = Revolt/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = Revolt;
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.social-networking";
+INFOPLIST_KEY_NSSupportsLiveActivities = YES;
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
-				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.5;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -934,6 +980,14 @@
 			requirement = {
 				kind = upToNextMajorVersion;
 				minimumVersion = 0.13.0;
+			};
+		};
+		1757A26B2BB7444D007EE8B9 /* XCRemoteSwiftPackageReference "client-sdk-swift" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/livekit/client-sdk-swift";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 2.0.5;
 			};
 		};
 		175997172B2FB90600C39CF6 /* XCRemoteSwiftPackageReference "SwiftUI-Flow" */ = {
@@ -1023,6 +1077,11 @@
 			package = 174DA9E62B9E4D70001BC330 /* XCRemoteSwiftPackageReference "swift-parsing" */;
 			productName = Parsing;
 		};
+		1757A26C2BB7444D007EE8B9 /* LiveKit */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 1757A26B2BB7444D007EE8B9 /* XCRemoteSwiftPackageReference "client-sdk-swift" */;
+			productName = LiveKit;
+		};
 		175997182B2FB90700C39CF6 /* Flow */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = 175997172B2FB90600C39CF6 /* XCRemoteSwiftPackageReference "SwiftUI-Flow" */;
@@ -1032,6 +1091,21 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 175997172B2FB90600C39CF6 /* XCRemoteSwiftPackageReference "SwiftUI-Flow" */;
 			productName = Renderer;
+		};
+		176062A22BF9870E00E73A00 /* Alamofire */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = DA99EC5129D6148200419FDA /* XCRemoteSwiftPackageReference "Alamofire" */;
+			productName = Alamofire;
+		};
+		176062AC2BF9871D00E73A00 /* ULID */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 17CCCF6C2ADA173B00D78D7A /* XCRemoteSwiftPackageReference "ULID" */;
+			productName = ULID;
+		};
+		176062B82BF9873900E73A00 /* LiveKit */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 1757A26B2BB7444D007EE8B9 /* XCRemoteSwiftPackageReference "client-sdk-swift" */;
+			productName = LiveKit;
 		};
 		178BB10B2B02D84C001143A4 /* HCaptcha */ = {
 			isa = XCSwiftPackageProductDependency;
@@ -1049,6 +1123,11 @@
 			productName = ULID;
 		};
 		17D9C2BC2ADCA48D00426857 /* Kingfisher */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 17D9C2BB2ADCA48D00426857 /* XCRemoteSwiftPackageReference "Kingfisher" */;
+			productName = Kingfisher;
+		};
+		17DE7DEF2BFAF3C400C99188 /* Kingfisher */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = 17D9C2BB2ADCA48D00426857 /* XCRemoteSwiftPackageReference "Kingfisher" */;
 			productName = Kingfisher;

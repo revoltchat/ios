@@ -38,7 +38,7 @@ struct ServerOverviewSettings: View {
             description: s.description.wrappedValue ?? ""
         )
         
-        return .init(currentValues: settings, server: s)
+        return .init(initial: settings, currentValues: settings, server: s)
     }
     
     var body: some View {
@@ -103,7 +103,27 @@ struct ServerOverviewSettings: View {
             ToolbarItem(placement: .topBarTrailing) {
                 if showSaveButton {
                     Button {
-                        
+                        Task {
+                            var edits = ServerEdit()
+                            
+                            if currentValues.name != initial.name {
+                                edits.name = currentValues.name
+                            }
+                            
+                            if currentValues.icon != initial.icon, case .local(let data) = currentValues.icon {
+                                let file = try! await viewState.http.uploadFile(data: data, name: "", category: .icon).get()
+                                edits.icon = file.id
+                            }
+                            
+                            if currentValues.description != initial.description {
+                                edits.description = currentValues.description
+                            }
+                            
+                            viewState.servers[server.id] = try! await viewState.http.editServer(server: server.id, edits: edits).get()
+                            
+                            initial = currentValues
+                            showSaveButton = false
+                        }
                     } label: {
                         Text("Save")
                             .foregroundStyle(viewState.theme.accent)

@@ -22,7 +22,7 @@ struct MessageView: View {
                 VStack(alignment: .leading) {
                     ForEach(replies, id: \.self) { id in
                         MessageReplyView(mentions: viewModel.$message.mentions, channelScrollPosition: viewModel.$channelScrollPosition, id: id, channel: viewModel.message.channel)
-                            .padding(.leading, 48)
+                            .padding(.leading, 38)
                     }
                 }
             }
@@ -54,7 +54,8 @@ struct MessageView: View {
                                 }
                             }
                             .foregroundStyle(viewModel.member?.displayColour(theme: viewState.theme, server: viewModel.server!) ?? AnyShapeStyle(viewState.theme.foreground.color))
-                            .fontWeight(.heavy)
+                            .font(.body)
+                            .fontWeight(.bold)
 
                         
                         if viewModel.author.bot != nil {
@@ -62,12 +63,12 @@ struct MessageView: View {
                         }
                         
                         Text(createdAt(id: viewModel.message.id).formatted())
-                            .font(.caption2)
+                            .font(.caption)
                             .foregroundStyle(.gray)
                         
                         if viewModel.message.edited != nil {
                             Text("(edited)")
-                                .font(.caption2)
+                                .font(.caption)
                                 .foregroundStyle(.gray)
                         }
                     }
@@ -106,7 +107,7 @@ struct GhostMessageView: View {
 
 struct MessageView_Previews: PreviewProvider {
     static var viewState: ViewState = ViewState.preview()
-    @State static var message = viewState.messages["01HD4VQY398JNRJY60JDY2QHA5"]!
+    @State static var message = viewState.messages["01HDEX6M2E3SHY8AC2S6B9SEAW"]!
     @State static var author = viewState.users[message.author]!
     @State static var member = viewState.members["0"]!["0"]
     @State static var channel = viewState.channels["0"]!
@@ -115,7 +116,9 @@ struct MessageView_Previews: PreviewProvider {
     @State static var channelScrollPosition: String? = nil
     
     static var previews: some View {
+        List {
         MessageView(viewModel: MessageContentsViewModel(viewState: viewState, message: $message, author: $author, member: $member, server: $server, channel: $channel, replies: $replies, channelScrollPosition: $channelScrollPosition), isStatic: false)
+        }
             .applyPreviewModifiers(withState: viewState)
     }
 }

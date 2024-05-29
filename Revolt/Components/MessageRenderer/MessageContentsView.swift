@@ -38,10 +38,6 @@ class MessageContentsViewModel: ObservableObject, Equatable {
         await viewState.http.deleteMessage(channel: channel.id, message: message.id)
     }
     
-    func report() async {
-        
-    }
-    
     func reply() {
         if !channelReplies.contains(where: { $0.message.id == message.id }) && channelReplies.count < 5 {
             channelReplies.append(Reply(message: message))
@@ -55,6 +51,7 @@ struct MessageContentsView: View {
     
     @State var showMemberSheet: Bool = false
     @State var showReportSheet: Bool = false
+    @State var showReactSheet: Bool = false
     @State var isStatic: Bool
     
     func copyText() {
@@ -83,7 +80,7 @@ struct MessageContentsView: View {
         VStack(alignment: .leading) {
             if let content = message.content {
                 Contents(text: content)
-                    .font(.system(size: 16))
+                    .font(.body)
             }
             
             VStack(alignment: .leading) {
@@ -97,10 +94,26 @@ struct MessageContentsView: View {
         .sheet(isPresented: $showReportSheet) {
             ReportMessageSheetView(showSheet: $showReportSheet, messageView: viewModel)
         }
+        .sheet(isPresented: $showReactSheet) {
+            EmojiPicker(background: AnyView(viewState.theme.background)) { emoji in
+                Task {
+                    await viewState.http.reactMessage(channel: message.channel, message: message.id, emoji: emoji.id)
+                }
+            }
+            .padding([.top, .horizontal])
+            .background(viewState.theme.background.ignoresSafeArea(.all))
+            .presentationDetents([.large])
+        }
         .contextMenu(self.isStatic ? nil : ContextMenu {
             Button(action: viewModel.reply, label: {
                 Label("Reply", systemImage: "arrowshape.turn.up.left.fill")
             })
+
+            Button {
+                showReactSheet = true
+            } label: {
+                Label("React", systemImage: "face.smiling.inverse")
+            }
             
             Button(action: copyText, label: {
                 Label("Copy contents", systemImage: "doc.on.clipboard")

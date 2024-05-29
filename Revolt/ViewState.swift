@@ -108,6 +108,7 @@ enum NavigationDestination: Hashable, Codable {
     case channel_settings(String)
     case add_friend
     case create_group([String])
+    case add_server
 }
 
 struct UserMaybeMember: Identifiable {
@@ -443,6 +444,9 @@ public class ViewState: ObservableObject {
 
             case .authenticated:
                 print("authenticated")
+
+            case .invalid_session:
+                self.logout()
 
             case .channel_start_typing(let e):
                 var typing = currentlyTyping[e.id] ?? []
