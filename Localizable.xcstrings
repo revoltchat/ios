@@ -152,6 +152,9 @@
     "Direct Messages" : {
 
     },
+    "Discover" : {
+
+    },
     "Discovery" : {
 
     },
@@ -392,6 +395,12 @@
     "Secondary Background" : {
 
     },
+    "Select a channel" : {
+
+    },
+    "Select a server" : {
+
+    },
     "Select File" : {
 
     },
@@ -408,6 +417,9 @@
 
     },
     "Server Name" : {
+
+    },
+    "Servers" : {
 
     },
     "Sessions" : {
