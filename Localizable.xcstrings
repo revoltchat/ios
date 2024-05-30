@@ -47,6 +47,15 @@
     "Accent" : {
 
     },
+    "Account Info" : {
+
+    },
+    "Account Management" : {
+
+    },
+    "Account Settings" : {
+      "comment" : "User Settings tooltip"
+    },
     "Active Sessions" : {
 
     },
@@ -55,6 +64,9 @@
     },
     "Add a topic..." : {
 
+    },
+    "Add Authenticator" : {
+      "comment" : "User settings button"
     },
     "add friend" : {
 
@@ -92,11 +104,26 @@
     "Categories" : {
 
     },
+    "Change it" : {
+      "comment" : "'done' button for changing password\n'done' button for changing username"
+    },
+    "Change Password" : {
+
+    },
     "Channel Icon" : {
 
     },
+    "Client Settings" : {
+
+    },
+    "code" : {
+      "comment" : "TOTP code"
+    },
     "Code or link" : {
 
+    },
+    "Code time" : {
+      "comment" : "debug print, dont translate"
     },
     "Community Guidelines" : {
 
@@ -140,6 +167,9 @@
     "Delete" : {
 
     },
+    "Delete Account" : {
+      "comment" : "User settings button"
+    },
     "Delete channel" : {
 
     },
@@ -148,6 +178,9 @@
     },
     "Didn't get an email?" : {
 
+    },
+    "Disable Account" : {
+      "comment" : "User settings button"
     },
     "Discovery" : {
 
@@ -170,13 +203,28 @@
     "enter" : {
 
     },
+    "Enter a new username" : {
+
+    },
+    "Enter Password" : {
+      "comment" : "Password prompt"
+    },
+    "Enter the code provided by your authenticator app" : {
+      "comment" : "prompting the user for their OTP while setting up TOTP"
+    },
     "Enter the verification code sent to your email" : {
 
+    },
+    "Enter TOTP code" : {
+      "comment" : "Authenticator prompt"
     },
     "Enter your email, and if we've got you on record we'll send you another one" : {
 
     },
     "Enter your Username" : {
+
+    },
+    "Experiments" : {
 
     },
     "Find your community, connect with the world." : {
@@ -194,11 +242,20 @@
     "Friends" : {
 
     },
+    "Generate Recovery Codes" : {
+      "comment" : "User settings button"
+    },
     "Get another code" : {
 
     },
     "Give us some detail" : {
 
+    },
+    "Hello, World!" : {
+
+    },
+    "Hold Up!" : {
+      "comment" : "title prompt for password when setting up totp"
     },
     "Home" : {
 
@@ -254,11 +311,17 @@
     "Light" : {
 
     },
+    "Loading Data..." : {
+      "comment" : "User setings notice - still fetching data"
+    },
     "Loading more messages..." : {
 
     },
     "Loading..." : {
 
+    },
+    "loading#0000" : {
+      "comment" : "The username is still loading from the api"
     },
     "Log In" : {
 
@@ -284,6 +347,9 @@
     "Mute" : {
 
     },
+    "My Account" : {
+
+    },
     "New Group" : {
 
     },
@@ -293,7 +359,16 @@
     "New Password" : {
 
     },
+    "Next" : {
+
+    },
+    "Notifications" : {
+
+    },
     "Offline" : {
+
+    },
+    "Old Password" : {
 
     },
     "One more thing" : {
@@ -301,6 +376,9 @@
     },
     "Online" : {
 
+    },
+    "Open in authenticator app" : {
+      "comment" : "open the user's authenticator app"
     },
     "Open Profile" : {
 
@@ -334,6 +412,12 @@
     },
     "React" : {
 
+    },
+    "Regenerate Recovery Codes" : {
+      "comment" : "User settings button"
+    },
+    "Remove Authenticator" : {
+      "comment" : "User settings button"
     },
     "Reply" : {
 
@@ -399,12 +483,15 @@
 
     },
     "Settings" : {
-
+      "comment" : "Settings Tooltip"
     },
     "Share Invite" : {
 
     },
     "Sign Up" : {
+
+    },
+    "Something went wrong. Try again later?" : {
 
     },
     "Submit" : {
@@ -415,6 +502,21 @@
     },
     "Terms of Service" : {
 
+    },
+    "Text Field" : {
+
+    },
+    "The trolls have rejected your old password" : {
+      "comment" : "The password was rejected by the server"
+    },
+    "The trolls have rejected your password" : {
+
+    },
+    "This area is guarded by trolls. Fetch them your TOTP code to continue." : {
+      "comment" : "subtitle prompt for password when modifying totp"
+    },
+    "This area is guarded by trolls. Tell them your password to continue." : {
+      "comment" : "subtitle prompt for password when setting up totp"
     },
     "This channel is marked as NSFW" : {
 
@@ -429,6 +531,12 @@
 
     },
     "Todo" : {
+
+    },
+    "Try again" : {
+      "comment" : "the user entered an incorrect password"
+    },
+    "Two-Factor Authentication" : {
 
     },
     "unknown" : {
@@ -446,6 +554,9 @@
     "User Management" : {
 
     },
+    "User Settings" : {
+      "comment" : "Settings tooltip"
+    },
     "Username" : {
 
     },
@@ -455,11 +566,20 @@
     "Verify" : {
 
     },
+    "Verify time" : {
+      "comment" : "debug print, dont translate"
+    },
     "Welcome to" : {
 
     },
     "What's wrong..." : {
 
+    },
+    "You have not enabled two-factor authentication!" : {
+      "comment" : "User settings info notice"
+    },
+    "You must enter your password" : {
+      "comment" : "the user entered a blank password"
     },
     "You've got 2FA enabled to keep your account extra-safe." : {
 

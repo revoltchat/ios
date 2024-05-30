@@ -50,3 +50,26 @@ struct Unread: Decodable, Identifiable {
         case last_id, mentions
     }
 }
+
+struct AuthAccount: Decodable {
+    var _id: String
+    var email: String
+}
+
+struct TOTPSecretResponse: Decodable {
+    var secret: String
+}
+
+struct MFATicketResponse: Decodable {
+    enum CodingKeys: String, CodingKey {
+        case id = "_id"
+        case account_id, token, validated, authorised, last_totp_code
+    }
+    
+    var id: String
+    var account_id: String
+    var token: String
+    var validated: Bool
+    var authorised: Bool
+    var last_totp_code: String?
+}

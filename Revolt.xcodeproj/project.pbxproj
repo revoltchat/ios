@@ -7,6 +7,12 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		170C23CE2C224B460057E399 /* UserSettingsStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 170C23CD2C224B460057E399 /* UserSettingsStore.swift */; };
+		170C23D32C224B6D0057E399 /* NotificationSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 170C23D02C224B6D0057E399 /* NotificationSettings.swift */; };
+		170C23D42C224B6D0057E399 /* ExperimentsSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 170C23CF2C224B6D0057E399 /* ExperimentsSettings.swift */; };
+		170C23D52C224B6D0057E399 /* SettingsCommon.swift in Sources */ = {isa = PBXBuildFile; fileRef = 170C23D12C224B6D0057E399 /* SettingsCommon.swift */; };
+		170C23D62C224B6D0057E399 /* UserSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 170C23D22C224B6D0057E399 /* UserSettings.swift */; };
+		170C23D92C224BA40057E399 /* View.swift in Sources */ = {isa = PBXBuildFile; fileRef = 170C23D72C224BA40057E399 /* View.swift */; };
 		1713035A2B6166B700B66050 /* Localizable.xcstrings in Resources */ = {isa = PBXBuildFile; fileRef = 171303592B6166B700B66050 /* Localizable.xcstrings */; settings = {ASSET_TAGS = (Resources, ); }; };
 		171594C32B4B2A0D00D7C3C3 /* ServerOverviewSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 171594C22B4B2A0D00D7C3C3 /* ServerOverviewSettings.swift */; };
 		1718F3D02B0BCAA50018E524 /* UnreadCounter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1718F3CF2B0BCAA50018E524 /* UnreadCounter.swift */; };
@@ -130,6 +136,12 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		170C23CD2C224B460057E399 /* UserSettingsStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserSettingsStore.swift; sourceTree = "<group>"; };
+		170C23CF2C224B6D0057E399 /* ExperimentsSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExperimentsSettings.swift; sourceTree = "<group>"; };
+		170C23D02C224B6D0057E399 /* NotificationSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationSettings.swift; sourceTree = "<group>"; };
+		170C23D12C224B6D0057E399 /* SettingsCommon.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsCommon.swift; sourceTree = "<group>"; };
+		170C23D22C224B6D0057E399 /* UserSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserSettings.swift; sourceTree = "<group>"; };
+		170C23D72C224BA40057E399 /* View.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = View.swift; sourceTree = "<group>"; };
 		171303592B6166B700B66050 /* Localizable.xcstrings */ = {isa = PBXFileReference; lastKnownFileType = text.json.xcstrings; path = Localizable.xcstrings; sourceTree = "<group>"; };
 		171594C22B4B2A0D00D7C3C3 /* ServerOverviewSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ServerOverviewSettings.swift; sourceTree = "<group>"; };
 		1718F3CF2B0BCAA50018E524 /* UnreadCounter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UnreadCounter.swift; sourceTree = "<group>"; };
@@ -240,6 +252,14 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		170C23D82C224BA40057E399 /* Extensions */ = {
+			isa = PBXGroup;
+			children = (
+				170C23D72C224BA40057E399 /* View.swift */,
+			);
+			path = Extensions;
+			sourceTree = "<group>";
+		};
 		171594C12B4B29F300D7C3C3 /* ServerSettings */ = {
 			isa = PBXGroup;
 			children = (
@@ -384,6 +404,7 @@
 		17DFB4622AE06A3200E1D417 /* Api */ = {
 			isa = PBXGroup;
 			children = (
+				170C23CD2C224B460057E399 /* UserSettingsStore.swift */,
 				DAAA4C0829F2974300F41E52 /* Http.swift */,
 				DAAA4C0A29F2CF1200F41E52 /* Websocket.swift */,
 				17CCCF6F2ADA17B600D78D7A /* Utils.swift */,
@@ -397,6 +418,10 @@
 		17E019C72AF1277D00AB4663 /* Settings */ = {
 			isa = PBXGroup;
 			children = (
+				170C23CF2C224B6D0057E399 /* ExperimentsSettings.swift */,
+				170C23D02C224B6D0057E399 /* NotificationSettings.swift */,
+				170C23D12C224B6D0057E399 /* SettingsCommon.swift */,
+				170C23D22C224B6D0057E399 /* UserSettings.swift */,
 				17DFB4632AE06A5D00E1D417 /* Settings.swift */,
 				17E019C82AF1279100AB4663 /* AppearanceSettings.swift */,
 				17E019CE2AF146AD00AB4663 /* About.swift */,
@@ -445,6 +470,7 @@
 		D49B705129C4D3FE009494A5 /* Revolt */ = {
 			isa = PBXGroup;
 			children = (
+				170C23D82C224BA40057E399 /* Extensions */,
 				173190012B754BB900B6DA49 /* Resources */,
 				17DFB4622AE06A3200E1D417 /* Api */,
 				17DFB4612AE06A0F00E1D417 /* Pages */,
@@ -664,6 +690,10 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				170C23D32C224B6D0057E399 /* NotificationSettings.swift in Sources */,
+				170C23D42C224B6D0057E399 /* ExperimentsSettings.swift in Sources */,
+				170C23D52C224B6D0057E399 /* SettingsCommon.swift in Sources */,
+				170C23D62C224B6D0057E399 /* UserSettings.swift in Sources */,
 				178BB11B2B02FCDD001143A4 /* Responses.swift in Sources */,
 				17BF54CD2B1785E200178866 /* HomeWelcome.swift in Sources */,
 				17F502542B9BFB1000A3022D /* AddFriend.swift in Sources */,
@@ -692,6 +722,7 @@
 				17F555272AFC229900958F2F /* ServerSettings.swift in Sources */,
 				17E019D32AF17F9D00AB4663 /* ProfileSettings.swift in Sources */,
 				DAAA4C0929F2974300F41E52 /* Http.swift in Sources */,
+				170C23D92C224BA40057E399 /* View.swift in Sources */,
 				1750EF6E2B0585B300DD3EB3 /* ResendEmail.swift in Sources */,
 				17E019D72AF1998300AB4663 /* MessageAttachment.swift in Sources */,
 				DAAA4BFB29F2518900F41E52 /* MessageView.swift in Sources */,
@@ -711,6 +742,7 @@
 				17429D992B4C931D0036105A /* ChannelOverviewSettings.swift in Sources */,
 				17966B652AE0842A00BAEC58 /* ChannelIcon.swift in Sources */,
 				172754C92B399092002223FE /* Contents.swift in Sources */,
+				170C23CE2C224B460057E399 /* UserSettingsStore.swift in Sources */,
 				1777DD892ADC3C31003D6C72 /* Markdown.swift in Sources */,
 				17E019D52AF1937400AB4663 /* Theme.swift in Sources */,
 				175E01E02ADAB554004F6431 /* Avatar.swift in Sources */,
