@@ -180,11 +180,14 @@ public class ViewState: ObservableObject {
     }
 
     @Published var path: NavigationPath = NavigationPath()
+    
+    var userSettingsStore: UserSettingsData
 
     init() {
         launchTransaction = SentrySDK.startTransaction(name: "launch", operation: "launch")
         let decoder = JSONDecoder()
-
+        
+        self.userSettingsStore = UserSettingsData.maybeRead(viewState: nil)
         self.sessionToken = UserDefaults.standard.string(forKey: "sessionToken")
 
         if let currentServer = UserDefaults.standard.data(forKey: "currentServer") {
@@ -215,6 +218,8 @@ public class ViewState: ObservableObject {
 
         self.users["00000000000000000000000000"] = User(id: "00000000000000000000000000", username: "Revolt", discriminator: "0000")
         self.http.token = self.sessionToken
+        
+        self.userSettingsStore.viewState = self // this is a cursed workaround
     }
 
     func applySystemScheme(theme: ColorScheme, followSystem: Bool = false) -> Self {

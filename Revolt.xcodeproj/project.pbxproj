@@ -7,6 +7,10 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		1707713A2B7856A200CA6A91 /* UserSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 170771392B7856A100CA6A91 /* UserSettings.swift */; };
+		1707713C2B78584000CA6A91 /* NotificationSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1707713B2B78584000CA6A91 /* NotificationSettings.swift */; };
+		1707713E2B78590000CA6A91 /* ExperimentsSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1707713D2B78590000CA6A91 /* ExperimentsSettings.swift */; };
+		170771402B785C8700CA6A91 /* SettingsCommon.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1707713F2B785C8700CA6A91 /* SettingsCommon.swift */; };
 		1713035A2B6166B700B66050 /* Localizable.xcstrings in Resources */ = {isa = PBXBuildFile; fileRef = 171303592B6166B700B66050 /* Localizable.xcstrings */; settings = {ASSET_TAGS = (Resources, ); }; };
 		171594C32B4B2A0D00D7C3C3 /* ServerOverviewSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 171594C22B4B2A0D00D7C3C3 /* ServerOverviewSettings.swift */; };
 		1718F3D02B0BCAA50018E524 /* UnreadCounter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1718F3CF2B0BCAA50018E524 /* UnreadCounter.swift */; };
@@ -58,6 +62,7 @@
 		178E26BC2B1542820015CAC7 /* PageToolbar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 178E26BB2B1542820015CAC7 /* PageToolbar.swift */; };
 		17966B652AE0842A00BAEC58 /* ChannelIcon.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17966B642AE0842A00BAEC58 /* ChannelIcon.swift */; };
 		17966B672AE08C3000BAEC58 /* DMList.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17966B662AE08C3000BAEC58 /* DMList.swift */; };
+		17ADD35B2B8AC7820027140C /* Cache in Frameworks */ = {isa = PBXBuildFile; productRef = 17ADD35A2B8AC7820027140C /* Cache */; };
 		17B7128D2B03E9D700CFF61C /* FriendsList.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17B7128C2B03E9D700CFF61C /* FriendsList.swift */; };
 		17BADE012B7019270021BB62 /* EmojiPicker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17BADE002B7019270021BB62 /* EmojiPicker.swift */; };
 		17BC476B2B9CB51200A593DA /* ShareInviteSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17BC476A2B9CB51200A593DA /* ShareInviteSheet.swift */; };
@@ -71,6 +76,7 @@
 		17CE783C2B129983006C1D2C /* HomeRewritten.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17CE783B2B129983006C1D2C /* HomeRewritten.swift */; };
 		17CE783F2B129E28006C1D2C /* ServerScrollView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17CE783E2B129E28006C1D2C /* ServerScrollView.swift */; };
 		17CE78412B12AA51006C1D2C /* ServerChannelScrollView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17CE78402B12AA51006C1D2C /* ServerChannelScrollView.swift */; };
+		17D020AA2B9E8A5A00A7CC3E /* View.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17D020A92B9E8A5A00A7CC3E /* View.swift */; };
 		17D5C9442B14DF500060C035 /* DMScrollView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17D5C9432B14DF500060C035 /* DMScrollView.swift */; };
 		17D8BACF2B211DEE005F5447 /* ChannelInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17D8BACE2B211DEE005F5447 /* ChannelInfo.swift */; };
 		17D9C2BD2ADCA48D00426857 /* Kingfisher in Frameworks */ = {isa = PBXBuildFile; productRef = 17D9C2BC2ADCA48D00426857 /* Kingfisher */; };
@@ -87,6 +93,8 @@
 		17E019DA2AF199A600AB4663 /* MessageReply.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17E019D92AF199A600AB4663 /* MessageReply.swift */; };
 		17E019DC2AF1B25100AB4663 /* SessionsSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17E019DB2AF1B25100AB4663 /* SessionsSettings.swift */; };
 		17E28E082AF319D500F6069F /* AddServer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17E28E072AF319D500F6069F /* AddServer.swift */; };
+		17E28E082AF319D500F6069F /* JoinServer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17E28E072AF319D500F6069F /* JoinServer.swift */; };
+		17E687DD2B89BF8D0028E7FA /* UserSettingsStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17E687DC2B89BF8D0028E7FA /* UserSettingsStore.swift */; };
 		17F502542B9BFB1000A3022D /* AddFriend.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17F502532B9BFB1000A3022D /* AddFriend.swift */; };
 		17F502562B9BFB2800A3022D /* CreateGroup.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17F502552B9BFB2800A3022D /* CreateGroup.swift */; };
 		17F555272AFC229900958F2F /* ServerSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17F555262AFC229900958F2F /* ServerSettings.swift */; };
@@ -133,6 +141,10 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		170771392B7856A100CA6A91 /* UserSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserSettings.swift; sourceTree = "<group>"; };
+		1707713B2B78584000CA6A91 /* NotificationSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationSettings.swift; sourceTree = "<group>"; };
+		1707713D2B78590000CA6A91 /* ExperimentsSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExperimentsSettings.swift; sourceTree = "<group>"; };
+		1707713F2B785C8700CA6A91 /* SettingsCommon.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsCommon.swift; sourceTree = "<group>"; };
 		171303592B6166B700B66050 /* Localizable.xcstrings */ = {isa = PBXFileReference; lastKnownFileType = text.json.xcstrings; path = Localizable.xcstrings; sourceTree = "<group>"; };
 		171594C22B4B2A0D00D7C3C3 /* ServerOverviewSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ServerOverviewSettings.swift; sourceTree = "<group>"; };
 		1718F3CF2B0BCAA50018E524 /* UnreadCounter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UnreadCounter.swift; sourceTree = "<group>"; };
@@ -174,6 +186,7 @@
 		17CE783B2B129983006C1D2C /* HomeRewritten.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeRewritten.swift; sourceTree = "<group>"; };
 		17CE783E2B129E28006C1D2C /* ServerScrollView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ServerScrollView.swift; sourceTree = "<group>"; };
 		17CE78402B12AA51006C1D2C /* ServerChannelScrollView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ServerChannelScrollView.swift; sourceTree = "<group>"; };
+		17D020A92B9E8A5A00A7CC3E /* View.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = View.swift; sourceTree = "<group>"; };
 		17D5C9432B14DF500060C035 /* DMScrollView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DMScrollView.swift; sourceTree = "<group>"; };
 		17D8BACE2B211DEE005F5447 /* ChannelInfo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChannelInfo.swift; sourceTree = "<group>"; };
 		17D9D2B62B0843DE00D57812 /* PermissionsCalculator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PermissionsCalculator.swift; sourceTree = "<group>"; };
@@ -201,6 +214,8 @@
 		17E019D92AF199A600AB4663 /* MessageReply.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageReply.swift; sourceTree = "<group>"; };
 		17E019DB2AF1B25100AB4663 /* SessionsSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SessionsSettings.swift; sourceTree = "<group>"; };
 		17E28E072AF319D500F6069F /* AddServer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddServer.swift; sourceTree = "<group>"; };
+		17E28E072AF319D500F6069F /* JoinServer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JoinServer.swift; sourceTree = "<group>"; };
+		17E687DC2B89BF8D0028E7FA /* UserSettingsStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserSettingsStore.swift; sourceTree = "<group>"; };
 		17F502532B9BFB1000A3022D /* AddFriend.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddFriend.swift; sourceTree = "<group>"; };
 		17F502552B9BFB2800A3022D /* CreateGroup.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateGroup.swift; sourceTree = "<group>"; };
 		17F555262AFC229900958F2F /* ServerSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ServerSettings.swift; sourceTree = "<group>"; };
@@ -233,6 +248,7 @@
 				DA99EC5329D6148200419FDA /* Alamofire in Frameworks */,
 				178BB10E2B02D84C001143A4 /* HCaptcha_RxSwift in Frameworks */,
 				174DA9E82B9E4D70001BC330 /* Parsing in Frameworks */,
+				17ADD35B2B8AC7820027140C /* Cache in Frameworks */,
 				17CCCF6E2ADA173B00D78D7A /* ULID in Frameworks */,
 				1773C0272C07DC32007B8867 /* Types.framework in Frameworks */,
 				DAAA4BF829F2274A00F41E52 /* OrderedCollections in Frameworks */,
@@ -364,6 +380,12 @@
 				17DE7E1B2BFAFE5600C99188 /* File.swift */,
 			);
 			path = Types;
+		17D020A82B9E8A4A00A7CC3E /* Extensions */ = {
+			isa = PBXGroup;
+			children = (
+				17D020A92B9E8A5A00A7CC3E /* View.swift */,
+			);
+			path = Extensions;
 			sourceTree = "<group>";
 		};
 		17DFB4612AE06A0F00E1D417 /* Pages */ = {
@@ -397,6 +419,7 @@
 				178BB1182B02FBD0001143A4 /* Payloads.swift */,
 				178BB11A2B02FCDD001143A4 /* Responses.swift */,
 				17D9D2B62B0843DE00D57812 /* PermissionsCalculator.swift */,
+				17E687DC2B89BF8D0028E7FA /* UserSettingsStore.swift */,
 			);
 			path = Api;
 			sourceTree = "<group>";
@@ -410,6 +433,10 @@
 				17E019D22AF17F9D00AB4663 /* ProfileSettings.swift */,
 				17E019DB2AF1B25100AB4663 /* SessionsSettings.swift */,
 				17BF54D02B17B24200178866 /* LanguageSettings.swift */,
+				170771392B7856A100CA6A91 /* UserSettings.swift */,
+				1707713B2B78584000CA6A91 /* NotificationSettings.swift */,
+				1707713D2B78590000CA6A91 /* ExperimentsSettings.swift */,
+				1707713F2B785C8700CA6A91 /* SettingsCommon.swift */,
 			);
 			path = Settings;
 			sourceTree = "<group>";
@@ -452,6 +479,7 @@
 		D49B705129C4D3FE009494A5 /* Revolt */ = {
 			isa = PBXGroup;
 			children = (
+				17D020A82B9E8A4A00A7CC3E /* Extensions */,
 				173190012B754BB900B6DA49 /* Resources */,
 				17DFB4622AE06A3200E1D417 /* Api */,
 				17DFB4612AE06A0F00E1D417 /* Pages */,
@@ -545,6 +573,7 @@
 				1746CF592B83C6750051FD47 /* CodableWrapper */,
 				174DA9E72B9E4D70001BC330 /* Parsing */,
 				1757A26C2BB7444D007EE8B9 /* LiveKit */,
+				17ADD35A2B8AC7820027140C /* Cache */,
 			);
 			productName = Revolt;
 			productReference = D49B704F29C4D3FE009494A5 /* Revolt.app */;
@@ -594,6 +623,7 @@
 				1746CF582B83C6750051FD47 /* XCRemoteSwiftPackageReference "CodableWrapper" */,
 				174DA9E62B9E4D70001BC330 /* XCRemoteSwiftPackageReference "swift-parsing" */,
 				1757A26B2BB7444D007EE8B9 /* XCRemoteSwiftPackageReference "client-sdk-swift" */,
+				17ADD3592B8AC7810027140C /* XCRemoteSwiftPackageReference "Cache" */,
 			);
 			productRefGroup = D49B705029C4D3FE009494A5 /* Products */;
 			projectDirPath = "";
@@ -681,22 +711,28 @@
 				1773C03D2C07DD1F007B8867 /* MessageableChannel.swift in Sources */,
 				DAAA4C0B29F2CF1200F41E52 /* Websocket.swift in Sources */,
 				DA99EC4A29D5F35400419FDA /* Home.swift in Sources */,
+				1707713C2B78584000CA6A91 /* NotificationSettings.swift in Sources */,
 				DAAA4C0329F2548400F41E52 /* MessageBox.swift in Sources */,
 				17CE783C2B129983006C1D2C /* HomeRewritten.swift in Sources */,
 				1748B2072B1FB88B00AA2D47 /* MessageReactions.swift in Sources */,
 				17E28E082AF319D500F6069F /* AddServer.swift in Sources */,
 				17429D972B4C91170036105A /* ChannelSettings.swift in Sources */,
 				17BC476B2B9CB51200A593DA /* ShareInviteSheet.swift in Sources */,
+				1707713A2B7856A200CA6A91 /* UserSettings.swift in Sources */,
+				17E687DD2B89BF8D0028E7FA /* UserSettingsStore.swift in Sources */,
 				1739DB962B08E53B00D23DAD /* MessageBadge.swift in Sources */,
 				175E01DE2ADAB3F6004F6431 /* LazyImage.swift in Sources */,
 				1759C39C2B291E2F006E6BBE /* SystemMessageView.swift in Sources */,
 				17E019DC2AF1B25100AB4663 /* SessionsSettings.swift in Sources */,
+				1707713E2B78590000CA6A91 /* ExperimentsSettings.swift in Sources */,
+				17CCCF6B2ADA14CB00D78D7A /* Role.swift in Sources */,
 				178BB1192B02FBD1001143A4 /* Payloads.swift in Sources */,
 				1777DD8E2ADC4336003D6C72 /* RemoteImageTextAttachment.swift in Sources */,
 				17966B672AE08C3000BAEC58 /* DMList.swift in Sources */,
 				178BB1172B02E63B001143A4 /* LoadingSpinnerView.swift in Sources */,
 				17CE783F2B129E28006C1D2C /* ServerScrollView.swift in Sources */,
 				DA99EC5029D5F35900419FDA /* Login.swift in Sources */,
+				170771402B785C8700CA6A91 /* SettingsCommon.swift in Sources */,
 				178BB1102B02D89A001143A4 /* HCaptchaView.swift in Sources */,
 				17DFB4642AE06A5D00E1D417 /* Settings.swift in Sources */,
 				17F555272AFC229900958F2F /* ServerSettings.swift in Sources */,
@@ -704,6 +740,9 @@
 				DAAA4C0929F2974300F41E52 /* Http.swift in Sources */,
 				1750EF6E2B0585B300DD3EB3 /* ResendEmail.swift in Sources */,
 				17E019D72AF1998300AB4663 /* MessageAttachment.swift in Sources */,
+				17D020AA2B9E8A5A00A7CC3E /* View.swift in Sources */,
+				17CCCF672ADA109600D78D7A /* Permissions.swift in Sources */,
+				DAAA4BFF29F251ED00F41E52 /* User.swift in Sources */,
 				DAAA4BFB29F2518900F41E52 /* MessageView.swift in Sources */,
 				1759C39A2B291A75006E6BBE /* MessageContentsView.swift in Sources */,
 				17E019D12AF14EC000AB4663 /* ServerIcon.swift in Sources */,
@@ -1174,6 +1213,14 @@
 				minimumVersion = 2.5.1;
 			};
 		};
+		17ADD3592B8AC7810027140C /* XCRemoteSwiftPackageReference "Cache" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/hyperoslo/Cache";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 6.1.0;
+			};
+		};
 		17CCCF6C2ADA173B00D78D7A /* XCRemoteSwiftPackageReference "ULID" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/yaslab/ULID.swift";
@@ -1269,6 +1316,11 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 178BB10A2B02D84C001143A4 /* XCRemoteSwiftPackageReference "HCaptcha-ios-sdk" */;
 			productName = HCaptcha_RxSwift;
+		};
+		17ADD35A2B8AC7820027140C /* Cache */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 17ADD3592B8AC7810027140C /* XCRemoteSwiftPackageReference "Cache" */;
+			productName = Cache;
 		};
 		17CCCF6D2ADA173B00D78D7A /* ULID */ = {
 			isa = XCSwiftPackageProductDependency;

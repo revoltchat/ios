@@ -18,6 +18,14 @@
         "version" : "2.0.8"
       }
     },
+      "identity" : "cache",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/hyperoslo/Cache",
+      "state" : {
+        "revision" : "d048bf404a5c8362c6cf840c2096d5777975cd27",
+        "version" : "6.1.0"
+      }
+    },
     {
       "identity" : "codablewrapper",
       "kind" : "remoteSourceControl",
@@ -59,8 +67,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/getsentry/sentry-cocoa/",
       "state" : {
-        "revision" : "b847a202a517a90763e8fd0656d8028aeee7b78d",
-        "version" : "8.20.0"
+        "revision" : "38f4f70d07117b9f958a76b1bff278c2f29ffe0e",
+        "version" : "8.21.0"
       }
     },
     {

@@ -18,22 +18,27 @@ enum CurrentSettingsPage: Hashable {
 
 struct Settings: View {
     @EnvironmentObject var viewState: ViewState
-
-    @State var currentPage: CurrentSettingsPage? = .language
     
     var body: some View {
         List {
-            Section("Revolt") {
-                NavigationLink(destination: ProfileSettings.init) {
+            Section("User Settings") {
+                NavigationLink(destination: { UserSettings(viewState: viewState) }) {
                     Image(systemName: "person.fill")
+                    Text("My Account")
+                }
+                NavigationLink(destination: ProfileSettings()) {
+                    Image(systemName: "person.text.rectangle.fill")
                     Text("Profile")
                 }
                 
-                NavigationLink(destination: SessionsSettings.init) {
-                    Image(systemName: "shield.fill")
+                NavigationLink(destination: SessionsSettings()) {
+                    Image(systemName: "checkmark.shield.fill")
                     Text("Sessions")
                 }
-                
+            }
+            .listRowBackground(viewState.theme.background2)
+            
+            Section("Client Settings") {
                 NavigationLink(destination: { AppearanceSettings(
                     accent: viewState.theme.accent.color,
                     background: viewState.theme.background.color,
@@ -48,7 +53,12 @@ struct Settings: View {
                     Text("Appearance")
                 }
                 
-                NavigationLink(destination: LanguageSettings.init) {
+                NavigationLink(destination: NotificationSettings()) {
+                    Image(systemName: "bell.fill")
+                    Text("Notifications")
+                }
+                
+                NavigationLink(destination: LanguageSettings()) {
                     Image(systemName: "globe")
                     Text("Language")
                 }
@@ -56,9 +66,14 @@ struct Settings: View {
             .listRowBackground(viewState.theme.background2)
             
             Section("Misc") {
-                NavigationLink(destination: About.init) {
+                NavigationLink(destination: About()) {
                     Image(systemName: "info.circle.fill")
                     Text("About")
+                }
+                
+                NavigationLink(destination: ExperimentsSettings()) {
+                    Image(systemName: "flask.fill")
+                    Text("Experiments")
                 }
                 
                 Button {
@@ -75,14 +90,14 @@ struct Settings: View {
             .listRowBackground(viewState.theme.background2)
         }
         .scrollContentBackground(.hidden)
+        .scrollDisabled(true)
         .frame(maxWidth: .infinity, maxHeight: .infinity)
         .toolbar {
             ToolbarItem(placement: .principal) {
-                Text("Settings")
+                Text(String(localized: "Settings", comment: "Settings Tooltip"))
             }
         }
         .toolbarBackground(viewState.theme.topBar.color, for: .automatic)
-
         .background(viewState.theme.background)
     }
 }

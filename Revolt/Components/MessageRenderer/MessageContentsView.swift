@@ -57,7 +57,7 @@ struct MessageContentsView: View {
 
     func copyText() {
 #if os(macOS)
-        NSPasteboard.general.setString(message.content ?? "", forType: .string)
+        NSPasteboard.general.setString(viewModel.message.content ?? "", forType: .string)
 #else
         UIPasteboard.general.string = viewModel.message.content
 #endif
