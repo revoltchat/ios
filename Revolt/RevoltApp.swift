@@ -15,8 +15,8 @@ struct RevoltApp: App {
             options.profilesSampleRate = 1.0
             options.enableTracing = true
             options.attachViewHierarchy = true
-            //options.enableAppLaunchProfiling = true
-            //options.enableMetrics = true
+            options.enableAppLaunchProfiling = true
+            options.enableMetrics = true
         }
     }
 
