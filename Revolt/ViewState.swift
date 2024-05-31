@@ -479,6 +479,24 @@ public class ViewState: ObservableObject {
                     message.reactions = reactions
                     messages[e.id] = message
                 }
+            
+            case .message_unreact(let e):
+                
+                if var message = messages[e.id] {
+                    if var reactions = message.reactions {
+                        if var users = reactions[e.emoji_id] {
+                            users.removeAll { $0 == e.user_id }
+                            
+                            if users.isEmpty {
+                                reactions.removeValue(forKey: e.emoji_id)
+                            } else {
+                                reactions[e.emoji_id] = users
+                            }
+                            message.reactions = reactions
+                            messages[e.id] = message
+                        }
+                    }
+                }
         }
     }
 
@@ -583,7 +601,7 @@ public class ViewState: ObservableObject {
         }
     }
     
-    func openUserSheet(user: Types.User, member: Member?) {
+    func openUserSheet(user: Types.User, member: Member? = nil) {
         currentUserSheet = UserMaybeMember(user: user, member: member)
     }
 }
