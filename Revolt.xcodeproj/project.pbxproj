@@ -23,7 +23,6 @@
 		1750EF6E2B0585B300DD3EB3 /* ResendEmail.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1750EF6D2B0585B300DD3EB3 /* ResendEmail.swift */; };
 		1757A26D2BB7444D007EE8B9 /* LiveKit in Frameworks */ = {isa = PBXBuildFile; productRef = 1757A26C2BB7444D007EE8B9 /* LiveKit */; };
 		175997192B2FB90700C39CF6 /* Flow in Frameworks */ = {isa = PBXBuildFile; productRef = 175997182B2FB90700C39CF6 /* Flow */; };
-		1759971B2B2FB90700C39CF6 /* Renderer in Frameworks */ = {isa = PBXBuildFile; productRef = 1759971A2B2FB90700C39CF6 /* Renderer */; };
 		1759C39A2B291A75006E6BBE /* MessageContentsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1759C3992B291A75006E6BBE /* MessageContentsView.swift */; };
 		1759C39C2B291E2F006E6BBE /* SystemMessageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1759C39B2B291E2F006E6BBE /* SystemMessageView.swift */; };
 		175E01DE2ADAB3F6004F6431 /* LazyImage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 175E01DD2ADAB3F6004F6431 /* LazyImage.swift */; };
@@ -57,7 +56,6 @@
 		178BB11B2B02FCDD001143A4 /* Responses.swift in Sources */ = {isa = PBXBuildFile; fileRef = 178BB11A2B02FCDD001143A4 /* Responses.swift */; };
 		178E26BC2B1542820015CAC7 /* PageToolbar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 178E26BB2B1542820015CAC7 /* PageToolbar.swift */; };
 		17966B652AE0842A00BAEC58 /* ChannelIcon.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17966B642AE0842A00BAEC58 /* ChannelIcon.swift */; };
-		17966B672AE08C3000BAEC58 /* DMList.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17966B662AE08C3000BAEC58 /* DMList.swift */; };
 		17B7128D2B03E9D700CFF61C /* FriendsList.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17B7128C2B03E9D700CFF61C /* FriendsList.swift */; };
 		17BADE012B7019270021BB62 /* EmojiPicker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17BADE002B7019270021BB62 /* EmojiPicker.swift */; };
 		17BC476B2B9CB51200A593DA /* ShareInviteSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17BC476A2B9CB51200A593DA /* ShareInviteSheet.swift */; };
@@ -99,7 +97,6 @@
 		DA99EC5029D5F35900419FDA /* Login.swift in Sources */ = {isa = PBXBuildFile; fileRef = DA99EC4F29D5F35900419FDA /* Login.swift */; };
 		DA99EC5329D6148200419FDA /* Alamofire in Frameworks */ = {isa = PBXBuildFile; productRef = DA99EC5229D6148200419FDA /* Alamofire */; };
 		DAAA4BF429F2274A00F41E52 /* Collections in Frameworks */ = {isa = PBXBuildFile; productRef = DAAA4BF329F2274A00F41E52 /* Collections */; };
-		DAAA4BF629F2274A00F41E52 /* DequeModule in Frameworks */ = {isa = PBXBuildFile; productRef = DAAA4BF529F2274A00F41E52 /* DequeModule */; };
 		DAAA4BF829F2274A00F41E52 /* OrderedCollections in Frameworks */ = {isa = PBXBuildFile; productRef = DAAA4BF729F2274A00F41E52 /* OrderedCollections */; };
 		DAAA4BFB29F2518900F41E52 /* MessageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DAAA4BFA29F2518900F41E52 /* MessageView.swift */; };
 		DAAA4C0329F2548400F41E52 /* MessageBox.swift in Sources */ = {isa = PBXBuildFile; fileRef = DAAA4C0229F2548400F41E52 /* MessageBox.swift */; };
@@ -160,7 +157,6 @@
 		178BB11A2B02FCDD001143A4 /* Responses.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Responses.swift; sourceTree = "<group>"; };
 		178E26BB2B1542820015CAC7 /* PageToolbar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PageToolbar.swift; sourceTree = "<group>"; };
 		17966B642AE0842A00BAEC58 /* ChannelIcon.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChannelIcon.swift; sourceTree = "<group>"; };
-		17966B662AE08C3000BAEC58 /* DMList.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DMList.swift; sourceTree = "<group>"; };
 		17B1A0462BFC471C005D4664 /* Types.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Types.swift; sourceTree = "<group>"; };
 		17B7128C2B03E9D700CFF61C /* FriendsList.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FriendsList.swift; sourceTree = "<group>"; };
 		17BADE002B7019270021BB62 /* EmojiPicker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmojiPicker.swift; sourceTree = "<group>"; };
@@ -227,7 +223,6 @@
 				175997192B2FB90700C39CF6 /* Flow in Frameworks */,
 				1746CF5A2B83C6750051FD47 /* CodableWrapper in Frameworks */,
 				17D9C2BD2ADCA48D00426857 /* Kingfisher in Frameworks */,
-				1759971B2B2FB90700C39CF6 /* Renderer in Frameworks */,
 				172754CC2B39989E002223FE /* SwiftParsec in Frameworks */,
 				178BB10C2B02D84C001143A4 /* HCaptcha in Frameworks */,
 				DA99EC5329D6148200419FDA /* Alamofire in Frameworks */,
@@ -237,7 +232,6 @@
 				1773C0272C07DC32007B8867 /* Types.framework in Frameworks */,
 				DAAA4BF829F2274A00F41E52 /* OrderedCollections in Frameworks */,
 				DAF84FFD2A0EFE1B00B01682 /* Starscream in Frameworks */,
-				DAAA4BF629F2274A00F41E52 /* DequeModule in Frameworks */,
 				36D461CF77D84B97B94929A9 /* Sentry in Frameworks */,
 				1757A26D2BB7444D007EE8B9 /* LiveKit in Frameworks */,
 			);
@@ -375,7 +369,6 @@
 				17E019C72AF1277D00AB4663 /* Settings */,
 				DA99EC4929D5F35400419FDA /* Home.swift */,
 				17CE783B2B129983006C1D2C /* HomeRewritten.swift */,
-				17966B662AE08C3000BAEC58 /* DMList.swift */,
 				17E28E072AF319D500F6069F /* AddServer.swift */,
 				17B7128C2B03E9D700CFF61C /* FriendsList.swift */,
 				1782F5E52B08F60B00759D40 /* Discovery.swift */,
@@ -531,7 +524,6 @@
 			packageProductDependencies = (
 				DA99EC5229D6148200419FDA /* Alamofire */,
 				DAAA4BF329F2274A00F41E52 /* Collections */,
-				DAAA4BF529F2274A00F41E52 /* DequeModule */,
 				DAAA4BF729F2274A00F41E52 /* OrderedCollections */,
 				DAF84FFC2A0EFE1B00B01682 /* Starscream */,
 				17CCCF6D2ADA173B00D78D7A /* ULID */,
@@ -539,7 +531,6 @@
 				178BB10B2B02D84C001143A4 /* HCaptcha */,
 				178BB10D2B02D84C001143A4 /* HCaptcha_RxSwift */,
 				175997182B2FB90700C39CF6 /* Flow */,
-				1759971A2B2FB90700C39CF6 /* Renderer */,
 				172754CB2B39989E002223FE /* SwiftParsec */,
 				03268FCCFC7D4D1F8B6E9F6F /* Sentry */,
 				1746CF592B83C6750051FD47 /* CodableWrapper */,
@@ -693,7 +684,6 @@
 				17E019DC2AF1B25100AB4663 /* SessionsSettings.swift in Sources */,
 				178BB1192B02FBD1001143A4 /* Payloads.swift in Sources */,
 				1777DD8E2ADC4336003D6C72 /* RemoteImageTextAttachment.swift in Sources */,
-				17966B672AE08C3000BAEC58 /* DMList.swift in Sources */,
 				178BB1172B02E63B001143A4 /* LoadingSpinnerView.swift in Sources */,
 				17CE783F2B129E28006C1D2C /* ServerScrollView.swift in Sources */,
 				DA99EC5029D5F35900419FDA /* Login.swift in Sources */,
@@ -1027,8 +1017,8 @@
 				PRODUCT_BUNDLE_IDENTIFIER = chat.revolt.app;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
-				"PROVISIONING_PROFILE_SPECIFIER[sdk=iphoneos*]" = "my iphone";
-				"PROVISIONING_PROFILE_SPECIFIER[sdk=macosx*]" = "Zoma mac mini";
+				"PROVISIONING_PROFILE_SPECIFIER[sdk=iphoneos*]" = "match Development chat.revolt.app";
+				"PROVISIONING_PROFILE_SPECIFIER[sdk=macosx*]" = "match Development chat.revolt.app macos";
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator macosx";
 				SUPPORTS_MACCATALYST = YES;
 				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = YES;
@@ -1082,8 +1072,8 @@
 				PRODUCT_BUNDLE_IDENTIFIER = chat.revolt.app;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
-				"PROVISIONING_PROFILE_SPECIFIER[sdk=iphoneos*]" = "my iphone";
-				"PROVISIONING_PROFILE_SPECIFIER[sdk=macosx*]" = "Zoma mac mini";
+				"PROVISIONING_PROFILE_SPECIFIER[sdk=iphoneos*]" = "match Development chat.revolt.app";
+				"PROVISIONING_PROFILE_SPECIFIER[sdk=macosx*]" = "match Development chat.revolt.app macos";
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator macosx";
 				SUPPORTS_MACCATALYST = YES;
 				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = YES;
@@ -1195,7 +1185,7 @@
 			repositoryURL = "https://github.com/getsentry/sentry-cocoa/";
 			requirement = {
 				kind = upToNextMajorVersion;
-				minimumVersion = 8.0.0;
+				minimumVersion = 8.26.0;
 			};
 		};
 		DA99EC5129D6148200419FDA /* XCRemoteSwiftPackageReference "Alamofire" */ = {
@@ -1255,11 +1245,6 @@
 			package = 175997172B2FB90600C39CF6 /* XCRemoteSwiftPackageReference "SwiftUI-Flow" */;
 			productName = Flow;
 		};
-		1759971A2B2FB90700C39CF6 /* Renderer */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 175997172B2FB90600C39CF6 /* XCRemoteSwiftPackageReference "SwiftUI-Flow" */;
-			productName = Renderer;
-		};
 		178BB10B2B02D84C001143A4 /* HCaptcha */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = 178BB10A2B02D84C001143A4 /* XCRemoteSwiftPackageReference "HCaptcha-ios-sdk" */;
@@ -1299,11 +1284,6 @@
 			isa = XCSwiftPackageProductDependency;
 			package = DAAA4BF229F2274A00F41E52 /* XCRemoteSwiftPackageReference "swift-collections" */;
 			productName = Collections;
-		};
-		DAAA4BF529F2274A00F41E52 /* DequeModule */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = DAAA4BF229F2274A00F41E52 /* XCRemoteSwiftPackageReference "swift-collections" */;
-			productName = DequeModule;
 		};
 		DAAA4BF729F2274A00F41E52 /* OrderedCollections */ = {
 			isa = XCSwiftPackageProductDependency;
