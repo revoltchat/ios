@@ -19,9 +19,7 @@ struct AppearanceSettings: View {
     @State var background2: Color
     @State var textColor: Color
     @State var messageBox: Color
-    @State var messageBoxBackground: Color
     @State var topBar: Color
-    @State var messageBoxBorder: Color
 
     var body: some View {
         VStack(alignment: .leading) {
@@ -91,23 +89,7 @@ struct AppearanceSettings: View {
                 let resolved = messageBox.resolve(in: environment)
                 viewState.theme.messageBox.set(with: resolved)
             }
-            
-            ColorPicker(selection: $messageBoxBackground, label: {
-                Text("Message Box Background")
-            })
-            .onChange(of: messageBoxBackground) {
-                let resolved = messageBoxBackground.resolve(in: environment)
-                viewState.theme.messageBoxBackground.set(with: resolved)
-            }
-            
-            ColorPicker(selection: $messageBoxBorder, label: {
-                Text("Message Box Border")
-            })
-            .onChange(of: messageBoxBorder) {
-                let resolved = messageBoxBorder.resolve(in: environment)
-                viewState.theme.messageBoxBorder.set(with: resolved)
-            }
-            
+                        
             ColorPicker(selection: $topBar, label: {
                 Text("Top Bar")
             })
@@ -140,9 +122,7 @@ struct AppearanceSettings_Preview: PreviewProvider {
             background2: viewState.theme.background2.color,
             textColor: viewState.theme.foreground.color,
             messageBox: viewState.theme.messageBox.color,
-            messageBoxBackground: viewState.theme.messageBoxBackground.color,
-            topBar: viewState.theme.topBar.color,
-            messageBoxBorder: viewState.theme.messageBoxBorder.color
+            topBar: viewState.theme.topBar.color
         )
         .applyPreviewModifiers(withState: viewState.applySystemScheme(theme: .light))
         
@@ -152,9 +132,7 @@ struct AppearanceSettings_Preview: PreviewProvider {
             background2: viewState.theme.background2.color,
             textColor: viewState.theme.foreground.color,
             messageBox: viewState.theme.messageBox.color,
-            messageBoxBackground: viewState.theme.messageBoxBackground.color,
-            topBar: viewState.theme.topBar.color,
-            messageBoxBorder: viewState.theme.messageBoxBorder.color
+            topBar: viewState.theme.topBar.color
         )
         .applyPreviewModifiers(withState: viewState.applySystemScheme(theme: .dark))
     }

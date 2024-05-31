@@ -40,9 +40,7 @@ struct Settings: View {
                     background2: viewState.theme.background2.color,
                     textColor: viewState.theme.foreground.color,
                     messageBox: viewState.theme.messageBox.color,
-                    messageBoxBackground: viewState.theme.messageBoxBackground.color,
-                    topBar: viewState.theme.topBar.color,
-                    messageBoxBorder: viewState.theme.messageBoxBorder.color
+                    topBar: viewState.theme.topBar.color
                 )}) {
                     Image(systemName: "paintpalette.fill")
                     Text("Appearance")
