@@ -149,13 +149,13 @@
     "Didn't get an email?" : {
 
     },
-    "Direct Messages" : {
-
-    },
     "Discovery" : {
 
     },
     "Edit" : {
+
+    },
+    "Editing Message" : {
 
     },
     "Email" : {
@@ -278,16 +278,10 @@
     "Members - %lld" : {
 
     },
-    "Message %@" : {
+    "Message #%@" : {
 
     },
     "Message Box" : {
-
-    },
-    "Message Box Background" : {
-
-    },
-    "Message Box Border" : {
 
     },
     "Misc" : {
