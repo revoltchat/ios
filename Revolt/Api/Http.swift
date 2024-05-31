@@ -264,4 +264,8 @@ struct HTTPClient {
     func reactMessage(channel: String, message: String, emoji: String) async -> Result<EmptyResponse, AFError> {
         await req(method: .put, route: "/channels/\(channel)/messages/\(message)/reactions/\(emoji)")
     }
+    
+    func editMessage(channel: String, message: String, edits: MessageEdit) async -> Result<Message, AFError> {
+        await req(method: .patch, route: "/channels/\(channel)/messages/\(message)", parameters: edits)
+    }
 }

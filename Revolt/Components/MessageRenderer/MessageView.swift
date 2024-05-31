@@ -20,7 +20,7 @@ struct MessageView: View {
     var body: some View {
         VStack(alignment: .leading, spacing: 4) {
             if let replies = viewModel.message.replies {
-                VStack(alignment: .leading) {
+                VStack(alignment: .leading, spacing: 4) {
                     ForEach(replies, id: \.self) { id in
                         MessageReplyView(mentions: viewModel.$message.mentions, channelScrollPosition: viewModel.$channelScrollPosition, id: id, channel: viewModel.message.channel)
                             .padding(.leading, 38)
@@ -83,28 +83,28 @@ struct MessageView: View {
     }
 }
 
-struct GhostMessageView: View {
-    @EnvironmentObject var viewState: ViewState
-    
-    var message: QueuedMessage
-    
-    var body: some View {
-        HStack(alignment: .top) {
-            Avatar(user: viewState.currentUser!, width: 16, height: 16)
-            VStack(alignment: .leading) {
-                HStack {
-                    Text(viewState.currentUser!.username)
-                        .fontWeight(.heavy)
-                    Text(createdAt(id: message.nonce).formatted())
-                }
-                Contents(text: message.content)
-                //.frame(maxWidth: .infinity, alignment: .leading)
-            }
-            //.frame(maxWidth: .infinity, alignment: .leading)
-        }
-        .listRowSeparator(.hidden)
-    }
-}
+//struct GhostMessageView: View {
+//    @EnvironmentObject var viewState: ViewState
+//    
+//    var message: QueuedMessage
+//    
+//    var body: some View {
+//        HStack(alignment: .top) {
+//            Avatar(user: viewState.currentUser!, width: 16, height: 16)
+//            VStack(alignment: .leading) {
+//                HStack {
+//                    Text(viewState.currentUser!.username)
+//                        .fontWeight(.heavy)
+//                    Text(createdAt(id: message.nonce).formatted())
+//                }
+//                Contents(text: message.content)
+//                //.frame(maxWidth: .infinity, alignment: .leading)
+//            }
+//            //.frame(maxWidth: .infinity, alignment: .leading)
+//        }
+//        .listRowSeparator(.hidden)
+//    }
+//}
 
 struct MessageView_Previews: PreviewProvider {
     static var viewState: ViewState = ViewState.preview()
@@ -118,7 +118,7 @@ struct MessageView_Previews: PreviewProvider {
     
     static var previews: some View {
         List {
-            MessageView(viewModel: MessageContentsViewModel(viewState: viewState, message: $message, author: $author, member: $member, server: $server, channel: $channel, replies: $replies, channelScrollPosition: $channelScrollPosition), isStatic: false)
+            MessageView(viewModel: MessageContentsViewModel(viewState: viewState, message: $message, author: $author, member: $member, server: $server, channel: $channel, replies: $replies, channelScrollPosition: $channelScrollPosition, editing: .constant(nil)), isStatic: false)
         }
             .applyPreviewModifiers(withState: viewState)
     }

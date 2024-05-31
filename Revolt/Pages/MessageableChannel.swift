@@ -90,6 +90,7 @@ struct MessageableChannelView: View {
     @State var atBottom: Bool = false
     @State var showDetails: Bool = false
     @State var showingSelectEmoji = false
+    @State var currentlyEditing: Message? = nil
     
     @Binding var showSidebar: Bool
     
@@ -120,6 +121,7 @@ struct MessageableChannelView: View {
             PageToolbar(showSidebar: $showSidebar) {
                 NavigationLink(value: NavigationDestination.channel_info(viewModel.channel.id)) {
                     ChannelIcon(channel: viewModel.channel)
+//                        .bold()
                     Image(systemName: "chevron.right")
                         .frame(height: 4)
                 }
@@ -180,7 +182,8 @@ struct MessageableChannelView: View {
                                                     server: $viewModel.server,
                                                     channel: $viewModel.channel,
                                                     replies: $viewModel.replies,
-                                                    channelScrollPosition: $scrollPosition
+                                                    channelScrollPosition: $scrollPosition,
+                                                    editing: $currentlyEditing
                                                 )
                                             }
                                         }
@@ -193,14 +196,16 @@ struct MessageableChannelView: View {
                                             viewModel: first,
                                             isStatic: false
                                         )
-                                        .padding(.top, 8)
+                                        .listRowBackground(first.message.mentions?.firstIndex(of: viewState.currentUser!.id) != nil ? viewState.theme.mention : viewState.theme.background)
+                                        .listRowInsets(EdgeInsets(top: 8, leading: 12, bottom: rest.isEmpty ? 4 : 0, trailing: 12))
                                         
                                         ForEach(rest, id: \.message.id) { message in
                                             MessageContentsView(viewModel: message, isStatic: false)
+                                                .listRowBackground(first.message.mentions?.firstIndex(of: viewState.currentUser!.id) != nil ? viewState.theme.mention : viewState.theme.background)
                                         }
                                         .padding(.leading, 40)
                                         .listRowSeparator(.hidden)
-                                        .listRowInsets(EdgeInsets(top: 0, leading: 12, bottom: 0, trailing: 12))
+                                        .listRowInsets(EdgeInsets(top: 4, leading: 12, bottom: 4, trailing: 12))
                                         
                                         //                                    .if(lastMessage.id == viewModel.messages.last, content: {
                                         //                                        $0.onAppear {
@@ -232,8 +237,6 @@ struct MessageableChannelView: View {
                                         //                                        }
                                         //                                    }
                                     }
-                                    .listRowInsets(EdgeInsets(top: 0, leading: 12, bottom: 0, trailing: 12))
-                                    .listRowBackground(viewState.theme.background.color)
                                     
                                     Color.clear
                                         .listRowInsets(EdgeInsets(top: 0, leading: 0, bottom: 0, trailing: 0))
@@ -257,7 +260,7 @@ struct MessageableChannelView: View {
                                 .listStyle(.plain)
                                 .listRowSeparator(.hidden)
                                 .environment(\.defaultMinListRowHeight, 0)
-                                .background(viewState.theme.background.color)
+                                .background(viewState.theme.background)
                                 
                                 if let last_id = viewState.unreads[viewModel.channel.id]?.last_id, let last_message_id = viewModel.channel.last_message_id {
                                     if last_id < last_message_id {
@@ -265,7 +268,7 @@ struct MessageableChannelView: View {
                                         Text("New messages since \(formatRelative(id: last_id))")
                                             .padding(4)
                                             .frame(maxWidth: .infinity)
-                                            .background(viewState.theme.accent.color)
+                                            .background(viewState.theme.accent)
                                             .clipShape(UnevenRoundedRectangle(bottomLeadingRadius: 5, bottomTrailingRadius: 5))
                                             .onTapGesture {
                                                 proxy.scrollTo(last_id)
@@ -282,7 +285,14 @@ struct MessageableChannelView: View {
                         showingSelectEmoji = false
                     })
                     
-                    MessageBox(channel: viewModel.channel, server: viewModel.server, channelReplies: $viewModel.replies, focusState: $focused, showingSelectEmoji: $showingSelectEmoji)
+                    MessageBox(
+                        channel: viewModel.channel,
+                        server: viewModel.server,
+                        channelReplies: $viewModel.replies,
+                        focusState: $focused,
+                        showingSelectEmoji: $showingSelectEmoji,
+                        editing: $currentlyEditing
+                    )
                 }
                 
                 if viewModel.channel.nsfw {

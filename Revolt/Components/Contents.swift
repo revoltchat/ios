@@ -272,7 +272,7 @@ func parseEmojisOnly(text: String) -> [String]? {
 
 struct Contents: View {
     @EnvironmentObject var viewState: ViewState
-    var text: String
+    @Binding var text: String
     
     func buildContent() -> AttributedString {
         let font = UIFont.systemFont(ofSize: 15.0, weight: .regular)
@@ -341,7 +341,7 @@ struct ParserPreview: PreviewProvider {
     static let viewState = ViewState.preview().applySystemScheme(theme: .light)
     
     static var previews: some View {
-        Contents(text: "hello <@0>, checkout <#0>!")
+        Contents(text: .constant("hello <@0>, checkout <#0>!"))
             .applyPreviewModifiers(withState: viewState)
     }
 }

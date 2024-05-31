@@ -131,3 +131,7 @@ struct ServerEdit: Encodable {
     var analytics: Bool?
     var remove: [Remove]?
 }
+
+struct MessageEdit: Encodable {
+    var content: String?
+}
