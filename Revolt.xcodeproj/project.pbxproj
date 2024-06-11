@@ -33,6 +33,7 @@
 		1759C39C2B291E2F006E6BBE /* SystemMessageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1759C39B2B291E2F006E6BBE /* SystemMessageView.swift */; };
 		175E01DE2ADAB3F6004F6431 /* LazyImage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 175E01DD2ADAB3F6004F6431 /* LazyImage.swift */; };
 		175E01E02ADAB554004F6431 /* Avatar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 175E01DF2ADAB554004F6431 /* Avatar.swift */; };
+		176AE2212C0A9E4200DE85C7 /* UserSettingsStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 176AE2202C0A9E4200DE85C7 /* UserSettingsStore.swift */; };
 		1773C0272C07DC32007B8867 /* Types.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 17DE7DB22BFAEC3F00C99188 /* Types.framework */; };
 		1773C0282C07DC32007B8867 /* Types.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 17DE7DB22BFAEC3F00C99188 /* Types.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		1773C02F2C07DC99007B8867 /* Api.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17DE7E0C2BFAFDDD00C99188 /* Api.swift */; };
@@ -52,6 +53,10 @@
 		1777DD842ADC24CE003D6C72 /* ReversedSrollView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1777DD832ADC24CE003D6C72 /* ReversedSrollView.swift */; };
 		1777DD892ADC3C31003D6C72 /* Markdown.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1777DD882ADC3C31003D6C72 /* Markdown.swift */; };
 		1777DD8E2ADC4336003D6C72 /* RemoteImageTextAttachment.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1777DD8D2ADC4336003D6C72 /* RemoteImageTextAttachment.swift */; };
+		177B28022C0824870062BF90 /* ExperimentsSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 177B27FE2C0824850062BF90 /* ExperimentsSettings.swift */; };
+		177B28032C0824870062BF90 /* SettingsCommon.swift in Sources */ = {isa = PBXBuildFile; fileRef = 177B27FF2C0824860062BF90 /* SettingsCommon.swift */; };
+		177B28042C0824870062BF90 /* NotificationSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 177B28002C0824860062BF90 /* NotificationSettings.swift */; };
+		177B28052C0824870062BF90 /* UserSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 177B28012C0824870062BF90 /* UserSettings.swift */; };
 		1782F5E62B08F60B00759D40 /* Discovery.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1782F5E52B08F60B00759D40 /* Discovery.swift */; };
 		178BB10C2B02D84C001143A4 /* HCaptcha in Frameworks */ = {isa = PBXBuildFile; platformFilters = (ios, maccatalyst, ); productRef = 178BB10B2B02D84C001143A4 /* HCaptcha */; };
 		178BB10E2B02D84C001143A4 /* HCaptcha_RxSwift in Frameworks */ = {isa = PBXBuildFile; platformFilters = (ios, maccatalyst, ); productRef = 178BB10D2B02D84C001143A4 /* HCaptcha_RxSwift */; };
@@ -157,10 +162,15 @@
 		1759C39B2B291E2F006E6BBE /* SystemMessageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SystemMessageView.swift; sourceTree = "<group>"; };
 		175E01DD2ADAB3F6004F6431 /* LazyImage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LazyImage.swift; sourceTree = "<group>"; };
 		175E01DF2ADAB554004F6431 /* Avatar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Avatar.swift; sourceTree = "<group>"; };
+		176AE2202C0A9E4200DE85C7 /* UserSettingsStore.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UserSettingsStore.swift; sourceTree = "<group>"; };
 		1773C03C2C07DD1F007B8867 /* MessageableChannel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageableChannel.swift; sourceTree = "<group>"; };
 		1777DD832ADC24CE003D6C72 /* ReversedSrollView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReversedSrollView.swift; sourceTree = "<group>"; };
 		1777DD882ADC3C31003D6C72 /* Markdown.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Markdown.swift; sourceTree = "<group>"; };
 		1777DD8D2ADC4336003D6C72 /* RemoteImageTextAttachment.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemoteImageTextAttachment.swift; sourceTree = "<group>"; };
+		177B27FE2C0824850062BF90 /* ExperimentsSettings.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ExperimentsSettings.swift; sourceTree = "<group>"; };
+		177B27FF2C0824860062BF90 /* SettingsCommon.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SettingsCommon.swift; sourceTree = "<group>"; };
+		177B28002C0824860062BF90 /* NotificationSettings.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NotificationSettings.swift; sourceTree = "<group>"; };
+		177B28012C0824870062BF90 /* UserSettings.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UserSettings.swift; sourceTree = "<group>"; };
 		1782F5E52B08F60B00759D40 /* Discovery.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Discovery.swift; sourceTree = "<group>"; };
 		178BB10F2B02D89A001143A4 /* HCaptchaView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HCaptchaView.swift; sourceTree = "<group>"; };
 		178BB1132B02E475001143A4 /* CreateAccount.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateAccount.swift; sourceTree = "<group>"; };
@@ -700,6 +710,7 @@
 				17C9A3502B0580D10043A387 /* Welcome.swift in Sources */,
 				17E019CF2AF146AD00AB4663 /* About.swift in Sources */,
 				1773C03D2C07DD1F007B8867 /* MessageableChannel.swift in Sources */,
+				177B28042C0824870062BF90 /* NotificationSettings.swift in Sources */,
 				DAAA4C0B29F2CF1200F41E52 /* Websocket.swift in Sources */,
 				DA99EC4A29D5F35400419FDA /* Home.swift in Sources */,
 				DAAA4C0329F2548400F41E52 /* MessageBox.swift in Sources */,
@@ -710,6 +721,7 @@
 				17BC476B2B9CB51200A593DA /* ShareInviteSheet.swift in Sources */,
 				1739DB962B08E53B00D23DAD /* MessageBadge.swift in Sources */,
 				175E01DE2ADAB3F6004F6431 /* LazyImage.swift in Sources */,
+				177B28022C0824870062BF90 /* ExperimentsSettings.swift in Sources */,
 				1759C39C2B291E2F006E6BBE /* SystemMessageView.swift in Sources */,
 				17E019DC2AF1B25100AB4663 /* SessionsSettings.swift in Sources */,
 				178BB1192B02FBD1001143A4 /* Payloads.swift in Sources */,
@@ -754,9 +766,11 @@
 				178E26BC2B1542820015CAC7 /* PageToolbar.swift in Sources */,
 				17BADE012B7019270021BB62 /* EmojiPicker.swift in Sources */,
 				171594C32B4B2A0D00D7C3C3 /* ServerOverviewSettings.swift in Sources */,
+				176AE2212C0A9E4200DE85C7 /* UserSettingsStore.swift in Sources */,
 				1718FB542AF8470400E9C511 /* ReportMessageSheetView.swift in Sources */,
 				17E019DA2AF199A600AB4663 /* MessageReply.swift in Sources */,
 				17D5C9442B14DF500060C035 /* DMScrollView.swift in Sources */,
+				177B28032C0824870062BF90 /* SettingsCommon.swift in Sources */,
 				17D8BACF2B211DEE005F5447 /* ChannelInfo.swift in Sources */,
 				1777DD842ADC24CE003D6C72 /* ReversedSrollView.swift in Sources */,
 			);
@@ -810,7 +824,7 @@
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_KEY_NSHumanReadableCopyright = "";
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
-				IPHONEOS_DEPLOYMENT_TARGET = 17.5;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -859,7 +873,7 @@
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_KEY_NSHumanReadableCopyright = "";
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
-				IPHONEOS_DEPLOYMENT_TARGET = 17.5;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",

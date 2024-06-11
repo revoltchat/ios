@@ -179,8 +179,17 @@
     "Didn't get an email?" : {
 
     },
+    "Direct Messages" : {
+
+    },
+    "Discover" : {
+
+    },
     "Disable Account" : {
       "comment" : "User settings button"
+    },
+    "Discover" : {
+
     },
     "Discovery" : {
 
@@ -203,6 +212,14 @@
     "enter" : {
 
     },
+    "Enter a new username" : {
+
+    },
+    "Enter Password" : {
+      "comment" : "Password prompt"
+    },
+    "Enter the code provided by your authenticator app" : {
+      "comment" : "prompting the user for their OTP while setting up TOTP"
     "Enter a new username" : {
 
     },
