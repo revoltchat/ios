@@ -182,11 +182,11 @@
     "Direct Messages" : {
 
     },
-    "Discover" : {
-
-    },
     "Disable Account" : {
       "comment" : "User settings button"
+    },
+    "Discover" : {
+
     },
     "Discovery" : {
 
@@ -209,8 +209,14 @@
     "enter" : {
 
     },
-    "Enter the server's invite" : {
+    "Enter a new username" : {
 
+    },
+    "Enter Password" : {
+      "comment" : "Password prompt"
+    },
+    "Enter the code provided by your authenticator app" : {
+      "comment" : "prompting the user for their OTP while setting up TOTP"
     },
     "Enter the verification code sent to your email" : {
 
@@ -368,8 +374,26 @@
     "New Password" : {
 
     },
+    "Next" : {
+
+    },
+    "Notifications" : {
+
+    },
+    "Offline" : {
+
+    },
+    "Old Password" : {
+
+    },
     "One more thing" : {
 
+    },
+    "Online" : {
+
+    },
+    "Open in authenticator app" : {
+      "comment" : "open the user's authenticator app"
     },
     "Open Profile" : {
 

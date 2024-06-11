@@ -8,6 +8,7 @@
 import Foundation
 import Observation
 import OSLog
+import Types
 
 let logger = Logger(subsystem: "chat.revolt.app", category: "settingsStore")
 

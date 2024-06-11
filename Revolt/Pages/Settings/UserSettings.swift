@@ -391,7 +391,7 @@ fileprivate struct UsernameUpdateSheet: View {
                     }
                     .focused($nameFieldState)
                 Text("#\(viewState.userSettingsStore.store.user!.discriminator)")
-                    .addBorder(viewState.theme.accent, cornerRadius: 1.0)
+                    //.addBorder(viewState.theme.accent, cornerRadius: 1.0)
             }
             Spacer()
                 .frame(maxHeight: 30)
@@ -546,24 +546,28 @@ struct UserSettings: View {
     @State var presentChangeEmailSheet = false
     @State var presentChangePasswordSheet = false
     
-    @State var emailSubstitute = ""
+    @State var emailSubstitute = "loading..."
     
     init(viewState: ViewState) { // dirty trick because environment objects arent set until after init
         self._store = State(initialValue: viewState.userSettingsStore.store)
-        substituteEmail()
-    }
-    
-    func substituteEmail() {
+        self._emailSubstitute = State(initialValue: "Testing!")
+        
         let raw = store.accountData?.email
         guard let raw = raw else { return }
-        let groups = try! /(?<addr>[^@]+)\@(?<url>[^.]+)\.(?<domain>.+)/.wholeMatch(in: raw)
-        guard let groups = groups else { return }
+        self._emailSubstitute = State(initialValue: substituteEmail(raw))
+    }
+    
+    func substituteEmail(_ email: String) -> String {
+        let groups = try! /(?<addr>[^@]+)\@(?<url>[^.]+)\.(?<domain>.+)/.wholeMatch(in: email)
+        guard let groups = groups else { return "loading@loading.com" }
         
         // cursed
         let m1 = String(repeating: "*", count: groups.output.addr.count)
         let m2 = String(repeating: "*", count: groups.output.url.count)
         let m3 = String(repeating: "*", count: groups.output.domain.count)
-        emailSubstitute = "\(m1)@\(m2).\(m3)"
+        let resp = "\(m1)@\(m2).\(m3)"
+        emailSubstitute = resp
+        return resp
     }
     
     var body: some View {
@@ -589,7 +593,11 @@ struct UserSettings: View {
                         Text("Email")
                         Spacer()
                         Text(verbatim: emailSubstitute)
-                            .onChange(of: store.accountData?.email, { _, value in substituteEmail()})
+                            .onChange(of: store.accountData?.email, { _, value in 
+                                let raw = store.accountData?.email
+                                guard let raw = raw else { return }
+                                _ = substituteEmail(raw)
+                            })
                     }
                 }
                 Button(action: {

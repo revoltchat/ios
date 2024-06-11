@@ -277,7 +277,8 @@ struct HTTPClient {
     
     func reactMessage(channel: String, message: String, emoji: String) async -> Result<EmptyResponse, AFError> {
         await req(method: .put, route: "/channels/\(channel)/messages/\(message)/reactions/\(emoji)")
-
+    }
+    
     // settings stuff
     func fetchAccount() async -> Result<AuthAccount, AFError> {
         await req(method: .get, route: "/auth/account")
