@@ -19,7 +19,7 @@ struct SettingFieldNavigationItem: View {
     @State var includeValueIfAvailable: Bool
 
     var body: some View {
-        Text(/*@START_MENU_TOKEN@*/"Hello, World!"/*@END_MENU_TOKEN@*/)
+        Text("Hello, World!")
     }
 }
 
@@ -36,9 +36,9 @@ struct SettingsSheetContainer<Content: View>: View {
                 .backgroundStyle(viewState.theme.background)
                 .toolbar {
                     ToolbarItem(placement: .cancellationAction) {
-                        Button(action: {
+                        Button {
                             showSheet = false
-                        }) {
+                        } label: {
                             Text("Cancel")
                         }
                     }
