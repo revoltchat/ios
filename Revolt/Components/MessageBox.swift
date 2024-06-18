@@ -180,45 +180,8 @@ struct MessageBox: View {
         }
     }
 
-    func getCurrentlyTyping() -> [(User, Member?)]? {
-        viewState.currentlyTyping[channel.id]?.compactMap({ user_id in
-            guard let user = viewState.users[user_id] else {
-                return nil
-            }
-
-            var member: Member?
-
-            if let server = server {
-                member = viewState.members[server.id]![user_id]
-            }
-
-            return (user, member)
-        })
-    }
-
-    func formatTypingIndicatorText(withUsers users: [(User, Member?)]) -> String {
-        let base = ListFormatter.localizedString(byJoining: users.map({ (user, member) in member?.nickname ?? user.display_name ?? user.username }))
-
-        let ending = users.count == 1 ? "is typing" : "are typing"
-
-        return "\(base) \(ending)"
-    }
-
     var body: some View {
         VStack(alignment: .leading, spacing: 4) {
-            if let users = getCurrentlyTyping(), !users.isEmpty {
-                HStack {
-                    HStack(spacing: -10) {
-                        ForEach(users, id: \.0.id) { (user, member) in
-                            Avatar(user: user, member: member, width: 16, height: 16)
-                        }
-                    }
-
-                    Text(formatTypingIndicatorText(withUsers: users))
-                        .font(.callout)
-                        .foregroundStyle(viewState.theme.foreground2)
-                }
-            }
             ForEach(Array(channelReplies.enumerated()), id: \.element.message.id) { reply in
                 let model = ReplyViewModel(idx: reply.offset, replies: $channelReplies)
                 ReplyView(viewModel: model, id: reply.element.message.id)

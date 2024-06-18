@@ -22,7 +22,7 @@ struct MessageView: View {
             if let replies = viewModel.message.replies {
                 VStack(alignment: .leading, spacing: 4) {
                     ForEach(replies, id: \.self) { id in
-                        MessageReplyView(mentions: viewModel.$message.mentions, channelScrollPosition: viewModel.$channelScrollPosition, id: id, channel: viewModel.message.channel)
+                        MessageReplyView(mentions: viewModel.$message.mentions, channelScrollPosition: viewModel.channelScrollPosition, id: id, channel: viewModel.message.channel)
                             .padding(.leading, 38)
                     }
                 }
@@ -114,11 +114,13 @@ struct MessageView_Previews: PreviewProvider {
     @State static var channel = viewState.channels["0"]!
     @State static var server = viewState.servers["0"]
     @State static var replies: [Reply] = []
-    @State static var channelScrollPosition: String? = nil
+    @State static var highlighted: String? = nil
     
     static var previews: some View {
-        List {
-            MessageView(viewModel: MessageContentsViewModel(viewState: viewState, message: $message, author: $author, member: $member, server: $server, channel: $channel, replies: $replies, channelScrollPosition: $channelScrollPosition, editing: .constant(nil)), isStatic: false)
+        ScrollViewReader { p in
+            List {
+                MessageView(viewModel: MessageContentsViewModel(viewState: viewState, message: $message, author: $author, member: $member, server: $server, channel: $channel, replies: $replies, channelScrollPosition: ChannelScrollController(proxy: p, highlighted: $highlighted), editing: .constant(nil)), isStatic: false)
+            }
         }
             .applyPreviewModifiers(withState: viewState)
     }

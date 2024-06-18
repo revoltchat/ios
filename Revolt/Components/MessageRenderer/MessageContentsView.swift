@@ -18,10 +18,11 @@ class MessageContentsViewModel: ObservableObject, Equatable {
     @Binding var server: Server?
     @Binding var channel: Channel
     @Binding var channelReplies: [Reply]
-    @Binding var channelScrollPosition: String?
     @Binding var editing: Message?
+    
+    var channelScrollPosition: ChannelScrollController
 
-    init(viewState: ViewState, message: Binding<Message>, author: Binding<User>, member: Binding<Member?>, server: Binding<Server?>, channel: Binding<Channel>, replies: Binding<[Reply]>, channelScrollPosition: Binding<String?>, editing: Binding<Message?>) {
+    init(viewState: ViewState, message: Binding<Message>, author: Binding<User>, member: Binding<Member?>, server: Binding<Server?>, channel: Binding<Channel>, replies: Binding<[Reply]>, channelScrollPosition: ChannelScrollController, editing: Binding<Message?>) {
         self.viewState = viewState
         self._message = message
         self._author = author
@@ -29,7 +30,7 @@ class MessageContentsViewModel: ObservableObject, Equatable {
         self._server = server
         self._channel = channel
         self._channelReplies = replies
-        self._channelScrollPosition = channelScrollPosition
+        self.channelScrollPosition = channelScrollPosition
         self._editing = editing
     }
 
