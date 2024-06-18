@@ -34,14 +34,7 @@ struct Settings: View {
                     Text("Sessions")
                 }
                 
-                NavigationLink(destination: { AppearanceSettings(
-                    accent: viewState.theme.accent.color,
-                    background: viewState.theme.background.color,
-                    background2: viewState.theme.background2.color,
-                    textColor: viewState.theme.foreground.color,
-                    messageBox: viewState.theme.messageBox.color,
-                    topBar: viewState.theme.topBar.color
-                )}) {
+                NavigationLink(destination: AppearanceSettings.init) {
                     Image(systemName: "paintpalette.fill")
                     Text("Appearance")
                 }
