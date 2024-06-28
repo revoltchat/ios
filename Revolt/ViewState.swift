@@ -406,6 +406,10 @@ public class ViewState: ObservableObject {
 
                     users[user.id] = user
                 }
+                
+                for member in event.members {
+                    members[member.id.server]![member.id.user] = member
+                }
 
                 dms = try! await http.fetchDms().get()
 
@@ -429,9 +433,12 @@ public class ViewState: ObservableObject {
                 launchTransaction.finish()
 
             case .message(let m):
-                if users[m.author] == nil {
-                    let user = try! await http.fetchUser(user: m.author).get()
-                    users[m.author] = user
+                if let user = m.user {
+                    users[user.id] = user
+                }
+                
+                if let member = m.member {
+                    members[member.id.server]?[m.author] = member
                 }
 
                 messages[m.id] = m
