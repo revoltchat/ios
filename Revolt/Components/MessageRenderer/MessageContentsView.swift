@@ -67,7 +67,13 @@ struct MessageContentsView: View {
     }
 
     private var isModeratorInChannel: Bool {
-        return true // TODO: need bit op stuff
+        let member = viewModel.server.flatMap {
+            viewState.members[$0.id]?[viewState.currentUser!.id]
+        }
+        
+        let permissions = resolveChannelPermissions(from: viewState.currentUser!, targettingUser: viewState.currentUser!, targettingMember: member, channel: viewModel.channel, server: viewModel.server)
+        
+        return permissions.contains(.manageChannel)
     }
 
     private var isMessageAuthor: Bool {

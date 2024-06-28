@@ -72,7 +72,16 @@ func resolveChannelPermissions(from: User, targettingUser user: User, targetting
                 permissions.formApply(overwrite: defaultPermissions)
             }
             
-            let overwrites = textChannel.role_permissions?.map({(server!.roles![$0]!, $1)}).sorted(by: {$0.0.rank < $1.0.rank}) ?? []
+            let overwrites = textChannel.role_permissions?
+                .compactMap({ (id, overwrite) in
+                    guard let role = server?.roles?[id] else {
+                        return nil
+                    }
+                    
+                    return (role, overwrite)
+                })
+                .sorted(by: { (a, b) in a.0.rank < b.0.rank})
+                ?? ([] as [(Role, Overwrite)])
             
             for (_, overwrite) in overwrites {
                 permissions.formApply(overwrite: overwrite)
