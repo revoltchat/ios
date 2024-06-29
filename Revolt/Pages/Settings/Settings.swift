@@ -18,7 +18,7 @@ enum CurrentSettingsPage: Hashable {
 
 struct Settings: View {
     @EnvironmentObject var viewState: ViewState
-    
+
     var body: some View {
         List {
             Section("User Settings") {
@@ -37,45 +37,33 @@ struct Settings: View {
                 }
             }
             .listRowBackground(viewState.theme.background2)
-            
+
             Section("Client Settings") {
-                NavigationLink(destination: { AppearanceSettings(
-                    accent: viewState.theme.accent.color,
-                    background: viewState.theme.background.color,
-                    background2: viewState.theme.background2.color,
-                    textColor: viewState.theme.foreground.color,
-                    messageBox: viewState.theme.messageBox.color,
-                    messageBoxBackground: viewState.theme.messageBoxBackground.color,
-                    topBar: viewState.theme.topBar.color,
-                    messageBoxBorder: viewState.theme.messageBoxBorder.color
-                )}) {
+                NavigationLink(destination: AppearanceSettings()) {
                     Image(systemName: "paintpalette.fill")
                     Text("Appearance")
                 }
-                
-                NavigationLink(destination: NotificationSettings()) {
+
+                NavigationLink(destination: { NotificationSettings() }) {
                     Image(systemName: "bell.fill")
                     Text("Notifications")
                 }
-                
                 NavigationLink(destination: LanguageSettings()) {
                     Image(systemName: "globe")
                     Text("Language")
                 }
             }
             .listRowBackground(viewState.theme.background2)
-            
+
             Section("Misc") {
                 NavigationLink(destination: About()) {
                     Image(systemName: "info.circle.fill")
                     Text("About")
                 }
-                
                 NavigationLink(destination: ExperimentsSettings()) {
                     Image(systemName: "flask.fill")
                     Text("Experiments")
                 }
-                
                 Button {
                     viewState.logout()
                 } label: {

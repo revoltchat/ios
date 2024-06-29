@@ -32,7 +32,7 @@ struct UserDisplay: View {
                 
                 VStack(alignment: .leading) {
                     Text(verbatim: member?.nickname ?? user.display_name ?? user.username)
-                        .fontWeight(.heavy)
+                        .fontWeight(.bold)
                         .foregroundStyle(member?.displayColour(theme: viewState.theme, server: server!) ?? AnyShapeStyle(viewState.theme.foreground.color))
                     
                     if let statusText = user.status?.text {
@@ -72,7 +72,6 @@ struct UserDisplay: View {
                                 Text("Offline")
                                     .font(.caption)
                                     .foregroundStyle(viewState.theme.foreground2.color)
-                                
                         }
                     }
                 }

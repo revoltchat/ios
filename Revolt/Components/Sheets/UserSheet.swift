@@ -168,7 +168,7 @@ struct UserSheet: View {
                                 Text("Bio")
                                     .font(.caption)
                                 
-                                Contents(text: bio)
+                                Contents(text: .constant(bio))
                             }
                             
                             Spacer()

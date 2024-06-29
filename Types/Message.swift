@@ -7,66 +7,66 @@
 
 import Foundation
 
-public struct Interactions: Codable {
+public struct Interactions: Codable, Equatable {
     public var reactions: [String]?
     public var restrict_reactions: Bool?
 }
 
-public struct Masquerade: Codable {
+public struct Masquerade: Codable, Equatable {
     public var name: String?
     public var avatar: String?
     public var colour: String?
 }
 
-public struct TextSystemMessageContent: Codable {
+public struct TextSystemMessageContent: Codable, Equatable {
     public var content: String
 }
 
-public struct UserAddedSystemContent: Codable {
+public struct UserAddedSystemContent: Codable, Equatable {
     public var id: String
     public var by: String
 }
 
-public struct UserRemovedSystemContent: Codable {
+public struct UserRemovedSystemContent: Codable, Equatable {
     public var id: String
     public var by: String
 }
 
-public struct UserJoinedSystemContent: Codable {
+public struct UserJoinedSystemContent: Codable, Equatable {
     public var id: String
 }
 
-public struct UserLeftSystemContent: Codable {
+public struct UserLeftSystemContent: Codable, Equatable {
     public var id: String
 }
 
-public struct UserKickedSystemContent: Codable {
+public struct UserKickedSystemContent: Codable, Equatable {
     public var id: String
 }
 
-public struct UserBannedSystemContent: Codable {
+public struct UserBannedSystemContent: Codable, Equatable {
     public var id: String
 }
 
-public struct ChannelRenamedSystemContent: Codable {
+public struct ChannelRenamedSystemContent: Codable, Equatable {
     public var name: String
     public var by: String
 }
 
-public struct ChannelDescriptionChangedSystemContent: Codable {
+public struct ChannelDescriptionChangedSystemContent: Codable, Equatable {
     public var by: String
 }
 
-public struct ChannelIconChangedSystemContent: Codable {
+public struct ChannelIconChangedSystemContent: Codable, Equatable {
     public var by: String
 }
 
-public struct ChannelOwnershipChangedSystemContent: Codable {
+public struct ChannelOwnershipChangedSystemContent: Codable, Equatable {
     public var from: String
     public var to: String
 }
 
-public enum SystemMessageContent {
+public enum SystemMessageContent: Equatable {
     case text(TextSystemMessageContent)
     case user_added(UserAddedSystemContent)
     case user_removed(UserRemovedSystemContent)
@@ -115,8 +115,8 @@ extension SystemMessageContent: Decodable {
     }
 }
 
-public struct Message: Identifiable, Decodable {
-    public init(id: String, content: String? = nil, author: String, channel: String, system: SystemMessageContent? = nil, attachments: [File]? = nil, mentions: [String]? = nil, replies: [String]? = nil, edited: String? = nil, masquerade: Masquerade? = nil, interactions: Interactions? = nil, reactions: [String : [String]]? = nil) {
+public struct Message: Identifiable, Decodable, Equatable {
+    public init(id: String, content: String? = nil, author: String, channel: String, system: SystemMessageContent? = nil, attachments: [File]? = nil, mentions: [String]? = nil, replies: [String]? = nil, edited: String? = nil, masquerade: Masquerade? = nil, interactions: Interactions? = nil, reactions: [String : [String]]? = nil, user: User? = nil, member: Member? = nil) {
         self.id = id
         self.content = content
         self.author = author
@@ -129,6 +129,8 @@ public struct Message: Identifiable, Decodable {
         self.masquerade = masquerade
         self.interactions = interactions
         self.reactions = reactions
+        self.user = user
+        self.member = member
     }
     
     public var id: String
@@ -144,9 +146,11 @@ public struct Message: Identifiable, Decodable {
     public var masquerade: Masquerade?
     public var interactions: Interactions?
     public var reactions: [String: [String]]?
+    public var user: User?
+    public var member: Member?
     
     enum CodingKeys: String, CodingKey {
         case id = "_id"
-        case content, author, channel, system, attachments, mentions, replies, edited, masquerade, interactions, reactions
+        case content, author, channel, system, attachments, mentions, replies, edited, masquerade, interactions, reactions, user, member
     }
 }

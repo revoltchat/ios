@@ -18,9 +18,11 @@ class MessageContentsViewModel: ObservableObject, Equatable {
     @Binding var server: Server?
     @Binding var channel: Channel
     @Binding var channelReplies: [Reply]
-    @Binding var channelScrollPosition: String?
+    @Binding var editing: Message?
+    
+    var channelScrollPosition: ChannelScrollController
 
-    init(viewState: ViewState, message: Binding<Message>, author: Binding<User>, member: Binding<Member?>, server: Binding<Server?>, channel: Binding<Channel>, replies: Binding<[Reply]>, channelScrollPosition: Binding<String?>) {
+    init(viewState: ViewState, message: Binding<Message>, author: Binding<User>, member: Binding<Member?>, server: Binding<Server?>, channel: Binding<Channel>, replies: Binding<[Reply]>, channelScrollPosition: ChannelScrollController, editing: Binding<Message?>) {
         self.viewState = viewState
         self._message = message
         self._author = author
@@ -28,7 +30,8 @@ class MessageContentsViewModel: ObservableObject, Equatable {
         self._server = server
         self._channel = channel
         self._channelReplies = replies
-        self._channelScrollPosition = channelScrollPosition
+        self.channelScrollPosition = channelScrollPosition
+        self._editing = editing
     }
 
     static func == (lhs: MessageContentsViewModel, rhs: MessageContentsViewModel) -> Bool {
@@ -64,7 +67,13 @@ struct MessageContentsView: View {
     }
 
     private var isModeratorInChannel: Bool {
-        return true // TODO: need bit op stuff
+        let member = viewModel.server.flatMap {
+            viewState.members[$0.id]?[viewState.currentUser!.id]
+        }
+        
+        let permissions = resolveChannelPermissions(from: viewState.currentUser!, targettingUser: viewState.currentUser!, targettingMember: member, channel: viewModel.channel, server: viewModel.server)
+        
+        return permissions.contains(.manageChannel)
     }
 
     private var isMessageAuthor: Bool {
@@ -76,16 +85,14 @@ struct MessageContentsView: View {
     }
 
     var body: some View {
-        let message = viewModel.message
-
         VStack(alignment: .leading) {
-            if let content = message.content {
+            if let content = Binding(viewModel.$message.content) {
                 Contents(text: content)
                     .font(.body)
             }
 
             VStack(alignment: .leading) {
-                ForEach(message.attachments ?? []) { attachment in
+                ForEach(viewModel.message.attachments ?? []) { attachment in
                     MessageAttachment(attachment: attachment)
                 }
             }
@@ -99,7 +106,7 @@ struct MessageContentsView: View {
             EmojiPicker(background: AnyView(viewState.theme.background)) { emoji in
                 Task {
                     showReactSheet = false
-                    await viewState.http.reactMessage(channel: message.channel, message: message.id, emoji: emoji.id)
+                    await viewState.http.reactMessage(channel: viewModel.message.channel, message: viewModel.message.id, emoji: emoji.id)
                 }
             }
             .padding([.top, .horizontal])
@@ -126,13 +133,11 @@ struct MessageContentsView: View {
             })
 
             if isMessageAuthor {
-                Button(role: .destructive, action: {
-                    Task {
-
-                    }
-                }, label: {
+                Button {
+                    viewModel.editing = viewModel.message
+                } label: {
                     Label("Edit", systemImage: "pencil")
-                })
+                }
             }
 
             if canDeleteMessage {

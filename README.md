@@ -1,3 +1,3 @@
-# Revolt IOS
+# Revolt iOS
 
-IOS app
+iOS app

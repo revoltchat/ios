@@ -54,7 +54,7 @@ struct ReportMessageSheetView: View {
                 
                 Text("Please note that this does not get sent to this server's moderators")
                     .font(.caption)
-                    .foregroundStyle(.red)
+                    .foregroundStyle(viewState.theme.error)
                     .multilineTextAlignment(.center)
                     .padding(.top, 4)
             }
@@ -67,21 +67,19 @@ struct ReportMessageSheetView: View {
             VStack {
                 Text("Pick a category")
                     .font(.caption)
-                    .foregroundStyle(viewState.theme.foreground.color)
     
                 Picker("Report reason", selection: $reason) {
                     ForEach(ContentReportPayload.ContentReportReason.allCases, id: \.rawValue) { reason in
                         Text(reason.rawValue)
                             .tag(reason)
-                            .foregroundStyle(viewState.theme.foreground.color)
                     }
                 }
                 .padding(.vertical, 2)
                 .frame(maxWidth: .infinity)
-                .foregroundStyle(viewState.theme.foreground.color)
+                .foregroundStyle(viewState.theme.foreground)
                 .overlay(
                     RoundedRectangle(cornerRadius: 5)
-                        .stroke((error != nil && userContext.isEmpty) ? Color.red : viewState.theme.messageBoxBorder.color, lineWidth: 1)
+                        .stroke((error != nil && userContext.isEmpty) ? viewState.theme.error : viewState.theme.foreground, lineWidth: 1)
                 )
             }
 
@@ -95,11 +93,7 @@ struct ReportMessageSheetView: View {
                     .padding(.leading)
                     .overlay(
                         RoundedRectangle(cornerRadius: 5)
-                            .stroke(
-                                (error != nil && userContext.isEmpty)
-                                ? Color.red
-                                : viewState.theme.messageBoxBorder.color,
-                                lineWidth: 1)
+                            .stroke((error != nil && userContext.isEmpty) ? viewState.theme.error : viewState.theme.foreground, lineWidth: 1)
                     )
                     .placeholder(when: userContext.isEmpty) {
                         Text("What's wrong...")
@@ -111,21 +105,20 @@ struct ReportMessageSheetView: View {
             if error != nil {
                 Text(error!)
                     .font(.subheadline)
-                    .foregroundStyle(.red)
+                    .foregroundStyle(viewState.theme.error)
             }
             Button(action: submit, label: {
                 Text("Submit")
-                    .foregroundStyle(viewState.theme.foreground.color)
             })
                 .padding()
                 .frame(maxWidth: .infinity)
-                .background(viewState.theme.accent.color)
+                .background(viewState.theme.accent)
                 .clipShape(.rect(cornerRadius: 5))
 
             Spacer()
         }
         .padding(.horizontal, 32)
-        .background(viewState.theme.background.color)
+        .background(viewState.theme.background)
     }
 }
 

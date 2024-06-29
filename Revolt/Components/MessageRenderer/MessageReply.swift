@@ -13,16 +13,15 @@ struct MessageReplyView: View {
     @EnvironmentObject var viewState: ViewState
     
     @Binding var mentions: [String]?
-    @Binding var channelScrollPosition: String?
+    var channelScrollPosition: ChannelScrollController
     @State var dead: Bool = false
     var id: String
     var channel: String
     
-    @ViewBuilder
     var body: some View {
         let message = viewState.messages[id]
         if message != nil || dead {
-            InnerMessageReplyView(mentions: $mentions, channelScrollPosition: $channelScrollPosition, message: message)
+            InnerMessageReplyView(mentions: $mentions, channelScrollPosition: channelScrollPosition, message: message)
         } else {
             if !viewState.loadingMessages.contains(id) {
                 let _ = Task {
@@ -44,7 +43,7 @@ struct InnerMessageReplyView: View {
     @EnvironmentObject var viewState: ViewState
     
     @Binding var mentions: [String]?
-    @Binding var channelScrollPosition: String?
+    var channelScrollPosition: ChannelScrollController
     var message: Message?
     
     var body: some View {
@@ -73,11 +72,11 @@ struct InnerMessageReplyView: View {
                 }
             }
             .onTapGesture {
-                channelScrollPosition = message.id
+                channelScrollPosition.scrollTo(message.id)
             }
         } else {
             Text("Unknown message")
+                .foregroundStyle(viewState.theme.foreground2)
         }
     }
 }
-

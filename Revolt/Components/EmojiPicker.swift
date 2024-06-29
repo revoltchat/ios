@@ -213,7 +213,7 @@ struct EmojiPicker: View {
     @State var showingSelectEmoji: Bool = false
     let viewState = ViewState.preview()
 
-    let box = MessageBox(channel: viewState.channels["0"]!, server: viewState.servers["0"], channelReplies: .constant([]), focusState: $focused, showingSelectEmoji: $showingSelectEmoji)
+    let box = MessageBox(channel: viewState.channels["0"]!, server: viewState.servers["0"], channelReplies: .constant([]), focusState: $focused, showingSelectEmoji: $showingSelectEmoji, editing: .constant(nil))
     box.showingSelectEmoji = true
 
     return box.applyPreviewModifiers(withState: ViewState.preview().applySystemScheme(theme: .dark))

@@ -85,14 +85,16 @@ struct FriendsList: View {
                 Section {
                     ForEach(users) { user in
                         Button {
-                            viewState.openUserSheet(withId: user.id, server: nil)
+                            viewState.openUserSheet(user: user)
                         } label: {
-                            HStack(spacing: 12) {
-                                Avatar(user: user)
-                                    .frame(width: 16, height: 16)
-                                    .frame(width: 24, height: 24)
-                                
-                                Text(user.display_name ?? user.username)
+                            HStack {
+                                HStack(spacing: 12) {
+                                    Avatar(user: user, withPresence: true)
+                                        .frame(width: 16, height: 16)
+                                        .frame(width: 24, height: 24)
+                                    
+                                    Text(user.display_name ?? user.username)
+                                }
                                 
                                 Spacer()
                                 

@@ -15,8 +15,8 @@ struct RevoltApp: App {
             options.profilesSampleRate = 1.0
             options.enableTracing = true
             options.attachViewHierarchy = true
-            //options.enableAppLaunchProfiling = true
-            //options.enableMetrics = true
+            options.enableAppLaunchProfiling = true
+            options.enableMetrics = true
         }
     }
 
@@ -144,87 +144,6 @@ struct InnerApp: View {
     }
 }
 
-extension View {
-    func placeholder<Content: View>(
-        when shouldShow: Bool,
-        alignment: Alignment = .leading,
-        @ViewBuilder placeholder: () -> Content
-    ) -> some View {
-        ZStack(alignment: alignment) {
-            placeholder()
-                .opacity(shouldShow ? 1 : 0)
-                .allowsHitTesting(false)
-            self
-        }
-    }
-
-    @ViewBuilder
-    func `if`<Content: View>(_ conditional: Bool, content: (Self) -> Content) -> some View {
-        if conditional {
-            content(self)
-        } else {
-            self
-        }
-    }
-
-    @ViewBuilder
-    func `if`<Content: View, Else: View>(_ conditional: Bool, content: (Self) -> Content, else other: (Self) -> Else) -> some View {
-        if conditional {
-            content(self)
-        } else {
-            other(self)
-        }
-    }
-
-    @MainActor
-    func applyPreviewModifiers(withState viewState: ViewState) -> some View {
-        self.environmentObject(viewState)
-            .tint(viewState.theme.accent.color)
-            .foregroundStyle(viewState.theme.foreground.color)
-            .background(viewState.theme.background.color)
-
-    }
-}
-
-extension Bundle {
-    var releaseVersionNumber: String? {
-        return infoDictionary?["CFBundleShortVersionString"] as? String
-    }
-    var buildVersionNumber: String? {
-        return infoDictionary?["CFBundleVersion"] as? String
-    }
-}
-
-extension IteratorProtocol {
-    mutating func next(n: Int) -> [Self.Element] {
-        var values: [Self.Element] = []
-
-        for _ in 0...n {
-            if let v = self.next() {
-                values.append(v)
-            }
-        }
-
-        return values
-    }
-
-    mutating func groups(n: Int) -> [[Self.Element]] {
-        var values: [[Self.Element]] = []
-
-        while true {
-            let group = self.next(n: n)
-
-            if group.count > 0 {
-                values.append(group)
-            }
-
-            if group.count != n {
-                return values
-            }
-        }
-    }
-}
-
 #if targetEnvironment(macCatalyst)
 let isIPad = UIDevice.current.userInterfaceIdiom == .pad
 let isIPhone = UIDevice.current.userInterfaceIdiom == .phone
@@ -238,34 +157,6 @@ let isIPad = false
 let isIPhone = false
 let isMac = true
 #endif
-
-extension Collection {
-    subscript (safe index: Index) -> Element? {
-        return indices.contains(index) ? self[index] : nil
-    }
-}
-
-
-struct CheckboxStyle: ToggleStyle {
-    @EnvironmentObject var viewState: ViewState
-
-    func makeBody(configuration: Self.Configuration) -> some View {
-        return HStack {
-            configuration.label
-
-            Spacer()
-
-            if configuration.isOn {
-                Image(systemName: "checkmark")
-                    .resizable()
-                    .frame(width: 16, height: 16)
-                    .foregroundColor(viewState.theme.accent.color)
-            }
-
-        }
-        .onTapGesture { configuration.isOn.toggle() }
-    }
-}
 
 
 var isPreview: Bool {

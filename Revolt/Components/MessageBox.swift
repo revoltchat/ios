@@ -93,6 +93,7 @@ struct MessageBox: View {
     @Binding var channelReplies: [Reply]
     var focusState: FocusState<Bool>.Binding
     @Binding var showingSelectEmoji: Bool
+    @Binding var editing: Message?
 
     @State var showingSelectFile = false
     @State var showingSelectPhoto = false
@@ -111,22 +112,37 @@ struct MessageBox: View {
     let channel: Channel
     let server: Server?
 
-    init(channel: Channel, server: Server?, channelReplies: Binding<[Reply]>, focusState f: FocusState<Bool>.Binding, showingSelectEmoji: Binding<Bool>) {
+    init(channel: Channel, server: Server?, channelReplies: Binding<[Reply]>, focusState f: FocusState<Bool>.Binding, showingSelectEmoji: Binding<Bool>, editing: Binding<Message?>) {
         self.channel = channel
         self.server = server
         _channelReplies = channelReplies
         focusState = f
         _showingSelectEmoji = showingSelectEmoji
+        _editing = editing
+        
+        if let msg = editing.wrappedValue {
+            content = msg.content ?? ""
+        }
     }
 
     func sendMessage() {
         let c = content
         content = ""
-        let f = selectedPhotos.map({ ($0.data, $0.filename) })
-        selectedPhotos = []
 
-        Task {
-            await viewState.queueMessage(channel: channel.id, replies: channelReplies, content: c, attachments: f)
+        if let message = editing {
+            Task {
+                await viewState.http.editMessage(channel: channel.id, message: message.id, edits: MessageEdit(content: c))
+                
+                editing = nil
+            }
+            
+        } else {
+            let f = selectedPhotos.map({ ($0.data, $0.filename) })
+            selectedPhotos = []
+            
+            Task {
+                await viewState.queueMessage(channel: channel.id, replies: channelReplies, content: c, attachments: f)
+            }
         }
     }
 
@@ -164,51 +180,14 @@ struct MessageBox: View {
         }
     }
 
-    func getCurrentlyTyping() -> [(User, Member?)]? {
-        viewState.currentlyTyping[channel.id]?.compactMap({ user_id in
-            guard let user = viewState.users[user_id] else {
-                return nil
-            }
-
-            var member: Member?
-
-            if let server = server {
-                member = viewState.members[server.id]![user_id]
-            }
-
-            return (user, member)
-        })
-    }
-
-    func formatTypingIndicatorText(withUsers users: [(User, Member?)]) -> String {
-        let base = ListFormatter.localizedString(byJoining: users.map({ (user, member) in member?.nickname ?? user.display_name ?? user.username }))
-
-        let ending = users.count == 1 ? "is typing" : "are typing"
-
-        return "\(base) \(ending)"
-    }
-
     var body: some View {
         VStack(alignment: .leading, spacing: 4) {
-            if let users = getCurrentlyTyping(), !users.isEmpty {
-                HStack {
-                    HStack(spacing: -10) {
-                        ForEach(users, id: \.0.id) { (user, member) in
-                            Avatar(user: user, member: member, width: 16, height: 16)
-                        }
-                    }
-
-                    Text(formatTypingIndicatorText(withUsers: users))
-                        .font(.callout)
-                        .foregroundStyle(viewState.theme.foreground2)
-                }
-            }
             ForEach(Array(channelReplies.enumerated()), id: \.element.message.id) { reply in
                 let model = ReplyViewModel(idx: reply.offset, replies: $channelReplies)
                 ReplyView(viewModel: model, id: reply.element.message.id)
                     .padding(.horizontal, 16)
             }
-            VStack(spacing: 8) {
+            VStack(alignment: .leading, spacing: 8) {
                 if selectedPhotos.count > 0 {
                     ScrollView(.horizontal) {
                         HStack {
@@ -302,15 +281,37 @@ struct MessageBox: View {
                     }
                     .frame(maxWidth: .infinity)
                 }
+                
+                if editing != nil {
+                    Button {
+                        editing = nil
+                        content = ""
+                    } label: {
+                        HStack {
+                            Image(systemName: "pencil")
+                                .foregroundStyle(viewState.theme.accent)
+                            
+                            Text("Editing Message")
+                            
+                            Spacer()
+                            
+                            Image(systemName: "xmark")
+                                .foregroundStyle(viewState.theme.foreground2)
+                        }
+                        .bold()
+                    }
+                }
 
                 HStack(alignment: .top) {
-                    UploadButton(showingSelectFile: $showingSelectFile, showingSelectPhoto: $showingSelectPhoto, selectedPhotoItems: $selectedPhotoItems, selectedPhotos: $selectedPhotos)
-                        .frame(alignment: .top)
+                    if editing == nil {
+                        UploadButton(showingSelectFile: $showingSelectFile, showingSelectPhoto: $showingSelectPhoto, selectedPhotoItems: $selectedPhotoItems, selectedPhotos: $selectedPhotos)
+                            .frame(alignment: .top)
+                    }
 
                     TextField("", text: $content.animation(), axis: .vertical)
                         .focused(focusState)
                         .placeholder(when: content.isEmpty) {
-                            Text("Message \(channel.getName(viewState))")
+                            Text("Message #\(channel.getName(viewState))")
                                 .foregroundStyle(viewState.theme.foreground2.color)
                         }
                         .onChange(of: content) { _, value in
@@ -344,6 +345,16 @@ struct MessageBox: View {
                                 withAnimation {
                                     focusState.wrappedValue = true
                                 }
+                            }
+                        })
+                        .onChange(of: editing, { b, a in
+                            if let a {
+                                selectedPhotos = []
+                                selectedPhotoItems = []
+                                channelReplies = []
+                                autoCompleteType = nil
+                                autocompleteSearchValue = ""
+                                content = a.content ?? ""
                             }
                         })
                         .sheet(isPresented: $showingSelectEmoji) {
@@ -392,7 +403,7 @@ struct MessageBox: View {
         .padding(.top, 4)
         .padding(.horizontal, 12)
         .padding(.bottom, 12)
-        .background(viewState.theme.messageBoxBackground.color)
+        .background(viewState.theme.messageBox.color)
     }
 }
 
@@ -480,7 +491,7 @@ struct MessageBox_Previews: PreviewProvider {
         let channel = viewState.channels["0"]!
         let server = viewState.servers["0"]!
 
-        MessageBox(channel: channel, server: server, channelReplies: $replies, focusState: $focused, showingSelectEmoji: $showingSelectEmoji)
+        MessageBox(channel: channel, server: server, channelReplies: $replies, focusState: $focused, showingSelectEmoji: $showingSelectEmoji, editing: .constant(nil))
             .applyPreviewModifiers(withState: viewState)
     }
 }
