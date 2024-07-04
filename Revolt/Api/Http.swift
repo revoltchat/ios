@@ -37,14 +37,20 @@ struct HTTPClient {
         method: HTTPMethod,
         route: String,
         parameters: I? = nil as Int?,
-        encoder: ParameterEncoder = JSONParameterEncoder.default
-    ) async -> Result<O, AFError> {
+        encoder: ParameterEncoder = JSONParameterEncoder.default,
+        headers hdrs: HTTPHeaders? = nil
+    ) async -> Result<DataResponse<String, AFError>, RevoltError> {
+        var headers: HTTPHeaders = hdrs ?? HTTPHeaders()
+
+        if token != nil {
+            headers.add(name: "x-session-token", value: token!)
+        }
         let req = self.session.request(
             "\(baseURL)\(route)",
             method: method,
             parameters: parameters,
             encoder: encoder,
-            headers: headers
+            headers: token.map({ HTTPHeaders(dictionaryLiteral: ("x-session-token", $0)) })
         )
 
         let response = await req.serializingString()
@@ -264,51 +270,6 @@ struct HTTPClient {
     func reactMessage(channel: String, message: String, emoji: String) async -> Result<EmptyResponse, RevoltError> {
         await req(method: .put, route: "/channels/\(channel)/messages/\(message)/reactions/\(emoji)")
     }
-    // settings stuff
-    func fetchAccount() async -> Result<AuthAccount, AFError> {
-        await req(method: .get, route: "/auth/account")
-    }
-    
-    func fetchMFAStatus() async -> Result<AccountSettingsMFAStatus, AFError> {
-        await req(method: .get, route: "/auth/mfa")
-    }
-    
-    func submitMFATicket(password: String) async -> Result<MFATicketResponse, AFError> {
-        await req(method: .put, route: "/auth/mfa/ticket", parameters: ["password": password])
-    }
-    
-    func submitMFATicket(totp: String) async -> Result<MFATicketResponse, AFError> {
-        await req(method: .put, route: "/auth/mfa/ticket", parameters: ["totp_code": totp])
-    }
-    
-    func submitMFATicket(recoveryCode: String) async -> Result<MFATicketResponse, AFError> {
-        await req(method: .put, route: "/auth/mfa/ticket", parameters: ["recovery_code": recoveryCode])
-    }
-    
-    
-    func getTOTPSecret(mfaToken: String) async -> Result<TOTPSecretResponse, AFError> {
-        let headers = HTTPHeaders(dictionaryLiteral: ("X-Mfa-Ticket", mfaToken))
-        return await req(method: .post, route: "/auth/mfa/totp", headers: headers)
-    }
-    
-    /// This should be called only after fetching the secret AND verifying the user has the authenticator set up correctly
-    func enableTOTP(mfaToken: String, totp_code: String) async -> Result<EmptyResponse, AFError> {
-        let headers = HTTPHeaders(dictionaryLiteral: ("X-Mfa-Ticket", mfaToken))
-        return await req(method: .put, route: "/auth/mfa/totp", parameters: ["totp_code": totp_code], headers: headers)
-    }
-    
-    func disableTOTP(mfaToken: String) async -> Result<EmptyResponse, AFError> {
-        let headers = HTTPHeaders(dictionaryLiteral: ("X-Mfa-Ticket", mfaToken))
-        return await req(method: .delete, route: "/auth/mfa/totp", headers: headers)
-    }
-    
-    func updateUsername(newName: String, password: String) async -> Result<User, AFError> {
-        await req(method: .patch, route: "/users/@me/username", parameters: ["username": newName, "password": password])
-    }
-    
-    func updatePassword(newPassword: String, oldPassword: String) async -> Result<EmptyResponse, AFError> {
-        await req(method: .patch, route: "/auth/account/change/password", parameters: ["password": newPassword, "current_password": oldPassword])
-    }
 
     // settings stuff
     func fetchAccount() async -> Result<AuthAccount, RevoltError> {
@@ -358,5 +319,9 @@ struct HTTPClient {
 
     func editMessage(channel: String, message: String, edits: MessageEdit) async -> Result<Message, RevoltError> {
         await req(method: .patch, route: "/channels/\(channel)/messages/\(message)", parameters: edits)
+    }
+    
+    func uploadNotificationToken(token: String) async -> Result<EmptyResponse, RevoltError> {
+        await req(method: .post, route: "/push/subscribe", parameters: ["endpoint": "apn", "p256dh": "", "auth": token])
     }
 }

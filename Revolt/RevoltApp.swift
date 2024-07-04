@@ -5,8 +5,9 @@ import Types
 
 @main
 struct RevoltApp: App {
+    @UIApplicationDelegateAdaptor(AppDelegate.self) var appDelegate
     @Environment(\.locale) var systemLocale: Locale
-    @StateObject var state = ViewState()
+    @StateObject var state = ViewState.shared ?? ViewState()
 
     init() {
         SentrySDK.start { options in

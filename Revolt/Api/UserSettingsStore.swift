@@ -35,9 +35,13 @@ class UserSettingsStore: Codable {
     var user: User?
     var accountData: UserSettingsAccountData?
     
+    /// This is null when we havent asked for permission yet
+    var rejectedRemoteNotifications: Bool?
+    
     fileprivate func clear() {
         user = nil
         accountData = nil
+        rejectedRemoteNotifications = nil
     }
 }
 
@@ -117,7 +121,7 @@ class UserSettingsData {
         }
     }
     
-    private func writeCacheToFile() {
+    func writeCacheToFile() {
         DispatchQueue.main.async(qos: .utility) {
             if let caches = FileManager.default.urls(for: .cachesDirectory, in: .userDomainMask).first {
                 let revoltDir = caches.appendingPathComponent("RevoltCaches", conformingTo: .directory)

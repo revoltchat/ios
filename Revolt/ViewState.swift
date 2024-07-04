@@ -121,6 +121,14 @@ struct UserMaybeMember: Identifiable {
 
 @MainActor
 public class ViewState: ObservableObject {
+    static var shared: ViewState? = nil
+
+#if os(iOS)
+    static var application: UIApplication? = nil
+#elseif os(macOS)
+    static var application: NSApplication? = nil
+#endif
+
     var http: HTTPClient = HTTPClient(token: nil, baseURL: "https://api.revolt.chat")
     var ws: WebSocketStream? = nil
     var apiInfo: ApiInfo? = nil
@@ -220,6 +228,7 @@ public class ViewState: ObservableObject {
         self.http.token = self.sessionToken
         
         self.userSettingsStore.viewState = self // this is a cursed workaround
+        ViewState.shared = self
     }
 
     func applySystemScheme(theme: ColorScheme, followSystem: Bool = false) -> Self {
@@ -302,7 +311,16 @@ public class ViewState: ObservableObject {
                                     self.currentSessionId = success._id
                                     self.sessionToken = success.token
                                     self.http.token = success.token
-
+                                    
+                                    let notificationsGranted = try? await UNUserNotificationCenter.current().requestAuthorization(options: [.alert, .badge, .sound, .providesAppNotificationSettings])
+                                    if notificationsGranted != nil && notificationsGranted! {
+                                        ViewState.application?.registerForRemoteNotifications()
+                                        self.userSettingsStore.store.rejectedRemoteNotifications = false
+                                    } else {
+                                        self.userSettingsStore.store.rejectedRemoteNotifications = true
+                                    }
+                                    self.userSettingsStore.writeCacheToFile()
+                                    
                                     do {
                                         let onboardingState = try await self.http.checkOnboarding().get()
                                         if onboardingState.onboarding {

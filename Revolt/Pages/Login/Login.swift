@@ -141,10 +141,10 @@ struct LogIn: View {
 
             Spacer()
 
-            NavigationLink("Resend a verification email", destination: ResendEmail())
+            NavigationLink("Resend a verification email", destination: { ResendEmail() })
                 .padding(15)
             
-            NavigationLink("Forgot Password", destination: ForgotPassword())
+            NavigationLink("Forgot Password", destination: { ForgotPassword() })
                 .padding(15)
 
             Spacer()
@@ -202,6 +202,7 @@ struct Mfa: View {
                         if selected == method {
                             ZStack(alignment: .trailing) {
                                 TextField("\(method.lowercased()) code", text: $currentText)
+                                    .textContentType(.oneTimeCode)
                                 Button("enter", systemImage: "arrowshape.right.circle") {
                                     let key: String
                                     
