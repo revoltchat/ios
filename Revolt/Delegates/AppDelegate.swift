@@ -10,10 +10,19 @@ import SwiftUI
 import Sentry
 import UserNotificationsUI
 
+
 #if os(macOS)
 import AppKit
 #endif
 
+func declareNotificationCategoryTypes() {
+    // first: messages
+    let replyAction = UNTextInputNotificationAction(identifier: "REPLY", title: "Reply", options: [.authenticationRequired], textInputButtonTitle: "Done", textInputPlaceholder: "Reply to this message...")
+    let messageCategory = UNNotificationCategory(identifier: "ALERT_MESSAGE", actions: [replyAction], intentIdentifiers: [], options: [])
+    
+    let notificationCenter = UNUserNotificationCenter.current()
+    notificationCenter.setNotificationCategories([messageCategory])
+}
 
 #if os(iOS)
 class AppDelegate: NSObject, UIApplicationDelegate {
@@ -24,6 +33,7 @@ class AppDelegate: NSObject, UIApplicationDelegate {
     ) -> Bool {
         UNUserNotificationCenter.current().delegate = self
         ViewState.application = application
+        declareNotificationCategoryTypes()
         return true
     }
     
@@ -36,7 +46,7 @@ class AppDelegate: NSObject, UIApplicationDelegate {
         let state = ViewState.shared ?? ViewState()
         let token = deviceToken.reduce("", {$0 + String(format: "%02x", $1)})
         
-        debugPrint("received notification token!")
+        debugPrint("received notification token: \(token)")
 
         if state.http.token != nil {
             Task {
@@ -54,6 +64,7 @@ class AppDelegate: NSObject, UIApplicationDelegate {
 class AppDelegate: NSObject, NSApplicationDelegate {
     func applicationDidFinishLaunching(_ notification: Notification) {
         UNUserNotificationCenter.current().delegate = self
+        declareNotificationCategoryTypes()
     }
     
     func application(_ application: NSApplication, didFailToRegisterForRemoteNotificationsWithError error: Error) {
@@ -78,7 +89,23 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 #endif
 
 extension AppDelegate: UNUserNotificationCenterDelegate {
-    func userNotificationCenter(_ center: UNUserNotificationCenter, didReceive response: UNNotificationResponse) async {
+    /*func userNotificationCenter(_ center: UNUserNotificationCenter, didReceive response: UNNotificationResponse) async {
+        let state = ViewState.shared ?? ViewState()
+
+        if state.sessionToken == nil {
+            return
+        }
+        
+        
+        
+        let userinfo = response.notification.request.content.userInfo
+        state.currentChannel = .channel(userinfo["channelId"] as! String)
+        state.currentServer = .server(userinfo["serverId"] as! String)
+        // TODO: scroll to message
+
+    }*/
+    
+    func userNotificationCenter(_ center: UNUserNotificationCenter, didReceive response: UNNotificationResponse, withCompletionHandler completionHandler: @escaping () -> Void) {
         let state = ViewState.shared ?? ViewState()
 
         if state.sessionToken == nil {
@@ -86,10 +113,23 @@ extension AppDelegate: UNUserNotificationCenterDelegate {
         }
         
         let userinfo = response.notification.request.content.userInfo
-        state.currentChannel = .channel(userinfo["channelId"] as! String)
-        state.currentServer = .server(userinfo["serverId"] as! String)
-        // TODO: scroll to message
-
+        let channelId = (userinfo["message"] as! [String: Any])["channel"] as! String
+        let serverId = userinfo["serverId"] as! String
+        let messageId = (userinfo["message"] as! [String: Any])["_id"] as! String
+        
+        print(response.actionIdentifier)
+        debugPrint(response)
+        
+        switch response.actionIdentifier {
+        case "REPLY":
+            let response = response as! UNTextInputNotificationResponse
+            Task {
+                await state.http.sendMessage(channel: channelId, replies: [ApiReply(id: messageId, mention: false)], content: response.userText, attachments: [], nonce: "")
+            }
+        default:
+            state.currentChannel = .channel(channelId)
+            state.currentServer = .server(serverId)
+        }
     }
     
     func userNotificationCenter(_ center: UNUserNotificationCenter, willPresent notification: UNNotification, withCompletionHandler completionHandler: @escaping (UNNotificationPresentationOptions) -> Void) {

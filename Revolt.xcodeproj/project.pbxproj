@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		1700380B2C37875F00F8B134 /* NotificationService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1700380A2C37875F00F8B134 /* NotificationService.swift */; };
+		1700380F2C37875F00F8B134 /* notificationd.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = 170038082C37875F00F8B134 /* notificationd.appex */; platformFilters = (ios, maccatalyst, ); settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		170C23CE2C224B460057E399 /* UserSettingsStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 170C23CD2C224B460057E399 /* UserSettingsStore.swift */; };
 		170C23D32C224B6D0057E399 /* NotificationSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 170C23D02C224B6D0057E399 /* NotificationSettings.swift */; };
 		170C23D42C224B6D0057E399 /* ExperimentsSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 170C23CF2C224B6D0057E399 /* ExperimentsSettings.swift */; };
@@ -117,6 +119,13 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
+		1700380D2C37875F00F8B134 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = D49B704729C4D3FE009494A5 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 170038072C37875F00F8B134;
+			remoteInfo = notificationd;
+		};
 		1773C0292C07DC32007B8867 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = D49B704729C4D3FE009494A5 /* Project object */;
@@ -127,6 +136,17 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXCopyFilesBuildPhase section */
+		170038142C37875F00F8B134 /* Embed Foundation Extensions */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 13;
+			files = (
+				1700380F2C37875F00F8B134 /* notificationd.appex in Embed Foundation Extensions */,
+			);
+			name = "Embed Foundation Extensions";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		1773C02B2C07DC32007B8867 /* Embed Frameworks */ = {
 			isa = PBXCopyFilesBuildPhase;
 			buildActionMask = 2147483647;
@@ -141,6 +161,10 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		170038082C37875F00F8B134 /* notificationd.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = notificationd.appex; sourceTree = BUILT_PRODUCTS_DIR; };
+		1700380A2C37875F00F8B134 /* NotificationService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationService.swift; sourceTree = "<group>"; };
+		1700380C2C37875F00F8B134 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		170038102C37875F00F8B134 /* notificationd.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = notificationd.entitlements; sourceTree = "<group>"; };
 		170C23CD2C224B460057E399 /* UserSettingsStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserSettingsStore.swift; sourceTree = "<group>"; };
 		170C23CF2C224B6D0057E399 /* ExperimentsSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExperimentsSettings.swift; sourceTree = "<group>"; };
 		170C23D02C224B6D0057E399 /* NotificationSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationSettings.swift; sourceTree = "<group>"; };
@@ -237,6 +261,13 @@
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
+		170038052C37875F00F8B134 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		D49B704C29C4D3FE009494A5 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
@@ -262,6 +293,16 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		170038092C37875F00F8B134 /* notificationd */ = {
+			isa = PBXGroup;
+			children = (
+				170038102C37875F00F8B134 /* notificationd.entitlements */,
+				1700380A2C37875F00F8B134 /* NotificationService.swift */,
+				1700380C2C37875F00F8B134 /* Info.plist */,
+			);
+			path = notificationd;
+			sourceTree = "<group>";
+		};
 		170C23D82C224BA40057E399 /* Extensions */ = {
 			isa = PBXGroup;
 			children = (
@@ -475,6 +516,7 @@
 				171303592B6166B700B66050 /* Localizable.xcstrings */,
 				D49B705129C4D3FE009494A5 /* Revolt */,
 				17DE7DB32BFAEC3F00C99188 /* Types */,
+				170038092C37875F00F8B134 /* notificationd */,
 				D49B705029C4D3FE009494A5 /* Products */,
 				DAFC10FE29CFC3B400D2C2F9 /* Frameworks */,
 			);
@@ -485,6 +527,7 @@
 			children = (
 				D49B704F29C4D3FE009494A5 /* Revolt.app */,
 				17DE7DB22BFAEC3F00C99188 /* Types.framework */,
+				170038082C37875F00F8B134 /* notificationd.appex */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -535,6 +578,23 @@
 /* End PBXHeadersBuildPhase section */
 
 /* Begin PBXNativeTarget section */
+		170038072C37875F00F8B134 /* notificationd */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 170038112C37875F00F8B134 /* Build configuration list for PBXNativeTarget "notificationd" */;
+			buildPhases = (
+				170038042C37875F00F8B134 /* Sources */,
+				170038052C37875F00F8B134 /* Frameworks */,
+				170038062C37875F00F8B134 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = notificationd;
+			productName = notificationd;
+			productReference = 170038082C37875F00F8B134 /* notificationd.appex */;
+			productType = "com.apple.product-type.app-extension";
+		};
 		17DE7DB12BFAEC3F00C99188 /* Types */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = 17DE7DBA2BFAEC3F00C99188 /* Build configuration list for PBXNativeTarget "Types" */;
@@ -560,6 +620,7 @@
 				D49B704C29C4D3FE009494A5 /* Frameworks */,
 				D49B704D29C4D3FE009494A5 /* Resources */,
 				1773C02B2C07DC32007B8867 /* Embed Frameworks */,
+				170038142C37875F00F8B134 /* Embed Foundation Extensions */,
 				179366C82BFAD17D00FC420D /* Run Script */,
 			);
 			buildRules = (
@@ -568,6 +629,7 @@
 				17F3EFAD2B13D042002C34B5 /* PBXTargetDependency */,
 				17F3EFAF2B13D042002C34B5 /* PBXTargetDependency */,
 				1773C02A2C07DC32007B8867 /* PBXTargetDependency */,
+				1700380E2C37875F00F8B134 /* PBXTargetDependency */,
 			);
 			name = Revolt;
 			packageProductDependencies = (
@@ -600,9 +662,12 @@
 				KnownAssetTags = (
 					Resources,
 				);
-				LastSwiftUpdateCheck = 1420;
+				LastSwiftUpdateCheck = 1540;
 				LastUpgradeCheck = 1530;
 				TargetAttributes = {
+					170038072C37875F00F8B134 = {
+						CreatedOnToolsVersion = 15.4;
+					};
 					17DE7DB12BFAEC3F00C99188 = {
 						CreatedOnToolsVersion = 15.3;
 						LastSwiftMigration = 1540;
@@ -641,11 +706,19 @@
 			targets = (
 				D49B704E29C4D3FE009494A5 /* Revolt */,
 				17DE7DB12BFAEC3F00C99188 /* Types */,
+				170038072C37875F00F8B134 /* notificationd */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXResourcesBuildPhase section */
+		170038062C37875F00F8B134 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		17DE7DB02BFAEC3F00C99188 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -689,6 +762,14 @@
 /* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
+		170038042C37875F00F8B134 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				1700380B2C37875F00F8B134 /* NotificationService.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		1773C02C2C07DC75007B8867 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -793,6 +874,11 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
+		1700380E2C37875F00F8B134 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 170038072C37875F00F8B134 /* notificationd */;
+			targetProxy = 1700380D2C37875F00F8B134 /* PBXContainerItemProxy */;
+		};
 		1773C02A2C07DC32007B8867 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			target = 17DE7DB12BFAEC3F00C99188 /* Types */;
@@ -817,6 +903,79 @@
 /* End PBXTargetDependency section */
 
 /* Begin XCBuildConfiguration section */
+		170038122C37875F00F8B134 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_ENTITLEMENTS = notificationd/notificationd.entitlements;
+				CODE_SIGN_IDENTITY = "Apple Development";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				CODE_SIGN_STYLE = Manual;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = "";
+				"DEVELOPMENT_TEAM[sdk=iphoneos*]" = T23HBWQ54Y;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = notificationd/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = notificationd;
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = chat.revolt.app.notificationd;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
+				"PROVISIONING_PROFILE_SPECIFIER[sdk=iphoneos*]" = "match Development chat.revolt.app.notificationd";
+				SKIP_INSTALL = NO;
+				SUPPORTS_MACCATALYST = YES;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "DEBUG $(inherited)";
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		170038132C37875F00F8B134 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_ENTITLEMENTS = notificationd/notificationd.entitlements;
+				CODE_SIGN_IDENTITY = "Apple Development";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				CODE_SIGN_STYLE = Manual;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = "";
+				"DEVELOPMENT_TEAM[sdk=iphoneos*]" = T23HBWQ54Y;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = notificationd/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = notificationd;
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = chat.revolt.app.notificationd;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
+				"PROVISIONING_PROFILE_SPECIFIER[sdk=iphoneos*]" = "match Development chat.revolt.app.notificationd";
+				SKIP_INSTALL = NO;
+				SUPPORTS_MACCATALYST = YES;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
 		17DE7DBB2BFAEC3F00C99188 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -1146,6 +1305,15 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
+		170038112C37875F00F8B134 /* Build configuration list for PBXNativeTarget "notificationd" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				170038122C37875F00F8B134 /* Debug */,
+				170038132C37875F00F8B134 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
 		17DE7DBA2BFAEC3F00C99188 /* Build configuration list for PBXNativeTarget "Types" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
