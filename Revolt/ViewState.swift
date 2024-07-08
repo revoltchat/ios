@@ -636,6 +636,22 @@ public class ViewState: ObservableObject {
     func openUserSheet(user: Types.User, member: Member? = nil) {
         currentUserSheet = UserMaybeMember(user: user, member: member)
     }
+    
+    public var openServer: Server? {
+        if case .server(let serverId) = currentServer {
+            return servers[serverId]
+        }
+        
+        return nil
+    }
+    
+    public var openServerMember: Member? {
+        if case .server(let serverId) = currentServer, let userId = currentUser?.id {
+            return members[serverId]?[userId]
+        }
+        
+        return nil
+    }
 }
 
 enum UnreadCount {

@@ -58,14 +58,6 @@ struct MessageContentsView: View {
     @State var showReactSheet: Bool = false
     @State var isStatic: Bool
 
-    func copyText() {
-#if os(macOS)
-        NSPasteboard.general.setString(viewModel.message.content ?? "", forType: .string)
-#else
-        UIPasteboard.general.string = viewModel.message.content
-#endif
-    }
-
     private var isModeratorInChannel: Bool {
         let member = viewModel.server.flatMap {
             viewState.members[$0.id]?[viewState.currentUser!.id]
@@ -124,9 +116,11 @@ struct MessageContentsView: View {
                 Label("React", systemImage: "face.smiling.inverse")
             }
 
-            Button(action: copyText, label: {
+            Button {
+                copyText(text: viewModel.message.content ?? "")
+            } label: {
                 Label("Copy contents", systemImage: "doc.on.clipboard")
-            })
+            }
 
             Button(action: { showMemberSheet.toggle() }, label: {
                 Label("Open Profile", systemImage: "person.crop.circle")

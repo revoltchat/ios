@@ -167,3 +167,11 @@ var isPreview: Bool {
     false
 #endif
 }
+
+func copyText(text: String) {
+#if os(macOS)
+    NSPasteboard.general.setString(text, forType: .string)
+#else
+    UIPasteboard.general.string = text
+#endif
+    }
