@@ -79,12 +79,17 @@ struct ApplicationSwitcher: View {
     @Environment(\.colorScheme) var colorScheme
     @EnvironmentObject var viewState: ViewState
 
-    @ViewBuilder
     var body: some View {
-        if viewState.sessionToken != nil && !viewState.isOnboarding {
+        if viewState.state != .signedOut && !viewState.isOnboarding {
             InnerApp()
+                .transition(.slide)
                 .task {
                     await viewState.backgroundWsTask()
+                    if viewState.state != .signedOut {
+                        withAnimation {
+                            viewState.state = .connecting
+                        }
+                    }
                 }
                 .onChange(of: colorScheme) { before, after in
                     // automatically switch the color scheme if the user pressed "auto" in the preferences menu
@@ -96,6 +101,13 @@ struct ApplicationSwitcher: View {
                 }
         } else {
             Welcome()
+                .transition(.slide)
+                .onAppear {
+                    if viewState.state == .signedOut && viewState.sessionToken != nil { // signging out
+                        viewState.sessionToken = nil
+                        viewState.destroyCache()
+                    }
+                }
         }
     }
 }
@@ -106,8 +118,21 @@ struct InnerApp: View {
     var body: some View {
         NavigationStack(path: $viewState.path) {
             switch viewState.state {
-                case .connecting:
+            case .signedOut:
+                    Text("Signed out... How did you get here?")
+                case .connecting, .notConnecting, .reconnecting:
+                VStack {
                     Text("Connecting...")
+                    #if DEBUG
+                    Button(action: {
+                        viewState.destroyCache()
+                        viewState.sessionToken = nil
+                        viewState.state = .signedOut
+                    }) {
+                        Text("Developer: Nuke everything and force welcome screen")
+                    }
+                    #endif
+                }
                 case .connected:
                     HomeRewritten(
                         currentSelection: $viewState.currentServer,

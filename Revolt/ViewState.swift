@@ -64,6 +64,9 @@ extension LoginResponse: Decodable {
 }
 
 enum ConnectionState {
+    case signedOut
+    case notConnecting
+    case reconnecting
     case connecting
     case connected
 }
@@ -129,7 +132,7 @@ public class ViewState: ObservableObject {
     static var application: NSApplication? = nil
 #endif
 
-    var http: HTTPClient = HTTPClient(token: nil, baseURL: "https://api.revolt.chat")
+    var http: HTTPClient = HTTPClient(token: nil, baseURL: "http://local.angelomanca.com:8000")
     var ws: WebSocketStream? = nil
     var apiInfo: ApiInfo? = nil
     
@@ -149,7 +152,7 @@ public class ViewState: ObservableObject {
     @Published var dms: [Channel] = []
     @Published var emojis: [String: Emoji] = [:]
 
-    @Published var state: ConnectionState = .connecting
+    @Published var state: ConnectionState = .notConnecting
     @Published var queuedMessages: Dictionary<String, [QueuedMessage]> = [:]
     @Published var currentUser: Types.User? = nil
     @Published var loadingMessages: Set<String> = Set()
@@ -312,14 +315,7 @@ public class ViewState: ObservableObject {
                                     self.sessionToken = success.token
                                     self.http.token = success.token
                                     
-                                    let notificationsGranted = try? await UNUserNotificationCenter.current().requestAuthorization(options: [.alert, .badge, .sound, .providesAppNotificationSettings])
-                                    if notificationsGranted != nil && notificationsGranted! {
-                                        ViewState.application?.registerForRemoteNotifications()
-                                        self.userSettingsStore.store.rejectedRemoteNotifications = false
-                                    } else {
-                                        self.userSettingsStore.store.rejectedRemoteNotifications = true
-                                    }
-                                    self.userSettingsStore.writeCacheToFile()
+                                    await self.promptForNotifications()
                                     
                                     do {
                                         let onboardingState = try await self.http.checkOnboarding().get()
@@ -328,9 +324,11 @@ public class ViewState: ObservableObject {
                                         } else {
                                             self.isOnboarding = false
                                             callback(.Success)
+                                            self.state = .connecting
                                         }
                                     } catch {
                                         self.isOnboarding = false
+                                        self.state = .connecting
                                         return callback(.Success) // if the onboard check dies, just try to go for it
                                     }
                                 }
@@ -347,9 +345,61 @@ public class ViewState: ObservableObject {
             }
     }
 
-    func signOut() async -> Result<Bool, UserStateError>  {
-        sessionToken = nil
-        return .success(true)
+    /// A successful result here means pending (the session has been destroyed but the client still has data cached)
+    func signOut() async -> Result<(), UserStateError>  {
+        let status = try? await http.signout().get()
+        guard let status = status else { return .failure(.signOutError)}
+        self.ws?.stop()
+        
+        withAnimation {
+            state = .signedOut
+        }
+        
+        // IMPORTANT: do not destroy the cache/session here. It'll cause the app to crash before it can transition to the welcome screen.
+        // The cache is destroyed in RevoltApp.swift:ApplicationSwitcher
+        
+        return .success(())
+    }
+    
+    /// A workaround for the UserSettingStore finding out we're not authenticated, since not a main actor.
+    func setSignedOutState() {
+        withAnimation {
+            state = .signedOut
+        }
+    }
+    
+    func destroyCache() {
+        // In future this'll need to delete files too
+        path = NavigationPath()
+
+        users.removeAll()
+        servers.removeAll()
+        channels.removeAll()
+        messages.removeAll()
+        members.removeAll()
+        emojis.removeAll()
+        dms.removeAll()
+        currentlyTyping.removeAll()
+        channelMessages.removeAll()
+        
+        currentUser = nil
+        currentServer = .dms
+        currentChannel = .home
+        currentSessionId = nil
+        
+        userSettingsStore.destroyCache()
+        self.ws = nil
+    }
+    
+    func promptForNotifications() async {
+        let notificationsGranted = try? await UNUserNotificationCenter.current().requestAuthorization(options: [.alert, .badge, .sound, .providesAppNotificationSettings])
+        if notificationsGranted != nil && notificationsGranted! {
+            ViewState.application?.registerForRemoteNotifications()
+            self.userSettingsStore.store.rejectedRemoteNotifications = false
+        } else {
+            self.userSettingsStore.store.rejectedRemoteNotifications = true
+        }
+        self.userSettingsStore.writeCacheToFile()
     }
 
     func formatUrl(with: File) -> String {
@@ -366,18 +416,26 @@ public class ViewState: ObservableObject {
         }
 
         guard let token = sessionToken else {
+            state = .signedOut
             return
         }
 
         let fetchApiInfoSpan = launchTransaction.startChild(operation: "fetchApiInfo")
         
-        let apiInfo = try! await self.http.fetchApiInfo().get()
-        self.http.apiInfo = apiInfo
-        self.apiInfo = apiInfo
+        do {
+            let apiInfo = try await self.http.fetchApiInfo().get()
+            self.http.apiInfo = apiInfo
+            self.apiInfo = apiInfo
+        } catch {
+            SentrySDK.capture(error: error)
+            state = .notConnecting
+            fetchApiInfoSpan.finish()
+            return
+        }
         
         fetchApiInfoSpan.finish()
 
-        let ws = WebSocketStream(url: apiInfo.ws, token: token, onEvent: onEvent)
+        let ws = WebSocketStream(url: apiInfo!.ws, token: token, onEvent: onEvent)
         self.ws = ws
     }
 
@@ -480,7 +538,9 @@ public class ViewState: ObservableObject {
                 print("authenticated")
 
             case .invalid_session:
-                self.logout()
+                Task {
+                    await self.signOut()
+                }
 
             case .channel_start_typing(let e):
                 var typing = currentlyTyping[e.id] ?? []
@@ -500,7 +560,7 @@ public class ViewState: ObservableObject {
                 }
 
             case .channel_ack(let e):
-                unreads[e.id]?.last_id = nil
+                unreads[e.id]?.last_id = e.message_id
                 unreads[e.id]?.mentions?.removeAll { $0 <= e.message_id }
             
             case .message_react(let e):
@@ -530,25 +590,6 @@ public class ViewState: ObservableObject {
                     }
                 }
         }
-    }
-
-    func logout() {
-        currentUser = nil
-        sessionToken = nil
-        currentServer = .dms
-        currentChannel = .home
-        currentlyTyping = [:]
-        currentSessionId = nil
-        users = [:]
-        servers = [:]
-        channels = [:]
-        messages = [:]
-        channelMessages = [:]
-        members = [:]
-        dms = []
-        path = NavigationPath()
-
-        ws?.stop()
     }
 
     func joinServer(code: String) async -> JoinResponse {

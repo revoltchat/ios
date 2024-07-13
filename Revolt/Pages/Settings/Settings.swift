@@ -18,6 +18,8 @@ enum CurrentSettingsPage: Hashable {
 
 struct Settings: View {
     @EnvironmentObject var viewState: ViewState
+    
+    @State var presentLogoutDialog = false
 
     var body: some View {
         List {
@@ -60,12 +62,18 @@ struct Settings: View {
                     Image(systemName: "info.circle.fill")
                     Text("About")
                 }
-                NavigationLink(destination: ExperimentsSettings()) {
+                NavigationLink(destination: { ExperimentsSettings() }) {
                     Image(systemName: "flask.fill")
                     Text("Experiments")
                 }
+#if DEBUG
+                NavigationLink(destination: { DeveloperSettings() }) {
+                    Image(systemName: "face.smiling")
+                    Text("Developer")
+                }
+#endif
                 Button {
-                    viewState.logout()
+                    presentLogoutDialog = true
                 } label: {
                     HStack {
                         Image(systemName: "arrow.left.square")
@@ -87,6 +95,18 @@ struct Settings: View {
         }
         .toolbarBackground(viewState.theme.topBar.color, for: .automatic)
         .background(viewState.theme.background)
+        .confirmationDialog("Are you sure?", isPresented: $presentLogoutDialog, titleVisibility: .visible) {
+            Button("Yes", role: .destructive) {
+                Task {
+                    await viewState.signOut()
+                }
+            }
+            .keyboardShortcut(.defaultAction)
+            Button("Wait!", role: .cancel) {
+                presentLogoutDialog = false
+            }
+            .keyboardShortcut(.cancelAction)
+        }
     }
 }
 

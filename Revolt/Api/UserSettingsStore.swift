@@ -8,6 +8,7 @@
 import Foundation
 import Observation
 import OSLog
+import Sentry
 import Types
 
 let logger = Logger(subsystem: "chat.revolt.app", category: "settingsStore")
@@ -32,7 +33,7 @@ struct UserSettingsAccountData: Codable {
 
 @Observable
 class UserSettingsStore: Codable {
-    var user: User?
+    var user: Types.User?
     var accountData: UserSettingsAccountData?
     
     /// This is null when we havent asked for permission yet
@@ -100,11 +101,15 @@ class UserSettingsData {
         Task(priority: .medium, operation: self.fetchFromApi)
     }
     
-    @Sendable func fetchFromApi() async {
+    
+    func fetchFromApi() async {
         while viewState == nil {
             try! await Task.sleep(for: .seconds(1))
         }
         let state = viewState!
+        if await state.state == .signedOut {
+            return
+        }
         
         do {
             self.store.user = try await state.http.fetchSelf().get()
@@ -117,7 +122,26 @@ class UserSettingsData {
             writeCacheToFile()
         } catch {
             self.dataState = .failed
-            logger.error("An error occurred while fetching user settings: \(error.localizedDescription)")
+            let error = error as! RevoltError
+            switch error {
+                case .Alamofire(let afErr):
+                    if afErr.responseCode == 401 {
+                        await state.setSignedOutState()
+                    } else {
+                        SentrySDK.capture(error: error)
+                    }
+                case .HTTPError(_, let status):
+                    if status == 401 {
+                        await state.setSignedOutState()
+                    } else {
+                        SentrySDK.capture(error: error)
+                    }
+                default:
+                    #if DEBUG
+                    logger.error("An error occurred while fetching user settings: \(error.localizedDescription)")
+                    #endif
+                    SentrySDK.capture(error: error)
+            }
         }
     }
     

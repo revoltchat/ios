@@ -62,7 +62,7 @@ func getMessageIntent(_ notification: UNNotificationContent) -> INSendMessageInt
         conversationIdentifier: message.channel,
         serviceName: nil,
         sender: sender,
-        attachments: displayedAttachment
+        attachments: (displayedAttachment != nil) ? [displayedAttachment!] : nil
     )
         
     // TODO: figure out how to manually set avatars (for dm groups)
@@ -111,7 +111,7 @@ class NotificationService: UNNotificationServiceExtension {
                 
                 let originalTitle = bestAttemptContent.title
                 let updated = try bestAttemptContent.updating(from: intent)
-                updated.title = originalTitle // we actually dont want the title from the intent, since it's just the username
+                updated.setValue(originalTitle, forKey: "title") // we actually dont want the title from the intent, since it's just the username
                 
                 contentHandler(updated)
                 

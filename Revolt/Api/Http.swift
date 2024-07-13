@@ -115,6 +115,10 @@ struct HTTPClient {
     func fetchSelf() async -> Result<User, RevoltError> {
         await req(method: .get, route: "/users/@me")
     }
+    
+    func signout() async -> Result<EmptyResponse, RevoltError> {
+        await req(method: .post, route: "/auth/session/logout")
+    }
 
     func fetchApiInfo() async -> Result<ApiInfo, RevoltError> {
         await req(method: .get, route: "/")
