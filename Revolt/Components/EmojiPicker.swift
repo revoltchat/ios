@@ -121,6 +121,7 @@ struct EmojiPicker: View {
         return emojis
     }
 
+    #if os(iOS)
     func convertEmojiToImage(text: String) -> UIImage {
         let size = CGSize(width: 32, height: 32)
         UIGraphicsBeginImageContextWithOptions(size, false, 0)
@@ -132,6 +133,19 @@ struct EmojiPicker: View {
         UIGraphicsEndImageContext()
         return image!
     }
+    #elseif os(macOS)
+    func convertEmojiToImage(text: String) -> NSImage {
+        let canvas = NSImage(size: NSSize(width: 32, height: 32))
+
+        let image = NSImage(size: NSSize(width: 32, height: 32), flipped: false) { rect in
+            canvas.draw(in: rect)
+            (text as NSString).draw(in: rect, withAttributes: [NSAttributedString.Key.font: NSFont.systemFont(ofSize: 30)])
+            return true
+        }
+
+        return image
+    }
+    #endif
 
     var body: some View {
         let emojis = loadEmojis()
@@ -150,10 +164,19 @@ struct EmojiPicker: View {
                                 case .unicode(_):
                                     let emojiString = String(String.UnicodeScalarView(group.1.first!.base.compactMap(Unicode.Scalar.init)))
 
+                                    #if os(iOS)
                                     Image(uiImage: convertEmojiToImage(text: emojiString))
                                         .resizable()
                                         .aspectRatio(contentMode: .fit)
                                         .frame(width: 32, height: 32)
+
+                                    #elseif os(macOS)
+                                    Image(nsImage: convertEmojiToImage(text: emojiString))
+                                        .resizable()
+                                        .aspectRatio(contentMode: .fit)
+                                        .frame(width: 32, height: 32)
+
+                                    #endif
                             }
                         }
                     }
@@ -183,10 +206,18 @@ struct EmojiPicker: View {
                                         let emojiString = String(String.UnicodeScalarView(emoji.base.compactMap(Unicode.Scalar.init)))
                                         let image = convertEmojiToImage(text: emojiString)
 
+                                        #if os(iOS)
                                         Image(uiImage: image)
                                             .resizable()
                                             .aspectRatio(contentMode: .fit)
                                             .frame(width: 32, height: 32)
+                                            
+                                        #elseif os(macOS)
+                                        Image(nsImage: image)
+                                            .resizable()
+                                            .aspectRatio(contentMode: .fit)
+                                            .frame(width: 32, height: 32)
+                                        #endif
                                     }
                                 }
                             }
@@ -198,7 +229,9 @@ struct EmojiPicker: View {
                     .listRowSeparator(.hidden)
                 }
             }
+            #if os(iOS)
             .listStyle(.grouped)
+            #endif
             .scrollPosition(id: $scrollPosition)
             .padding(.top, 30)
             .scrollContentBackground(.hidden)

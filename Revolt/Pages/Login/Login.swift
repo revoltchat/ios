@@ -180,25 +180,28 @@ struct Mfa: View {
             Text("You've got 2FA enabled to keep your account extra-safe.")
 
             Spacer()
-        
-            List(methods, id: \.self) { method in
-                Button(action: {
-                    withAnimation {
-                        if selected == method {
-                            selected = nil
-                        } else {
-                            selected = method
-                        }
-                        
-                        currentText = ""
-                    }
-                }, label: {
+            
+            ScrollView {
+                ForEach(methods, id: \.self) { method in
                     VStack(alignment: .leading) {
-                        HStack(alignment: .top) {
-                            Text("use a \(method.lowercased()) code")
-                                .frame(alignment: .center)
+                        Button {
+                            withAnimation {
+                                if selected == method {
+                                    selected = nil
+                                } else {
+                                    selected = method
+                                }
+                                
+                                currentText = ""
+                            }
+                        } label: {
+                            HStack(alignment: .top) {
+                                Text("use a \(method.lowercased()) code")
+                                    .frame(alignment: .center)
+                            }
                         }
-                        
+
+                                
                         if selected == method {
                             ZStack(alignment: .trailing) {
                                 TextField("\(method.lowercased()) code", text: $currentText)
@@ -232,10 +235,9 @@ struct Mfa: View {
                             }
                         }
                     }
-                    .transition(.slide)
-                    .animation(.easeInOut, value: currentText)
-                })
+                }
             }
+            .padding(.horizontal, 16)
         }
         .foregroundColor((colorScheme == .light) ? Color.black : Color.white)
     }

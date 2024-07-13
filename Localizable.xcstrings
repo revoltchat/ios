@@ -80,6 +80,9 @@
     "Are you sure you want to leave?" : {
 
     },
+    "Are you sure?" : {
+
+    },
     "Auto" : {
 
     },
@@ -129,6 +132,9 @@
       "comment" : "debug print, dont translate"
     },
     "Community Guidelines" : {
+
+    },
+    "Compact Mode" : {
 
     },
     "Connecting..." : {
@@ -182,13 +188,13 @@
     "Delete server" : {
 
     },
-    "Didn't get an email?" : {
+    "Developer" : {
 
     },
-    "Disable Account" : {
-      "comment" : "User settings button"
+    "Developer: Nuke everything and force welcome screen" : {
+
     },
-    "Discover" : {
+    "Didn't get an email?" : {
 
     },
     "Disable Account" : {
@@ -246,6 +252,9 @@
 
     },
     "Focus" : {
+
+    },
+    "Force remote notification upload" : {
 
     },
     "Forgot Password" : {
@@ -362,6 +371,9 @@
     "Message Box" : {
 
     },
+    "Messages" : {
+
+    },
     "Misc" : {
 
     },
@@ -381,6 +393,12 @@
 
     },
     "Next" : {
+
+    },
+    "No hcaptcha support" : {
+
+    },
+    "No hcapture support" : {
 
     },
     "Notifications" : {
@@ -482,12 +500,6 @@
     "Secondary Background" : {
 
     },
-    "Select a channel" : {
-
-    },
-    "Select a server" : {
-
-    },
     "Select File" : {
 
     },
@@ -506,9 +518,6 @@
     "Server Name" : {
 
     },
-    "Servers" : {
-
-    },
     "Sessions" : {
 
     },
@@ -519,6 +528,9 @@
 
     },
     "Sign Up" : {
+
+    },
+    "Signed out... How did you get here?" : {
 
     },
     "Something went wrong. Try again later?" : {
@@ -542,6 +554,9 @@
     "The trolls have rejected your password" : {
 
     },
+    "Theme" : {
+
+    },
     "This area is guarded by trolls. Fetch them your TOTP code to continue." : {
       "comment" : "subtitle prompt for password when modifying totp"
     },
@@ -561,12 +576,6 @@
 
     },
     "Todo" : {
-
-    },
-    "Try again" : {
-      "comment" : "the user entered an incorrect password"
-    },
-    "Two-Factor Authentication" : {
 
     },
     "Try again" : {
@@ -605,10 +614,16 @@
     "Verify time" : {
       "comment" : "debug print, dont translate"
     },
+    "Wait!" : {
+
+    },
     "Welcome to" : {
 
     },
     "What's wrong..." : {
+
+    },
+    "Yes" : {
 
     },
     "You have not enabled two-factor authentication!" : {

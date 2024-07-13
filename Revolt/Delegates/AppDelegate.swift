@@ -13,6 +13,7 @@ import UserNotificationsUI
 
 #if os(macOS)
 import AppKit
+import UserNotifications
 #endif
 
 func declareNotificationCategoryTypes() {
@@ -88,7 +89,8 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 }
 #endif
 
-extension AppDelegate: UNUserNotificationCenterDelegate {
+@MainActor
+extension AppDelegate: @preconcurrency UNUserNotificationCenterDelegate {
     /*func userNotificationCenter(_ center: UNUserNotificationCenter, didReceive response: UNNotificationResponse) async {
         let state = ViewState.shared ?? ViewState()
 

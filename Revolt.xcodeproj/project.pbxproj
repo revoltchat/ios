@@ -62,6 +62,8 @@
 		1777DD892ADC3C31003D6C72 /* Markdown.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1777DD882ADC3C31003D6C72 /* Markdown.swift */; };
 		1777DD8E2ADC4336003D6C72 /* RemoteImageTextAttachment.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1777DD8D2ADC4336003D6C72 /* RemoteImageTextAttachment.swift */; };
 		1782F5E62B08F60B00759D40 /* Discovery.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1782F5E52B08F60B00759D40 /* Discovery.swift */; };
+		1788F96E2C3CA19800A385A8 /* MessageEmbed.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1788F96D2C3CA19400A385A8 /* MessageEmbed.swift */; };
+		1788F9702C3CA3A600A385A8 /* Embed.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1788F96F2C3CA3A300A385A8 /* Embed.swift */; };
 		178BB10C2B02D84C001143A4 /* HCaptcha in Frameworks */ = {isa = PBXBuildFile; platformFilters = (ios, maccatalyst, ); productRef = 178BB10B2B02D84C001143A4 /* HCaptcha */; };
 		178BB10E2B02D84C001143A4 /* HCaptcha_RxSwift in Frameworks */ = {isa = PBXBuildFile; platformFilters = (ios, maccatalyst, ); productRef = 178BB10D2B02D84C001143A4 /* HCaptcha_RxSwift */; };
 		178BB1102B02D89A001143A4 /* HCaptchaView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 178BB10F2B02D89A001143A4 /* HCaptchaView.swift */; };
@@ -71,6 +73,8 @@
 		178BB11B2B02FCDD001143A4 /* Responses.swift in Sources */ = {isa = PBXBuildFile; fileRef = 178BB11A2B02FCDD001143A4 /* Responses.swift */; };
 		178E26BC2B1542820015CAC7 /* PageToolbar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 178E26BB2B1542820015CAC7 /* PageToolbar.swift */; };
 		17966B652AE0842A00BAEC58 /* ChannelIcon.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17966B642AE0842A00BAEC58 /* ChannelIcon.swift */; };
+		17B375812C41FEC300FC7E6E /* Types.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 17DE7DB22BFAEC3F00C99188 /* Types.framework */; };
+		17B375822C41FEC300FC7E6E /* Types.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 17DE7DB22BFAEC3F00C99188 /* Types.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		17B7128D2B03E9D700CFF61C /* FriendsList.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17B7128C2B03E9D700CFF61C /* FriendsList.swift */; };
 		17BADE012B7019270021BB62 /* EmojiPicker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17BADE002B7019270021BB62 /* EmojiPicker.swift */; };
 		17BC476B2B9CB51200A593DA /* ShareInviteSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17BC476A2B9CB51200A593DA /* ShareInviteSheet.swift */; };
@@ -135,6 +139,13 @@
 			remoteGlobalIDString = 17DE7DB12BFAEC3F00C99188;
 			remoteInfo = Types;
 		};
+		17B3757B2C41FE0E00FC7E6E /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = D49B704729C4D3FE009494A5 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 17DE7DB12BFAEC3F00C99188;
+			remoteInfo = Types;
+		};
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -156,6 +167,17 @@
 			dstSubfolderSpec = 10;
 			files = (
 				1773C0282C07DC32007B8867 /* Types.framework in Embed Frameworks */,
+			);
+			name = "Embed Frameworks";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		17B375832C41FEC300FC7E6E /* Embed Frameworks */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 12;
+			dstPath = "";
+			dstSubfolderSpec = 10;
+			files = (
+				17B375822C41FEC300FC7E6E /* Types.framework in Embed Frameworks */,
 			);
 			name = "Embed Frameworks";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -200,6 +222,8 @@
 		1777DD882ADC3C31003D6C72 /* Markdown.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Markdown.swift; sourceTree = "<group>"; };
 		1777DD8D2ADC4336003D6C72 /* RemoteImageTextAttachment.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemoteImageTextAttachment.swift; sourceTree = "<group>"; };
 		1782F5E52B08F60B00759D40 /* Discovery.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Discovery.swift; sourceTree = "<group>"; };
+		1788F96D2C3CA19400A385A8 /* MessageEmbed.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageEmbed.swift; sourceTree = "<group>"; };
+		1788F96F2C3CA3A300A385A8 /* Embed.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Embed.swift; sourceTree = "<group>"; };
 		178BB10F2B02D89A001143A4 /* HCaptchaView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HCaptchaView.swift; sourceTree = "<group>"; };
 		178BB1132B02E475001143A4 /* CreateAccount.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateAccount.swift; sourceTree = "<group>"; };
 		178BB1162B02E63A001143A4 /* LoadingSpinnerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoadingSpinnerView.swift; sourceTree = "<group>"; };
@@ -269,6 +293,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				17B375812C41FEC300FC7E6E /* Types.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -290,7 +315,6 @@
 				DAAA4BF829F2274A00F41E52 /* OrderedCollections in Frameworks */,
 				DAF84FFD2A0EFE1B00B01682 /* Starscream in Frameworks */,
 				36D461CF77D84B97B94929A9 /* Sentry in Frameworks */,
-				1757A26D2BB7444D007EE8B9 /* LiveKit in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -431,6 +455,7 @@
 		17DE7DB32BFAEC3F00C99188 /* Types */ = {
 			isa = PBXGroup;
 			children = (
+				1788F96F2C3CA3A300A385A8 /* Embed.swift */,
 				17DE7E0C2BFAFDDD00C99188 /* Api.swift */,
 				17DE7E032BFAFDDD00C99188 /* Channel.swift */,
 				17DE7E082BFAFDDD00C99188 /* Emoji.swift */,
@@ -504,6 +529,7 @@
 		17E019D82AF1998800AB4663 /* MessageRenderer */ = {
 			isa = PBXGroup;
 			children = (
+				1788F96D2C3CA19400A385A8 /* MessageEmbed.swift */,
 				DAAA4BFA29F2518900F41E52 /* MessageView.swift */,
 				17E019D62AF1998300AB4663 /* MessageAttachment.swift */,
 				17E019D92AF199A600AB4663 /* MessageReply.swift */,
@@ -595,6 +621,7 @@
 			buildRules = (
 			);
 			dependencies = (
+				17B3757C2C41FE0E00FC7E6E /* PBXTargetDependency */,
 			);
 			name = NotificationService;
 			productName = NotificationService;
@@ -652,7 +679,6 @@
 				03268FCCFC7D4D1F8B6E9F6F /* Sentry */,
 				1746CF592B83C6750051FD47 /* CodableWrapper */,
 				174DA9E72B9E4D70001BC330 /* Parsing */,
-				1757A26C2BB7444D007EE8B9 /* LiveKit */,
 			);
 			productName = Revolt;
 			productReference = D49B704F29C4D3FE009494A5 /* Revolt.app */;
@@ -763,7 +789,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "export SENTRY_ORG=revolt\nexport SENTRY_PROJECT=apple-ios\nexport SENTRY_URL=https://sentry.revolt.chat/\n\nsentry-cli debug-files upload --include-sources \"$DWARF_DSYM_FOLDER_PATH\" --force-foreground\n\n";
+			shellScript = "export SENTRY_ORG=revolt\nexport SENTRY_PROJECT=apple-ios\nexport SENTRY_URL=https://sentry.revolt.chat/\n\n# sentry-cli debug-files upload --include-sources \"$DWARF_DSYM_FOLDER_PATH\" --force-foreground\n\n";
 		};
 /* End PBXShellScriptBuildPhase section */
 
@@ -785,6 +811,7 @@
 				1773C0312C07DC99007B8867 /* Emoji.swift in Sources */,
 				1773C0322C07DC99007B8867 /* Invite.swift in Sources */,
 				1773C0332C07DC99007B8867 /* Types.swift in Sources */,
+				1788F9702C3CA3A600A385A8 /* Embed.swift in Sources */,
 				1773C0342C07DC99007B8867 /* Member.swift in Sources */,
 				1773C0352C07DC99007B8867 /* Message.swift in Sources */,
 				1773C0362C07DC99007B8867 /* Permissions.swift in Sources */,
@@ -860,6 +887,7 @@
 				170C23CE2C224B460057E399 /* UserSettingsStore.swift in Sources */,
 				1777DD892ADC3C31003D6C72 /* Markdown.swift in Sources */,
 				17E019D52AF1937400AB4663 /* Theme.swift in Sources */,
+				1788F96E2C3CA19800A385A8 /* MessageEmbed.swift in Sources */,
 				175E01E02ADAB554004F6431 /* Avatar.swift in Sources */,
 				173190032B754D4700B6DA49 /* EmojiPickerContent.swift in Sources */,
 				17B7128D2B03E9D700CFF61C /* FriendsList.swift in Sources */,
@@ -896,6 +924,11 @@
 			target = 17DE7DB12BFAEC3F00C99188 /* Types */;
 			targetProxy = 1773C0292C07DC32007B8867 /* PBXContainerItemProxy */;
 		};
+		17B3757C2C41FE0E00FC7E6E /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 17DE7DB12BFAEC3F00C99188 /* Types */;
+			targetProxy = 17B3757B2C41FE0E00FC7E6E /* PBXContainerItemProxy */;
+		};
 		17F3EFAD2B13D042002C34B5 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			platformFilters = (
@@ -926,6 +959,7 @@
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = "";
 				"DEVELOPMENT_TEAM[sdk=iphoneos*]" = T23HBWQ54Y;
+				"DEVELOPMENT_TEAM[sdk=macosx*]" = T23HBWQ54Y;
 				ENABLE_USER_SCRIPT_SANDBOXING = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu17;
 				GENERATE_INFOPLIST_FILE = YES;
@@ -944,6 +978,7 @@
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				"PROVISIONING_PROFILE_SPECIFIER[sdk=iphoneos*]" = "match Development chat.revolt.app.notificationd";
+				"PROVISIONING_PROFILE_SPECIFIER[sdk=macosx*]" = "match Development chat.revolt.app.notificationd ma";
 				SKIP_INSTALL = NO;
 				SUPPORTS_MACCATALYST = YES;
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "DEBUG $(inherited)";
@@ -964,6 +999,7 @@
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = "";
 				"DEVELOPMENT_TEAM[sdk=iphoneos*]" = T23HBWQ54Y;
+				"DEVELOPMENT_TEAM[sdk=macosx*]" = T23HBWQ54Y;
 				ENABLE_USER_SCRIPT_SANDBOXING = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu17;
 				GENERATE_INFOPLIST_FILE = YES;
@@ -982,6 +1018,7 @@
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				"PROVISIONING_PROFILE_SPECIFIER[sdk=iphoneos*]" = "match Development chat.revolt.app.notificationd";
+				"PROVISIONING_PROFILE_SPECIFIER[sdk=macosx*]" = "match Development chat.revolt.app.notificationd ma";
 				SKIP_INSTALL = NO;
 				SUPPORTS_MACCATALYST = YES;
 				SWIFT_EMIT_LOC_STRINGS = YES;
@@ -998,15 +1035,16 @@
 				CODE_SIGN_IDENTITY = "Apple Development";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Mac Developer";
-				CODE_SIGN_STYLE = Automatic;
+				CODE_SIGN_STYLE = Manual;
 				CURRENT_PROJECT_VERSION = 1;
 				DEFINES_MODULE = YES;
-				DEVELOPMENT_TEAM = "";
+				DEVELOPMENT_TEAM = T23HBWQ54Y;
+				"DEVELOPMENT_TEAM[sdk=iphoneos*]" = T23HBWQ54Y;
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
 				ENABLE_MODULE_VERIFIER = YES;
-				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = NO;
 				GCC_C_LANGUAGE_STANDARD = gnu17;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_KEY_NSHumanReadableCopyright = "";
@@ -1023,7 +1061,8 @@
 				MODULE_VERIFIER_SUPPORTED_LANGUAGE_STANDARDS = "gnu17 gnu++20";
 				PRODUCT_BUNDLE_IDENTIFIER = chat.revolt.Types;
 				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
-				SKIP_INSTALL = YES;
+				PROVISIONING_PROFILE_SPECIFIER = "";
+				SKIP_INSTALL = NO;
 				SUPPORTED_PLATFORMS = "$(AVAILABLE_PLATFORMS)";
 				SUPPORTS_MACCATALYST = YES;
 				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = YES;
@@ -1047,15 +1086,16 @@
 				CODE_SIGN_IDENTITY = "Apple Development";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Mac Developer";
-				CODE_SIGN_STYLE = Automatic;
+				CODE_SIGN_STYLE = Manual;
 				CURRENT_PROJECT_VERSION = 1;
 				DEFINES_MODULE = YES;
-				DEVELOPMENT_TEAM = "";
+				DEVELOPMENT_TEAM = T23HBWQ54Y;
+				"DEVELOPMENT_TEAM[sdk=iphoneos*]" = T23HBWQ54Y;
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
 				ENABLE_MODULE_VERIFIER = YES;
-				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = NO;
 				GCC_C_LANGUAGE_STANDARD = gnu17;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_KEY_NSHumanReadableCopyright = "";
@@ -1072,7 +1112,8 @@
 				MODULE_VERIFIER_SUPPORTED_LANGUAGE_STANDARDS = "gnu17 gnu++20";
 				PRODUCT_BUNDLE_IDENTIFIER = chat.revolt.Types;
 				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
-				SKIP_INSTALL = YES;
+				PROVISIONING_PROFILE_SPECIFIER = "";
+				SKIP_INSTALL = NO;
 				SUPPORTED_PLATFORMS = "$(AVAILABLE_PLATFORMS)";
 				SUPPORTS_MACCATALYST = YES;
 				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = YES;
@@ -1199,6 +1240,7 @@
 				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = iphoneos;
 				SWIFT_COMPILATION_MODE = wholemodule;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
@@ -1427,7 +1469,7 @@
 			repositoryURL = "https://github.com/getsentry/sentry-cocoa/";
 			requirement = {
 				kind = upToNextMajorVersion;
-				minimumVersion = 8.26.0;
+				minimumVersion = 8.30.0;
 			};
 		};
 		DA99EC5129D6148200419FDA /* XCRemoteSwiftPackageReference "Alamofire" */ = {
@@ -1476,11 +1518,6 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 174DA9E62B9E4D70001BC330 /* XCRemoteSwiftPackageReference "swift-parsing" */;
 			productName = Parsing;
-		};
-		1757A26C2BB7444D007EE8B9 /* LiveKit */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 1757A26B2BB7444D007EE8B9 /* XCRemoteSwiftPackageReference "client-sdk-swift" */;
-			productName = LiveKit;
 		};
 		175997182B2FB90700C39CF6 /* Flow */ = {
 			isa = XCSwiftPackageProductDependency;

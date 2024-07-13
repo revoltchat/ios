@@ -271,12 +271,14 @@ func parseEmojisOnly(text: String) -> [String]? {
 //}
 
 struct Contents: View {
+    @Environment(\.font) var font: Font?
     @EnvironmentObject var viewState: ViewState
     @Binding var text: String
-    
+        
     func buildContent() -> AttributedString {
-        let font = UIFont.systemFont(ofSize: 15.0, weight: .regular)
-                
+        let font = self.font ?? Font.body
+        let boldFont = font.bold()
+
         let parts = parseMentions(text: text)
         var str = AttributedString()
         
@@ -284,17 +286,16 @@ struct Contents: View {
             switch part {
                 case .user_mention(let string):
                     var mention: AttributedString = AttributedString()
-                    let boldFont = UIFont.boldSystemFont(ofSize: UIFont.preferredFont(forTextStyle: .body).pointSize)
                     
                     if let user = viewState.users[string] {
                         let member = viewState.currentServer.id.flatMap { viewState.members[$0] }.flatMap { $0[string] }
                         
                         let name = member?.nickname ?? user.display_name ?? user.username
                                                                         
-                        mention.append(AttributedString("@\(name)", attributes: AttributeContainer([.foregroundColor: UIColor(viewState.theme.accent.color), .font: boldFont, .link: "revoltchat://users?user=\(string)"])
+                        mention.append(AttributedString("@\(name)", attributes: AttributeContainer([.foregroundColor: viewState.theme.accent.color, .font: boldFont, .link: "revoltchat://users?user=\(string)"])
 ))
                     } else {
-                        let container = AttributeContainer([.foregroundColor: UIColor(viewState.theme.accent.color), .font: boldFont])
+                        let container = AttributeContainer([.foregroundColor: viewState.theme.accent.color, .font: boldFont])
                         
                         mention.append(AttributedString("@Unknown", attributes: container))
                     }
@@ -303,15 +304,14 @@ struct Contents: View {
                     
                 case .channel_mention(let string):
                     let mention: AttributedString
-                    let boldFont = UIFont.boldSystemFont(ofSize: UIFont.preferredFont(forTextStyle: .body).pointSize)
                     
                     if let channel = viewState.channels[string] {
                         let name = channel.getName(viewState)
                         
-                        let container = AttributeContainer([.foregroundColor: UIColor(viewState.theme.accent.color), .font: boldFont, .link: "revoltchat://channels?channel=\(string)"])
+                        let container = AttributeContainer([.foregroundColor: viewState.theme.accent.color, .font: boldFont, .link: "revoltchat://channels?channel=\(string)"])
                         mention = AttributedString("#\(name)", attributes: container)
                     } else {
-                        let container = AttributeContainer([.foregroundColor: UIColor(viewState.theme.accent.color), .font: boldFont])
+                        let container = AttributeContainer([.foregroundColor: viewState.theme.accent.color, .font: boldFont])
                         
                         mention = AttributedString("#Unknown", attributes: container)
                     }
@@ -320,7 +320,7 @@ struct Contents: View {
                     
                 case .text(let string):
                     var substring = try! AttributedString(markdown: string, options: .init(interpretedSyntax: .inlineOnlyPreservingWhitespace))
-                    substring.setAttributes(AttributeContainer([.font: font, .foregroundColor: UIColor(viewState.theme.foreground.color)]))
+                    substring.setAttributes(AttributeContainer([.font: font, .foregroundColor: viewState.theme.foreground.color]))
                     
                     str.append(substring)
                     

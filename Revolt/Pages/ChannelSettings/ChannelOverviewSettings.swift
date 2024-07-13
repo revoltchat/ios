@@ -84,7 +84,12 @@ struct ChannelOverviewSettings: View {
             }
         }
         .toolbar {
-            ToolbarItem(placement: .topBarTrailing) {
+#if os(iOS)
+            let placement = ToolbarItemPlacement.topBarTrailing
+#elseif os(macOS)
+            let placement = ToolbarItemPlacement.automatic
+#endif
+            ToolbarItem(placement: placement) {
                 if showSaveButton {
                     Button {
                         

@@ -116,7 +116,7 @@ extension SystemMessageContent: Decodable {
 }
 
 public struct Message: Identifiable, Decodable, Equatable {
-    public init(id: String, content: String? = nil, author: String, channel: String, system: SystemMessageContent? = nil, attachments: [File]? = nil, mentions: [String]? = nil, replies: [String]? = nil, edited: String? = nil, masquerade: Masquerade? = nil, interactions: Interactions? = nil, reactions: [String : [String]]? = nil, user: User? = nil, member: Member? = nil) {
+    public init(id: String, content: String? = nil, author: String, channel: String, system: SystemMessageContent? = nil, attachments: [File]? = nil, mentions: [String]? = nil, replies: [String]? = nil, edited: String? = nil, masquerade: Masquerade? = nil, interactions: Interactions? = nil, reactions: [String : [String]]? = nil, user: User? = nil, member: Member? = nil, embeds: [Embed]? = nil) {
         self.id = id
         self.content = content
         self.author = author
@@ -131,6 +131,7 @@ public struct Message: Identifiable, Decodable, Equatable {
         self.reactions = reactions
         self.user = user
         self.member = member
+        self.embeds = embeds
     }
     
     public var id: String
@@ -148,9 +149,10 @@ public struct Message: Identifiable, Decodable, Equatable {
     public var reactions: [String: [String]]?
     public var user: User?
     public var member: Member?
+    public var embeds: [Embed]?
     
     enum CodingKeys: String, CodingKey {
         case id = "_id"
-        case content, author, channel, system, attachments, mentions, replies, edited, masquerade, interactions, reactions, user, member
+        case content, author, channel, system, attachments, mentions, replies, edited, masquerade, interactions, reactions, user, member, embeds
     }
 }

@@ -12,7 +12,7 @@ import Types
 
 #if os(macOS)
 
-struct WebView: NSViewRepresentable {
+fileprivate struct WebView: NSViewRepresentable {
     @EnvironmentObject var viewState: ViewState
     
     let url: URL
@@ -32,7 +32,7 @@ struct WebView: NSViewRepresentable {
 }
 
 #else
-struct WebView: UIViewRepresentable {
+fileprivate struct WebView: UIViewRepresentable {
     @EnvironmentObject var viewState: ViewState
 
     let url: URL

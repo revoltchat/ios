@@ -82,6 +82,12 @@ struct MessageContentsView: View {
                 Contents(text: content)
                     .font(.body)
             }
+            
+            if let embeds = Binding(viewModel.$message.embeds) {
+                ForEach(embeds, id: \.wrappedValue) { embed in
+                    MessageEmbed(embed: embed)
+                }
+            }
 
             VStack(alignment: .leading) {
                 ForEach(viewModel.message.attachments ?? []) { attachment in

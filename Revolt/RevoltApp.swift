@@ -5,7 +5,12 @@ import Types
 
 @main
 struct RevoltApp: App {
+    #if os(iOS)
     @UIApplicationDelegateAdaptor(AppDelegate.self) var appDelegate
+    #elseif os(macOS)
+    @NSApplicationDelegateAdaptor(AppDelegate.self) var appDelegate
+    #endif
+    
     @Environment(\.locale) var systemLocale: Locale
     @StateObject var state = ViewState.shared ?? ViewState()
 
@@ -15,7 +20,7 @@ struct RevoltApp: App {
             options.tracesSampleRate = 1.0
             options.profilesSampleRate = 1.0
             options.enableTracing = true
-            options.attachViewHierarchy = true
+            //options.attachViewHierarchy = true
             options.enableAppLaunchProfiling = true
             options.enableMetrics = true
         }
@@ -124,11 +129,11 @@ struct InnerApp: View {
                 VStack {
                     Text("Connecting...")
                     #if DEBUG
-                    Button(action: {
+                    Button {
                         viewState.destroyCache()
                         viewState.sessionToken = nil
                         viewState.state = .signedOut
-                    }) {
+                    } label: {
                         Text("Developer: Nuke everything and force welcome screen")
                     }
                     #endif
@@ -200,3 +205,11 @@ func copyText(text: String) {
     UIPasteboard.general.string = text
 #endif
     }
+
+func copyUrl(url: URL) {
+#if os(macOS)
+    NSPasteboard.general.setString(url.absoluteString, forType: .URL)
+#else
+    UIPasteboard.general.url = url
+#endif
+}

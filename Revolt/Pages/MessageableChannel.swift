@@ -285,6 +285,13 @@ struct MessageableChannelView: View {
                                     //                                    }
                                 }
                                 
+#if os(iOS)
+                                let intersects = UIScreen.main.bounds.intersects(geoProxy.frame(in: .global))
+#elseif os(macOS)
+                                let intersects = NSIntersectsRect(NSScreen.main!.frame, geoProxy.frame(in: .global))
+#endif
+
+                                
                                 Color.clear
                                     .id("bottom")
                                     .listRowInsets(EdgeInsets(top: 0, leading: 0, bottom: 0, trailing: 0))
@@ -292,7 +299,7 @@ struct MessageableChannelView: View {
                                     .frame(height: 0)
                                     .preference(
                                         key: VisibleKey.self,
-                                        value: UIScreen.main.bounds.intersects(geoProxy.frame(in: .global))
+                                        value: intersects
                                     )
                                     .onPreferenceChange(VisibleKey.self) { isVisible in
                                         atBottom = isVisible

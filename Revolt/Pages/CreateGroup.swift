@@ -75,7 +75,9 @@ struct CreateGroup: View {
                 }
             }
             .scrollContentBackground(.hidden)
+            #if os(iOS)
             .environment(\.editMode, .constant(EditMode.active))
+            #endif
         }
         .background(viewState.theme.background.color)
         .toolbarBackground(viewState.theme.topBar.color, for: .automatic)
@@ -89,7 +91,12 @@ struct CreateGroup: View {
             }
         }
         .toolbar {
-            ToolbarItem(placement: .topBarTrailing) {
+#if os(iOS)
+            let placement = ToolbarItemPlacement.topBarTrailing
+#elseif os(macOS)
+            let placement = ToolbarItemPlacement.automatic
+#endif
+            ToolbarItem(placement: placement) {
                 Button {
                     Task {
                         let res = await viewState.http.createGroup(name: "New Group", users: selectedUsers.map(\.id))

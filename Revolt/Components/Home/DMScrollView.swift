@@ -88,7 +88,9 @@ struct DMScrollView: View {
         .frame(maxWidth: .infinity)
         .scrollContentBackground(.hidden)
         .background(viewState.theme.background2.color)
+        #if os(iOS)
         .listStyle(.grouped)
+        #endif
     }
 }
 

@@ -7,7 +7,6 @@
 
 import Foundation
 import SwiftUI
-import UIKit
 import Types
 
 struct ShareInviteSheet: View {
@@ -48,7 +47,7 @@ struct ShareInviteSheet: View {
                 }
                 
                 Button {
-                    UIPasteboard.general.url = url
+                    copyUrl(url: url)
                 } label: {
                     VStack {
                         Image(systemName: "link.circle")

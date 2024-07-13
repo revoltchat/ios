@@ -19,8 +19,11 @@ func generateTOTPUrl(secret: String, email: String) -> String {
 /// Takes a callback that receives either the totp code or the recovery code (in that argument order).
 /// Wont be called if neither are found.
 func maybeGetPasteboardValue(_ callback: (String?, String?) -> ()) {
+    #if os(iOS)
     let pasteboardItem = UIPasteboard.general.string
-    
+    #elseif os(macOS)
+    let pasteboardItem = NSPasteboard.general.string(forType: .string)
+    #endif
     if let pasteboardItem = pasteboardItem {
         let regex = /(?<totp>\d{6})|(?<recovery>[a-z0-9]{5}-[a-z0-9]{5})/
         if let match = try? regex.wholeMatch(in: pasteboardItem) {
@@ -137,7 +140,9 @@ fileprivate struct CreateMFATicketView: View {
                 TextField(String(localized: "Enter TOTP code", comment: "Authenticator prompt"), text: $fieldValue)
                     .textContentType(.oneTimeCode)
                     .offset(x: fieldShake ? 30 : 0)
+                #if os(iOS)
                     .keyboardType(UIKeyboardType.numberPad)
+                #endif
                     .onChange(of: fieldValue) { _, _ in
                         if fieldIsIncorrect {
                             withAnimation {
@@ -258,7 +263,7 @@ fileprivate struct AddTOTPSheet: View {
                 Text(secret!)
                     .selectionDisabled(false)
                     .onTapGesture {
-                        UIPasteboard.general.string = secret!
+                        copyText(text: secret!)
                     }
                 Spacer()
                     .frame(maxHeight: 10)
@@ -288,7 +293,9 @@ fileprivate struct AddTOTPSheet: View {
                     .onSubmit {
                         Task{ await finalize() }
                     }
+                #if os(iOS)
                     .keyboardType(.numberPad)
+                #endif
                     .onTapGesture {
                         maybeGetPasteboardValue(receivePasteboardCallback)
                     }
@@ -537,7 +544,6 @@ fileprivate struct PasswordUpdateSheet: View {
 
 struct UserSettings: View {
     @EnvironmentObject var viewState: ViewState
-    @State var store: UserSettingsStore
     
     // Everything here should be a sheet, no making navlinks!
     @State var presentAddTOTPSheet = false
@@ -547,15 +553,6 @@ struct UserSettings: View {
     @State var presentChangePasswordSheet = false
     
     @State var emailSubstitute = "loading..."
-    
-    init(viewState: ViewState) { // dirty trick because environment objects arent set until after init
-        self._store = State(initialValue: viewState.userSettingsStore.store)
-        self._emailSubstitute = State(initialValue: "Testing!")
-        
-        let raw = store.accountData?.email
-        guard let raw = raw else { return }
-        self._emailSubstitute = State(initialValue: substituteEmail(raw))
-    }
     
     func substituteEmail(_ email: String) -> String {
         let groups = try! /(?<addr>[^@]+)\@(?<url>[^.]+)\.(?<domain>.+)/.wholeMatch(in: email)
@@ -579,8 +576,8 @@ struct UserSettings: View {
                     HStack {
                         Text("Username")
                         Spacer()
-                        if store.user != nil {
-                            Text(verbatim: "\(store.user!.username)#\(store.user!.discriminator)")
+                        if viewState.userSettingsStore.store.user != nil {
+                            Text(verbatim: "\(viewState.userSettingsStore.store.user!.username)#\(viewState.userSettingsStore.store.user!.discriminator)")
                         } else {
                             Text("loading#0000", comment: "The username is still loading from the api")
                         }
@@ -593,8 +590,8 @@ struct UserSettings: View {
                         Text("Email")
                         Spacer()
                         Text(verbatim: emailSubstitute)
-                            .onChange(of: store.accountData?.email, { _, value in 
-                                let raw = store.accountData?.email
+                            .onChange(of: viewState.userSettingsStore.store.accountData?.email, { _, value in
+                                let raw = viewState.userSettingsStore.store.accountData?.email
                                 guard let raw = raw else { return }
                                 _ = substituteEmail(raw)
                             })
@@ -612,16 +609,16 @@ struct UserSettings: View {
             .listRowBackground(viewState.theme.background2)
             
             Section("Two-Factor Authentication") {
-                if store.accountData?.mfaStatus == nil {
+                if viewState.userSettingsStore.store.accountData?.mfaStatus == nil {
                     Text("Loading Data...", comment: "User setings notice - still fetching data")
                 } else {
-                    if !store.accountData!.mfaStatus.anyMFA { // MFA not enabled.
+                    if !viewState.userSettingsStore.store.accountData!.mfaStatus.anyMFA { // MFA not enabled.
                         Text("You have not enabled two-factor authentication!", comment: "User settings info notice") // idk thisll do for now
                     }
                     Button(action: {
                         print("generate codes")
                     }, label: {
-                        if !store.accountData!.mfaStatus.recovery_active {
+                        if !viewState.userSettingsStore.store.accountData!.mfaStatus.recovery_active {
                             Text("Generate Recovery Codes", comment: "User settings button")
                                 .foregroundStyle(viewState.theme.foreground)
                         } else {
@@ -629,7 +626,7 @@ struct UserSettings: View {
                                 .foregroundStyle(viewState.theme.foreground)
                         }
                     })
-                    if !store.accountData!.mfaStatus.totp_mfa {
+                    if !viewState.userSettingsStore.store.accountData!.mfaStatus.totp_mfa {
                         Button(action: {
                             presentAddTOTPSheet = true
                         }, label: {
@@ -674,6 +671,12 @@ struct UserSettings: View {
         .toolbarBackground(viewState.theme.topBar, for: .automatic)
         .refreshable {
             await viewState.userSettingsStore.fetchFromApi()
+        }
+        .onAppear {
+            let raw = viewState.userSettingsStore.store.accountData?.email
+            guard let raw = raw else { return }
+            emailSubstitute = substituteEmail(raw)
+
         }
         .sheet(isPresented: $presentAddTOTPSheet, onDismiss: {
             Task {

@@ -16,29 +16,41 @@ struct PageToolbar<C: View, T: View>: View {
     @ViewBuilder var trailing: () -> T
     
     var body: some View {
-        HStack {
-            Button {
-                withAnimation {
-                    showSidebar = true
+        ZStack {
+            HStack(alignment: .center) {
+                Button {
+                    withAnimation {
+                        showSidebar = true
+                    }
+                } label: {
+                    Image(systemName: "line.3.horizontal")
+                        .resizable()
+                        .frame(width: 24, height: 14)
+                        .foregroundStyle(viewState.theme.foreground2.color)
                 }
-            } label: {
-                Image(systemName: "line.3.horizontal")
-                    .resizable()
-                    .frame(width: 24, height: 14)
-                    .foregroundStyle(viewState.theme.foreground2.color)
+                
+                Spacer()
+                
+                trailing()
             }
             
-            Spacer()
-            
-            contents()
-            
-            Spacer()
-            
-            trailing()
+            HStack(alignment: .center) {
+                Spacer()
+                
+                contents()
+                
+                Spacer()
+            }
         }
         .padding(.horizontal, 12)
-        .padding(.vertical, 6)
+        .padding(.top, 4)
+        .padding(.bottom, 8)
         .background(viewState.theme.topBar.color)
+        .overlay(alignment: .bottom) {
+            Rectangle()
+                .frame(maxWidth: .infinity, maxHeight: 1)
+                .foregroundStyle(viewState.theme.background2)
+        }
     }
 }
 
