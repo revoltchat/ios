@@ -25,6 +25,7 @@
 		172F2D052C22ED8500948C00 /* CheckboxStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 172F2D042C22ED8100948C00 /* CheckboxStyle.swift */; };
 		173190032B754D4700B6DA49 /* EmojiPickerContent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 173190022B754D4700B6DA49 /* EmojiPickerContent.swift */; };
 		1739DB962B08E53B00D23DAD /* MessageBadge.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1739DB952B08E53B00D23DAD /* MessageBadge.swift */; };
+		173F16272C3C22580009FDF9 /* ServerInfoSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 173F16262C3C22540009FDF9 /* ServerInfoSheet.swift */; };
 		17429D972B4C91170036105A /* ChannelSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17429D962B4C91170036105A /* ChannelSettings.swift */; };
 		17429D992B4C931D0036105A /* ChannelOverviewSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17429D982B4C931D0036105A /* ChannelOverviewSettings.swift */; };
 		1746CF5A2B83C6750051FD47 /* CodableWrapper in Frameworks */ = {isa = PBXBuildFile; productRef = 1746CF592B83C6750051FD47 /* CodableWrapper */; };
@@ -178,6 +179,7 @@
 		172F2D042C22ED8100948C00 /* CheckboxStyle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CheckboxStyle.swift; sourceTree = "<group>"; };
 		173190022B754D4700B6DA49 /* EmojiPickerContent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmojiPickerContent.swift; sourceTree = "<group>"; };
 		1739DB952B08E53B00D23DAD /* MessageBadge.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageBadge.swift; sourceTree = "<group>"; };
+		173F16262C3C22540009FDF9 /* ServerInfoSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ServerInfoSheet.swift; sourceTree = "<group>"; };
 		17429D962B4C91170036105A /* ChannelSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChannelSettings.swift; sourceTree = "<group>"; };
 		17429D982B4C931D0036105A /* ChannelOverviewSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChannelOverviewSettings.swift; sourceTree = "<group>"; };
 		1748B2062B1FB88B00AA2D47 /* MessageReactions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageReactions.swift; sourceTree = "<group>"; };
@@ -415,6 +417,7 @@
 		17CE783D2B129E0A006C1D2C /* Home */ = {
 			isa = PBXGroup;
 			children = (
+				173F16262C3C22540009FDF9 /* ServerInfoSheet.swift */,
 				17CE783E2B129E28006C1D2C /* ServerScrollView.swift */,
 				17CE78402B12AA51006C1D2C /* ServerChannelScrollView.swift */,
 				17D5C9432B14DF500060C035 /* DMScrollView.swift */,
@@ -863,6 +866,7 @@
 				178E26BC2B1542820015CAC7 /* PageToolbar.swift in Sources */,
 				17BADE012B7019270021BB62 /* EmojiPicker.swift in Sources */,
 				171594C32B4B2A0D00D7C3C3 /* ServerOverviewSettings.swift in Sources */,
+				173F16272C3C22580009FDF9 /* ServerInfoSheet.swift in Sources */,
 				1718FB542AF8470400E9C511 /* ReportMessageSheetView.swift in Sources */,
 				17E019DA2AF199A600AB4663 /* MessageReply.swift in Sources */,
 				17D5C9442B14DF500060C035 /* DMScrollView.swift in Sources */,

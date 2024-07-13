@@ -77,6 +77,9 @@
     "Appearance" : {
 
     },
+    "Are you sure you want to leave?" : {
+
+    },
     "Auto" : {
 
     },
@@ -140,6 +143,9 @@
     "Copy Link" : {
 
     },
+    "Copy Server ID" : {
+
+    },
     "Create" : {
 
     },
@@ -192,6 +198,9 @@
 
     },
     "Edit" : {
+
+    },
+    "Edit Server Profile" : {
 
     },
     "Editing Message" : {
@@ -303,6 +312,12 @@
 
     },
     "Language" : {
+
+    },
+    "Leave" : {
+
+    },
+    "Leave Server" : {
 
     },
     "Let's fix that" : {
