@@ -7,7 +7,10 @@
 
 import SwiftUI
 import OSLog
+import Sentry
 import Alamofire // literally just for types
+import UniformTypeIdentifiers
+
 
 let log = Logger(subsystem: "app.revolt.chat", category: "UserSettingsViews")
 
@@ -36,7 +39,7 @@ func maybeGetPasteboardValue(_ callback: (String?, String?) -> ()) {
     }
 }
 
-// MARK: MFA stuff
+// MARK: - MFA stuff
 
 fileprivate struct CreateMFATicketView: View {
     @EnvironmentObject var viewState: ViewState
@@ -324,7 +327,9 @@ fileprivate struct RemoveTOTPSheet: View {
                 print(try await viewState.http.disableTOTP(mfaToken: ticket.token).get())
                 showSheet = false
             } catch {
-                log.debug("failed to disable totp")
+                let error = error as! RevoltError
+                SentrySDK.capture(error: error)
+                
                 withAnimation {
                     errorOccurred = true
                 }
@@ -339,13 +344,111 @@ fileprivate struct RemoveTOTPSheet: View {
                 Spacer()
                     .frame(maxHeight: 10)
                 Text("Something went wrong. Try again later?")
+                    .foregroundStyle(.red)
             }
         }
         .padding()
     }
 }
 
-// MARK: Account fields
+fileprivate struct GenerateRecoveryCodesSheet: View {
+    @EnvironmentObject var viewState: ViewState
+    @Binding var showSheet: Bool
+    @Binding var sheetIsNotDismissable: Bool
+    @State var errorOccurred = false
+    @State var codes: [String] = []
+    @State var copyButtonText = String(localized: "Copy to clipboard")
+    @State var isCopyDisabled = false
+    
+    func generateCodes(ticket: MFATicketResponse) {
+        Task {
+            do {
+                let _codes = try await viewState.http.generateRecoveryCodes(mfaToken: ticket.token).get()
+                
+                sheetIsNotDismissable = true
+                withAnimation {
+                    codes = _codes
+                }
+            } catch {
+                let error = error as! RevoltError
+                SentrySDK.capture(error: error)
+                
+                withAnimation {
+                    errorOccurred = true
+                }
+            }
+        }
+    }
+    
+    // known bug: the MFATicketview doesnt fully slide offscreen
+    var body: some View {
+        VStack {
+            if codes.isEmpty {
+                CreateMFATicketView(requestTicketType: .Password, doneCallback: generateCodes)
+                    .transition(.slideNext)
+            } else {
+                VStack {
+                    ForEach(0 ..< codes.count, id: \.self) { value in
+                        Text(codes[value])
+                            .font(.subheadline)
+                            .fontWeight(.heavy)
+                            .padding(5)
+                            .textSelection(.enabled)
+                    }
+                    Spacer()
+
+                    Button(action: {
+                        let content = codes.joined(separator: "\n")
+                        UIPasteboard.general.setValue(content, forPasteboardType: UTType.plainText.identifier)
+                        
+                        withAnimation {
+                            copyButtonText = String(localized: "Copied!")
+                            isCopyDisabled = true
+                        }
+                        
+                        DispatchQueue.main.asyncAfter(deadline: .now() + 4, execute: {
+                            withAnimation {
+                                copyButtonText = String(localized: "Copy to clipboard")
+                                isCopyDisabled = false
+                            }
+                        })
+                    }) {
+                        Text(copyButtonText)
+                    }
+                    .padding(.vertical, 10)
+                    .frame(width: 250.0)
+                    .foregroundStyle(viewState.theme.foreground)
+                    .background(viewState.theme.background2)
+                    .clipShape(.rect(cornerRadius: 50))
+                    .disabled(isCopyDisabled)
+                    
+                    Button(action: {
+                        showSheet = false
+                    }) {
+                        Text("Done")
+                    }
+                    .padding(.vertical, 10)
+                    .frame(width: 250.0)
+                    .foregroundStyle(viewState.theme.foreground)
+                    .background(viewState.theme.background2)
+                    .clipShape(.rect(cornerRadius: 50))
+                }
+                .backgroundStyle(viewState.theme.background2)
+                .padding()
+                .transition(.slideNext)
+            }
+            if errorOccurred {
+                Spacer()
+                    .frame(maxHeight: 10)
+                Text("Something went wrong. Try again later?")
+                    .foregroundStyle(.red)
+            }
+        }
+        .padding()
+    }
+}
+
+// MARK: - Account fields
 
 fileprivate struct UsernameUpdateSheet: View {
     @EnvironmentObject var viewState: ViewState
@@ -542,15 +645,212 @@ fileprivate struct PasswordUpdateSheet: View {
     }
 }
 
+fileprivate struct DisableAccountSheet: View {
+    @EnvironmentObject var viewState: ViewState
+    @Binding var showSheet: Bool
+    @State var ticket: MFATicketResponse? = nil
+    @State var errorOccurred = false
+    @State var presentConfirmationDialog = false
+    
+    func receiveTicket(ticket: MFATicketResponse) {
+        withAnimation {
+            self.ticket = ticket
+        }
+    }
+    
+    func deactivateAccount() {
+        Task {
+            do {
+                _ = try await viewState.http.disableAccount(mfaToken: ticket!.token).get()
+            } catch {
+                SentrySDK.capture(error: error)
+                
+                withAnimation {
+                    errorOccurred = true
+                }
+                return
+            }
+            
+            viewState.ws?.stop()
+            showSheet = false
+
+            withAnimation {
+                viewState.state = .signedOut
+            }
+        }
+    }
+    
+    var body: some View {
+        if ticket == nil {
+            CreateMFATicketView(requestTicketType: .Password, doneCallback: receiveTicket)
+                .transition(.slideNext)
+        } else {
+            VStack {
+                Text("Wait a minute!")
+                    .font(.title)
+                Text("Are you sure you want to disable your account?")
+                    .font(.title2)
+                    .multilineTextAlignment(.center)
+                Spacer()
+                    .frame(maxHeight: 10)
+                Text("This will prevent you from being able to sign in. You'll need to message support to get your account reactivated.")
+                    .font(.callout)
+                    .multilineTextAlignment(.center)
+                
+                Spacer()
+                
+                Button(role: .destructive, action: {
+                    presentConfirmationDialog = true
+                }) {
+                    Text("Do it")
+                }
+                .padding(.vertical, 10)
+                .frame(width: 250.0)
+                .foregroundStyle(viewState.theme.foreground)
+                .background(viewState.theme.background2)
+                .clipShape(.rect(cornerRadius: 50))
+                
+                Spacer()
+                    .frame(maxHeight: 10)
+                
+                Button(role: .cancel, action: {
+                    showSheet = false
+                }) {
+                    Text("Go back")
+                }
+                .padding(.vertical, 10)
+                .frame(width: 250.0)
+                .foregroundStyle(viewState.theme.foreground)
+                .background(viewState.theme.background2)
+                .clipShape(.rect(cornerRadius: 50))
+            }
+            .confirmationDialog("Confirm disabling your account", isPresented: $presentConfirmationDialog) {
+                Button("Confirm", role: .destructive) {
+                    deactivateAccount()
+                }
+            }
+            .transition(.slideNext)
+            
+            if errorOccurred {
+                Spacer()
+                    .frame(maxHeight: 10)
+                Text("Something went wrong. Try again later?")
+                    .foregroundStyle(.red)
+            }
+        }
+    }
+}
+
+
+fileprivate struct DeleteAccountSheet: View {
+    @EnvironmentObject var viewState: ViewState
+    @Binding var showSheet: Bool
+    @State var ticket: MFATicketResponse? = nil
+    @State var errorOccurred = false
+    @State var presentConfirmationDialog = false
+    
+    func receiveTicket(ticket: MFATicketResponse) {
+        withAnimation {
+            self.ticket = ticket
+        }
+    }
+    
+    func deleteAccount() {
+        Task {
+            do {
+                _ = try await viewState.http.deleteAccount(mfaToken: ticket!.token).get()
+            } catch {
+                SentrySDK.capture(error: error)
+                
+                withAnimation {
+                    errorOccurred = true
+                }
+                return
+            }
+            
+            viewState.ws?.stop()
+            showSheet = false
+
+            withAnimation {
+                viewState.state = .signedOut
+            }
+        }
+    }
+    
+    var body: some View {
+        if ticket == nil {
+            CreateMFATicketView(requestTicketType: .Password, doneCallback: receiveTicket)
+                .transition(.slideNext)
+        } else {
+            VStack {
+                Text("Stop right there!")
+                    .font(.title)
+                Text("Are you sure you want to delete your account?")
+                    .font(.title2)
+                    .multilineTextAlignment(.center)
+                Spacer()
+                    .frame(maxHeight: 10)
+                Text("Your account will be disabled, and may be reactivated by opening a support request. After a week, it will be permenantly deleted.")
+                    .font(.callout)
+                    .multilineTextAlignment(.center)
+                
+                Spacer()
+                
+                Button(role: .destructive, action: {
+                    presentConfirmationDialog = true
+                }) {
+                    Text("Do it")
+                }
+                .padding(.vertical, 10)
+                .frame(width: 250.0)
+                .foregroundStyle(viewState.theme.foreground)
+                .background(viewState.theme.background2)
+                .clipShape(.rect(cornerRadius: 50))
+                
+                Spacer()
+                    .frame(maxHeight: 10)
+                
+                Button(role: .cancel, action: {
+                    showSheet = false
+                }) {
+                    Text("Go back")
+                }
+                .padding(.vertical, 10)
+                .frame(width: 250.0)
+                .foregroundStyle(viewState.theme.foreground)
+                .background(viewState.theme.background2)
+                .clipShape(.rect(cornerRadius: 50))
+            }
+            .confirmationDialog("Confirm deleting your account", isPresented: $presentConfirmationDialog) {
+                Button("Confirm", role: .destructive) {
+                    deleteAccount()
+                }
+            }
+            .transition(.slideNext)
+            
+            if errorOccurred {
+                Spacer()
+                    .frame(maxHeight: 10)
+                Text("Something went wrong. Try again later?")
+                    .foregroundStyle(.red)
+            }
+        }
+    }
+}
+
 struct UserSettings: View {
     @EnvironmentObject var viewState: ViewState
     
     // Everything here should be a sheet, no making navlinks!
+    @State var presentGenerateCodesSheet = false
+    @State var GenerateCodeSheetIsNotDismissable = false
     @State var presentAddTOTPSheet = false
     @State var presentRemoveTOTPSheet = false
     @State var presentChangeUsernameSheet = false
     @State var presentChangeEmailSheet = false
     @State var presentChangePasswordSheet = false
+    @State var presentDisableAccountSheet = false
+    @State var presentDeleteAccountSheet = false
     
     @State var emailSubstitute = "loading..."
     
@@ -559,9 +859,9 @@ struct UserSettings: View {
         guard let groups = groups else { return "loading@loading.com" }
         
         // cursed
-        let m1 = String(repeating: "*", count: groups.output.addr.count)
-        let m2 = String(repeating: "*", count: groups.output.url.count)
-        let m3 = String(repeating: "*", count: groups.output.domain.count)
+        let m1 = String(repeating: "•", count: groups.output.addr.count)
+        let m2 = String(repeating: "•", count: groups.output.url.count)
+        let m3 = String(repeating: "•", count: groups.output.domain.count)
         let resp = "\(m1)@\(m2).\(m3)"
         emailSubstitute = resp
         return resp
@@ -614,9 +914,10 @@ struct UserSettings: View {
                 } else {
                     if !viewState.userSettingsStore.store.accountData!.mfaStatus.anyMFA { // MFA not enabled.
                         Text("You have not enabled two-factor authentication!", comment: "User settings info notice") // idk thisll do for now
+                            .font(.callout)
                     }
                     Button(action: {
-                        print("generate codes")
+                        presentGenerateCodesSheet = true
                     }, label: {
                         if !viewState.userSettingsStore.store.accountData!.mfaStatus.recovery_active {
                             Text("Generate Recovery Codes", comment: "User settings button")
@@ -645,14 +946,14 @@ struct UserSettings: View {
             
             Section("Account Management") {
                 Button(action: {
-                    print("disable")
+                    presentDisableAccountSheet = true
                 }, label: {
                     Text("Disable Account", comment: "User settings button")
                         .foregroundStyle(.red)
                 })
                 
                 Button(action: {
-                    print("delete")
+                    presentDeleteAccountSheet = true
                 }, label: {
                     Text("Delete Account", comment: "User settings button")
                         .foregroundStyle(.red)
@@ -674,9 +975,24 @@ struct UserSettings: View {
         }
         .onAppear {
             let raw = viewState.userSettingsStore.store.accountData?.email
-            guard let raw = raw else { return }
+            guard let raw = raw else {
+                Task {
+                    await viewState.userSettingsStore.fetchFromApi()
+                }
+                return
+            }
             emailSubstitute = substituteEmail(raw)
 
+        }
+        .sheet(isPresented: $presentGenerateCodesSheet, onDismiss: {
+            Task {
+                await viewState.userSettingsStore.fetchFromApi()
+            }
+        }) {
+            SettingsSheetContainer(showSheet: $presentGenerateCodesSheet) {
+                GenerateRecoveryCodesSheet(showSheet: $presentGenerateCodesSheet, sheetIsNotDismissable: $GenerateCodeSheetIsNotDismissable)
+            }
+            .interactiveDismissDisabled(GenerateCodeSheetIsNotDismissable)
         }
         .sheet(isPresented: $presentAddTOTPSheet, onDismiss: {
             Task {
@@ -708,6 +1024,16 @@ struct UserSettings: View {
         .sheet(isPresented: $presentChangePasswordSheet) {
             SettingsSheetContainer(showSheet: $presentChangePasswordSheet) {
                 PasswordUpdateSheet(showSheet: $presentChangePasswordSheet)
+            }
+        }
+        .sheet(isPresented: $presentDisableAccountSheet) {
+            SettingsSheetContainer(showSheet: $presentDisableAccountSheet) {
+                DisableAccountSheet(showSheet: $presentDisableAccountSheet)
+            }
+        }
+        .sheet(isPresented: $presentDeleteAccountSheet) {
+            SettingsSheetContainer(showSheet: $presentDeleteAccountSheet) {
+                DeleteAccountSheet(showSheet: $presentDeleteAccountSheet)
             }
         }
     }

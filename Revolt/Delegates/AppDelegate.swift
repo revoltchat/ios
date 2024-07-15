@@ -90,7 +90,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 #endif
 
 @MainActor
-extension AppDelegate: @preconcurrency UNUserNotificationCenterDelegate {
+extension AppDelegate: UNUserNotificationCenterDelegate {
     /*func userNotificationCenter(_ center: UNUserNotificationCenter, didReceive response: UNNotificationResponse) async {
         let state = ViewState.shared ?? ViewState()
 

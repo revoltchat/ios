@@ -75,8 +75,10 @@ struct ServerScrollView: View {
                 Button(action: {
                     viewState.currentServer = .dms
                 }) {
-                    Avatar(user: viewState.currentUser!, width: buttonSize, height: buttonSize, withPresence: true)
-                        .frame(width: buttonSize, height: buttonSize)
+                    if viewState.currentUser != nil {
+                        Avatar(user: viewState.currentUser!, width: buttonSize, height: buttonSize, withPresence: true)
+                            .frame(width: buttonSize, height: buttonSize)
+                    }
                 }
                 
                 Divider()

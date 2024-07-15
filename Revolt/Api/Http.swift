@@ -50,7 +50,7 @@ struct HTTPClient {
             method: method,
             parameters: parameters,
             encoder: encoder,
-            headers: token.map({ HTTPHeaders(dictionaryLiteral: ("x-session-token", $0)) })
+            headers: headers
         )
 
         let response = await req.serializingString()
@@ -295,8 +295,12 @@ struct HTTPClient {
     func submitMFATicket(recoveryCode: String) async -> Result<MFATicketResponse, RevoltError> {
         await req(method: .put, route: "/auth/mfa/ticket", parameters: ["recovery_code": recoveryCode])
     }
-
-
+    
+    func generateRecoveryCodes(mfaToken: String) async -> Result<[String], RevoltError> {
+        let headers = HTTPHeaders(dictionaryLiteral: ("X-Mfa-Ticket", mfaToken))
+        return await req(method: .patch, route: "/auth/mfa/recovery", headers: headers)
+    }
+    
     func getTOTPSecret(mfaToken: String) async -> Result<TOTPSecretResponse, RevoltError> {
         let headers = HTTPHeaders(dictionaryLiteral: ("X-Mfa-Ticket", mfaToken))
         return await req(method: .post, route: "/auth/mfa/totp", headers: headers)
@@ -316,11 +320,21 @@ struct HTTPClient {
     func updateUsername(newName: String, password: String) async -> Result<User, RevoltError> {
         await req(method: .patch, route: "/users/@me/username", parameters: ["username": newName, "password": password])
     }
-
+    
     func updatePassword(newPassword: String, oldPassword: String) async -> Result<EmptyResponse, RevoltError> {
         await req(method: .patch, route: "/auth/account/change/password", parameters: ["password": newPassword, "current_password": oldPassword])
     }
-
+    
+    func disableAccount(mfaToken: String) async -> Result<EmptyResponse, RevoltError> {
+        let headers = HTTPHeaders(dictionaryLiteral: ("X-Mfa-Ticket", mfaToken))
+        return await req(method: .post, route: "/auth/account/disable", headers: headers)
+    }
+    
+    func deleteAccount(mfaToken: String) async -> Result<EmptyResponse, RevoltError> {
+        let headers = HTTPHeaders(dictionaryLiteral: ("X-Mfa-Ticket", mfaToken))
+        return await req(method: .post, route: "/auth/account/delete", headers: headers)
+    }
+    
     func editMessage(channel: String, message: String, edits: MessageEdit) async -> Result<Message, RevoltError> {
         await req(method: .patch, route: "/channels/\(channel)/messages/\(message)", parameters: edits)
     }

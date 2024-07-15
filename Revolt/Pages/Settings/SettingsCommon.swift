@@ -46,3 +46,29 @@ struct SettingsSheetContainer<Content: View>: View {
         }
     }
 }
+
+struct MaybeDismissableSettingsSheetContainer<Content: View>: View {
+    @EnvironmentObject var viewState: ViewState
+    
+    @Binding var showSheet: Bool
+    @Binding var sheetDismissDisabled: Bool
+    @ViewBuilder var sheet: () -> Content
+    
+    var body: some View {
+        NavigationView {
+            sheet()
+                .padding()
+                .backgroundStyle(viewState.theme.background)
+                .interactiveDismissDisabled(sheetDismissDisabled)
+                .toolbar {
+                    ToolbarItem(placement: .cancellationAction) {
+                        Button {
+                            showSheet = false
+                        } label: {
+                            Text("Cancel")
+                        }
+                    }
+                }
+        }
+    }
+}

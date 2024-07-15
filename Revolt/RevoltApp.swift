@@ -83,6 +83,7 @@ struct RevoltApp: App {
 struct ApplicationSwitcher: View {
     @Environment(\.colorScheme) var colorScheme
     @EnvironmentObject var viewState: ViewState
+    @State var wasSignedOut = false
 
     var body: some View {
         if viewState.state != .signedOut && !viewState.isOnboarding {
@@ -105,12 +106,15 @@ struct ApplicationSwitcher: View {
                     }
                 }
         } else {
-            Welcome()
-                .transition(.slide)
+            Welcome(wasSignedOut: $wasSignedOut)
+                .transition(.slideNext)
                 .onAppear {
                     if viewState.state == .signedOut && viewState.sessionToken != nil { // signging out
                         viewState.sessionToken = nil
                         viewState.destroyCache()
+                        withAnimation {
+                            wasSignedOut = true
+                        }
                     }
                 }
         }

@@ -24,16 +24,16 @@ struct Settings: View {
     var body: some View {
         List {
             Section("User Settings") {
-                NavigationLink(destination: { UserSettings(viewState: viewState) }) {
+                NavigationLink(destination: { UserSettings() }) {
                     Image(systemName: "person.fill")
                     Text("My Account")
                 }
-                NavigationLink(destination: ProfileSettings()) {
+                NavigationLink(destination: { ProfileSettings() }) {
                     Image(systemName: "person.text.rectangle.fill")
                     Text("Profile")
                 }
                 
-                NavigationLink(destination: SessionsSettings()) {
+                NavigationLink(destination: { SessionsSettings() }) {
                     Image(systemName: "checkmark.shield.fill")
                     Text("Sessions")
                 }
@@ -41,7 +41,7 @@ struct Settings: View {
             .listRowBackground(viewState.theme.background2)
 
             Section("Client Settings") {
-                NavigationLink(destination: AppearanceSettings()) {
+                NavigationLink(destination: { AppearanceSettings() }) {
                     Image(systemName: "paintpalette.fill")
                     Text("Appearance")
                 }
@@ -50,7 +50,7 @@ struct Settings: View {
                     Image(systemName: "bell.fill")
                     Text("Notifications")
                 }
-                NavigationLink(destination: LanguageSettings()) {
+                NavigationLink(destination: { LanguageSettings() }) {
                     Image(systemName: "globe")
                     Text("Language")
                 }

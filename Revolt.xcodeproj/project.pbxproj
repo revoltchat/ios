@@ -35,7 +35,6 @@
 		1750EF6E2B0585B300DD3EB3 /* ResendEmail.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1750EF6D2B0585B300DD3EB3 /* ResendEmail.swift */; };
 		175465CD2C42147B0076B393 /* NotificationService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 175465CC2C42147B0076B393 /* NotificationService.swift */; };
 		175465D12C42147B0076B393 /* NotificationService.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = 175465CA2C42147B0076B393 /* NotificationService.appex */; platformFilters = (ios, maccatalyst, ); settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
-		1757A26D2BB7444D007EE8B9 /* LiveKit in Frameworks */ = {isa = PBXBuildFile; productRef = 1757A26C2BB7444D007EE8B9 /* LiveKit */; };
 		175997192B2FB90700C39CF6 /* Flow in Frameworks */ = {isa = PBXBuildFile; productRef = 175997182B2FB90700C39CF6 /* Flow */; };
 		1759C39A2B291A75006E6BBE /* MessageContentsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1759C3992B291A75006E6BBE /* MessageContentsView.swift */; };
 		1759C39C2B291E2F006E6BBE /* SystemMessageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1759C39B2B291E2F006E6BBE /* SystemMessageView.swift */; };
@@ -73,8 +72,8 @@
 		178BB11B2B02FCDD001143A4 /* Responses.swift in Sources */ = {isa = PBXBuildFile; fileRef = 178BB11A2B02FCDD001143A4 /* Responses.swift */; };
 		178E26BC2B1542820015CAC7 /* PageToolbar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 178E26BB2B1542820015CAC7 /* PageToolbar.swift */; };
 		17966B652AE0842A00BAEC58 /* ChannelIcon.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17966B642AE0842A00BAEC58 /* ChannelIcon.swift */; };
+		17A589FA2C44781F00B9D85A /* AnyTransition.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17A589F92C44781F00B9D85A /* AnyTransition.swift */; };
 		17B375812C41FEC300FC7E6E /* Types.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 17DE7DB22BFAEC3F00C99188 /* Types.framework */; };
-		17B375822C41FEC300FC7E6E /* Types.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 17DE7DB22BFAEC3F00C99188 /* Types.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		17B7128D2B03E9D700CFF61C /* FriendsList.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17B7128C2B03E9D700CFF61C /* FriendsList.swift */; };
 		17BADE012B7019270021BB62 /* EmojiPicker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17BADE002B7019270021BB62 /* EmojiPicker.swift */; };
 		17BC476B2B9CB51200A593DA /* ShareInviteSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17BC476A2B9CB51200A593DA /* ShareInviteSheet.swift */; };
@@ -171,17 +170,6 @@
 			name = "Embed Frameworks";
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		17B375832C41FEC300FC7E6E /* Embed Frameworks */ = {
-			isa = PBXCopyFilesBuildPhase;
-			buildActionMask = 12;
-			dstPath = "";
-			dstSubfolderSpec = 10;
-			files = (
-				17B375822C41FEC300FC7E6E /* Types.framework in Embed Frameworks */,
-			);
-			name = "Embed Frameworks";
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
@@ -231,6 +219,7 @@
 		178BB11A2B02FCDD001143A4 /* Responses.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Responses.swift; sourceTree = "<group>"; };
 		178E26BB2B1542820015CAC7 /* PageToolbar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PageToolbar.swift; sourceTree = "<group>"; };
 		17966B642AE0842A00BAEC58 /* ChannelIcon.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChannelIcon.swift; sourceTree = "<group>"; };
+		17A589F92C44781F00B9D85A /* AnyTransition.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnyTransition.swift; sourceTree = "<group>"; };
 		17B1A0462BFC471C005D4664 /* Types.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Types.swift; sourceTree = "<group>"; };
 		17B7128C2B03E9D700CFF61C /* FriendsList.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FriendsList.swift; sourceTree = "<group>"; };
 		17BADE002B7019270021BB62 /* EmojiPicker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmojiPicker.swift; sourceTree = "<group>"; };
@@ -328,6 +317,7 @@
 				172F2D002C22ED4A00948C00 /* IteratorProtocol.swift */,
 				172F2CFE2C22ED3600948C00 /* Bundle.swift */,
 				170C23D72C224BA40057E399 /* View.swift */,
+				17A589F92C44781F00B9D85A /* AnyTransition.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -832,6 +822,7 @@
 				170C23D52C224B6D0057E399 /* SettingsCommon.swift in Sources */,
 				170C23D62C224B6D0057E399 /* UserSettings.swift in Sources */,
 				178BB11B2B02FCDD001143A4 /* Responses.swift in Sources */,
+				17A589FA2C44781F00B9D85A /* AnyTransition.swift in Sources */,
 				17BF54CD2B1785E200178866 /* HomeWelcome.swift in Sources */,
 				17F502542B9BFB1000A3022D /* AddFriend.swift in Sources */,
 				17C9A3502B0580D10043A387 /* Welcome.swift in Sources */,
