@@ -72,3 +72,58 @@ struct MaybeDismissableSettingsSheetContainer<Content: View>: View {
         }
     }
 }
+
+
+struct CheckboxListItem: View {
+    @EnvironmentObject var viewState: ViewState
+
+    @State var title: String
+    @Binding var isOn: Bool
+    var willChange: ( (Bool) -> (Bool) )?
+    var onChange: ( (Bool) -> Void )?
+    
+    init(title: String, isOn: Bool, onChange: ((Bool) -> Void)? = nil, willChange: ((Bool) -> Bool)? = nil) {
+        self._title = State(initialValue: title)
+        self._isOn = .constant(isOn)
+        self.onChange = onChange
+        self.willChange = willChange
+    }
+    
+    init(title: String, isOn: Binding<Bool>, onChange: ((Bool) -> Void)? = nil, willChange: ((Bool) -> Bool)? = nil) {
+        self._title = State(initialValue: title)
+        self._isOn = isOn
+        self.onChange = onChange
+        self.willChange = willChange
+    }
+    
+    private func prepareChange() {
+        if willChange != nil {
+            if !willChange!(isOn) {
+                isOn = !isOn
+                return
+            }
+        }
+        
+        if onChange != nil {
+            onChange!(isOn)
+        }
+    }
+    
+    var body: some View {
+        HStack {
+            Text(title)
+                .foregroundStyle(viewState.theme.foreground)
+            Spacer()
+            Toggle(isOn: $isOn) {}
+                .toggleStyle(.switch)
+        }
+        .onTapGesture {
+            isOn = !isOn
+        }
+        .onChange(of: isOn) {
+            prepareChange()
+        }
+        
+        .backgroundStyle(viewState.theme.background2)
+    }
+}

@@ -342,4 +342,8 @@ struct HTTPClient {
     func uploadNotificationToken(token: String) async -> Result<EmptyResponse, RevoltError> {
         await req(method: .post, route: "/push/subscribe", parameters: ["endpoint": "apn", "p256dh": "", "auth": token])
     }
+    
+    func revokeNotificationToken() async -> Result<EmptyResponse, RevoltError> {
+        await req(method: .post, route: "/push/unsubscribe")
+    }
 }

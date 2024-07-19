@@ -13,6 +13,9 @@ import Types
 
 let logger = Logger(subsystem: "chat.revolt.app", category: "settingsStore")
 
+
+// MARK: - Discardable caches
+
 struct AccountSettingsMFAStatus: Codable {
     var email_otp: Bool
     var trusted_handover: Bool
@@ -32,20 +35,85 @@ struct UserSettingsAccountData: Codable {
 }
 
 @Observable
-class UserSettingsStore: Codable {
+class DiscardableUserStore: Codable {
     var user: Types.User?
     var accountData: UserSettingsAccountData?
     
     /// This is null when we havent asked for permission yet
-    var rejectedRemoteNotifications: Bool?
-    
     fileprivate func clear() {
         user = nil
         accountData = nil
-        rejectedRemoteNotifications = nil
+    }
+    
+    enum CodingKeys: String, CodingKey {
+        case _user = "user"
+        case _accountData = "accountData"
     }
 }
 
+// MARK: - Persistent settings
+
+@Observable
+class NotificationOptionsData: Codable {
+    var keyWasSet: () -> Void = {}
+    
+    var rejectedRemoteNotifications: Bool {
+        didSet(newSetting) {
+            keyWasSet()
+        }
+    }
+    
+    var wantsNotificationsWhileAppRunning: Bool {
+        didSet(newSetting) {
+            keyWasSet()
+        }
+    }
+    
+    init(keyWasSet: @escaping () -> Void, rejectedRemoteNotifications: Bool, wantsNotificationsWhileAppRunning: Bool) {
+        self.rejectedRemoteNotifications = rejectedRemoteNotifications
+        self.wantsNotificationsWhileAppRunning = wantsNotificationsWhileAppRunning
+
+        self.keyWasSet = keyWasSet
+    }
+    
+    init(keyWasSet: @escaping () -> Void) {
+        self.rejectedRemoteNotifications = true
+        self.wantsNotificationsWhileAppRunning = true
+        
+        self.keyWasSet = keyWasSet
+    }
+    
+    init() {
+        self.rejectedRemoteNotifications = true
+        self.wantsNotificationsWhileAppRunning = true
+    }
+    
+    enum CodingKeys: String, CodingKey {
+        case _rejectedRemoteNotifications = "rejectedRemoteNotifications"
+        case _wantsNotificationsWhileAppRunning = "wantsNotificationsWhileAppRunning"
+    }
+}
+
+@Observable
+class PersistentUserSettingsStore: Codable {
+    var notifications: NotificationOptionsData
+
+    init(keyWasSet: @escaping () -> Void, notifications: NotificationOptionsData) {
+        self.notifications = notifications
+    }
+    
+    init() {
+        self.notifications = NotificationOptionsData()
+    }
+    
+    fileprivate func updateDecodeWithCallback(keyWasSet: @escaping () -> Void) {
+        self._notifications.keyWasSet = keyWasSet
+    }
+    
+    enum CodingKeys: String, CodingKey {
+        case _notifications = "notifications"
+    }
+}
 
 class UserSettingsData {
     enum SettingsFetchState {
@@ -53,54 +121,114 @@ class UserSettingsData {
     }
     
     var viewState: ViewState?
-    var store: UserSettingsStore
-    var dataState: SettingsFetchState
+    
+    var cache: DiscardableUserStore
+    var cacheState: SettingsFetchState
+    
+    var store: PersistentUserSettingsStore
     
     static var cacheFile: URL? {
-        if let caches = FileManager.default.urls(for: .cachesDirectory, in: .userDomainMask).first {
-            let revoltDir = caches.appendingPathComponent("RevoltCaches", conformingTo: .directory)
-            let resp = revoltDir.appendingPathComponent("settingsCache", conformingTo: .json)
+        if let caches = FileManager.default.urls(for: .applicationSupportDirectory, in: .userDomainMask).first {
+            let revoltDir = caches.appendingPathComponent(Bundle.main.bundleIdentifier!, conformingTo: .directory)
+            let resp = revoltDir.appendingPathComponent("userInfoCache", conformingTo: .json)
+            return resp
+        }
+        return nil
+    }
+    
+    static var storeFile: URL? {
+        if let caches = FileManager.default.urls(for: .applicationSupportDirectory, in: .userDomainMask).first {
+            let revoltDir = caches.appendingPathComponent(Bundle.main.bundleIdentifier!, conformingTo: .directory)
+            let resp = revoltDir.appendingPathComponent("userSettings", conformingTo: .json)
             return resp
         }
         return nil
     }
 
-    init(viewState: ViewState?, store: UserSettingsStore) {
+    init(viewState: ViewState?, cache: DiscardableUserStore, store: PersistentUserSettingsStore) {
         self.viewState = viewState
+        self.cache = cache
+        self.cacheState = .cached
         self.store = store
-        self.dataState = .cached
+        self.store.updateDecodeWithCallback(keyWasSet: storeKeyWasSet)
+    }
+    
+    init(viewState: ViewState?, store: PersistentUserSettingsStore) {
+        self.viewState = viewState
+        self.cache = DiscardableUserStore()
+        self.cacheState = .fetching
+        
+        self.store = store
+        self.store.updateDecodeWithCallback(keyWasSet: storeKeyWasSet)
+        
+        createFetchTask()
     }
     
     init(viewState: ViewState?) {
         self.viewState = viewState
-        self.store = UserSettingsStore()
-        self.dataState = .fetching
+        self.cache = DiscardableUserStore()
+        self.cacheState = .fetching
+        
+        self.store = PersistentUserSettingsStore()
+        self.store.updateDecodeWithCallback(keyWasSet: storeKeyWasSet)
         
         createFetchTask()
     }
     
     class func maybeRead(viewState: ViewState?) -> UserSettingsData {
-        let filePath = UserSettingsData.cacheFile!
-        var file = Data()
+        var cache: DiscardableUserStore? = nil
+        var store: PersistentUserSettingsStore? = nil
+        
+        var fileContents: Data?
         do {
-            file = try Data(contentsOf: filePath)
+            let filePath = UserSettingsData.cacheFile!
+            fileContents = try Data(contentsOf: filePath)
         } catch {
-            logger.debug("settingsCache file does not exist")
+            logger.debug("settingsCache file does not exist, will rebuild. \(error.localizedDescription)")
+        }
+        
+        do {
+            if fileContents != nil {
+                cache = try JSONDecoder().decode(DiscardableUserStore.self, from: fileContents!)
+            }
+        } catch {
+            logger.warning("Failed to parse the existing cache file. Will discard cache and rebuild. \(error.localizedDescription)")
+        }
+        
+        var storefileContents: Data? = nil
+        do {
+            let filePath = UserSettingsData.storeFile!
+            storefileContents = try Data(contentsOf: filePath)
+        } catch {
+            logger.warning("User settings have been removed. Will rebuild from scratch. \(error.localizedDescription)")
+        }
+        
+        do {
+            if storefileContents != nil {
+                store = try JSONDecoder().decode(PersistentUserSettingsStore.self, from: storefileContents!)
+            }
+        } catch {
+            logger.warning("Failed to parse the existing settings store file. Settings may have been lost. \(error.localizedDescription)")
+        }
+        
+        if store != nil && cache != nil {
+            return UserSettingsData(viewState: viewState, cache: cache!, store: store!)
+        } else if store != nil {
+            return UserSettingsData(viewState: viewState, store: store!)
+        } else {
             return UserSettingsData(viewState: viewState)
         }
-        do {
-            let data = try JSONDecoder().decode(UserSettingsStore.self, from: file)
-            return UserSettingsData(viewState: viewState, store: data)
-        } catch {
-            logger.warning("Failed to parse the existing cache file. Discarding file and rebuilding cache")
-            return UserSettingsData(viewState: viewState)
+    }
+    
+    private func storeKeyWasSet() {
+        DispatchQueue.main.async(qos: .utility) {
+            self.writeStoreToFile()
         }
     }
     
     func createFetchTask() {
         Task(priority: .medium, operation: self.fetchFromApi)
     }
-    
     
     func fetchFromApi() async {
         while viewState == nil {
@@ -112,16 +240,16 @@ class UserSettingsData {
         }
         
         do {
-            self.store.user = try await state.http.fetchSelf().get()
-            self.store.accountData = UserSettingsAccountData(
+            self.cache.user = try await state.http.fetchSelf().get()
+            self.cache.accountData = UserSettingsAccountData(
                 email: try await state.http.fetchAccount().get().email,
                 mfaStatus: try await state.http.fetchMFAStatus().get()
             )
             
-            self.dataState = .cached
+            self.cacheState = .cached
             writeCacheToFile()
         } catch {
-            self.dataState = .failed
+            self.cacheState = .failed
             let error = error as! RevoltError
             switch error {
                 case .Alamofire(let afErr):
@@ -137,9 +265,7 @@ class UserSettingsData {
                         SentrySDK.capture(error: error)
                     }
                 default:
-                    #if DEBUG
                     logger.error("An error occurred while fetching user settings: \(error.localizedDescription)")
-                    #endif
                     SentrySDK.capture(error: error)
             }
         }
@@ -147,14 +273,14 @@ class UserSettingsData {
     
     func writeCacheToFile() {
         DispatchQueue.main.async(qos: .utility) {
-            if let caches = FileManager.default.urls(for: .cachesDirectory, in: .userDomainMask).first {
-                let revoltDir = caches.appendingPathComponent("RevoltCaches", conformingTo: .directory)
+            if let caches = FileManager.default.urls(for: .applicationSupportDirectory, in: .userDomainMask).first {
+                let revoltDir = caches.appendingPathComponent(Bundle.main.bundleIdentifier!, conformingTo: .directory)
                 do {
                     try FileManager.default.createDirectory(at: revoltDir, withIntermediateDirectories: false)
                 } catch {} //ignore error if it already exists
                 
                 do {
-                    let encoded = try JSONEncoder().encode(self.store)
+                    let encoded = try JSONEncoder().encode(self.cache)
                     let filePath = UserSettingsData.cacheFile!
                     logger.debug("will write cache to: \(filePath.absoluteString)")
                     try encoded.write(to: filePath)
@@ -168,14 +294,42 @@ class UserSettingsData {
         }
     }
     
+    func writeStoreToFile() {
+        DispatchQueue.main.async(qos: .utility) {
+            if let caches = FileManager.default.urls(for: .applicationSupportDirectory, in: .userDomainMask).first {
+                let revoltDir = caches.appendingPathComponent(Bundle.main.bundleIdentifier!, conformingTo: .directory)
+                do {
+                    try FileManager.default.createDirectory(at: revoltDir, withIntermediateDirectories: false)
+                } catch {} //ignore error if it already exists
+            }
+            do {
+                let encoded = try JSONEncoder().encode(self.store)
+                let filePath = UserSettingsData.storeFile!
+                logger.debug("will write settings store to: \(filePath.absoluteString)")
+                try encoded.write(to: filePath)
+            } catch {
+                logger.error("Failed to serialize the settings store: \(error.localizedDescription)")
+            }
+        }
+    }
+    
     func destroyCache() {
         DispatchQueue.main.async(qos: .utility, execute: deleteCacheFile)
-        self.store.clear()
+        self.cache.clear()
         logger.debug("Queued cache file deletion, evicted from memory")
     }
     
     private func deleteCacheFile() {
         let file = UserSettingsData.cacheFile!
         try? FileManager.default.removeItem(at: file)
+    }
+    
+    /// Called when logging out of the app
+    func isLoggingOut() {
+        destroyCache()
+        let file = UserSettingsData.storeFile!
+        try? FileManager.default.removeItem(at: file)
+        self.store = .init()
+        self.store.updateDecodeWithCallback(keyWasSet: storeKeyWasSet)
     }
 }

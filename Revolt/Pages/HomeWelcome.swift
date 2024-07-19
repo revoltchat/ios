@@ -31,6 +31,7 @@ struct HomeWelcome: View {
                         .font(.title)
                         .fontWeight(.bold)
                     Image("wide")
+                        .maybeColorInvert(color: viewState.theme.background, isDefaultImage: false, defaultIsLight: true)
                 }
                 
                 VStack {

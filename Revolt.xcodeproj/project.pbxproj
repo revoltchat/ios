@@ -73,6 +73,8 @@
 		178E26BC2B1542820015CAC7 /* PageToolbar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 178E26BB2B1542820015CAC7 /* PageToolbar.swift */; };
 		17966B652AE0842A00BAEC58 /* ChannelIcon.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17966B642AE0842A00BAEC58 /* ChannelIcon.swift */; };
 		17A589FA2C44781F00B9D85A /* AnyTransition.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17A589F92C44781F00B9D85A /* AnyTransition.swift */; };
+		17A7FE372C49DE6F0083B22F /* Member.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17A7FE362C49DE6F0083B22F /* Member.swift */; };
+		17A7FE392C49EBD20083B22F /* Image.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17A7FE382C49EBD20083B22F /* Image.swift */; };
 		17B375812C41FEC300FC7E6E /* Types.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 17DE7DB22BFAEC3F00C99188 /* Types.framework */; };
 		17B7128D2B03E9D700CFF61C /* FriendsList.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17B7128C2B03E9D700CFF61C /* FriendsList.swift */; };
 		17BADE012B7019270021BB62 /* EmojiPicker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17BADE002B7019270021BB62 /* EmojiPicker.swift */; };
@@ -220,6 +222,8 @@
 		178E26BB2B1542820015CAC7 /* PageToolbar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PageToolbar.swift; sourceTree = "<group>"; };
 		17966B642AE0842A00BAEC58 /* ChannelIcon.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChannelIcon.swift; sourceTree = "<group>"; };
 		17A589F92C44781F00B9D85A /* AnyTransition.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnyTransition.swift; sourceTree = "<group>"; };
+		17A7FE362C49DE6F0083B22F /* Member.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Member.swift; sourceTree = "<group>"; };
+		17A7FE382C49EBD20083B22F /* Image.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Image.swift; sourceTree = "<group>"; };
 		17B1A0462BFC471C005D4664 /* Types.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Types.swift; sourceTree = "<group>"; };
 		17B7128C2B03E9D700CFF61C /* FriendsList.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FriendsList.swift; sourceTree = "<group>"; };
 		17BADE002B7019270021BB62 /* EmojiPicker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmojiPicker.swift; sourceTree = "<group>"; };
@@ -318,6 +322,8 @@
 				172F2CFE2C22ED3600948C00 /* Bundle.swift */,
 				170C23D72C224BA40057E399 /* View.swift */,
 				17A589F92C44781F00B9D85A /* AnyTransition.swift */,
+				17A7FE362C49DE6F0083B22F /* Member.swift */,
+				17A7FE382C49EBD20083B22F /* Image.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -557,9 +563,9 @@
 		D49B705129C4D3FE009494A5 /* Revolt */ = {
 			isa = PBXGroup;
 			children = (
+				173190012B754BB900B6DA49 /* Resources */,
 				17772C162C30AF6D000D1EDA /* Delegates */,
 				170C23D82C224BA40057E399 /* Extensions */,
-				173190012B754BB900B6DA49 /* Resources */,
 				17DFB4622AE06A3200E1D417 /* Api */,
 				17DFB4612AE06A0F00E1D417 /* Pages */,
 				175E01DC2ADAB3EA004F6431 /* Components */,
@@ -826,6 +832,7 @@
 				17BF54CD2B1785E200178866 /* HomeWelcome.swift in Sources */,
 				17F502542B9BFB1000A3022D /* AddFriend.swift in Sources */,
 				17C9A3502B0580D10043A387 /* Welcome.swift in Sources */,
+				17A7FE392C49EBD20083B22F /* Image.swift in Sources */,
 				17E019CF2AF146AD00AB4663 /* About.swift in Sources */,
 				1773C03D2C07DD1F007B8867 /* MessageableChannel.swift in Sources */,
 				DAAA4C0B29F2CF1200F41E52 /* Websocket.swift in Sources */,
@@ -836,6 +843,7 @@
 				17E28E082AF319D500F6069F /* AddServer.swift in Sources */,
 				17429D972B4C91170036105A /* ChannelSettings.swift in Sources */,
 				17BC476B2B9CB51200A593DA /* ShareInviteSheet.swift in Sources */,
+				17A7FE372C49DE6F0083B22F /* Member.swift in Sources */,
 				1739DB962B08E53B00D23DAD /* MessageBadge.swift in Sources */,
 				175E01DE2ADAB3F6004F6431 /* LazyImage.swift in Sources */,
 				1759C39C2B291E2F006E6BBE /* SystemMessageView.swift in Sources */,

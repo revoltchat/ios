@@ -287,7 +287,7 @@ public class ViewState: ObservableObject {
     }
 
     func signIn(mfa_ticket: String, mfa_response: [String: String], callback: @escaping((LoginState) -> ())) async {
-        let body = ["mfa_ticket": mfa_ticket, "mfa_response": mfa_response, "friendly_name": "Revolt IOS"] as [String : Any]
+        let body = ["mfa_ticket": mfa_ticket, "mfa_response": mfa_response, "friendly_name": "Revolt iOS"] as [String : Any]
 
         await innerSignIn(body, callback)
     }
@@ -388,7 +388,7 @@ public class ViewState: ObservableObject {
         currentChannel = .home
         currentSessionId = nil
         
-        userSettingsStore.destroyCache()
+        userSettingsStore.isLoggingOut()
         self.ws = nil
     }
     
@@ -396,11 +396,11 @@ public class ViewState: ObservableObject {
         let notificationsGranted = try? await UNUserNotificationCenter.current().requestAuthorization(options: [.alert, .badge, .sound, .providesAppNotificationSettings])
         if notificationsGranted != nil && notificationsGranted! {
             ViewState.application?.registerForRemoteNotifications()
-            self.userSettingsStore.store.rejectedRemoteNotifications = false
+            self.userSettingsStore.store.notifications.rejectedRemoteNotifications = false
         } else {
-            self.userSettingsStore.store.rejectedRemoteNotifications = true
+            self.userSettingsStore.store.notifications.rejectedRemoteNotifications = true
         }
-        self.userSettingsStore.writeCacheToFile()
+        self.userSettingsStore.writeStoreToFile()
     }
 
     func formatUrl(with: File) -> String {

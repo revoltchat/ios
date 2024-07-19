@@ -273,7 +273,7 @@ fileprivate struct AddTOTPSheet: View {
                 Link(destination: URL(
                     string: generateTOTPUrl(
                         secret: secret!,
-                        email: viewState.userSettingsStore.store.accountData!.email
+                        email: viewState.userSettingsStore.cache.accountData!.email
                     ))!) {
                         Text("Open in authenticator app", comment: "open the user's authenticator app")
                     }
@@ -465,7 +465,7 @@ fileprivate struct UsernameUpdateSheet: View {
     init(viewState: ViewState, showSheet sheet: Binding<Bool>) {
         _showSheet = sheet
         _value = State(initialValue: "")
-        _value.wrappedValue = viewState.userSettingsStore.store.user!.username
+        _value.wrappedValue = viewState.userSettingsStore.cache.user!.username
     }
     
     func submitName() async {
@@ -500,7 +500,7 @@ fileprivate struct UsernameUpdateSheet: View {
                         }
                     }
                     .focused($nameFieldState)
-                Text("#\(viewState.userSettingsStore.store.user!.discriminator)")
+                Text("#\(viewState.userSettingsStore.cache.user!.discriminator)")
                     //.addBorder(viewState.theme.accent, cornerRadius: 1.0)
             }
             Spacer()
@@ -876,8 +876,8 @@ struct UserSettings: View {
                     HStack {
                         Text("Username")
                         Spacer()
-                        if viewState.userSettingsStore.store.user != nil {
-                            Text(verbatim: "\(viewState.userSettingsStore.store.user!.username)#\(viewState.userSettingsStore.store.user!.discriminator)")
+                        if viewState.userSettingsStore.cache.user != nil {
+                            Text(verbatim: "\(viewState.userSettingsStore.cache.user!.username)#\(viewState.userSettingsStore.cache.user!.discriminator)")
                         } else {
                             Text("loading#0000", comment: "The username is still loading from the api")
                         }
@@ -890,8 +890,8 @@ struct UserSettings: View {
                         Text("Email")
                         Spacer()
                         Text(verbatim: emailSubstitute)
-                            .onChange(of: viewState.userSettingsStore.store.accountData?.email, { _, value in
-                                let raw = viewState.userSettingsStore.store.accountData?.email
+                            .onChange(of: viewState.userSettingsStore.cache.accountData?.email, { _, value in
+                                let raw = viewState.userSettingsStore.cache.accountData?.email
                                 guard let raw = raw else { return }
                                 _ = substituteEmail(raw)
                             })
@@ -909,17 +909,17 @@ struct UserSettings: View {
             .listRowBackground(viewState.theme.background2)
             
             Section("Two-Factor Authentication") {
-                if viewState.userSettingsStore.store.accountData?.mfaStatus == nil {
+                if viewState.userSettingsStore.cache.accountData?.mfaStatus == nil {
                     Text("Loading Data...", comment: "User setings notice - still fetching data")
                 } else {
-                    if !viewState.userSettingsStore.store.accountData!.mfaStatus.anyMFA { // MFA not enabled.
+                    if !viewState.userSettingsStore.cache.accountData!.mfaStatus.anyMFA { // MFA not enabled.
                         Text("You have not enabled two-factor authentication!", comment: "User settings info notice") // idk thisll do for now
                             .font(.callout)
                     }
                     Button(action: {
                         presentGenerateCodesSheet = true
                     }, label: {
-                        if !viewState.userSettingsStore.store.accountData!.mfaStatus.recovery_active {
+                        if !viewState.userSettingsStore.cache.accountData!.mfaStatus.recovery_active {
                             Text("Generate Recovery Codes", comment: "User settings button")
                                 .foregroundStyle(viewState.theme.foreground)
                         } else {
@@ -927,7 +927,7 @@ struct UserSettings: View {
                                 .foregroundStyle(viewState.theme.foreground)
                         }
                     })
-                    if !viewState.userSettingsStore.store.accountData!.mfaStatus.totp_mfa {
+                    if !viewState.userSettingsStore.cache.accountData!.mfaStatus.totp_mfa {
                         Button(action: {
                             presentAddTOTPSheet = true
                         }, label: {
@@ -974,7 +974,7 @@ struct UserSettings: View {
             await viewState.userSettingsStore.fetchFromApi()
         }
         .onAppear {
-            let raw = viewState.userSettingsStore.store.accountData?.email
+            let raw = viewState.userSettingsStore.cache.accountData?.email
             guard let raw = raw else {
                 Task {
                     await viewState.userSettingsStore.fetchFromApi()

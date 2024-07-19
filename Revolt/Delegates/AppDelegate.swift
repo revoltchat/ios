@@ -136,7 +136,15 @@ extension AppDelegate: UNUserNotificationCenterDelegate {
     
     func userNotificationCenter(_ center: UNUserNotificationCenter, willPresent notification: UNNotification, withCompletionHandler completionHandler: @escaping (UNNotificationPresentationOptions) -> Void) {
         // TODO: handle notification taps while app is running
-        completionHandler([.list, .banner, .sound])
+        Task {
+            let viewState = ViewState.shared ?? ViewState()
+            
+            if viewState.userSettingsStore.store.notifications.wantsNotificationsWhileAppRunning {
+                completionHandler([.list, .banner, .sound])
+            } else {
+                completionHandler([])
+            }
+        }
     }
     
     func userNotificationCenter(_ center: UNUserNotificationCenter, openSettingsFor notification: UNNotification?) {

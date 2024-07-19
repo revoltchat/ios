@@ -475,15 +475,15 @@ public struct Theme: Codable, Equatable {
     }
 }
 
-extension Member {
-    public func displayColour(theme: Theme, server: Server) -> AnyShapeStyle? {
-        roles?
-            .compactMap { server.roles?[$0] }
-            .sorted(by: { $0.rank > $1.rank })
-            .compactMap(\.colour)
-            .last
-            .map {
-                return parseCSSColor(currentTheme: theme, input: $0)
-            }
+extension Theme {
+    /// This function takes a ThemeColor and determines if it is "light" or "dark", via a true/false flag.
+    /// True means "light", and False means "dark".
+    static func isLightOrDark(_ color: ThemeColor) -> Bool {
+        let (r, g, b) = (color.r * 255, color.g * 255, color.b * 255)
+        
+        // https://alienryderflex.com/hsp.html
+        // basically percieved brightness > sqrt((1*255^2) / 4)
+        let hsp = sqrt((0.299 * (r * r)) + (0.587 * (g * g)) + (0.114 * (b * b)))
+        return hsp > 127.5
     }
 }
