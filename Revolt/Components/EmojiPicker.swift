@@ -78,6 +78,68 @@ struct PickerEmojiCategory {
     var parent: PickerEmojiParent
 }
 
+@MainActor
+func loadEmojis(withState viewState: ViewState) -> OrderedDictionary<PickerEmojiParent, [PickerEmoji]> {
+    let baseEmojis = try! JSONDecoder().decode([EmojiGroup].self, from: emojiPickerContent.data(using: .utf8)!)
+    
+    var emojis: OrderedDictionary<PickerEmojiParent, [PickerEmoji]> = [:]
+    
+    for emoji in viewState.emojis.values {
+        if case .server(let id) = emoji.parent {
+            let server = viewState.servers[id.id]!
+            let parent = PickerEmojiParent.server(server)
+            let emoji = PickerEmoji(
+                base: [],
+                emojiId: emoji.id,
+                alternates: [],
+                emoticons: [],
+                shortcodes: [],
+                animated: emoji.animated ?? false,
+                directional: false
+            )
+            
+            if emojis[parent] == nil {
+                emojis[parent] = []
+            }
+            
+            emojis[parent]!.append(emoji)
+        }
+    }
+    
+    for category in baseEmojis {
+        let parent = PickerEmojiParent.unicode(category.group)
+        emojis[parent] = category.emoji
+    }
+    
+    return emojis
+}
+
+#if os(iOS)
+func convertEmojiToImage(text: String) -> UIImage {
+    let size = CGSize(width: 32, height: 32)
+    UIGraphicsBeginImageContextWithOptions(size, false, 0)
+    UIColor.clear.set()
+    let rect = CGRect(origin: CGPoint(), size: size)
+    UIRectFill(rect)
+    (text as NSString).draw(in: rect, withAttributes: [NSAttributedString.Key.font: UIFont.systemFont(ofSize: 30)])
+    let image = UIGraphicsGetImageFromCurrentImageContext()
+    UIGraphicsEndImageContext()
+    return image!
+}
+#elseif os(macOS)
+func convertEmojiToImage(text: String) -> NSImage {
+    let canvas = NSImage(size: NSSize(width: 32, height: 32))
+    
+    let image = NSImage(size: NSSize(width: 32, height: 32), flipped: false) { rect in
+        canvas.draw(in: rect)
+        (text as NSString).draw(in: rect, withAttributes: [NSAttributedString.Key.font: NSFont.systemFont(ofSize: 30)])
+        return true
+    }
+    
+    return image
+}
+#endif
+
 struct EmojiPicker: View {
     @EnvironmentObject var viewState: ViewState
     var background: AnyView
@@ -86,69 +148,8 @@ struct EmojiPicker: View {
 
     @State var scrollPosition: String?
 
-    func loadEmojis() -> OrderedDictionary<PickerEmojiParent, [PickerEmoji]> {
-        let baseEmojis = try! JSONDecoder().decode([EmojiGroup].self, from: emojiPickerContent.data(using: .utf8)!)
-
-        var emojis: OrderedDictionary<PickerEmojiParent, [PickerEmoji]> = [:]
-
-        for emoji in viewState.emojis.values {
-            if case .server(let id) = emoji.parent {
-                let server = viewState.servers[id.id]!
-                let parent = PickerEmojiParent.server(server)
-                let emoji = PickerEmoji(
-                    base: [],
-                    emojiId: emoji.id,
-                    alternates: [],
-                    emoticons: [],
-                    shortcodes: [],
-                    animated: emoji.animated ?? false,
-                    directional: false
-                )
-
-                if emojis[parent] == nil {
-                    emojis[parent] = []
-                }
-
-                emojis[parent]!.append(emoji)
-            }
-        }
-
-        for category in baseEmojis {
-            let parent = PickerEmojiParent.unicode(category.group)
-            emojis[parent] = category.emoji
-        }
-
-        return emojis
-    }
-
-    #if os(iOS)
-    func convertEmojiToImage(text: String) -> UIImage {
-        let size = CGSize(width: 32, height: 32)
-        UIGraphicsBeginImageContextWithOptions(size, false, 0)
-        UIColor.clear.set()
-        let rect = CGRect(origin: CGPoint(), size: size)
-        UIRectFill(rect)
-        (text as NSString).draw(in: rect, withAttributes: [NSAttributedString.Key.font: UIFont.systemFont(ofSize: 30)])
-        let image = UIGraphicsGetImageFromCurrentImageContext()
-        UIGraphicsEndImageContext()
-        return image!
-    }
-    #elseif os(macOS)
-    func convertEmojiToImage(text: String) -> NSImage {
-        let canvas = NSImage(size: NSSize(width: 32, height: 32))
-
-        let image = NSImage(size: NSSize(width: 32, height: 32), flipped: false) { rect in
-            canvas.draw(in: rect)
-            (text as NSString).draw(in: rect, withAttributes: [NSAttributedString.Key.font: NSFont.systemFont(ofSize: 30)])
-            return true
-        }
-
-        return image
-    }
-    #endif
-
     var body: some View {
-        let emojis = loadEmojis()
+        let emojis = loadEmojis(withState: viewState)
 
         ZStack(alignment: .top) {
             ScrollView(.horizontal) {

@@ -417,8 +417,41 @@ func parseEmojisOnly(text: String) -> [String]? {
 struct Contents: View {
     @EnvironmentObject var viewState: ViewState
     @Binding var text: String
-    @State var images: [String: UIImage] = [:]
+    @State var images: [URL: UIImage] = [:]
     var fontSize: CGFloat
+    
+    func addImageToState(url: URL, image: UIImage, round: Bool) {
+        let image = round ? image.roundedImage : image
+
+        images[url] = image.imageWith(newSize: CGSize(width: fontSize, height: fontSize), contentMode: .contentAspectFit)
+    }
+    
+    func getImage(url: URL, round: Bool = false) -> UIImage {
+        if let image = images[url] {
+            return image
+        } else {
+            Task {
+                ImageCache.default.retrieveImage(forKey: url.absoluteString, options: []) { cacheResult in
+                    if case .success(let cacheImage) = cacheResult,
+                       let image = cacheImage.image
+                    {
+                        addImageToState(url: url, image: image, round: round)
+                    } else {
+                        ImageDownloader.default.downloadImage(with: url, options: []) { result in
+                            if case .success(let image) = result,
+                               let image = UIImage(data: image.originalData)
+                            {
+                                ImageCache.default.store(image, forKey: url.absoluteString, options: .init([]))
+                                addImageToState(url: url, image: image, round: round)
+                            }
+                        }
+                    }
+                }
+            }
+            
+            return UIImage()
+        }
+    }
 
     func buildContent() -> Text? {
         let font = UIFont.systemFont(ofSize: fontSize)
@@ -430,20 +463,21 @@ struct Contents: View {
         for part in parts {
             switch part {
                 case .user_mention(let string):
-                    var mention: NSAttributedString
-
                     if let user = viewState.users[string] {
                         let member = viewState.currentServer.id.flatMap { viewState.members[$0] }.flatMap { $0[string] }
 
                         let name = member?.nickname ?? user.display_name ?? user.username
 
-                        mention = NSAttributedString(string: "@\(name)", attributes: [.foregroundColor: viewState.theme.accent.color, .font: boldFont, .link: "revoltchat://users?user=\(string)"])
+                        let mention = NSAttributedString(string: name, attributes: [.foregroundColor: viewState.theme.accent.color, .font: boldFont, .link: "revoltchat://users?user=\(string)"])
+                        let pfpUrl = (member?.avatar ?? user.avatar).map { viewState.formatUrl(with: $0) } ?? "\(viewState.http.baseURL)/users/\(user.id)/default_avatar"
+                        
+                        let image = getImage(url: URL(string: pfpUrl)!, round: true)
+                        let text = Text(Image(uiImage: image)) + Text(AttributedString(mention))
+                        
+                        textParts.append(text)
                     } else {
-                        mention = NSAttributedString(string: "@Unknown", attributes: [.foregroundColor: viewState.theme.accent.color, .font: boldFont])
+                        textParts.append(Text(AttributedString(NSAttributedString(string: "@Unknown", attributes: [.foregroundColor: viewState.theme.accent.color, .font: boldFont]))))
                     }
-
-                    textParts.append(Text(AttributedString(mention)))
-
                 case .channel_mention(let string):
                     let mention: NSAttributedString
 
@@ -465,16 +499,22 @@ struct Contents: View {
                         textParts.append(Text(AttributedString(substring)))
                     }
 
-                case .custom_emoji(let string):
-                    let image = UIImage(named: "amog")!.imageWith(newSize: CGSize(width: fontSize, height: fontSize))
-
-                    textParts.append(Text(Image(uiImage: image)))
+                case .custom_emoji(let id):
+                    if let emoji = viewState.emojis[id] {
+                        let url = viewState.formatUrl(fromEmoji: emoji.id)
+                        
+                        let image = getImage(url: URL(string: url)!)
+                        
+                        textParts.append(Text(Image(uiImage: image)))
+                    } else {
+                        textParts.append(Text(verbatim: ":\(id):"))
+                    }
             }
         }
 
         if textParts.count > 0 {
             let first = textParts.removeFirst()
-            return textParts.reduce(first, { a, b in a + b })
+            return textParts.reduce(first, (+))
         } else {
             return nil
         }

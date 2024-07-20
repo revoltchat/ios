@@ -253,22 +253,7 @@ struct MessageableChannelView: View {
                                     .padding(.leading, 40)
                                     .listRowSeparator(.hidden)
                                     .listRowInsets(EdgeInsets(top: 4, leading: 12, bottom: 4, trailing: 12))
-                                    
-                                    //                                    .if(lastMessage.id == viewModel.messages.last, content: {
-                                    //                                        $0.onAppear {
-                                    //                                            let message = group.last!.message
-                                    //                                            if var unread = viewState.unreads[viewModel.channel.id] {
-                                    //                                                unread.last_id = lastMessage.id
-                                    //                                                viewState.unreads[viewModel.channel.id] = unread
-                                    //                                            } else {
-                                    //                                                viewState.unreads[viewModel.channel.id] = Unread(id: Unread.Id(channel: viewModel.channel.id, user: viewState.currentUser!.id), last_id: lastMessage.id)
-                                    //                                            }
-                                    //
-                                    //                                            Task {
-                                    //                                                await viewState.http.ackMessage(channel: viewModel.channel.id, message: message.id)
-                                    //                                            }
-                                    //                                        }
-                                    //                                    })
+                                
                                     //
                                     //                                    if lastMessage.id == viewState.unreads[viewModel.channel.id]?.last_id, lastMessage.id != viewModel.messages.last {
                                     //                                        HStack(spacing: 0) {
@@ -303,6 +288,12 @@ struct MessageableChannelView: View {
                                     )
                                     .onPreferenceChange(VisibleKey.self) { isVisible in
                                         atBottom = isVisible
+                                        
+                                        if isVisible, let lastMessage = messages.last?.last {
+                                            Task {
+                                                await viewState.http.ackMessage(channel: viewModel.channel.id, message: lastMessage.message.id)
+                                            }
+                                        }
                                     }
                                     .onChange(of: messages) { (_, _) in
                                         withAnimation {

@@ -70,11 +70,13 @@ struct MessageBox: View {
     enum AutocompleteType {
         case user
         case channel
+        case emoji
     }
 
     enum AutocompleteValues {
         case channels([Channel])
         case users([(User, Member?)])
+        case emojis([PickerEmoji])
     }
 
     struct Photo: Identifiable, Hashable {
@@ -165,7 +167,11 @@ struct MessageBox: View {
                         users = viewState.members[server!.id]!.values.map({ m in (viewState.users[m.id.user]!, m) })
                 }
 
-                return AutocompleteValues.users(users)
+                return AutocompleteValues.users(users.filter { pair in
+                    pair.0.display_name?.lowercased().starts(with: autocompleteSearchValue.lowercased())
+                    ?? pair.1?.nickname?.lowercased().starts(with: autocompleteSearchValue.lowercased())
+                    ?? pair.0.username.lowercased().starts(with: autocompleteSearchValue.lowercased())
+                })
             case .channel:
                 let channels: [Channel]
 
@@ -176,7 +182,24 @@ struct MessageBox: View {
                         channels = server!.channels.compactMap({ viewState.channels[$0] })
                 }
 
-                return AutocompleteValues.channels(channels)
+                return AutocompleteValues.channels(channels.filter { channel in
+                    channel.getName(viewState).lowercased().starts(with: autocompleteSearchValue.lowercased())
+                })
+            case .emoji:
+                return AutocompleteValues.emojis(loadEmojis(withState: viewState)
+                    .values
+                    .flatMap { $0 }
+                    .filter { emoji in
+                        let names: [String]
+                        
+                        if let emojiId = emoji.emojiId, let emoji = viewState.emojis[emojiId] {
+                            names = [emoji.name]
+                        } else {
+                            names = emoji.alternates.prepending(emoji.base).map { String(String.UnicodeScalarView($0.compactMap(Unicode.Scalar.init))) }
+                        }
+                        
+                        return names.contains(where: { $0.lowercased().starts(with: autocompleteSearchValue.lowercased()) })
+                    })
         }
     }
 
@@ -246,12 +269,12 @@ struct MessageBox: View {
                                     ForEach(users, id: \.0.id) { (user, member) in
                                         Button {
                                             withAnimation {
-                                                content = String(content.dropLast())
+                                                content = String(content.dropLast(autocompleteSearchValue.count + 1))
                                                 content.append("<@\(user.id)>")
                                                 autoCompleteType = nil
                                             }
                                         } label: {
-                                            HStack(spacing: 4) {
+                                            HStack(spacing: 8) {
                                                 Avatar(user: user, member: member, width: 24, height: 24)
                                                 Text(verbatim: member?.nickname ?? user.display_name ?? user.username)
                                             }
@@ -264,7 +287,7 @@ struct MessageBox: View {
                                     ForEach(channels) { channel in
                                         Button {
                                             withAnimation {
-                                                content = String(content.dropLast())
+                                                content = String(content.dropLast(autocompleteSearchValue.count + 1))
                                                 content.append("<#\(channel.id)>")
                                                 autoCompleteType = nil
                                             }
@@ -274,6 +297,50 @@ struct MessageBox: View {
                                         }
                                         .background(viewState.theme.background2.color)
                                         .clipShape(RoundedRectangle(cornerRadius: 8))
+                                    }
+                                case .emojis(let emojis):
+                                    ForEach(emojis) { emoji in
+                                        Button {
+                                            let emojiString: String
+                                            
+                                            if let emojiId = emoji.emojiId {
+                                                emojiString = ":\(emojiId):"
+                                            } else {
+                                                emojiString = String(String.UnicodeScalarView(emoji.base.compactMap(Unicode.Scalar.init)))
+                                            }
+                                            
+                                            withAnimation {
+                                                content = String(content.dropLast(autocompleteSearchValue.count + 1))
+                                                content.append(emojiString)
+                                                autoCompleteType = nil
+                                            }
+                                        } label: {
+                                            HStack(spacing: 8) {
+                                                if let id = emoji.emojiId {
+                                                    let emoji = viewState.emojis[id]!
+                                                    
+                                                    LazyImage(source: .emoji(id), height: 24, width: 24, clipTo: Rectangle())
+                                                    Text(verbatim: emoji.name)
+                                                } else {
+                                                    let emojiString = String(String.UnicodeScalarView(emoji.base.compactMap(Unicode.Scalar.init)))
+                                                    let image = convertEmojiToImage(text: emojiString)
+                                                    
+#if os(iOS)
+                                                    Image(uiImage: image)
+                                                        .resizable()
+                                                        .aspectRatio(contentMode: .fit)
+                                                        .frame(width: 24, height: 24)
+#elseif os(macOS)
+                                                    Image(nsImage: image)
+                                                        .resizable()
+                                                        .aspectRatio(contentMode: .fit)
+                                                        .frame(width: 24, height: 24)
+#endif
+                                                    
+                                                    Text(verbatim: emojiString)
+                                                }
+                                            }
+                                        }
                                     }
                             }
                         }
@@ -325,6 +392,8 @@ struct MessageBox: View {
                                             autoCompleteType = .user
                                         case "#":
                                             autoCompleteType = .channel
+                                        case ":":
+                                            autoCompleteType = .emoji
                                         default:
                                             autoCompleteType = nil
                                     }
