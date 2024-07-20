@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		1701E08C2C4C395900DD970F /* emoji_15_1_ordering.json in Resources */ = {isa = PBXBuildFile; fileRef = 1701E08B2C4C395900DD970F /* emoji_15_1_ordering.json */; };
 		170C23CE2C224B460057E399 /* UserSettingsStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 170C23CD2C224B460057E399 /* UserSettingsStore.swift */; };
 		170C23D32C224B6D0057E399 /* NotificationSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 170C23D02C224B6D0057E399 /* NotificationSettings.swift */; };
 		170C23D42C224B6D0057E399 /* ExperimentsSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 170C23CF2C224B6D0057E399 /* ExperimentsSettings.swift */; };
@@ -23,7 +24,6 @@
 		172F2D012C22ED4D00948C00 /* IteratorProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 172F2D002C22ED4A00948C00 /* IteratorProtocol.swift */; };
 		172F2D032C22ED5C00948C00 /* Collection.swift in Sources */ = {isa = PBXBuildFile; fileRef = 172F2D022C22ED5A00948C00 /* Collection.swift */; };
 		172F2D052C22ED8500948C00 /* CheckboxStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 172F2D042C22ED8100948C00 /* CheckboxStyle.swift */; };
-		173190032B754D4700B6DA49 /* EmojiPickerContent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 173190022B754D4700B6DA49 /* EmojiPickerContent.swift */; };
 		1739DB962B08E53B00D23DAD /* MessageBadge.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1739DB952B08E53B00D23DAD /* MessageBadge.swift */; };
 		173A336A2C422EF800B8A58E /* DeveloperSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 173A33692C422EF800B8A58E /* DeveloperSettings.swift */; };
 		173F16272C3C22580009FDF9 /* ServerInfoSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 173F16262C3C22540009FDF9 /* ServerInfoSheet.swift */; };
@@ -176,6 +176,7 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		1701E08B2C4C395900DD970F /* emoji_15_1_ordering.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = emoji_15_1_ordering.json; sourceTree = "<group>"; };
 		170C23CD2C224B460057E399 /* UserSettingsStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserSettingsStore.swift; sourceTree = "<group>"; };
 		170C23CF2C224B6D0057E399 /* ExperimentsSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExperimentsSettings.swift; sourceTree = "<group>"; };
 		170C23D02C224B6D0057E399 /* NotificationSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationSettings.swift; sourceTree = "<group>"; };
@@ -191,7 +192,6 @@
 		172F2D002C22ED4A00948C00 /* IteratorProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IteratorProtocol.swift; sourceTree = "<group>"; };
 		172F2D022C22ED5A00948C00 /* Collection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Collection.swift; sourceTree = "<group>"; };
 		172F2D042C22ED8100948C00 /* CheckboxStyle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CheckboxStyle.swift; sourceTree = "<group>"; };
-		173190022B754D4700B6DA49 /* EmojiPickerContent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmojiPickerContent.swift; sourceTree = "<group>"; };
 		1739DB952B08E53B00D23DAD /* MessageBadge.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageBadge.swift; sourceTree = "<group>"; };
 		173A33692C422EF800B8A58E /* DeveloperSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeveloperSettings.swift; sourceTree = "<group>"; };
 		173F16262C3C22540009FDF9 /* ServerInfoSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ServerInfoSheet.swift; sourceTree = "<group>"; };
@@ -343,6 +343,7 @@
 		173190012B754BB900B6DA49 /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				1701E08B2C4C395900DD970F /* emoji_15_1_ordering.json */,
 				D49B705629C4D3FE009494A5 /* Assets.xcassets */,
 				D49B705829C4D3FE009494A5 /* Preview Content */,
 			);
@@ -388,7 +389,6 @@
 				1718F3CF2B0BCAA50018E524 /* UnreadCounter.swift */,
 				172754C82B399092002223FE /* Contents.swift */,
 				17BADE002B7019270021BB62 /* EmojiPicker.swift */,
-				173190022B754D4700B6DA49 /* EmojiPickerContent.swift */,
 			);
 			path = Components;
 			sourceTree = "<group>";
@@ -763,6 +763,7 @@
 			files = (
 				D49B705A29C4D3FE009494A5 /* Preview Assets.xcassets in Resources */,
 				D49B705729C4D3FE009494A5 /* Assets.xcassets in Resources */,
+				1701E08C2C4C395900DD970F /* emoji_15_1_ordering.json in Resources */,
 				1713035A2B6166B700B66050 /* Localizable.xcstrings in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -892,7 +893,6 @@
 				17E019D52AF1937400AB4663 /* Theme.swift in Sources */,
 				1788F96E2C3CA19800A385A8 /* MessageEmbed.swift in Sources */,
 				175E01E02ADAB554004F6431 /* Avatar.swift in Sources */,
-				173190032B754D4700B6DA49 /* EmojiPickerContent.swift in Sources */,
 				17B7128D2B03E9D700CFF61C /* FriendsList.swift in Sources */,
 				17BF54D12B17B24200178866 /* LanguageSettings.swift in Sources */,
 				17E019CD2AF136B100AB4663 /* PresenceIndicator.swift in Sources */,

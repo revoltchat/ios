@@ -80,7 +80,10 @@ struct PickerEmojiCategory {
 
 @MainActor
 func loadEmojis(withState viewState: ViewState) -> OrderedDictionary<PickerEmojiParent, [PickerEmoji]> {
-    let baseEmojis = try! JSONDecoder().decode([EmojiGroup].self, from: emojiPickerContent.data(using: .utf8)!)
+    let file = Bundle.main.url(forResource: "emoji_15_1_ordering.json", withExtension: nil)!
+    let data = try! Data(contentsOf: file)
+    
+    let baseEmojis = try! JSONDecoder().decode([EmojiGroup].self, from: data)
     
     var emojis: OrderedDictionary<PickerEmojiParent, [PickerEmoji]> = [:]
     
