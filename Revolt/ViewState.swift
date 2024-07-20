@@ -133,7 +133,7 @@ public class ViewState: ObservableObject {
     static var application: NSApplication? = nil
 #endif
 
-    var http: HTTPClient = HTTPClient(token: nil, baseURL: "http://local.angelomanca.com:8000")
+    var http: HTTPClient = HTTPClient(token: nil, baseURL: "https://revolt.chat/api")
     var ws: WebSocketStream? = nil
     var apiInfo: ApiInfo? = nil
     

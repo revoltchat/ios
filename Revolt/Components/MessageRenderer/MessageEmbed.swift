@@ -101,8 +101,8 @@ struct MessageEmbed: View {
                         }
                         
                         if let description = embed.description {
-                            Contents(text: .constant(description))
-                                .font(.footnote)
+                            Contents(text: .constant(description), fontSize: 13)
+                                //.font(.footnote)
                         }
                         
                         if let special = embed.special, special != .none {

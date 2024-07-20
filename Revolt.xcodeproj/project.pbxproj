@@ -94,6 +94,7 @@
 		17D9C2BD2ADCA48D00426857 /* Kingfisher in Frameworks */ = {isa = PBXBuildFile; productRef = 17D9C2BC2ADCA48D00426857 /* Kingfisher */; };
 		17D9D2B72B0843DE00D57812 /* PermissionsCalculator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17D9D2B62B0843DE00D57812 /* PermissionsCalculator.swift */; };
 		17DE7DB52BFAEC3F00C99188 /* Types.h in Headers */ = {isa = PBXBuildFile; fileRef = 17DE7DB42BFAEC3F00C99188 /* Types.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		17DF7CB02C4ACDA1003E8FDC /* UIImage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17DF7CAF2C4ACD9D003E8FDC /* UIImage.swift */; };
 		17DFB4642AE06A5D00E1D417 /* Settings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17DFB4632AE06A5D00E1D417 /* Settings.swift */; };
 		17E019C92AF1279100AB4663 /* AppearanceSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17E019C82AF1279100AB4663 /* AppearanceSettings.swift */; };
 		17E019CD2AF136B100AB4663 /* PresenceIndicator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17E019CC2AF136B100AB4663 /* PresenceIndicator.swift */; };
@@ -253,6 +254,7 @@
 		17DE7E0B2BFAFDDD00C99188 /* User.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = User.swift; sourceTree = "<group>"; };
 		17DE7E0C2BFAFDDD00C99188 /* Api.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Api.swift; sourceTree = "<group>"; };
 		17DE7E1B2BFAFE5600C99188 /* File.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = File.swift; sourceTree = "<group>"; };
+		17DF7CAF2C4ACD9D003E8FDC /* UIImage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIImage.swift; sourceTree = "<group>"; };
 		17DFB4632AE06A5D00E1D417 /* Settings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Settings.swift; sourceTree = "<group>"; };
 		17E019C82AF1279100AB4663 /* AppearanceSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppearanceSettings.swift; sourceTree = "<group>"; };
 		17E019CC2AF136B100AB4663 /* PresenceIndicator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PresenceIndicator.swift; sourceTree = "<group>"; };
@@ -317,6 +319,7 @@
 		170C23D82C224BA40057E399 /* Extensions */ = {
 			isa = PBXGroup;
 			children = (
+				17DF7CAF2C4ACD9D003E8FDC /* UIImage.swift */,
 				172F2D022C22ED5A00948C00 /* Collection.swift */,
 				172F2D002C22ED4A00948C00 /* IteratorProtocol.swift */,
 				172F2CFE2C22ED3600948C00 /* Bundle.swift */,
@@ -830,6 +833,7 @@
 				178BB11B2B02FCDD001143A4 /* Responses.swift in Sources */,
 				17A589FA2C44781F00B9D85A /* AnyTransition.swift in Sources */,
 				17BF54CD2B1785E200178866 /* HomeWelcome.swift in Sources */,
+				17DF7CB02C4ACDA1003E8FDC /* UIImage.swift in Sources */,
 				17F502542B9BFB1000A3022D /* AddFriend.swift in Sources */,
 				17C9A3502B0580D10043A387 /* Welcome.swift in Sources */,
 				17A7FE392C49EBD20083B22F /* Image.swift in Sources */,

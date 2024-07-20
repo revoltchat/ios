@@ -19,7 +19,7 @@ class MessageContentsViewModel: ObservableObject, Equatable {
     @Binding var channel: Channel
     @Binding var channelReplies: [Reply]
     @Binding var editing: Message?
-    
+
     var channelScrollPosition: ChannelScrollController
 
     init(viewState: ViewState, message: Binding<Message>, author: Binding<User>, member: Binding<Member?>, server: Binding<Server?>, channel: Binding<Channel>, replies: Binding<[Reply]>, channelScrollPosition: ChannelScrollController, editing: Binding<Message?>) {
@@ -58,14 +58,14 @@ struct MessageContentsView: View {
     @State var showReactSheet: Bool = false
     @State var isStatic: Bool
 
-    private var isModeratorInChannel: Bool {
+    private var canManageMessages: Bool {
         let member = viewModel.server.flatMap {
             viewState.members[$0.id]?[viewState.currentUser!.id]
         }
-        
+
         let permissions = resolveChannelPermissions(from: viewState.currentUser!, targettingUser: viewState.currentUser!, targettingMember: member, channel: viewModel.channel, server: viewModel.server)
-        
-        return permissions.contains(.manageChannel)
+
+        return permissions.contains(.manageMessages)
     }
 
     private var isMessageAuthor: Bool {
@@ -73,16 +73,16 @@ struct MessageContentsView: View {
     }
 
     private var canDeleteMessage: Bool {
-        return isMessageAuthor || isModeratorInChannel
+        return isMessageAuthor || canManageMessages
     }
 
     var body: some View {
         VStack(alignment: .leading) {
             if let content = Binding(viewModel.$message.content) {
-                Contents(text: content)
-                    .font(.body)
+                Contents(text: content, fontSize: 17)
+                    //.font(.body)
             }
-            
+
             if let embeds = Binding(viewModel.$message.embeds) {
                 ForEach(embeds, id: \.wrappedValue) { embed in
                     MessageEmbed(embed: embed)
