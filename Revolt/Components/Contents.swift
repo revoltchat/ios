@@ -493,22 +493,17 @@ struct Contents: View {
 
                 case .text(let string):
                     if string.count > 0 {
-                        var substring = try! NSMutableAttributedString(markdown: string, options: .init(interpretedSyntax: .inlineOnlyPreservingWhitespace))
+                        let substring = try! NSMutableAttributedString(markdown: string, options: .init(interpretedSyntax: .inlineOnlyPreservingWhitespace))
                         substring.setAttributes([.font: font, .foregroundColor: viewState.theme.foreground.color], range: NSRange(location: 0, length: substring.length))
 
                         textParts.append(Text(AttributedString(substring)))
                     }
 
                 case .custom_emoji(let id):
-                    if let emoji = viewState.emojis[id] {
-                        let url = viewState.formatUrl(fromEmoji: emoji.id)
-                        
-                        let image = getImage(url: URL(string: url)!)
-                        
-                        textParts.append(Text(Image(uiImage: image)))
-                    } else {
-                        textParts.append(Text(verbatim: ":\(id):"))
-                    }
+                    let url = viewState.formatUrl(fromEmoji: id)
+                    let image = getImage(url: URL(string: url)!)
+                    
+                    textParts.append(Text(Image(uiImage: image)))
             }
         }
 
