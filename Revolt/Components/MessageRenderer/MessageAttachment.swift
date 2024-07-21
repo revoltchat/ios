@@ -22,10 +22,12 @@ struct MessageAttachment: View {
             case .image(_):
                 LazyImage(source: .file(attachment), clipTo: RoundedRectangle(cornerRadius: 5))
                     .aspectRatio(contentMode: .fit)
+                    .frame(maxHeight: 400)
 
             case .video(_):
                 VideoPlayer(player: AVPlayer(url: URL(string: viewState.formatUrl(with: attachment))!))
                     .aspectRatio(contentMode: .fit)
+                    .frame(maxHeight: 400)
 
             case .file(_), .text(_), .audio(_):
                 HStack(alignment: .center) {
