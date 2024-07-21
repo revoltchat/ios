@@ -125,21 +125,9 @@ struct MessageContentsView: View {
             Button {
                 copyText(text: viewModel.message.content ?? "")
             } label: {
-                Label("Copy contents", systemImage: "doc.on.clipboard")
+                Label("Copy text", systemImage: "doc.on.clipboard")
             }
-
-            Button(action: { showMemberSheet.toggle() }, label: {
-                Label("Open Profile", systemImage: "person.crop.circle")
-            })
-
-            if isMessageAuthor {
-                Button {
-                    viewModel.editing = viewModel.message
-                } label: {
-                    Label("Edit", systemImage: "pencil")
-                }
-            }
-
+            
             if canDeleteMessage {
                 Button(role: .destructive, action: {
                     Task {
@@ -149,11 +137,34 @@ struct MessageContentsView: View {
                     Label("Delete", systemImage: "trash")
                 })
             }
-
+            
             if !isMessageAuthor {
                 Button(role: .destructive, action: { showReportSheet.toggle() }, label: {
                     Label("Report", systemImage: "exclamationmark.triangle")
                 })
+            } else {
+                Button {
+                    viewModel.editing = viewModel.message
+                } label: {
+                    Label("Edit", systemImage: "pencil")
+                }
+            }
+            
+            Button {
+                if let server = viewModel.server {
+                    copyUrl(url: URL(string: "https://revolt.chat/app/server/\(server.id)/channel/\(viewModel.channel.id)/\(viewModel.message.id)")!)
+                } else {
+                    copyUrl(url: URL(string: "https://revolt.chat/app/channel/\(viewModel.channel.id)/\(viewModel.message.id)")!)
+
+                }
+            } label: {
+                Label("Copy message link", systemImage: "doc.on.clipboard")
+            }
+            
+            Button {
+                copyText(text: viewModel.message.id)
+            } label: {
+                Label("Copy ID", systemImage: "doc.on.clipboard")
             }
         })
         .swipeActions(edge: .trailing) {
