@@ -25,6 +25,7 @@ struct ChannelListItem: View {
         }) {
             HStack {
                 ChannelIcon(channel: channel)
+                    .fontWeight(.medium)
                 
                 Spacer()
                 
@@ -68,9 +69,13 @@ struct ServerChannelScrollView: View {
     @State var showServerSheet: Bool = false
     
     private var canOpenServerSettings: Bool {
-        let perms = resolveServerPermissions(user: viewState.currentUser!, member: viewState.openServerMember!, server: viewState.openServer!)
-                
-        return !perms.intersection([.manageChannel, .manageServer, .managePermissions, .manageRole, .manageCustomisation, .kickMembers, .banMembers, .timeoutMembers, .assignRoles, .manageNickname, .manageMessages, .manageWebhooks, .muteMembers, .deafenMembers, .moveMembers]).isEmpty
+        if let user = viewState.currentUser, let member = viewState.openServerMember, let server = viewState.openServer {
+            let perms = resolveServerPermissions(user: user, member: member, server: server)
+            
+            return !perms.intersection([.manageChannel, .manageServer, .managePermissions, .manageRole, .manageCustomisation, .kickMembers, .banMembers, .timeoutMembers, .assignRoles, .manageNickname, .manageMessages, .manageWebhooks, .muteMembers, .deafenMembers, .moveMembers]).isEmpty
+        } else {
+            return false
+        }
     }
     
     var body: some View {
@@ -79,43 +84,68 @@ struct ServerChannelScrollView: View {
             default: nil
         }
 
-        if let selectedServer = maybeSelectedServer {
-            let categoryChannels = selectedServer.categories?.flatMap(\.channels) ?? []
-            let nonCategoryChannels = selectedServer.channels.filter({ !categoryChannels.contains($0) })
+        if let server = maybeSelectedServer {
+            let categoryChannels = server.categories?.flatMap(\.channels) ?? []
+            let nonCategoryChannels = server.channels.filter({ !categoryChannels.contains($0) })
             
             ScrollView {
                 Button {
                     showServerSheet = true
                 } label: {
                     ZStack(alignment: .bottomLeading) {
-                        if let banner = selectedServer.banner {
-                            ZStack {
-                                LazyImage(source: .file(banner), height: 100, clipTo: UnevenRoundedRectangle(topLeadingRadius: 5, topTrailingRadius: 5))
-                                
-                                LinearGradient(colors: [.clear, .clear, .clear, viewState.theme.background2.color], startPoint: .top, endPoint: .bottom)
-                                    .frame(height: 100)
-                            }
+                        if let banner = server.banner {
+                            LazyImage(source: .file(banner), height: 120, clipTo: RoundedRectangle(cornerRadius: 12))
                         }
                         
-                        HStack {
-                            Text(selectedServer.name)
+                        HStack(alignment: .center, spacing: 8) {
+                            if server.flags?.contains(.offical) == true {
+                                ZStack(alignment: .center) {
+                                    Image(systemName: "seal.fill")
+                                        .resizable()
+                                        .frame(width: 12, height: 12)
+                                        .foregroundStyle(.white)
+                                    
+                                    Image("monochrome")
+                                        .resizable()
+                                        .frame(width: 10, height: 10)
+                                        .colorInvert()
+                                }
+                            } else if server.flags?.contains(.verified) == true {
+                                Image(systemName: "checkmark.seal.fill")
+                                    .resizable()
+                                    .foregroundStyle(.black, .white)
+                                    .frame(width: 12, height: 12)
+                                
+//                                ZStack(alignment: .center) {
+//                                    Image("verified")
+//                                        .resizable()
+//                                        .frame(width: 16, height: 16)
+//
+//                                    Image(systemName: "checkmark")
+//                                        .resizable()
+//                                        .foregroundStyle(.black)
+//                                        .frame(width: 8, height: 8)
+//                                        .bold()
+//                                }
+                            }
+                            
+                            Text(server.name)
+                                .fontWeight(.medium)
                             
                             Spacer()
                             
                             if canOpenServerSettings {
-                                NavigationLink(value: NavigationDestination.server_settings(selectedServer.id)) {
-                                    HStack(spacing: 12) {
-                                        Image(systemName: "gearshape.fill")
-                                            .resizable()
-                                            .frame(width: 16, height: 16)
-                                            .frame(width: 24, height: 24)
-                                    }
+                                NavigationLink(value: NavigationDestination.server_settings(server.id)) {
+                                    Image(systemName: "gearshape.fill")
+                                        .resizable()
+                                        .bold()
+                                        .frame(width: 18, height: 18)
+                                        .foregroundStyle(viewState.theme.foreground.color)
                                 }
-                                .foregroundStyle(viewState.theme.foreground2.color)
                             }
                         }
                         .frame(maxWidth: .infinity)
-                        .padding(.horizontal, 8)
+                        .padding(.horizontal, 16)
                         .padding(.bottom, 8)
                     }
                     .padding(.bottom, 10)
@@ -125,7 +155,7 @@ struct ServerChannelScrollView: View {
                     ChannelListItem(channel: channel)
                 }
                 
-                ForEach(selectedServer.categories ?? []) { category in
+                ForEach(server.categories ?? []) { category in
                     CategoryListItem(category: category)
                 }
             }
@@ -134,7 +164,8 @@ struct ServerChannelScrollView: View {
             .scrollIndicators(.hidden)
             .background(viewState.theme.background2.color)
             .sheet(isPresented: $showServerSheet) {
-                ServerInfoSheet(server: selectedServer)
+                ServerInfoSheet(server: server)
+                    .presentationBackground(viewState.theme.background)
             }
         } else {
             Text("How did you get here?")
