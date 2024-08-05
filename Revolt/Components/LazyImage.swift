@@ -41,7 +41,7 @@ struct LazyImage<S: Shape>: View {
 
     @ViewBuilder
     var body: some View {
-        KFAnimatedImage.init(source: _source)
+        KFAnimatedImage(source: _source)
             .placeholder { Color.clear }
             .aspectRatio(contentMode: contentMode)
             .frame(width: width, height: height)

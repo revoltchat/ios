@@ -56,9 +56,19 @@ struct Avatar: View {
             }
             
             if withPresence {
-                PresenceIndicator(presence: user.status?.presence, width: width / 2.8, height: height / 2.8)
+                ZStack(alignment: .center) {
+                    Circle()
+                        .foregroundStyle(.black)
+                        .frame(width: width / 2.5, height: width / 2.5)
+                        .blendMode(.destinationOut)
+
+                    PresenceIndicator(presence: user.status?.presence, width: width / 3, height: height / 3)
+                }
+                    .padding(.bottom, -2)
+                    .padding(.trailing, -2)
             }
         }
+        .compositingGroup()
     }
 }
 

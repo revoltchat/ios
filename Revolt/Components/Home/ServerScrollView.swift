@@ -21,17 +21,30 @@ struct ServerScrollView: View {
                     .frame(height: buttonSize + 12 + 8)
                 Section {
                     ForEach(viewState.servers.elements, id: \.key) { elem in
-                        Button(action: {
-                            viewState.currentServer = .server(elem.value.id)
-                        }) {
+                        Button {
+                            withAnimation {
+                                viewState.currentServer = .server(elem.value.id)
+                            }
+                        } label: {
                             ZStack(alignment: .topTrailing) {
                                 ServerListIcon(server: elem.value, height: buttonSize, width: buttonSize, currentSelection: $viewState.currentServer)
+                                
                                 if let unread = viewState.getUnreadCountFor(server: elem.value) {
-                                    UnreadCounter(unread: unread, mentionSize: buttonSize / 2.5, unreadSize: buttonSize / 3)
-                                        .background(viewState.theme.background)
-                                        .containerShape(Circle())
+                                    ZStack(alignment: .center) {
+                                        Circle()
+                                            .foregroundStyle(.black)
+                                            .frame(width: (buttonSize / 3) + 6, height: (buttonSize / 3) + 6)
+                                            .blendMode(.destinationOut)
+                                        
+                                        UnreadCounter(unread: unread, mentionSize: buttonSize / 2.5, unreadSize: buttonSize / 3)
+                                            .background(viewState.theme.foreground)
+                                            .containerShape(Circle())
+                                    }
+                                    .padding(.top, -2)
+                                    .padding(.trailing, -2)
                                 }
                             }
+                            .compositingGroup()
                         }
                         .padding(.vertical, 2)
                     }
@@ -86,7 +99,7 @@ struct ServerScrollView: View {
             .background(viewState.theme.background)
         }
         .padding(.horizontal, viewWidth - buttonSize)
-        .background(viewState.theme.background.color)
+        .background(viewState.theme.background)
     }
 }
 
