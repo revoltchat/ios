@@ -20,13 +20,18 @@ class ReplyViewModel: ObservableObject {
 
     @Binding var replies: [Reply]
 
+    var channel: Channel
+    var server: Server?
+
     func remove() {
         replies.remove(at: idx)
     }
 
-    internal init(idx: Int, replies: Binding<[Reply]>) {
+    internal init(idx: Int, replies: Binding<[Reply]>, channel: Channel, server: Server?) {
         self.idx = idx
         _replies = replies
+        self.channel = channel
+        self.server = server
     }
 }
 
@@ -34,22 +39,36 @@ struct ReplyView: View {
     @EnvironmentObject var viewState: ViewState
     @ObservedObject var viewModel: ReplyViewModel
 
-    var id: String
-
     @ViewBuilder
     var body: some View {
-        let reply = viewModel.replies[viewModel.idx]
+        let reply = $viewModel.replies[viewModel.idx]
 
-        let author = viewState.users[reply.message.author]!
+        let user = viewState.users[reply.message.author.wrappedValue]!
+        let member = viewModel.server.flatMap { viewState.members[$0.id]?[user.id] }
 
-        HStack {
+        HStack(alignment: .center) {
             Button(action: viewModel.remove) {
-                Image(systemName: "xmark.circle")
+                Image(systemName: "xmark")
+                    .resizable()
+                    .frame(width: 12, height: 12)
+                    .foregroundStyle(viewState.theme.foreground2)
             }
-            Avatar(user: author, width:16, height: 16)
-            Text(author.username)
-            if let content = reply.message.content {
-                Text(content)
+            
+            Avatar(user: user, width: 16, height: 16)
+            
+            Text(reply.message.masquerade.wrappedValue?.name ?? member?.nickname ?? user.display_name ?? user.username)
+                .font(.caption)
+                .lineLimit(1)
+                .foregroundStyle(member?.displayColour(theme: viewState.theme, server: viewModel.server!) ?? AnyShapeStyle(viewState.theme.foreground.color))
+            
+            if !(reply.message.wrappedValue.attachments?.isEmpty ?? true) {
+                Text(Image(systemName: "doc.text.fill"))
+                    .font(.caption)
+                    .foregroundStyle(viewState.theme.foreground2)
+            }
+            
+            if let content = Binding(reply.message.content) {
+                Contents(text: content, fontSize: 12)
                     .lineLimit(1)
                     .truncationMode(.tail)
             }
@@ -130,6 +149,8 @@ struct MessageBox: View {
     func sendMessage() {
         let c = content
         content = ""
+        let replies = channelReplies
+        channelReplies = []
 
         if let message = editing {
             Task {
@@ -143,7 +164,7 @@ struct MessageBox: View {
             selectedPhotos = []
             
             Task {
-                await viewState.queueMessage(channel: channel.id, replies: channelReplies, content: c, attachments: f)
+                await viewState.queueMessage(channel: channel.id, replies: replies, content: c, attachments: f)
             }
         }
     }
@@ -206,9 +227,10 @@ struct MessageBox: View {
     var body: some View {
         VStack(alignment: .leading, spacing: 4) {
             ForEach(Array(channelReplies.enumerated()), id: \.element.message.id) { reply in
-                let model = ReplyViewModel(idx: reply.offset, replies: $channelReplies)
-                ReplyView(viewModel: model, id: reply.element.message.id)
-                    .padding(.horizontal, 16)
+                let model = ReplyViewModel(idx: reply.offset, replies: $channelReplies, channel: channel, server: server)
+                
+                ReplyView(viewModel: model)
+                    .padding(.horizontal, 8)
             }
             VStack(alignment: .leading, spacing: 8) {
                 if selectedPhotos.count > 0 {

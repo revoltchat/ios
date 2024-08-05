@@ -40,7 +40,6 @@ class MessageableChannelViewModel: ObservableObject {
     @Published var channel: Channel
     @Published var server: Server?
     @Binding var messages: [String]
-    @Published var replies: [Reply] = []
     @Published var queuedMessages: [QueuedMessage] = []
     
     init(viewState: ViewState, channel: Channel, server: Server?, messages: Binding<[String]>) {
@@ -48,7 +47,6 @@ class MessageableChannelViewModel: ObservableObject {
         self.channel = channel
         self.server = server
         self._messages = messages
-        self.replies = []
         self.queuedMessages = []
     }
     
@@ -111,6 +109,7 @@ struct MessageableChannelView: View {
     @State var showingSelectEmoji = false
     @State var currentlyEditing: Message? = nil
     @State var highlighted: String? = nil
+    @State var replies: [Reply] = []
     
     @Binding var showSidebar: Bool
     
@@ -181,7 +180,7 @@ struct MessageableChannelView: View {
                     member: viewModel.getMember(message: msg.wrappedValue),
                     server: $viewModel.server,
                     channel: $viewModel.channel,
-                    replies: $viewModel.replies,
+                    replies: $replies,
                     channelScrollPosition: ChannelScrollController(proxy: scrollProxy, highlighted: $highlighted),
                     editing: $currentlyEditing
                 )]
@@ -214,7 +213,7 @@ struct MessageableChannelView: View {
                         member: viewModel.getMember(message: msg.wrappedValue),
                         server: $viewModel.server,
                         channel: $viewModel.channel,
-                        replies: $viewModel.replies,
+                        replies: $replies,
                         channelScrollPosition: ChannelScrollController(proxy: scrollProxy, highlighted: $highlighted),
                         editing: $currentlyEditing
                     )
@@ -356,20 +355,22 @@ struct MessageableChannelView: View {
                             .overlay(alignment: .bottomLeading) {
                                 if let users = getCurrentlyTyping(), !users.isEmpty {
                                     HStack {
-                                        HStack(spacing: -10) {
+                                        HStack(spacing: -6) {
                                             ForEach(users, id: \.0.id) { (user, member) in
-                                                Avatar(user: user, member: member, width: 16, height: 16)
+                                                Avatar(user: user, member: member, width: 12, height: 12)
                                             }
                                         }
                                         
                                         Text(formatTypingIndicatorText(withUsers: users))
-                                            .font(.callout)
+                                            .font(Font.system(size: 14))
                                             .foregroundStyle(viewState.theme.foreground2)
+                                            .lineLimit(1)
                                         
                                         Spacer()
                                     }
                                     .frame(maxWidth: .infinity)
                                     .padding(.horizontal, 8)
+                                    .padding(.top, 2)
                                     .background(viewState.theme.messageBox)
                                 }
                             }
@@ -386,7 +387,7 @@ struct MessageableChannelView: View {
                     MessageBox(
                         channel: viewModel.channel,
                         server: viewModel.server,
-                        channelReplies: $viewModel.replies,
+                        channelReplies: $replies,
                         focusState: $focused,
                         showingSelectEmoji: $showingSelectEmoji,
                         editing: $currentlyEditing
