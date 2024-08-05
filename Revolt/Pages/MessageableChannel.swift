@@ -116,6 +116,10 @@ struct MessageableChannelView: View {
     
     @FocusState var focused: Bool
     
+    var isCompactMode: Bool {
+        return TEMP_IS_COMPACT_MODE.0
+    }
+    
     func viewMembers() {
         
     }
@@ -160,6 +164,65 @@ struct MessageableChannelView: View {
         return "\(base) \(ending)"
     }
     
+    func getMessages(scrollProxy: ScrollViewProxy) -> [[MessageContentsViewModel]] {
+        if isCompactMode {
+            return $viewModel.messages.map { $messageId -> Binding<Message> in
+                let message = Binding($viewState.messages[messageId])!
+                
+                return message
+            }
+            .map { msg in
+                let author = Binding($viewState.users[msg.author.wrappedValue])!
+                
+                return [MessageContentsViewModel(
+                    viewState: viewState,
+                    message: msg,
+                    author: author,
+                    member: viewModel.getMember(message: msg.wrappedValue),
+                    server: $viewModel.server,
+                    channel: $viewModel.channel,
+                    replies: $viewModel.replies,
+                    channelScrollPosition: ChannelScrollController(proxy: scrollProxy, highlighted: $highlighted),
+                    editing: $currentlyEditing
+                )]
+            }
+        } else {
+            return $viewModel.messages.map { $messageId -> Binding<Message> in
+                let message = Binding($viewState.messages[messageId])!
+                
+                return message
+            }
+            .reduce([]) { (messages: [[Binding<Message>]], $msg) in
+                if let lastMessage = messages.last?.last?.wrappedValue {
+                    if lastMessage.author == msg.author && (msg.replies?.count ?? 0) == 0 {
+                        return messages.prefix(upTo: messages.endIndex - 1) + [messages.last! + [$msg]]
+                    }
+                    
+                    return messages + [[$msg]]
+                }
+                
+                return [[$msg]]
+            }
+            .map { msgs in
+                return msgs.map { msg -> MessageContentsViewModel in
+                    let author = Binding($viewState.users[msg.author.wrappedValue])!
+                    
+                    return MessageContentsViewModel(
+                        viewState: viewState,
+                        message: msg,
+                        author: author,
+                        member: viewModel.getMember(message: msg.wrappedValue),
+                        server: $viewModel.server,
+                        channel: $viewModel.channel,
+                        replies: $viewModel.replies,
+                        channelScrollPosition: ChannelScrollController(proxy: scrollProxy, highlighted: $highlighted),
+                        editing: $currentlyEditing
+                    )
+                }
+            }
+        }
+    }
+    
     var body: some View {
         VStack(spacing: 0) {
             PageToolbar(showSidebar: $showSidebar) {
@@ -196,40 +259,8 @@ struct MessageableChannelView: View {
                                         }
                                         .listRowBackground(viewState.theme.background.color)
                                 }
-                                
-                                let messages = $viewModel.messages.map { $messageId -> Binding<Message> in
-                                    let message = Binding($viewState.messages[messageId])!
-                                    
-                                    return message
-                                }
-                                    .reduce([]) { (messages: [[Binding<Message>]], $msg) in
-                                        if let lastMessage = messages.last?.last?.wrappedValue {
-                                            if lastMessage.author == msg.author && (msg.replies?.count ?? 0) == 0 {
-                                                return messages.prefix(upTo: messages.endIndex - 1) + [messages.last! + [$msg]]
-                                            }
-                                            
-                                            return messages + [[$msg]]
-                                        }
-                                        
-                                        return [[$msg]]
-                                    }
-                                    .map { msgs in
-                                        return msgs.map { msg -> MessageContentsViewModel in
-                                            let author = Binding($viewState.users[msg.author.wrappedValue])!
-                                            
-                                            return MessageContentsViewModel(
-                                                viewState: viewState,
-                                                message: msg,
-                                                author: author,
-                                                member: viewModel.getMember(message: msg.wrappedValue),
-                                                server: $viewModel.server,
-                                                channel: $viewModel.channel,
-                                                replies: $viewModel.replies,
-                                                channelScrollPosition: ChannelScrollController(proxy: proxy, highlighted: $highlighted),
-                                                editing: $currentlyEditing
-                                            )
-                                        }
-                                    }
+                                                     
+                                let messages = getMessages(scrollProxy: proxy)
                                 
                                 ForEach(messages, id: \.last!.message.id) { group in
                                     let first = group.first!
@@ -252,7 +283,7 @@ struct MessageableChannelView: View {
                                     }
                                     .padding(.leading, 40)
                                     .listRowSeparator(.hidden)
-                                    .listRowInsets(EdgeInsets(top: 4, leading: 12, bottom: 4, trailing: 12))
+                                    .listRowInsets(EdgeInsets(top: 4, leading: 12, bottom: 0, trailing: 12))
                                 
                                     //
                                     //                                    if lastMessage.id == viewState.unreads[viewModel.channel.id]?.last_id, lastMessage.id != viewModel.messages.last {
@@ -278,6 +309,7 @@ struct MessageableChannelView: View {
 
                                 
                                 Color.clear
+                                    .listRowSeparator(.hidden)
                                     .id("bottom")
                                     .listRowInsets(EdgeInsets(top: 0, leading: 0, bottom: 0, trailing: 0))
                                     .listRowBackground(Color.clear)
@@ -323,21 +355,21 @@ struct MessageableChannelView: View {
                             }
                             .overlay(alignment: .bottomLeading) {
                                 if let users = getCurrentlyTyping(), !users.isEmpty {
-                                    VStack(alignment: .leading) {
-                                        HStack {
-                                            HStack(spacing: -10) {
-                                                ForEach(users, id: \.0.id) { (user, member) in
-                                                    Avatar(user: user, member: member, width: 16, height: 16)
-                                                }
+                                    HStack {
+                                        HStack(spacing: -10) {
+                                            ForEach(users, id: \.0.id) { (user, member) in
+                                                Avatar(user: user, member: member, width: 16, height: 16)
                                             }
-                                            
-                                            Text(formatTypingIndicatorText(withUsers: users))
-                                                .font(.callout)
-                                                .foregroundStyle(viewState.theme.foreground2)
                                         }
-                                        .frame(maxWidth: .infinity)
+                                        
+                                        Text(formatTypingIndicatorText(withUsers: users))
+                                            .font(.callout)
+                                            .foregroundStyle(viewState.theme.foreground2)
+                                        
+                                        Spacer()
                                     }
                                     .frame(maxWidth: .infinity)
+                                    .padding(.horizontal, 8)
                                     .background(viewState.theme.messageBox)
                                 }
                             }
