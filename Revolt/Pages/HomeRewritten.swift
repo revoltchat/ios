@@ -119,7 +119,7 @@ struct HomeRewritten: View {
                                 }
                             }
                     }
-                        .gesture(
+                    .simultaneousGesture(
                             DragGesture()
                                 .onChanged({ g in
                                     withAnimation {
