@@ -150,7 +150,13 @@ struct ChannelInfo: View {
                 return groupDMChannel.recipients.map { (viewState.users[$0]!, nil) }
 
             case .text_channel(_), .voice_channel(_):
-                return viewState.members[channel.server!]!.values.map { (viewState.users[$0.id.user]!, $0) }
+                return viewState.members[channel.server!]!.values.compactMap {
+                    if let user = viewState.users[$0.id.user] {
+                        return (user, $0)
+                    } else {
+                        return nil
+                    }
+                }
         }
     }
     
@@ -287,6 +293,7 @@ struct ChannelInfo: View {
         .background(viewState.theme.background.color)
         .sheet(item: $showInviteSheet) { url in
             ShareInviteSheet(channel: channel, url: url.url)
+                .presentationBackground(viewState.theme.background)
         }
     }
 }

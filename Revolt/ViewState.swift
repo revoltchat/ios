@@ -515,7 +515,7 @@ public class ViewState: ObservableObject {
                 }
                 
                 if let member = m.member {
-                    members[member.id.server]?[m.author] = member
+                    members[member.id.server]?[member.id.user] = member
                 }
 
                 messages[m.id] = m
