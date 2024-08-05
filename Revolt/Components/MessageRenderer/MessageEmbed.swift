@@ -46,8 +46,8 @@ struct MessageEmbed: View {
                         .fill(parseEmbedColor(color: embed.colour))
                         .frame(width: 4)
                     
-                    VStack(spacing: 6) {
-                        HStack(spacing: 6) {
+                    VStack(alignment: .leading, spacing: 6) {
+                        HStack(alignment: .top, spacing: 6) {
                             if let icon_url = embed.icon_url {
                                 if let url = URL(string: icon_url) {
                                     LazyImage(source: .url(url), height: 14, width: 14, clipTo: Rectangle())
@@ -80,7 +80,7 @@ struct MessageEmbed: View {
                         .frame(width: 4)
                     
                     VStack(alignment: .leading, spacing: 6) {
-                        HStack(spacing: 6) {
+                        HStack(alignment: .top, spacing: 6) {
                             if let icon_url = embed.icon_url, embed.site_name != nil {
                                 if let url = URL(string: icon_url) {
                                     LazyImage(source: .url(url), height: 14, width: 14, clipTo: Rectangle())
