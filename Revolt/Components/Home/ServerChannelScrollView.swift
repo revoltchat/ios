@@ -115,22 +115,11 @@ struct ServerChannelScrollView: View {
                                     .resizable()
                                     .foregroundStyle(.black, .white)
                                     .frame(width: 12, height: 12)
-                                
-//                                ZStack(alignment: .center) {
-//                                    Image("verified")
-//                                        .resizable()
-//                                        .frame(width: 16, height: 16)
-//
-//                                    Image(systemName: "checkmark")
-//                                        .resizable()
-//                                        .foregroundStyle(.black)
-//                                        .frame(width: 8, height: 8)
-//                                        .bold()
-//                                }
                             }
                             
                             Text(server.name)
                                 .fontWeight(.medium)
+                                .foregroundStyle(server.banner != nil ? .white : viewState.theme.foreground.color)
                             
                             Spacer()
                             
@@ -140,13 +129,18 @@ struct ServerChannelScrollView: View {
                                         .resizable()
                                         .bold()
                                         .frame(width: 18, height: 18)
-                                        .foregroundStyle(viewState.theme.foreground.color)
+                                        .foregroundStyle(server.banner != nil ? .white : viewState.theme.foreground.color)
                                 }
                             }
                         }
-                        .frame(maxWidth: .infinity)
-                        .padding(.horizontal, 16)
-                        .padding(.bottom, 8)
+                            .frame(maxWidth: .infinity)
+                            .padding(.horizontal, 16)
+                            .padding(.bottom, 8)
+                            .if(server.banner != nil) { $0.background(
+                                UnevenRoundedRectangle(bottomLeadingRadius: 12, bottomTrailingRadius: 12)
+                                    .foregroundStyle(LinearGradient(colors: [Color(red: 32/255, green: 26/255, blue: 25/255, opacity: 0.5), .clear], startPoint: .bottom, endPoint: .top))
+                                )
+                            }
                     }
                     .padding(.bottom, 10)
                 }
