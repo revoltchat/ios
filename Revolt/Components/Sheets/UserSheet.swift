@@ -186,6 +186,7 @@ struct UserSheet: View {
         .padding(.horizontal, 16)
         .background(viewState.theme.background.color)
         .presentationDetents([.fraction(0.4), .large])
+        .presentationBackground(viewState.theme.background)
         .task {
             if let profile = user.profile {
                 self.profile = profile
@@ -217,9 +218,9 @@ struct UserSheetPreview: PreviewProvider {
         
     static var previews: some View {
         Text("foo")
-            .sheet(isPresented: .constant(true), content: {
+            .sheet(isPresented: .constant(true)) {
                 UserSheet(user: viewState.users["0"]!, member: nil)
-            })
+            }
             .applyPreviewModifiers(withState: viewState)
     }
 }

@@ -17,7 +17,7 @@ struct ServerInfoSheet: View {
     var server: Server
     
     var body: some View {
-        VStack {
+        VStack(alignment: .leading) {
             ZStack(alignment: .bottomLeading) {
                 if let banner = server.banner {
                     LazyImage(source: .file(banner), height: 128, clipTo: UnevenRoundedRectangle(topLeadingRadius: 5, topTrailingRadius: 5))
@@ -42,9 +42,9 @@ struct ServerInfoSheet: View {
             .padding(.bottom, 10)
             
             if let description = server.description {
-                Text(verbatim: description)
+                Contents(text: .constant(description), fontSize: 15)
                     .fixedSize(horizontal: false, vertical: true)
-                    .font(.subheadline)
+                    .padding(.horizontal, 32)
             }
             
             List {
@@ -92,6 +92,7 @@ struct ServerInfoSheet: View {
                         }
                     }
                 }
+                .listRowBackground(viewState.theme.background)
                 
                 Section {
                     Button {
@@ -107,8 +108,10 @@ struct ServerInfoSheet: View {
                         }
                     }
                 }
+                .listRowBackground(viewState.theme.background)
             }
             .listStyle(.inset)
+            .scrollContentBackground(.hidden)
         }
         .presentationDetents([.medium, .large])
         .confirmationDialog("Are you sure you want to leave?", isPresented: $showLeaveServerDialog) {

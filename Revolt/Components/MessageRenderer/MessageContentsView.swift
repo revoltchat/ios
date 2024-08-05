@@ -79,7 +79,7 @@ struct MessageContentsView: View {
     var body: some View {
         VStack(alignment: .leading) {
             if let content = Binding(viewModel.$message.content) {
-                Contents(text: content, fontSize: 17)
+                Contents(text: content, fontSize: 16)
                     //.font(.body)
             }
 
@@ -99,6 +99,7 @@ struct MessageContentsView: View {
         }
         .sheet(isPresented: $showReportSheet) {
             ReportMessageSheetView(showSheet: $showReportSheet, messageView: viewModel)
+                .presentationBackground(viewState.theme.background)
         }
         .sheet(isPresented: $showReactSheet) {
             EmojiPicker(background: AnyView(viewState.theme.background)) { emoji in
@@ -110,6 +111,7 @@ struct MessageContentsView: View {
             .padding([.top, .horizontal])
             .background(viewState.theme.background.ignoresSafeArea(.all))
             .presentationDetents([.large])
+            .presentationBackground(viewState.theme.background)
         }
         .contextMenu(self.isStatic ? nil : ContextMenu {
             Button(action: viewModel.reply, label: {

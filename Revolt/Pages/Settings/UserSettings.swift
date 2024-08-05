@@ -992,6 +992,7 @@ struct UserSettings: View {
             SettingsSheetContainer(showSheet: $presentGenerateCodesSheet) {
                 GenerateRecoveryCodesSheet(showSheet: $presentGenerateCodesSheet, sheetIsNotDismissable: $GenerateCodeSheetIsNotDismissable)
             }
+            .presentationBackground(viewState.theme.background)
             .interactiveDismissDisabled(GenerateCodeSheetIsNotDismissable)
         }
         .sheet(isPresented: $presentAddTOTPSheet, onDismiss: {
@@ -1002,6 +1003,7 @@ struct UserSettings: View {
             SettingsSheetContainer(showSheet: $presentAddTOTPSheet) {
                 AddTOTPSheet(showSheet: $presentAddTOTPSheet)
             }
+            .presentationBackground(viewState.theme.background)
         }
         .sheet(isPresented: $presentRemoveTOTPSheet, onDismiss: {
             Task {
@@ -1011,6 +1013,7 @@ struct UserSettings: View {
             SettingsSheetContainer(showSheet: $presentRemoveTOTPSheet) {
                 RemoveTOTPSheet(showSheet: $presentRemoveTOTPSheet)
             }
+            .presentationBackground(viewState.theme.background)
         }
         .sheet(isPresented: $presentChangeUsernameSheet, onDismiss: {
             Task {
@@ -1020,21 +1023,25 @@ struct UserSettings: View {
             SettingsSheetContainer(showSheet: $presentChangeUsernameSheet) {
                 UsernameUpdateSheet(viewState: viewState, showSheet: $presentChangeUsernameSheet)
             }
+            .presentationBackground(viewState.theme.background)
         }
         .sheet(isPresented: $presentChangePasswordSheet) {
             SettingsSheetContainer(showSheet: $presentChangePasswordSheet) {
                 PasswordUpdateSheet(showSheet: $presentChangePasswordSheet)
             }
+            .presentationBackground(viewState.theme.background)
         }
         .sheet(isPresented: $presentDisableAccountSheet) {
             SettingsSheetContainer(showSheet: $presentDisableAccountSheet) {
                 DisableAccountSheet(showSheet: $presentDisableAccountSheet)
             }
+            .presentationBackground(viewState.theme.background)
         }
         .sheet(isPresented: $presentDeleteAccountSheet) {
             SettingsSheetContainer(showSheet: $presentDeleteAccountSheet) {
                 DeleteAccountSheet(showSheet: $presentDeleteAccountSheet)
             }
+            .presentationBackground(viewState.theme.background)
         }
     }
 }
