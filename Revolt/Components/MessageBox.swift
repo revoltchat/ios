@@ -485,8 +485,10 @@ struct UploadButton: View {
     @Binding var selectedPhotos: [MessageBox.Photo]
 
     func onFileCompletion(res: Result<URL, Error>) {
-        if case .success(let url) = res {
+        if case .success(let url) = res, url.startAccessingSecurityScopedResource() {
             let data = try? Data(contentsOf: url)
+            url.stopAccessingSecurityScopedResource()
+            
             guard let data = data else { return }
 
 #if os(macOS)
