@@ -250,7 +250,6 @@ class UserSettingsData {
             writeCacheToFile()
         } catch {
             self.cacheState = .failed
-            let error = error as! RevoltError
             switch error {
                 case .Alamofire(let afErr):
                     if afErr.responseCode == 401 {

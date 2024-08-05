@@ -18,7 +18,7 @@ enum CurrentSettingsPage: Hashable {
 
 struct Settings: View {
     @EnvironmentObject var viewState: ViewState
-    
+
     @State var presentLogoutDialog = false
 
     var body: some View {
@@ -26,15 +26,24 @@ struct Settings: View {
             Section("User Settings") {
                 NavigationLink(destination: { UserSettings() }) {
                     Image(systemName: "person.fill")
+                        .resizable()
+                        .scaledToFit()
+                        .frame(width: 16, height: 16)
                     Text("My Account")
                 }
                 NavigationLink(destination: { ProfileSettings() }) {
                     Image(systemName: "person.text.rectangle.fill")
+                        .resizable()
+                        .scaledToFit()
+                        .frame(width: 16, height: 16)
                     Text("Profile")
                 }
-                
+
                 NavigationLink(destination: { SessionsSettings() }) {
                     Image(systemName: "checkmark.shield.fill")
+                        .resizable()
+                        .scaledToFit()
+                        .frame(width: 16, height: 16)
                     Text("Sessions")
                 }
             }
@@ -43,15 +52,24 @@ struct Settings: View {
             Section("Client Settings") {
                 NavigationLink(destination: { AppearanceSettings() }) {
                     Image(systemName: "paintpalette.fill")
+                        .resizable()
+                        .scaledToFit()
+                        .frame(width: 16, height: 16)
                     Text("Appearance")
                 }
 
                 NavigationLink(destination: { NotificationSettings() }) {
                     Image(systemName: "bell.fill")
+                        .resizable()
+                        .scaledToFit()
+                        .frame(width: 16, height: 16)
                     Text("Notifications")
                 }
                 NavigationLink(destination: { LanguageSettings() }) {
                     Image(systemName: "globe")
+                        .resizable()
+                        .scaledToFit()
+                        .frame(width: 16, height: 16)
                     Text("Language")
                 }
             }
@@ -60,10 +78,16 @@ struct Settings: View {
             Section("Misc") {
                 NavigationLink(destination: About()) {
                     Image(systemName: "info.circle.fill")
+                        .resizable()
+                        .scaledToFit()
+                        .frame(width: 16, height: 16)
                     Text("About")
                 }
                 NavigationLink(destination: { ExperimentsSettings() }) {
                     Image(systemName: "flask.fill")
+                        .resizable()
+                        .scaledToFit()
+                        .frame(width: 16, height: 16)
                     Text("Experiments")
                 }
 #if DEBUG
@@ -77,7 +101,10 @@ struct Settings: View {
                 } label: {
                     HStack {
                         Image(systemName: "arrow.left.square")
+                            .resizable()
+                            .scaledToFit()
                             .foregroundStyle(.red)
+                            .frame(width: 16, height: 16)
                         Text("Logout")
                             .foregroundStyle(.red)
                     }

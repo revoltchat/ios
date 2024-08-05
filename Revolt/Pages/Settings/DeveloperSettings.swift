@@ -11,12 +11,19 @@ struct DeveloperSettings: View {
     @EnvironmentObject var viewState: ViewState
 
     var body: some View {
-        Button(action: {
-            Task {
-                await viewState.promptForNotifications()
+        List {
+            Button {
+                Task {
+                    await viewState.promptForNotifications()
+                }
+            } label: {
+                Text("Force remote notification upload")
             }
-        }) {
-            Text("Force remote notification upload")
+            .listRowBackground(viewState.theme.background2)
         }
+        .background(viewState.theme.background)
+        .scrollContentBackground(.hidden)
+        .toolbarBackground(viewState.theme.topBar, for: .automatic)
+
     }
 }
