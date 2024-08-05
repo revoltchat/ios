@@ -87,7 +87,7 @@ struct HomeRewritten: View {
             }
         } else {
             GeometryReader { geo in
-                let width = min(geo.size.width * 0.85, 600)
+                let sidebarWidth = min(geo.size.width * 0.85, 600)
                 
                 ZStack(alignment: .topLeading) {
                     HStack(spacing: 0) {
@@ -102,51 +102,55 @@ struct HomeRewritten: View {
                                 DMScrollView(currentChannel: $currentChannel)
                         }
                     }
-                    .frame(width: width)
+                    .frame(width: sidebarWidth)
                     .background(viewState.theme.background2.color)
                     
-                    MaybeChannelView(currentChannel: $currentChannel, currentSelection: $currentSelection, currentServer: $currentServer, showSidebar: $showSidebar)
-                        .disabled(offset != 0.0)
-                        .onTapGesture {
-                            if offset != 0.0 {
-                                withAnimation {
-                                    showSidebar = false
-                                    offset = .zero
+                    ZStack {
+                        MaybeChannelView(currentChannel: $currentChannel, currentSelection: $currentSelection, currentServer: $currentServer, showSidebar: $showSidebar)
+                            .disabled(offset != 0.0)
+                            .offset(x: offset)
+                            .frame(width: geo.size.width)
+                            .onTapGesture {
+                                if offset != 0.0 {
+                                    withAnimation {
+                                        showSidebar = false
+                                        offset = .zero
+                                    }
                                 }
                             }
-                        }
+                    }
                         .gesture(
                             DragGesture()
                                 .onChanged({ g in
                                     withAnimation {
-                                        if offset > 100 {
+                                        let snapSide = sidebarWidth * (2 / 3)
+                                        
+                                        if offset > snapSide {
                                             forceOpen = true
-                                        } else if offset <= 100, forceOpen {
+                                        } else if offset <= snapSide, forceOpen {
                                             forceOpen = false
                                         }
                                         
-                                        offset = min(max(g.translation.width - 50, 0), width)
+                                        offset = min(max(g.translation.width, 0), sidebarWidth)
                                     }
                                 })
                                 .onEnded({ v in
                                     withAnimation {
                                         if v.translation.width > 100 || forceOpen {
                                             forceOpen = false
-                                            offset = width
+                                            offset = sidebarWidth
                                         } else {
                                             offset = .zero
                                         }
                                     }
                                 })
                         )
-                        .offset(x: offset)
-                        .frame(width: geo.size.width)
                 }
                 .onChange(of: showSidebar) { (_, after) in
                     if after {
                         withAnimation {
-                        offset = min(geo.size.width * 0.85, 600)
-                        showSidebar = false
+                            offset = sidebarWidth
+                            showSidebar = false
                         }
                     }
                 }
