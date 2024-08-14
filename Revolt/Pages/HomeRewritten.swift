@@ -120,7 +120,7 @@ struct HomeRewritten: View {
                             }
                     }
                     .simultaneousGesture(
-                            DragGesture()
+                        DragGesture(minimumDistance: 50.0)
                                 .onChanged({ g in
                                     withAnimation {
                                         let snapSide = sidebarWidth * (2 / 3)
