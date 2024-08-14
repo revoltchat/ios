@@ -516,9 +516,8 @@ struct Contents: View {
     }
 
     var body: some View {
-        if let text = buildContent() {
-            text
-        }
+        // loadBody()
+        Text(verbatim: text).font(Font.system(size: fontSize))
     }
 }
 
