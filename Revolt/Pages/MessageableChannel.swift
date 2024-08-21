@@ -280,7 +280,7 @@ struct MessageableChannelView: View {
                                             .animation(.linear, value: highlighted == first.message.id)
                                             .id(message.message.id)
                                     }
-                                    .padding(.leading, 40)
+                                    .padding(.leading, 44)
                                     .listRowSeparator(.hidden)
                                     .listRowInsets(EdgeInsets(top: 4, leading: 12, bottom: 0, trailing: 12))
                                 
@@ -379,10 +379,10 @@ struct MessageableChannelView: View {
                         }
                         .scrollDismissesKeyboard(.automatic)
                     }
-                    .gesture(TapGesture().onEnded {
+                    .onTapGesture {
                         focused = false
                         showingSelectEmoji = false
-                    })
+                    }
                     
                     MessageBox(
                         channel: viewModel.channel,

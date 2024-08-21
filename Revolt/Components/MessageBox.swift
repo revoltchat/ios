@@ -245,13 +245,13 @@ struct MessageBox: View {
                                         Image(uiImage: image)
                                             .resizable()
                                             .scaledToFit()
-                                            .frame( maxWidth: 100, maxHeight: 100 )
+                                            .frame(maxWidth: 100, maxHeight: 100)
                                             .clipShape(RoundedRectangle(cornerRadius: 5.0, style: .circular))
 #else
                                         Image(nsImage: image)
                                             .resizable()
                                             .scaledToFit()
-                                            .frame( maxWidth: 100, maxHeight: 100 )
+                                            .frame(maxWidth: 100, maxHeight: 100)
                                             .clipShape(RoundedRectangle(cornerRadius: 5.0, style: .circular))
 #endif
                                     } else {
