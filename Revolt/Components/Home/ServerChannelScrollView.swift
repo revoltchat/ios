@@ -52,14 +52,39 @@ struct CategoryListItem: View {
     var selectedChannel: String?
 
     var body: some View {
+        let isClosed = viewState.userSettingsStore.store.closedCategories[server.id]?.contains(category.id) ?? false
+        
         VStack(alignment: .leading) {
-            Text(category.title)
-                .font(.subheadline)
-                .fontWeight(.medium)
-                .padding(.leading, 4)
+            Button {
+                withAnimation(.easeInOut) {
+                    if isClosed {
+                        viewState.userSettingsStore.store.closedCategories[server.id]?.remove(category.id)
+                    } else {
+                        viewState.userSettingsStore.store.closedCategories[server.id, default: Set()].insert(category.id)
+                    }
+                }
+            } label: {
+                HStack(spacing: 12) {
+                    Image(systemName: "chevron.right")
+                        .resizable()
+                        .rotationEffect(Angle(degrees: isClosed ? 0 : 90))
+                        .scaledToFit()
+                        .frame(width: 8, height: 8)
+                    
+                    Text(category.title)
+                        .font(.subheadline)
+                        .fontWeight(.medium)
+                        .foregroundStyle(viewState.theme.foreground)
+                    
+                    Spacer()
+                }
+                .padding(.horizontal, 6)
+            }
             
-            ForEach(category.channels.compactMap({ viewState.channels[$0] }), id: \.id) { channel in
-                ChannelListItem(server: server, channel: channel)
+            if !isClosed {
+                ForEach(category.channels.compactMap({ viewState.channels[$0] }), id: \.id) { channel in
+                    ChannelListItem(server: server, channel: channel)
+                }
             }
         }
     }
