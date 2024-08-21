@@ -39,8 +39,8 @@
 //    @EnvironmentObject var viewState: ViewState
 //    @State var showJoinServerSheet: Bool = false
 //
-//    var currentServer: Server? {
-//        if let id = viewState.currentServer?.id {
+//    var currentSelection: Server? {
+//        if let id = viewState.currentSelection?.id {
 //            return viewState.servers[id]!
 //        }
 //        
@@ -50,7 +50,7 @@
 //    var body: some View {
 //        VStack(alignment: .leading) {
 //            NavigationSplitView {
-//                List(selection: $viewState.currentServer) {
+//                List(selection: $viewState.currentSelection) {
 //                    NavigationLink(value: MainSelection.dms) {
 //                        Avatar(user: viewState.currentUser!, withPresence: true)
 //                            .frame(width: 16, height: 16)
@@ -122,7 +122,7 @@
 //                .background(viewState.theme.background.color)
 //
 //            } content: {
-//                switch viewState.currentServer {
+//                switch viewState.currentSelection {
 //                    case .server(let selectedServerId):
 //                        let selectedServer = viewState.servers[selectedServerId]!
 //                        
@@ -247,9 +247,9 @@
 //                            
 //                            let messages = Binding($viewState.channelMessages[channelId])!
 //                            
-//                            MessageableChannelView(viewModel: MessageableChannelViewModel(viewState: viewState, channel: channel, server: currentServer, messages: messages), showSidebar: .constant(false))
+//                            MessageableChannelView(viewModel: MessageableChannelViewModel(viewState: viewState, channel: channel, server: currentSelection, messages: messages), showSidebar: .constant(false))
 //                        case .server_settings:
-//                            ServerSettings(serverId: viewState.currentServer!.id!)
+//                            ServerSettings(serverId: viewState.currentSelection!.id!)
 //                        case .home:
 //                            VStack(alignment: .center) {
 //                                Image("wide")

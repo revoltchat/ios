@@ -436,6 +436,7 @@
 			children = (
 				17CE2E132AE709CE0059FB3A /* UserSheet.swift */,
 				17BC476A2B9CB51200A593DA /* ShareInviteSheet.swift */,
+				173F16262C3C22540009FDF9 /* ServerInfoSheet.swift */,
 			);
 			path = Sheets;
 			sourceTree = "<group>";
@@ -451,7 +452,6 @@
 		17CE783D2B129E0A006C1D2C /* Home */ = {
 			isa = PBXGroup;
 			children = (
-				173F16262C3C22540009FDF9 /* ServerInfoSheet.swift */,
 				17CE783E2B129E28006C1D2C /* ServerScrollView.swift */,
 				17CE78402B12AA51006C1D2C /* ServerChannelScrollView.swift */,
 				17D5C9432B14DF500060C035 /* DMScrollView.swift */,

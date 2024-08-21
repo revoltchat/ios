@@ -91,6 +91,13 @@ struct DMScrollView: View {
         #if os(iOS)
         .listStyle(.grouped)
         #endif
+        .onChange(of: viewState.currentChannel, { _, after in
+            if case .channel(let id) = after {
+                viewState.userSettingsStore.store.lastOpenChannels["dms"] = id
+            } else {
+                viewState.userSettingsStore.store.lastOpenChannels.removeValue(forKey: "dms")
+            }
+        })
     }
 }
 

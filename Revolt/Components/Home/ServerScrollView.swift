@@ -23,11 +23,28 @@ struct ServerScrollView: View {
                     ForEach(viewState.servers.elements, id: \.key) { elem in
                         Button {
                             withAnimation {
-                                viewState.currentServer = .server(elem.value.id)
+                                viewState.currentSelection = .server(elem.value.id)
+                                
+                                if let last = viewState.userSettingsStore.store.lastOpenChannels[elem.value.id] {
+                                    viewState.currentChannel = .channel(last)
+                                } else if let server = viewState.servers[elem.value.id] {
+                                    if let firstChannel = server.channels.compactMap({
+                                        switch viewState.channels[$0] {
+                                            case .text_channel(let c):
+                                                return c
+                                            default:
+                                                return nil
+                                        }
+                                    }).first {
+                                        viewState.currentChannel = .channel(firstChannel.id)
+                                    } else {
+                                        viewState.currentChannel = .noChannel
+                                    }
+                                }
                             }
                         } label: {
                             ZStack(alignment: .topTrailing) {
-                                ServerListIcon(server: elem.value, height: buttonSize, width: buttonSize, currentSelection: $viewState.currentServer)
+                                ServerListIcon(server: elem.value, height: buttonSize, width: buttonSize, currentSelection: $viewState.currentSelection)
                                 
                                 if let unread = viewState.getUnreadCountFor(server: elem.value) {
                                     ZStack(alignment: .center) {
@@ -86,7 +103,13 @@ struct ServerScrollView: View {
             
             VStack {
                 Button(action: {
-                    viewState.currentServer = .dms
+                    viewState.currentSelection = .dms
+                    
+                    if let last = viewState.userSettingsStore.store.lastOpenChannels["dms"] {
+                        viewState.currentChannel = .channel(last)
+                    } else {
+                        viewState.currentChannel = .home
+                    }
                 }) {
                     if viewState.currentUser != nil {
                         Avatar(user: viewState.currentUser!, width: buttonSize, height: buttonSize, withPresence: true)

@@ -102,7 +102,7 @@ extension AppDelegate: UNUserNotificationCenterDelegate {
         
         let userinfo = response.notification.request.content.userInfo
         state.currentChannel = .channel(userinfo["channelId"] as! String)
-        state.currentServer = .server(userinfo["serverId"] as! String)
+        state.currentSelection = .server(userinfo["serverId"] as! String)
         // TODO: scroll to message
 
     }*/
@@ -130,7 +130,7 @@ extension AppDelegate: UNUserNotificationCenterDelegate {
             }
         default:
             state.currentChannel = .channel(channelId)
-            state.currentServer = .server(serverId)
+            state.currentSelection = .server(serverId)
         }
     }
     

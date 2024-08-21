@@ -11,7 +11,6 @@ struct MaybeChannelView: View {
     @EnvironmentObject var viewState: ViewState
     @Binding var currentChannel: ChannelSelection
     @Binding var currentSelection: MainSelection
-    @Binding var currentServer: Server?
     @Binding var showSidebar: Bool
     
     var body: some View {
@@ -24,7 +23,7 @@ struct MaybeChannelView: View {
                         viewModel: MessageableChannelViewModel(
                             viewState: viewState,
                             channel: channel,
-                            server: currentServer,
+                            server: currentSelection.id.map { viewState.servers[$0]! },
                             messages: messages
                         ),
                         showSidebar: $showSidebar
@@ -50,6 +49,8 @@ struct MaybeChannelView: View {
                     FriendsList()
                 }
                 .background(viewState.theme.background.color)
+            case .noChannel:
+                Text("Looks a bit empty in here.")
         }
     }
 }
@@ -59,7 +60,6 @@ struct HomeRewritten: View {
     
     @Binding var currentSelection: MainSelection
     @Binding var currentChannel: ChannelSelection
-    @State var currentServer: Server?
     
     @State var offset = CGFloat.zero
     @State var forceOpen: Bool = false
@@ -82,12 +82,13 @@ struct HomeRewritten: View {
                 }
                 .frame(maxWidth: 300)
                 
-                MaybeChannelView(currentChannel: $currentChannel, currentSelection: $currentSelection, currentServer: $currentServer, showSidebar: $showSidebar)
+                MaybeChannelView(currentChannel: $currentChannel, currentSelection: $currentSelection, showSidebar: $showSidebar)
                     .frame(maxWidth: .infinity)
             }
         } else {
             GeometryReader { geo in
                 let sidebarWidth = min(geo.size.width * 0.85, 600)
+                let snapSide = sidebarWidth * (1 / 3)
                 
                 ZStack(alignment: .topLeading) {
                     HStack(spacing: 0) {
@@ -106,7 +107,7 @@ struct HomeRewritten: View {
                     .background(viewState.theme.background2.color)
                     
                     ZStack {
-                        MaybeChannelView(currentChannel: $currentChannel, currentSelection: $currentSelection, currentServer: $currentServer, showSidebar: $showSidebar)
+                        MaybeChannelView(currentChannel: $currentChannel, currentSelection: $currentSelection, showSidebar: $showSidebar)
                             .disabled(offset != 0.0)
                             .offset(x: offset)
                             .frame(width: geo.size.width)
@@ -123,8 +124,6 @@ struct HomeRewritten: View {
                         DragGesture(minimumDistance: 50.0)
                                 .onChanged({ g in
                                     withAnimation {
-                                        let snapSide = sidebarWidth * (2 / 3)
-                                        
                                         if offset > snapSide {
                                             forceOpen = true
                                         } else if offset <= snapSide, forceOpen {
@@ -136,7 +135,7 @@ struct HomeRewritten: View {
                                 })
                                 .onEnded({ v in
                                     withAnimation {
-                                        if v.translation.width > 100 || forceOpen {
+                                        if v.translation.width > snapSide || forceOpen {
                                             forceOpen = false
                                             offset = sidebarWidth
                                         } else {
@@ -157,22 +156,40 @@ struct HomeRewritten: View {
             }
             .onChange(of: viewState.currentChannel, { before, after in
                 withAnimation {
-                    // a seperate current server state is used to avoid setting the server to nil while switching to dms in the sidepanel but not switched channels yet
-                    // causing the state to be invalid as we have no server but inside a server channel, having a seperate state which only updates when switching channels
-                    // fixes this
-                    currentServer = currentSelection.id.flatMap { viewState.servers[$0] }
-                    
                     showSidebar = false
-                    currentChannel = after
                     forceOpen = false
                     offset = .zero
                 }
             })
-            .onChange(of: viewState.currentServer) { before, after in
-                withAnimation {
-                    currentSelection = after
-                }
-            }
+//            .onChange(of: viewState.currentSelection) { before, after in
+//                withAnimation {
+//                    switch after {
+//                        case .dms:
+//                            if let last = viewState.userSettingsStore.store.lastOpenChannels["dms"] {
+//                                currentChannel = .channel(last)
+//                            } else {
+//                                currentChannel = .home
+//                            }
+//                        case .server(let id):
+//                            if let last = viewState.userSettingsStore.store.lastOpenChannels[id] {
+//                                currentChannel = .channel(last)
+//                            } else if let server = viewState.servers[id] {
+//                                if let firstChannel = server.channels.compactMap({
+//                                    switch viewState.channels[$0] {
+//                                        case .text_channel(let c):
+//                                            return c
+//                                        default:
+//                                            return nil
+//                                    }
+//                                }).first {
+//                                    currentChannel = .channel(firstChannel.id)
+//                                } else {
+//                                    currentChannel = .noChannel
+//                                }
+//                            }
+//                    }
+//                }
+//            }
         }
     }
 }
@@ -180,6 +197,6 @@ struct HomeRewritten: View {
 #Preview {
     @StateObject var state = ViewState.preview().applySystemScheme(theme: .dark)
     
-    return HomeRewritten(currentSelection: $state.currentServer, currentChannel: $state.currentChannel, currentServer: nil)
+    return HomeRewritten(currentSelection: $state.currentSelection, currentChannel: $state.currentChannel)
             .environmentObject(state)
 }

@@ -43,7 +43,7 @@ struct RevoltApp: App {
                         case "http", "https":
                                 switch url.pathComponents[safe: 1] {
                                     case "app", "login":
-                                        state.currentServer = .dms
+                                        state.currentSelection = .dms
                                         state.currentChannel = .home
                                     default:
                                         ()
@@ -63,9 +63,9 @@ struct RevoltApp: App {
                                     if let id = queryItems["channel"] {
                                         if let channel = state.channels[id] {
                                             if let server = channel.server {
-                                                state.currentServer = .server(server)
+                                                state.currentSelection = .server(server)
                                             } else {
-                                                state.currentServer = .dms
+                                                state.currentSelection = .dms
                                             }
 
                                             state.currentChannel = .channel(id)
@@ -146,9 +146,8 @@ struct InnerApp: View {
                 }
                 case .connected:
                     HomeRewritten(
-                        currentSelection: $viewState.currentServer,
-                        currentChannel: $viewState.currentChannel,
-                        currentServer: viewState.currentServer.id.flatMap { viewState.servers[$0] }
+                        currentSelection: $viewState.currentSelection,
+                        currentChannel: $viewState.currentChannel
                     )
                     .navigationDestination(for: NavigationDestination.self) { dest in
                         switch dest {

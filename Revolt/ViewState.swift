@@ -96,6 +96,7 @@ enum ChannelSelection: Hashable, Codable {
     case channel(String)
     case home
     case friends
+    case noChannel
 
     var id: String? {
         switch self {
@@ -162,9 +163,9 @@ public class ViewState: ObservableObject {
     @Published var unreads: [String: Unread] = [:]
     @Published var currentUserSheet: UserMaybeMember? = nil
 
-    @Published var currentServer: MainSelection = .dms {
+    @Published var currentSelection: MainSelection = .dms {
         didSet {
-            UserDefaults.standard.set(try! JSONEncoder().encode(currentServer), forKey: "currentServer")
+            UserDefaults.standard.set(try! JSONEncoder().encode(currentSelection), forKey: "currentSelection")
         }
     }
 
@@ -202,10 +203,10 @@ public class ViewState: ObservableObject {
         self.userSettingsStore = UserSettingsData.maybeRead(viewState: nil)
         self.sessionToken = UserDefaults.standard.string(forKey: "sessionToken")
 
-        if let currentServer = UserDefaults.standard.data(forKey: "currentServer") {
-            self.currentServer = (try? decoder.decode(MainSelection.self, from: currentServer)) ?? .dms
+        if let currentSelection = UserDefaults.standard.data(forKey: "currentSelection") {
+            self.currentSelection = (try? decoder.decode(MainSelection.self, from: currentSelection)) ?? .dms
         } else {
-            self.currentServer = .dms
+            self.currentSelection = .dms
         }
 
         if let currentChannel = UserDefaults.standard.data(forKey: "currentChannel") {
@@ -259,7 +260,7 @@ public class ViewState: ObservableObject {
         this.channelMessages["0"] = ["01HD4VQY398JNRJY60JDY2QHA5", "01HDEX6M2E3SHY8AC2S6B9SEAW", "01HZ3CFEG10WH52YVXG34WZ9EM"]
         this.members["0"] = ["0": Member(id: MemberId(server: "0", user: "0"), joined_at: "")]
         this.emojis = ["0": Emoji(id: "01GX773A8JPQ0VP64NWGEBMQ1E", parent: .server(EmojiParentServer(id: "0")), creator_id: "0", name: "balls")]
-        this.currentServer = .server("0")
+        this.currentSelection = .server("0")
         this.currentChannel = .channel("0")
         this.dms.append(contentsOf: [this.channels["2"]!, this.channels["3"]!])
 
@@ -384,7 +385,7 @@ public class ViewState: ObservableObject {
         channelMessages.removeAll()
         
         currentUser = nil
-        currentServer = .dms
+        currentSelection = .dms
         currentChannel = .home
         currentSessionId = nil
         
@@ -505,6 +506,7 @@ public class ViewState: ObservableObject {
                 }
 
                 state = .connected
+                await verifyStateIntegrity()
                 
                 processReadySpan.finish()
                 launchTransaction.finish()
@@ -619,7 +621,7 @@ public class ViewState: ObservableObject {
             dms.append(channel!)
         }
 
-        currentServer = .dms
+        currentSelection = .dms
         currentChannel = .channel(channel!.id)
     }
 
@@ -680,7 +682,7 @@ public class ViewState: ObservableObject {
     }
     
     public var openServer: Server? {
-        if case .server(let serverId) = currentServer {
+        if case .server(let serverId) = currentSelection {
             return servers[serverId]
         }
         
@@ -688,11 +690,40 @@ public class ViewState: ObservableObject {
     }
     
     public var openServerMember: Member? {
-        if case .server(let serverId) = currentServer, let userId = currentUser?.id {
+        if case .server(let serverId) = currentSelection, let userId = currentUser?.id {
             return members[serverId]?[userId]
         }
         
         return nil
+    }
+    
+    func verifyStateIntegrity() async {
+        if currentUser == nil {
+            logger.warning("Current user is empty, logging out")
+            try! await signOut().get()
+        }
+        
+        if case .channel(let id) = currentChannel {
+            if let channel = channels[id] {
+                if let serverId = channel.server, currentSelection == .dms {
+                    logger.warning("Current channel is a server channel but selection is dms")
+                    
+                    currentSelection = .server(serverId)
+                }
+            } else {
+                logger.warning("Current channel no longer exists")
+                currentSelection = .dms
+                currentChannel = .home
+            }
+        }
+        
+        if case .server(let id) = currentSelection {
+            if servers[id] == nil {
+                logger.warning("Current server no longer exists")
+                currentSelection = .dms
+                currentChannel = .home
+            }
+        }
     }
 }
 

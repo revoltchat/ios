@@ -60,7 +60,7 @@ struct JoinServer: View {
         Button {
             Task {
                 let joinResponse = await viewState.joinServer(code: inviteCode)
-                viewState.currentServer = .server(joinResponse.server.id)
+                viewState.currentSelection = .server(joinResponse.server.id)
             }
         } label: {
             Text("Join")

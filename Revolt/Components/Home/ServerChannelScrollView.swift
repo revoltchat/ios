@@ -11,6 +11,7 @@ import Types
 
 struct ChannelListItem: View {
     @EnvironmentObject var viewState: ViewState
+    var server: Server
     var channel: Channel
     
     var body: some View {
@@ -20,9 +21,10 @@ struct ChannelListItem: View {
         let foregroundColor = isSelected || unread != nil ? viewState.theme.foreground : viewState.theme.foreground2
         let backgroundColor = isSelected ? viewState.theme.background : viewState.theme.background2
         
-        Button(action: {
+        Button {
             viewState.currentChannel = .channel(channel.id)
-        }) {
+            viewState.userSettingsStore.store.lastOpenChannels[server.id] = channel.id
+        } label: {
             HStack {
                 ChannelIcon(channel: channel)
                     .fontWeight(.medium)
@@ -44,6 +46,8 @@ struct ChannelListItem: View {
 
 struct CategoryListItem: View {
     @EnvironmentObject var viewState: ViewState
+    
+    var server: Server
     var category: Types.Category
     var selectedChannel: String?
 
@@ -55,7 +59,7 @@ struct CategoryListItem: View {
                 .padding(.leading, 4)
             
             ForEach(category.channels.compactMap({ viewState.channels[$0] }), id: \.id) { channel in
-                ChannelListItem(channel: channel)
+                ChannelListItem(server: server, channel: channel)
             }
         }
     }
@@ -146,11 +150,11 @@ struct ServerChannelScrollView: View {
                 }
                                 
                 ForEach(nonCategoryChannels.compactMap({ viewState.channels[$0] })) { channel in
-                    ChannelListItem(channel: channel)
+                    ChannelListItem(server: server, channel: channel)
                 }
                 
                 ForEach(server.categories ?? []) { category in
-                    CategoryListItem(category: category)
+                    CategoryListItem(server: server, category: category)
                 }
             }
             .padding(.horizontal, 8)

@@ -96,22 +96,36 @@ class NotificationOptionsData: Codable {
 
 @Observable
 class PersistentUserSettingsStore: Codable {
+    var keyWasSet: () -> Void = {}
+    
     var notifications: NotificationOptionsData
+    
+    var lastOpenChannels: [String: String] {
+        didSet {
+            keyWasSet()
+        }
+    }
 
-    init(keyWasSet: @escaping () -> Void, notifications: NotificationOptionsData) {
+    init(keyWasSet: @escaping () -> Void, notifications: NotificationOptionsData, lastOpenChannels: [String: String]) {
         self.notifications = notifications
+        self.lastOpenChannels = lastOpenChannels
+        
+        self.keyWasSet = keyWasSet
     }
     
     init() {
         self.notifications = NotificationOptionsData()
+        self.lastOpenChannels = [:]
     }
     
     fileprivate func updateDecodeWithCallback(keyWasSet: @escaping () -> Void) {
         self._notifications.keyWasSet = keyWasSet
+        self.keyWasSet = keyWasSet
     }
     
     enum CodingKeys: String, CodingKey {
         case _notifications = "notifications"
+        case _lastOpenChannels = "lastOpenChannels"
     }
 }
 
