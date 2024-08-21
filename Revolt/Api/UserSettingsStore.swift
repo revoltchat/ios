@@ -112,9 +112,10 @@ class PersistentUserSettingsStore: Codable {
         }
     }
 
-    init(keyWasSet: @escaping () -> Void, notifications: NotificationOptionsData, lastOpenChannels: [String: String]) {
+    init(keyWasSet: @escaping () -> Void, notifications: NotificationOptionsData, lastOpenChannels: [String: String], closedCategories: [String: Set<String>]) {
         self.notifications = notifications
         self.lastOpenChannels = lastOpenChannels
+        self.closedCategories = closedCategories
         
         self.keyWasSet = keyWasSet
     }
