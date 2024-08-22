@@ -273,14 +273,14 @@ class UserSettingsData {
             writeCacheToFile()
         } catch {
             self.cacheState = .failed
-            switch error {
+            switch error as RevoltError {
                 case .Alamofire(let afErr):
                     if afErr.responseCode == 401 {
                         await state.setSignedOutState()
                     } else {
                         SentrySDK.capture(error: error)
                     }
-                case .HTTPError(_, let status):
+                case .HTTPError(let _, let status):
                     if status == 401 {
                         await state.setSignedOutState()
                     } else {
