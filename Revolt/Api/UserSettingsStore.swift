@@ -273,7 +273,7 @@ class UserSettingsData {
             writeCacheToFile()
         } catch {
             self.cacheState = .failed
-            switch error as RevoltError {
+            switch error as! RevoltError {
                 case .Alamofire(let afErr):
                     if afErr.responseCode == 401 {
                         await state.setSignedOutState()
