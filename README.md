@@ -18,6 +18,8 @@ This repository contains the source code for the native iOS application.
 > [!IMPORTANT]
 > This app is still in early stages, and not yet ready for production.
 
+[Join the Testflight](https://testflight.apple.com/join/mGSCJe13) to try the app.
+
 ## Development
 
 ### Getting Started
