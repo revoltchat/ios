@@ -49,7 +49,8 @@ struct NotificationSettings: View {
                         onChange: { enabled in
                             viewState.userSettingsStore.store.notifications.wantsNotificationsWhileAppRunning = enabled
                         })
-                    .disabled(!pushNotificationsEnabled)
+                    //.disabled(!pushNotificationsEnabled)
+                    .disabled(true)
                 }
             }
             .listRowBackground(viewState.theme.background2)

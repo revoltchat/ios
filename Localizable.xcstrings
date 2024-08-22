@@ -77,6 +77,12 @@
     "Appearance" : {
 
     },
+    "Are you sure you want to delete your account?" : {
+
+    },
+    "Are you sure you want to disable your account?" : {
+
+    },
     "Are you sure you want to leave?" : {
 
     },
@@ -111,7 +117,7 @@
 
     },
     "Change it" : {
-      "comment" : "'done' button for changing password\n'done' button for changing username"
+      "comment" : "'done' button for changing username"
     },
     "Change Password" : {
 
@@ -137,19 +143,40 @@
     "Compact Mode" : {
 
     },
+    "Confirm" : {
+
+    },
+    "Confirm deleting your account" : {
+
+    },
+    "Confirm disabling your account" : {
+
+    },
     "Connecting..." : {
 
     },
     "Conversations" : {
 
     },
-    "Copy contents" : {
+    "Copied!" : {
+
+    },
+    "Copy ID" : {
 
     },
     "Copy Link" : {
 
     },
+    "Copy message link" : {
+
+    },
     "Copy Server ID" : {
+
+    },
+    "Copy text" : {
+
+    },
+    "Copy to clipboard" : {
 
     },
     "Create" : {
@@ -164,7 +191,7 @@
     "Create Group" : {
 
     },
-    "Created %lld days ago" : {
+    "Created %lld day(s) ago" : {
 
     },
     "Created today" : {
@@ -188,6 +215,9 @@
     "Delete server" : {
 
     },
+    "Delete Session?" : {
+
+    },
     "Developer" : {
 
     },
@@ -201,6 +231,12 @@
       "comment" : "User settings button"
     },
     "Discovery" : {
+
+    },
+    "Do it" : {
+
+    },
+    "Done" : {
 
     },
     "Edit" : {
@@ -219,6 +255,9 @@
 
     },
     "Emojis" : {
+
+    },
+    "Ending" : {
 
     },
     "enter" : {
@@ -254,6 +293,9 @@
     "Focus" : {
 
     },
+    "foo" : {
+
+    },
     "Force remote notification upload" : {
 
     },
@@ -273,6 +315,9 @@
 
     },
     "Give us some detail" : {
+
+    },
+    "Go back" : {
 
     },
     "Hello, World!" : {
@@ -398,9 +443,6 @@
     "No hcaptcha support" : {
 
     },
-    "No hcapture support" : {
-
-    },
     "Notifications" : {
 
     },
@@ -419,9 +461,6 @@
     "Open in authenticator app" : {
       "comment" : "open the user's authenticator app"
     },
-    "Open Profile" : {
-
-    },
     "Overview" : {
 
     },
@@ -432,6 +471,9 @@
 
     },
     "Pick a category" : {
+
+    },
+    "Placeholder" : {
 
     },
     "Please note that this does not get sent to this server's moderators" : {
@@ -447,6 +489,9 @@
 
     },
     "Profile Picture" : {
+
+    },
+    "Push Notifications" : {
 
     },
     "React" : {
@@ -476,10 +521,10 @@
     "Revolt" : {
 
     },
-    "Revolt is one of the best ways to stay connected with your friends and community, anywhere, anytime." : {
+    "Revolt iOS" : {
 
     },
-    "Revolt on IOS" : {
+    "Revolt is one of the best ways to stay connected with your friends and community, anywhere, anytime." : {
 
     },
     "Roles" : {
@@ -536,6 +581,9 @@
     "Something went wrong. Try again later?" : {
 
     },
+    "Stop right there!" : {
+
+    },
     "Submit" : {
 
     },
@@ -570,6 +618,9 @@
 
     },
     "This is the start of your conversation." : {
+
+    },
+    "This will prevent you from being able to sign in. You'll need to message support to get your account reactivated." : {
 
     },
     "todo" : {
@@ -614,6 +665,9 @@
     "Verify time" : {
       "comment" : "debug print, dont translate"
     },
+    "Wait a minute!" : {
+
+    },
     "Wait!" : {
 
     },
@@ -626,6 +680,9 @@
     "Yes" : {
 
     },
+    "You have been logged out" : {
+
+    },
     "You have not enabled two-factor authentication!" : {
       "comment" : "User settings info notice"
     },
@@ -633,6 +690,9 @@
       "comment" : "the user entered a blank password"
     },
     "You've got 2FA enabled to keep your account extra-safe." : {
+
+    },
+    "Your account will be disabled, and may be reactivated by opening a support request. After a week, it will be permenantly deleted." : {
 
     }
   },

@@ -29,6 +29,14 @@ func getMessageIntent(_ notification: UNNotificationContent) -> INSendMessageInt
     debugPrint(message)
     #endif
     
+    let name: String
+    
+    if let authorDisplayName = info["authorDisplayName"] as? String, let channelName = info["channelName"] as? String {
+        name = "\(authorDisplayName) (\(channelName))"
+    } else {
+        name = info["authorDisplayName"] as? String ?? "Unknown User"
+    }
+    
     let handle = INPersonHandle(value: message.author, type: .unknown)
     let avatar = INImage(url: URL(string: info["authorAvatar"] as! String)!)
     let sender = INPerson(
