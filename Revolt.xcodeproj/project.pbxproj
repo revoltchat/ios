@@ -34,14 +34,14 @@
 		174DA9E82B9E4D70001BC330 /* Parsing in Frameworks */ = {isa = PBXBuildFile; productRef = 174DA9E72B9E4D70001BC330 /* Parsing */; };
 		1750EF6E2B0585B300DD3EB3 /* ResendEmail.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1750EF6D2B0585B300DD3EB3 /* ResendEmail.swift */; };
 		175465CD2C42147B0076B393 /* NotificationService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 175465CC2C42147B0076B393 /* NotificationService.swift */; };
-		175465D12C42147B0076B393 /* NotificationService.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = 175465CA2C42147B0076B393 /* NotificationService.appex */; platformFilters = (ios, maccatalyst, ); settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		175465D12C42147B0076B393 /* NotificationService.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = 175465CA2C42147B0076B393 /* NotificationService.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		175997192B2FB90700C39CF6 /* Flow in Frameworks */ = {isa = PBXBuildFile; productRef = 175997182B2FB90700C39CF6 /* Flow */; };
 		1759C39A2B291A75006E6BBE /* MessageContentsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1759C3992B291A75006E6BBE /* MessageContentsView.swift */; };
 		1759C39C2B291E2F006E6BBE /* SystemMessageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1759C39B2B291E2F006E6BBE /* SystemMessageView.swift */; };
 		175E01DE2ADAB3F6004F6431 /* LazyImage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 175E01DD2ADAB3F6004F6431 /* LazyImage.swift */; };
 		175E01E02ADAB554004F6431 /* Avatar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 175E01DF2ADAB554004F6431 /* Avatar.swift */; };
-		1773C0272C07DC32007B8867 /* Types.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 17DE7DB22BFAEC3F00C99188 /* Types.framework */; };
-		1773C0282C07DC32007B8867 /* Types.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 17DE7DB22BFAEC3F00C99188 /* Types.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		1773C0272C07DC32007B8867 /* Types.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 17DE7DB22BFAEC3F00C99188 /* Types.framework */; platformFilters = (ios, maccatalyst, macos, ); };
+		1773C0282C07DC32007B8867 /* Types.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 17DE7DB22BFAEC3F00C99188 /* Types.framework */; platformFilters = (ios, maccatalyst, macos, ); settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		1773C02F2C07DC99007B8867 /* Api.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17DE7E0C2BFAFDDD00C99188 /* Api.swift */; };
 		1773C0302C07DC99007B8867 /* Channel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17DE7E032BFAFDDD00C99188 /* Channel.swift */; };
 		1773C0312C07DC99007B8867 /* Emoji.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17DE7E082BFAFDDD00C99188 /* Emoji.swift */; };
@@ -192,6 +192,7 @@
 		172F2D002C22ED4A00948C00 /* IteratorProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IteratorProtocol.swift; sourceTree = "<group>"; };
 		172F2D022C22ED5A00948C00 /* Collection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Collection.swift; sourceTree = "<group>"; };
 		172F2D042C22ED8100948C00 /* CheckboxStyle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CheckboxStyle.swift; sourceTree = "<group>"; };
+		17378BD72C76CF51004E4235 /* ci_post_clone.sh */ = {isa = PBXFileReference; lastKnownFileType = text.script.sh; path = ci_post_clone.sh; sourceTree = "<group>"; };
 		1739DB952B08E53B00D23DAD /* MessageBadge.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageBadge.swift; sourceTree = "<group>"; };
 		173A33692C422EF800B8A58E /* DeveloperSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeveloperSettings.swift; sourceTree = "<group>"; };
 		173F16262C3C22540009FDF9 /* ServerInfoSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ServerInfoSheet.swift; sourceTree = "<group>"; };
@@ -349,6 +350,14 @@
 				D49B705829C4D3FE009494A5 /* Preview Content */,
 			);
 			path = Resources;
+			sourceTree = "<group>";
+		};
+		17378BD62C76CF23004E4235 /* ci_scripts */ = {
+			isa = PBXGroup;
+			children = (
+				17378BD72C76CF51004E4235 /* ci_post_clone.sh */,
+			);
+			path = ci_scripts;
 			sourceTree = "<group>";
 		};
 		17429D952B4C91080036105A /* ChannelSettings */ = {
@@ -553,6 +562,7 @@
 		D49B704629C4D3FE009494A5 = {
 			isa = PBXGroup;
 			children = (
+				17378BD62C76CF23004E4235 /* ci_scripts */,
 				171303592B6166B700B66050 /* Localizable.xcstrings */,
 				D49B705129C4D3FE009494A5 /* Revolt */,
 				17DE7DB32BFAEC3F00C99188 /* Types */,
@@ -925,15 +935,16 @@
 /* Begin PBXTargetDependency section */
 		175465D02C42147B0076B393 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
-			platformFilters = (
-				ios,
-				maccatalyst,
-			);
 			target = 175465C92C42147B0076B393 /* NotificationService */;
 			targetProxy = 175465CF2C42147B0076B393 /* PBXContainerItemProxy */;
 		};
 		1773C02A2C07DC32007B8867 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
+			platformFilters = (
+				ios,
+				maccatalyst,
+				macos,
+			);
 			target = 17DE7DB12BFAEC3F00C99188 /* Types */;
 			targetProxy = 1773C0292C07DC32007B8867 /* PBXContainerItemProxy */;
 		};
@@ -1177,7 +1188,7 @@
 				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
-				COPY_PHASE_STRIP = NO;
+				COPY_PHASE_STRIP = YES;
 				DEBUG_INFORMATION_FORMAT = dwarf;
 				EMBED_ASSET_PACKS_IN_PRODUCT_BUNDLE = YES;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
@@ -1240,7 +1251,7 @@
 				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
-				COPY_PHASE_STRIP = NO;
+				COPY_PHASE_STRIP = YES;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				EMBED_ASSET_PACKS_IN_PRODUCT_BUNDLE = YES;
 				ENABLE_NS_ASSERTIONS = NO;
@@ -1312,6 +1323,8 @@
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				"PROVISIONING_PROFILE_SPECIFIER[sdk=iphoneos*]" = "match Development chat.revolt.app";
 				"PROVISIONING_PROFILE_SPECIFIER[sdk=macosx*]" = "match Development chat.revolt.app macos";
+				REGISTER_APP_GROUPS = YES;
+				SDKROOT = iphoneos;
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator macosx";
 				SUPPORTS_MACCATALYST = YES;
 				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = YES;
@@ -1368,6 +1381,8 @@
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				"PROVISIONING_PROFILE_SPECIFIER[sdk=iphoneos*]" = "match Development chat.revolt.app";
 				"PROVISIONING_PROFILE_SPECIFIER[sdk=macosx*]" = "match Development chat.revolt.app macos";
+				REGISTER_APP_GROUPS = YES;
+				SDKROOT = iphoneos;
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator macosx";
 				SUPPORTS_MACCATALYST = YES;
 				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = YES;
