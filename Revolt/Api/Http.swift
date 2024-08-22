@@ -84,15 +84,18 @@ struct HTTPClient {
         headers: HTTPHeaders? = nil
     ) async -> Result<O, RevoltError> {
         return await innerReq(method: method, route: route, parameters: parameters, encoder: encoder, headers: headers).flatMap { response in
-            response.result
-                .mapError(RevoltError.Alamofire)
-                .flatMap {
-                    do {
-                        return .success(try JSONDecoder().decode(O.self, from: $0.data(using: .utf8)!))
-                    } catch {
-                        return .failure(.JSONDecoding(error))
-                    }
+            if let error = response.error {
+                return .failure(.Alamofire(error))
+            } else if let data = response.data {
+                do {
+                    return .success(try JSONDecoder().decode(O.self, from: data))
+                } catch {
+                    return .failure(.JSONDecoding(error))
                 }
+
+            } else {
+                return .failure(.HTTPError("No error or body", 0))
+            }
         }
     }
 
@@ -106,9 +109,11 @@ struct HTTPClient {
         headers: HTTPHeaders? = nil
     ) async -> Result<EmptyResponse, RevoltError> {
         return await innerReq(method: method, route: route, parameters: parameters, encoder: encoder, headers: headers).flatMap { response in
-            response.result
-                .mapError(RevoltError.Alamofire)
-                .map { _ in EmptyResponse() }
+            if let error = response.error {
+                return .failure(.Alamofire(error))
+            } else {
+                return .success(EmptyResponse())
+            }
         }
     }
 
