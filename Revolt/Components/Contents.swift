@@ -188,7 +188,7 @@ func parseEmojisOnly(text: String) -> [String]? {
 //
 //    @State var showMemberSheet: Bool = false
 //
-//    func parseText(content: String, currentServer: String? = nil) -> [ContentPart] {
+//    func parseText(content: String, currentSelection: String? = nil) -> [ContentPart] {
 //        var parts: [ContentPart] = []
 //        let content = try! AttributedString(markdown: content, options: .init(allowsExtendedAttributes: true,
 //interpretedSyntax: .full, failurePolicy: .returnPartiallyParsedIfPossible))
@@ -211,7 +211,7 @@ func parseEmojisOnly(text: String) -> [String]? {
 //                        if let user = viewState.users[id] {
 //                            let member: Member?
 //
-//                            if let server = currentServer {
+//                            if let server = currentSelection {
 //                                member = viewState.members[server]?[id]
 //                            } else {
 //                                member = nil
@@ -263,7 +263,7 @@ func parseEmojisOnly(text: String) -> [String]? {
 ////                            ChannelIcon(channel: channel, spacing: 0, initialSize: (14, 14), frameSize: (16, 16))
 ////                                .bold()
 ////                                .onTapGesture {
-////                                    viewState.currentServer = channel.server != nil ? .server(channel.server!) : .dms
+////                                    viewState.currentSelection = channel.server != nil ? .server(channel.server!) : .dms
 ////                                    viewState.currentChannel = .channel(channel.id)
 ////                                }
 ////                        case .custom_emoji(let emojiId):
@@ -323,7 +323,7 @@ func parseEmojisOnly(text: String) -> [String]? {
 //                    view = ChannelIcon(channel: channel, spacing: 0, initialSize: (14, 14), frameSize: (16, 16))
 //                        .bold()
 //                        .onTapGesture {
-//                            viewState.currentServer = channel.server != nil ? .server(channel.server!) : .dms
+//                            viewState.currentSelection = channel.server != nil ? .server(channel.server!) : .dms
 //                            viewState.currentChannel = .channel(channel.id)
 //                        }
 //
@@ -464,7 +464,7 @@ struct Contents: View {
             switch part {
                 case .user_mention(let string):
                     if let user = viewState.users[string] {
-                        let member = viewState.currentServer.id.flatMap { viewState.members[$0] }.flatMap { $0[string] }
+                        let member = viewState.currentSelection.id.flatMap { viewState.members[$0] }.flatMap { $0[string] }
 
                         let name = member?.nickname ?? user.display_name ?? user.username
 
