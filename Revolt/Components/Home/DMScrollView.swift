@@ -70,7 +70,7 @@ struct DMScrollView: View {
             Section("Conversations") {
                 ForEach(viewState.dms.filter { switch $0 { case .saved_messages: return false; default: return true } }) { channel in
                     Button {
-                        viewState.currentChannel = .channel(channel.id)
+                        viewState.selectDm(withId: channel.id)
                     } label: {
                         HStack {
                             ChannelIcon(channel: channel)
@@ -91,13 +91,6 @@ struct DMScrollView: View {
         #if os(iOS)
         .listStyle(.grouped)
         #endif
-        .onChange(of: viewState.currentChannel, { _, after in
-            if case .channel(let id) = after {
-                viewState.userSettingsStore.store.lastOpenChannels["dms"] = id
-            } else {
-                viewState.userSettingsStore.store.lastOpenChannels.removeValue(forKey: "dms")
-            }
-        })
     }
 }
 

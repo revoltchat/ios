@@ -114,7 +114,7 @@ enum NavigationDestination: Hashable, Codable {
     case channel_settings(String)
     case add_friend
     case create_group([String])
-    case add_server
+    case create_server
 }
 
 struct UserMaybeMember: Identifiable {
@@ -723,6 +723,55 @@ public class ViewState: ObservableObject {
                 currentSelection = .dms
                 currentChannel = .home
             }
+        }
+    }
+    
+    func selectServer(withId id: String) {
+        currentSelection = .server(id)
+        
+        if let last = userSettingsStore.store.lastOpenChannels[id] {
+            currentChannel = .channel(last)
+        } else if let server = servers[id] {
+            if let firstChannel = server.channels.compactMap({
+                switch channels[$0] {
+                    case .text_channel(let c):
+                        return c
+                    default:
+                        return nil
+                }
+            }).first {
+                currentChannel = .channel(firstChannel.id)
+            } else {
+                currentChannel = .noChannel
+            }
+        }
+    }
+    
+    func selectChannel(inServer server: String, withId id: String) {
+        currentChannel = .channel(id)
+        userSettingsStore.store.lastOpenChannels[server] = id
+    }
+    
+    func selectDms() {
+        currentSelection = .dms
+        
+        if let last = userSettingsStore.store.lastOpenChannels["dms"] {
+            currentChannel = .channel(last)
+        } else {
+            currentChannel = .home
+        }
+    }
+    
+    func selectDm(withId id: String) {
+        currentChannel = .channel(id)
+        let channel = channels[id]!
+        
+        switch channel {
+            case .dm_channel, .group_dm_channel:
+                userSettingsStore.store.lastOpenChannels["dms"] = id
+            default:
+                userSettingsStore.store.lastOpenChannels.removeValue(forKey: "dms")
+                
         }
     }
 }

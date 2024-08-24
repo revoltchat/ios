@@ -14,6 +14,8 @@ struct ServerScrollView: View {
     
     @EnvironmentObject var viewState: ViewState
     
+    @State var showAddServerSheet = false
+    
     var body: some View {
         ZStack(alignment: .top) {
             ScrollView {
@@ -23,24 +25,7 @@ struct ServerScrollView: View {
                     ForEach(viewState.servers.elements, id: \.key) { elem in
                         Button {
                             withAnimation {
-                                viewState.currentSelection = .server(elem.value.id)
-                                
-                                if let last = viewState.userSettingsStore.store.lastOpenChannels[elem.value.id] {
-                                    viewState.currentChannel = .channel(last)
-                                } else if let server = viewState.servers[elem.value.id] {
-                                    if let firstChannel = server.channels.compactMap({
-                                        switch viewState.channels[$0] {
-                                            case .text_channel(let c):
-                                                return c
-                                            default:
-                                                return nil
-                                        }
-                                    }).first {
-                                        viewState.currentChannel = .channel(firstChannel.id)
-                                    } else {
-                                        viewState.currentChannel = .noChannel
-                                    }
-                                }
+                                viewState.selectServer(withId: elem.key)
                             }
                         } label: {
                             ZStack(alignment: .topTrailing) {
@@ -71,7 +56,9 @@ struct ServerScrollView: View {
                     .frame(height: 12)
                 
                 Section {
-                    NavigationLink(value: NavigationDestination.add_server) {
+                    Button {
+                        showAddServerSheet.toggle()
+                    } label: {
                         Image(systemName: "plus.circle.fill")
                             .symbolRenderingMode(.palette)
                             .foregroundStyle(viewState.theme.accent.color, viewState.theme.background2.color)
@@ -102,15 +89,9 @@ struct ServerScrollView: View {
             .scrollIndicators(.hidden)
             
             VStack {
-                Button(action: {
-                    viewState.currentSelection = .dms
-                    
-                    if let last = viewState.userSettingsStore.store.lastOpenChannels["dms"] {
-                        viewState.currentChannel = .channel(last)
-                    } else {
-                        viewState.currentChannel = .home
-                    }
-                }) {
+                Button {
+                    viewState.selectDms()
+                } label: {
                     if viewState.currentUser != nil {
                         Avatar(user: viewState.currentUser!, width: buttonSize, height: buttonSize, withPresence: true)
                             .frame(width: buttonSize, height: buttonSize)
@@ -123,6 +104,9 @@ struct ServerScrollView: View {
         }
         .padding(.horizontal, viewWidth - buttonSize)
         .background(viewState.theme.background)
+        .sheet(isPresented: $showAddServerSheet) {
+            AddServerSheet()
+        }
     }
 }
 

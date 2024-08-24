@@ -168,8 +168,8 @@ struct InnerApp: View {
                                 AddFriend()
                             case .create_group(let initial_users):
                                 CreateGroup(selectedUsers: Set(initial_users.compactMap { viewState.users[$0] }))
-                            case .add_server:
-                                AddServer()
+                            case .create_server:
+                                CreateServer()
                         }
                     }
                     .sheet(item: $viewState.currentUserSheet) { (v) in

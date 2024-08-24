@@ -105,10 +105,11 @@
 		17E019D72AF1998300AB4663 /* MessageAttachment.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17E019D62AF1998300AB4663 /* MessageAttachment.swift */; };
 		17E019DA2AF199A600AB4663 /* MessageReply.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17E019D92AF199A600AB4663 /* MessageReply.swift */; };
 		17E019DC2AF1B25100AB4663 /* SessionsSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17E019DB2AF1B25100AB4663 /* SessionsSettings.swift */; };
-		17E28E082AF319D500F6069F /* AddServer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17E28E072AF319D500F6069F /* AddServer.swift */; };
+		17E28E082AF319D500F6069F /* AddServerSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17E28E072AF319D500F6069F /* AddServerSheet.swift */; };
 		17F502542B9BFB1000A3022D /* AddFriend.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17F502532B9BFB1000A3022D /* AddFriend.swift */; };
 		17F502562B9BFB2800A3022D /* CreateGroup.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17F502552B9BFB2800A3022D /* CreateGroup.swift */; };
 		17F555272AFC229900958F2F /* ServerSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17F555262AFC229900958F2F /* ServerSettings.swift */; };
+		17F8B7092C7983730065F1DE /* CreateServer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17F8B7082C7983730065F1DE /* CreateServer.swift */; };
 		36D461CF77D84B97B94929A9 /* Sentry in Frameworks */ = {isa = PBXBuildFile; productRef = 03268FCCFC7D4D1F8B6E9F6F /* Sentry */; };
 		D49B705329C4D3FE009494A5 /* RevoltApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = D49B705229C4D3FE009494A5 /* RevoltApp.swift */; };
 		D49B705729C4D3FE009494A5 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = D49B705629C4D3FE009494A5 /* Assets.xcassets */; };
@@ -268,10 +269,11 @@
 		17E019D62AF1998300AB4663 /* MessageAttachment.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageAttachment.swift; sourceTree = "<group>"; };
 		17E019D92AF199A600AB4663 /* MessageReply.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageReply.swift; sourceTree = "<group>"; };
 		17E019DB2AF1B25100AB4663 /* SessionsSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SessionsSettings.swift; sourceTree = "<group>"; };
-		17E28E072AF319D500F6069F /* AddServer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddServer.swift; sourceTree = "<group>"; };
+		17E28E072AF319D500F6069F /* AddServerSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddServerSheet.swift; sourceTree = "<group>"; };
 		17F502532B9BFB1000A3022D /* AddFriend.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddFriend.swift; sourceTree = "<group>"; };
 		17F502552B9BFB2800A3022D /* CreateGroup.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateGroup.swift; sourceTree = "<group>"; };
 		17F555262AFC229900958F2F /* ServerSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ServerSettings.swift; sourceTree = "<group>"; };
+		17F8B7082C7983730065F1DE /* CreateServer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateServer.swift; sourceTree = "<group>"; };
 		D49B704F29C4D3FE009494A5 /* Revolt.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Revolt.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		D49B705229C4D3FE009494A5 /* RevoltApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RevoltApp.swift; sourceTree = "<group>"; };
 		D49B705629C4D3FE009494A5 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
@@ -445,6 +447,7 @@
 		17BC47692B9CB4F500A593DA /* Sheets */ = {
 			isa = PBXGroup;
 			children = (
+				17E28E072AF319D500F6069F /* AddServerSheet.swift */,
 				17CE2E132AE709CE0059FB3A /* UserSheet.swift */,
 				17BC476A2B9CB51200A593DA /* ShareInviteSheet.swift */,
 				173F16262C3C22540009FDF9 /* ServerInfoSheet.swift */,
@@ -501,14 +504,14 @@
 				17E019C72AF1277D00AB4663 /* Settings */,
 				DA99EC4929D5F35400419FDA /* Home.swift */,
 				17CE783B2B129983006C1D2C /* HomeRewritten.swift */,
-				17E28E072AF319D500F6069F /* AddServer.swift */,
-				17B7128C2B03E9D700CFF61C /* FriendsList.swift */,
 				1782F5E52B08F60B00759D40 /* Discovery.swift */,
 				17BF54CC2B1785E200178866 /* HomeWelcome.swift */,
+				17B7128C2B03E9D700CFF61C /* FriendsList.swift */,
 				17D8BACE2B211DEE005F5447 /* ChannelInfo.swift */,
 				17F502532B9BFB1000A3022D /* AddFriend.swift */,
 				17F502552B9BFB2800A3022D /* CreateGroup.swift */,
 				1773C03C2C07DD1F007B8867 /* MessageableChannel.swift */,
+				17F8B7082C7983730065F1DE /* CreateServer.swift */,
 			);
 			path = Pages;
 			sourceTree = "<group>";
@@ -867,7 +870,7 @@
 				DAAA4C0329F2548400F41E52 /* MessageBox.swift in Sources */,
 				17CE783C2B129983006C1D2C /* HomeRewritten.swift in Sources */,
 				1748B2072B1FB88B00AA2D47 /* MessageReactions.swift in Sources */,
-				17E28E082AF319D500F6069F /* AddServer.swift in Sources */,
+				17E28E082AF319D500F6069F /* AddServerSheet.swift in Sources */,
 				17429D972B4C91170036105A /* ChannelSettings.swift in Sources */,
 				17BC476B2B9CB51200A593DA /* ShareInviteSheet.swift in Sources */,
 				17A7FE372C49DE6F0083B22F /* Member.swift in Sources */,
@@ -893,6 +896,7 @@
 				173A336A2C422EF800B8A58E /* DeveloperSettings.swift in Sources */,
 				1759C39A2B291A75006E6BBE /* MessageContentsView.swift in Sources */,
 				17E019D12AF14EC000AB4663 /* ServerIcon.swift in Sources */,
+				17F8B7092C7983730065F1DE /* CreateServer.swift in Sources */,
 				172F2D012C22ED4D00948C00 /* IteratorProtocol.swift in Sources */,
 				1718F3D02B0BCAA50018E524 /* UnreadCounter.swift in Sources */,
 				17F502562B9BFB2800A3022D /* CreateGroup.swift in Sources */,

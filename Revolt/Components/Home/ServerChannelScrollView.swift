@@ -22,8 +22,7 @@ struct ChannelListItem: View {
         let backgroundColor = isSelected ? viewState.theme.background : viewState.theme.background2
         
         Button {
-            viewState.currentChannel = .channel(channel.id)
-            viewState.userSettingsStore.store.lastOpenChannels[server.id] = channel.id
+            viewState.selectChannel(inServer: server.id, withId: channel.id)
         } label: {
             HStack {
                 ChannelIcon(channel: channel)
