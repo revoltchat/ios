@@ -196,33 +196,35 @@ struct EmojiPicker: View {
                     Section(group.0.name) {
                         HFlow {
                             ForEach(group.1) { emoji in
-                                Button {
-                                    onClick(emoji)
-                                } label: {
+                                HStack {
                                     if let id = emoji.emojiId {
                                         LazyImage(source: .emoji(id), height: 32, width: 32, clipTo: Rectangle())
                                     } else {
-//                                        let base = emoji.base.map { String(format: "%02x", $0) }.joined(separator: "")
-//                                        let url = "https://raw.githubusercontent.com/jdecked/twemoji/master/assets/72x72/\(base).png"
-//
-//                                        LazyImage(source: .url(URL(string: url)!), height: 24, width: 24, clipTo: Rectangle())
-
+                                        //                                        let base = emoji.base.map { String(format: "%02x", $0) }.joined(separator: "")
+                                        //                                        let url = "https://raw.githubusercontent.com/jdecked/twemoji/master/assets/72x72/\(base).png"
+                                        //
+                                        //                                        LazyImage(source: .url(URL(string: url)!), height: 24, width: 24, clipTo: Rectangle())
+                                        
                                         let emojiString = String(String.UnicodeScalarView(emoji.base.compactMap(Unicode.Scalar.init)))
                                         let image = convertEmojiToImage(text: emojiString)
-
-                                        #if os(iOS)
+                                        
+#if os(iOS)
                                         Image(uiImage: image)
                                             .resizable()
                                             .aspectRatio(contentMode: .fit)
                                             .frame(width: 32, height: 32)
-                                            
-                                        #elseif os(macOS)
+                                        
+#elseif os(macOS)
                                         Image(nsImage: image)
                                             .resizable()
                                             .aspectRatio(contentMode: .fit)
                                             .frame(width: 32, height: 32)
-                                        #endif
+#endif
                                     }
+                                        
+                                }
+                                .onTapGesture {
+                                    onClick(emoji)
                                 }
                             }
                         }

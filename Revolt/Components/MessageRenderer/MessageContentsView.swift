@@ -77,7 +77,7 @@ struct MessageContentsView: View {
     }
 
     var body: some View {
-        VStack(alignment: .leading) {
+        VStack(alignment: .leading, spacing: 2) {
             if let content = Binding(viewModel.$message.content) {
                 Contents(text: content, fontSize: 16)
                     //.font(.body)
@@ -95,7 +95,12 @@ struct MessageContentsView: View {
                 }
             }
 
-            MessageReactions(reactions: viewModel.$message.reactions, interactions: viewModel.$message.interactions)
+            MessageReactions(
+                channel: viewModel.channel,
+                message: viewModel.message,
+                reactions: viewModel.$message.reactions,
+                interactions: viewModel.$message.interactions
+            )
         }
         .sheet(isPresented: $showReportSheet) {
             ReportMessageSheetView(showSheet: $showReportSheet, messageView: viewModel)

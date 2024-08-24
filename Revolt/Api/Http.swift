@@ -279,7 +279,11 @@ struct HTTPClient {
     func reactMessage(channel: String, message: String, emoji: String) async -> Result<EmptyResponse, RevoltError> {
         await req(method: .put, route: "/channels/\(channel)/messages/\(message)/reactions/\(emoji)")
     }
-
+    
+    func unreactMessage(channel: String, message: String, emoji: String) async -> Result<EmptyResponse, RevoltError> {
+        await req(method: .delete, route: "/channels/\(channel)/messages/\(message)/reactions/\(emoji)")
+    }
+    
     // settings stuff
     func fetchAccount() async -> Result<AuthAccount, RevoltError> {
         await req(method: .get, route: "/auth/account")
