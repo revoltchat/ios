@@ -18,7 +18,7 @@ struct ChannelListItem: View {
         let isSelected = viewState.currentChannel.id == channel.id
         let unread = viewState.getUnreadCountFor(channel: channel)
 
-        let foregroundColor = isSelected || unread != nil ? viewState.theme.foreground : viewState.theme.foreground2
+        let foregroundColor = isSelected || unread != nil ? viewState.theme.foreground : viewState.theme.foreground3
         let backgroundColor = isSelected ? viewState.theme.background : viewState.theme.background2
         
         Button {
