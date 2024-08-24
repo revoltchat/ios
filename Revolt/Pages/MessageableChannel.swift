@@ -193,7 +193,9 @@ struct MessageableChannelView: View {
             }
             .reduce([]) { (messages: [[Binding<Message>]], $msg) in
                 if let lastMessage = messages.last?.last?.wrappedValue {
-                    if lastMessage.author == msg.author && (msg.replies?.count ?? 0) == 0 {
+                    if lastMessage.author == msg.author && (msg.replies?.count ?? 0) == 0,  // same author
+                       createdAt(id: lastMessage.id).distance(to: createdAt(id: msg.id)) > (5 * 60)  // at most 5 mins apart
+                    {
                         return messages.prefix(upTo: messages.endIndex - 1) + [messages.last! + [$msg]]
                     }
                     
