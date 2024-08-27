@@ -90,7 +90,7 @@ struct InnerMessageReplyView: View {
                 }
             }
             .onTapGesture {
-                channelScrollPosition.scrollTo(message.id)
+                channelScrollPosition.scrollTo(message: message.id)
             }
         } else {
             Text("Unknown message")

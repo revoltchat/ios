@@ -9,17 +9,12 @@ import Foundation
 import SwiftUI
 import Types
 
-struct VisibleKey: PreferenceKey {
-    static var defaultValue: Bool = false
-    static func reduce(value: inout Bool, nextValue: () -> Bool) { }
-}
-
 struct ChannelScrollController {
     var proxy: ScrollViewProxy
     @Binding var highlighted: String?
     
-    func scrollTo(_ id: String) {
-        withAnimation {
+    func scrollTo(message id: String) {
+        withAnimation(.easeInOut) {
             proxy.scrollTo(id)
             highlighted = id
         }
@@ -104,12 +99,12 @@ struct MessageableChannelView: View {
     
     @State var foundAllMessages = false
     @State var over18: Bool = false
-    @State var atBottom: Bool = false
     @State var showDetails: Bool = false
     @State var showingSelectEmoji = false
     @State var currentlyEditing: Message? = nil
     @State var highlighted: String? = nil
     @State var replies: [Reply] = []
+    @State var scrollPosition: String? = nil
     
     @Binding var showSidebar: Bool
     
@@ -194,7 +189,7 @@ struct MessageableChannelView: View {
             .reduce([]) { (messages: [[Binding<Message>]], $msg) in
                 if let lastMessage = messages.last?.last?.wrappedValue {
                     if lastMessage.author == msg.author && (msg.replies?.count ?? 0) == 0,  // same author
-                       createdAt(id: lastMessage.id).distance(to: createdAt(id: msg.id)) > (5 * 60)  // at most 5 mins apart
+                       createdAt(id: lastMessage.id).distance(to: createdAt(id: msg.id)) < (5 * 60)  // at most 5 mins apart
                     {
                         return messages.prefix(upTo: messages.endIndex - 1) + [messages.last! + [$msg]]
                     }
@@ -248,7 +243,7 @@ struct MessageableChannelView: View {
                                             .font(.title)
                                         Text("This is the start of your conversation.")
                                     }
-                                    .listRowBackground(viewState.theme.background.color)
+                                    .listRowBackground(viewState.theme.background)
                                 } else {
                                     Text("Loading more messages...")
                                         .onAppear {
@@ -258,7 +253,7 @@ struct MessageableChannelView: View {
                                                 }
                                             }
                                         }
-                                        .listRowBackground(viewState.theme.background.color)
+                                        .listRowBackground(viewState.theme.background)
                                 }
                                                      
                                 let messages = getMessages(scrollProxy: proxy)
@@ -271,43 +266,40 @@ struct MessageableChannelView: View {
                                         viewModel: first,
                                         isStatic: false
                                     )
-                                    .listRowBackground(first.message.mentions?.firstIndex(of: viewState.currentUser!.id) != nil || highlighted == first.message.id ? viewState.theme.mention : viewState.theme.background)
-                                    .animation(.linear, value: highlighted == first.message.id)
+                                    .listRowBackground((first.message.mentions?.firstIndex(of: viewState.currentUser!.id) != nil || highlighted == first.message.id
+                                                       ? viewState.theme.mention
+                                                        : viewState.theme.background).animation(.easeInOut))
+                                    .animation(.easeInOut, value: highlighted)
                                     .listRowInsets(EdgeInsets(top: 8, leading: 12, bottom: rest.isEmpty ? 4 : 0, trailing: 12))
                                     .id(first.message.id)
                                     
                                     ForEach(rest, id: \.message.id) { message in
                                         MessageContentsView(viewModel: message, isStatic: false)
-                                            .listRowBackground(message.message.mentions?.firstIndex(of: viewState.currentUser!.id) != nil || highlighted == message.message.id ? viewState.theme.mention : viewState.theme.background)
-                                            .animation(.linear, value: highlighted == first.message.id)
+                                            .listRowBackground((message.message.mentions?.firstIndex(of: viewState.currentUser!.id) != nil || highlighted == message.message.id
+                                                               ? viewState.theme.mention
+                                                               : viewState.theme.background).animation(.default))
                                             .id(message.message.id)
                                     }
+                                    .animation(.easeInOut, value: highlighted)
                                     .padding(.leading, 44)
                                     .listRowSeparator(.hidden)
-                                    .listRowInsets(EdgeInsets(top: 4, leading: 12, bottom: 0, trailing: 12))
+                                    .listRowInsets(EdgeInsets(top: 0, leading: 12, bottom: 0, trailing: 12))
                                 
-                                    //
-                                    //                                    if lastMessage.id == viewState.unreads[viewModel.channel.id]?.last_id, lastMessage.id != viewModel.messages.last {
-                                    //                                        HStack(spacing: 0) {
-                                    //                                            Text("NEW")
-                                    //                                                .font(.caption)
-                                    //                                                .fontWeight(.bold)
-                                    //                                                .padding(.horizontal, 8)
-                                    //                                                .background(RoundedRectangle(cornerRadius: 100).fill(viewState.theme.accent.color))
-                                    //
-                                    //                                            Rectangle()
-                                    //                                                .frame(height: 1)
-                                    //                                                .foregroundStyle(viewState.theme.accent.color)
-                                    //                                        }
-                                    //                                    }
-                                }
-                                
-#if os(iOS)
-                                let intersects = UIScreen.main.bounds.intersects(geoProxy.frame(in: .global))
-#elseif os(macOS)
-                                let intersects = NSIntersectsRect(NSScreen.main!.frame, geoProxy.frame(in: .global))
-#endif
+                                    if first.message.id == viewState.unreads[viewModel.channel.id]?.last_id, first.message.id != viewModel.messages.last {
+                                        HStack(spacing: 0) {
+                                            Text("NEW")
+                                                .font(.caption)
+                                                .fontWeight(.bold)
+                                                .padding(.horizontal, 8)
+                                                .background(RoundedRectangle(cornerRadius: 100).foregroundStyle(viewState.theme.accent))
 
+                                            Rectangle()
+                                                .frame(height: 1)
+                                                .foregroundStyle(viewState.theme.accent)
+                                        }
+                                        .listRowBackground(viewState.theme.background)
+                                    }
+                                }
                                 
                                 Color.clear
                                     .listRowSeparator(.hidden)
@@ -315,14 +307,8 @@ struct MessageableChannelView: View {
                                     .listRowInsets(EdgeInsets(top: 0, leading: 0, bottom: 0, trailing: 0))
                                     .listRowBackground(Color.clear)
                                     .frame(height: 0)
-                                    .preference(
-                                        key: VisibleKey.self,
-                                        value: intersects
-                                    )
-                                    .onPreferenceChange(VisibleKey.self) { isVisible in
-                                        atBottom = isVisible
-                                        
-                                        if isVisible, let lastMessage = messages.last?.last {
+                                    .onAppear {
+                                        if let lastMessage = messages.last?.last {
                                             Task {
                                                 await viewState.http.ackMessage(channel: viewModel.channel.id, message: lastMessage.message.id)
                                             }
@@ -377,13 +363,8 @@ struct MessageableChannelView: View {
                                 }
                             }
                             .environment(\.defaultMinListRowHeight, 0)
-                            .background(viewState.theme.background)
+                            .scrollDismissesKeyboard(.immediately)
                         }
-                        .scrollDismissesKeyboard(.automatic)
-                    }
-                    .onTapGesture {
-                        focused = false
-                        showingSelectEmoji = false
                     }
                     
                     MessageBox(
