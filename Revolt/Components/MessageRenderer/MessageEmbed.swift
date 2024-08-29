@@ -147,6 +147,8 @@ fileprivate struct WebView: UIViewRepresentable {
     init(url: URL) {
         self.url = url
         self.webview = WKWebView(frame: .zero)
+        self.webview.isOpaque = false
+        self.webview.backgroundColor = .clear
     }
     
     func makeUIView(context: Context) -> WKWebView {
@@ -185,29 +187,55 @@ struct SpecialEmbed: View {
     
     var size: CGFloat {
         switch embed.special! {
-            case .youtube(let special):
+            case .youtube:
                 return CGFloat(embed.video?.width ?? 16)/CGFloat(embed.video?.height ?? 9)
-            case .lightspeed(let special):
+            case .lightspeed:
                 return 16/9
-            case .twitch(let special):
+            case .twitch:
                 return 16/9
             case .spotify(let special):
-                return 420/355
-            case .soundcloud(let special):
+                switch special.content_type {
+                    case "artist", "playlist":
+                        return 400/200
+                    default:
+                        return 400/105
+                }
+            case .soundcloud:
                 return 480/460
-            case .bandcamp(let special):
+            case .bandcamp:
                 return CGFloat(embed.video?.width ?? 16)/CGFloat(embed.video?.height ?? 9)
             default:
                 return 0
         }
     }
     
+    var url: String? {
+        switch embed.special! {
+            case .youtube(let special):
+                let timestamp = special.timestamp != nil ? "&start=\(special.timestamp!)" : ""
+                return "https://www.youtube-nocookie.com/embed/\(special.id)?modestbranding=1\(timestamp)"
+            case .twitch(let special):
+                return "https://player.twitch.tv/?\(special.content_type.rawValue.lowercased())=\(special.id)&autoplay=false"
+            case .lightspeed(let special):
+                return "https://new.lightspeed.tv/embed/\(special.id)/stream"
+            case .spotify(let special):
+                return "https://open.spotify.com/embed/\(special.content_type)/\(special.id)"
+            case .soundcloud:
+                let url = embed.url!.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed)!
+                return "https://w.soundcloud.com/player/?url=\(url)&color=%23FF7F50&auto_play=false&hide_related=false&show_comments=true&show_user=true&show_reposts=false&show_teaser=true&visual=true"
+            case .bandcamp(let special):
+                return "https://bandcamp.com/EmbeddedPlayer/\(special.content_type.rawValue.lowercased())=\(special.id)/size=large/bgcol=181a1b/linkcol=056cc4/tracklist=false/transparent=true/"
+            case .streamable(let special):
+                return "https://streamable.com/e/\(special.id)?loop=0"
+            default:
+                return nil
+        }
+    }
+    
     var body: some View {
-        if let url = URL(string: embed.url!) {
+        if let string = url, let url = URL(string: string) {
             WebView(url: url)
-                .aspectRatio(16/9, contentMode: .fit)
-            //.scaledToFit()
-            
+                .aspectRatio(size, contentMode: .fit)
         }
     }
 }
