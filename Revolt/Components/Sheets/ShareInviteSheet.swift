@@ -15,6 +15,7 @@ struct ShareInviteSheet: View {
     @State var channel: Channel
     @State var url: URL
     @State var friendSearch: String = ""
+    @State var copiedToClipboard: Bool = false
     
     func getFriends() ->  [User] {
         var friends: [User] = []
@@ -32,8 +33,10 @@ struct ShareInviteSheet: View {
     }
     
     var body: some View {
-        VStack {
+        VStack(spacing: 16) {
             Text("Invite another user")
+                .bold()
+            
             HStack {
                 ShareLink(item: url) {
                     VStack {
@@ -48,6 +51,16 @@ struct ShareInviteSheet: View {
                 
                 Button {
                     copyUrl(url: url)
+                    
+                    withAnimation(.snappy) {
+                        copiedToClipboard = true
+                    }
+                    
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 1.5) {
+                        withAnimation(.snappy) {
+                            copiedToClipboard = false
+                        }
+                    }
                 } label: {
                     VStack {
                         Image(systemName: "link.circle")
@@ -90,6 +103,9 @@ struct ShareInviteSheet: View {
                             
                             Text("Invite")
                                 .font(.subheadline)
+                                .padding(.horizontal, 12)
+                                .padding(.vertical, 8)
+                                .background(viewState.theme.background3, in: RoundedRectangle(cornerRadius: 50))
                         }
                         .listRowBackground(viewState.theme.background2)
                     }
@@ -100,6 +116,19 @@ struct ShareInviteSheet: View {
         }
         .padding(.top, 8)
         .background(viewState.theme.background)
+        .overlay {
+            if copiedToClipboard {
+                Text("Copied to Clipboard")
+                    .fontWeight(.semibold)
+                    .foregroundStyle(viewState.theme.foreground)
+                    .padding()
+                    .background(viewState.theme.accent, in: RoundedRectangle(cornerRadius: 20))
+                    .padding(.bottom)
+                    .shadow(radius: 5)
+                    .transition(.move(edge: .bottom))
+                    .frame(maxHeight: .infinity, alignment: .bottom)
+            }
+        }
     }
 }
 
