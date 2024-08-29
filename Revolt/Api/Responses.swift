@@ -73,3 +73,9 @@ struct MFATicketResponse: Decodable {
     var authorised: Bool
     var last_totp_code: String?
 }
+
+struct SearchResponse: Decodable {
+    var messages: [Message]
+    var users: [User]
+    var members: [Member]
+}

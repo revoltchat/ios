@@ -10,12 +10,12 @@ import SwiftUI
 import Types
 
 struct ChannelScrollController {
-    var proxy: ScrollViewProxy
+    var proxy: ScrollViewProxy?
     @Binding var highlighted: String?
     
     func scrollTo(message id: String) {
         withAnimation(.easeInOut) {
-            proxy.scrollTo(id)
+            proxy?.scrollTo(id)
             highlighted = id
         }
         
@@ -26,6 +26,10 @@ struct ChannelScrollController {
                 highlighted = nil
             }
         }
+    }
+    
+    static var empty: ChannelScrollController {
+        .init(proxy: nil, highlighted: .constant(nil))
     }
 }
 

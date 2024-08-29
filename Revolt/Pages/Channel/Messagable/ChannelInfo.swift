@@ -170,9 +170,7 @@ struct ChannelInfo: View {
                 }
                 
                 HStack {
-                    Button {
-                        
-                    } label: {
+                    NavigationLink(value: NavigationDestination.channel_search(channel.id)) {
                         VStack(alignment: .center) {
                             Image(systemName: "magnifyingglass.circle.fill")
                                 .resizable()

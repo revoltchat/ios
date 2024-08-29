@@ -355,4 +355,8 @@ struct HTTPClient {
     func revokeNotificationToken() async -> Result<EmptyResponse, RevoltError> {
         await req(method: .post, route: "/push/unsubscribe")
     }
+    
+    func searchChannel(channel: String, query: String) async -> Result<SearchResponse, RevoltError> {
+        await req(method: .post, route: "/channels/\(channel)/search", parameters: ChannelSearchPayload(query: query, sort: .latest, include_users: true))
+    }
 }

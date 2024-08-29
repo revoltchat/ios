@@ -135,3 +135,18 @@ struct ServerEdit: Encodable {
 struct MessageEdit: Encodable {
     var content: String?
 }
+
+struct ChannelSearchPayload: Encodable {
+    enum MessageSort: String, Encodable {
+        case relevance = "Relevance"
+        case latest = "Latest"
+        case oldest = "Oldest"
+    }
+    
+    var query: String
+    var limit: Int?
+    var before: String?
+    var after: String?
+    var sort: MessageSort?
+    var include_users: Bool?
+}

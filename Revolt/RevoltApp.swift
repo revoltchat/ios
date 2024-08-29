@@ -152,10 +152,10 @@ struct InnerApp: View {
                     .navigationDestination(for: NavigationDestination.self) { dest in
                         switch dest {
                             case .channel_info(let id):
-                                let channel =  Binding($viewState.channels[id])!
+                                let channel = Binding($viewState.channels[id])!
                                 ChannelInfo(channel: channel)
                             case .channel_settings(let id):
-                                let channel =  Binding($viewState.channels[id])!
+                                let channel = Binding($viewState.channels[id])!
                                 ChannelSettings(channel: channel)
                             case .discover:
                                 Discovery()
@@ -170,6 +170,9 @@ struct InnerApp: View {
                                 CreateGroup(selectedUsers: Set(initial_users.compactMap { viewState.users[$0] }))
                             case .create_server:
                                 CreateServer()
+                            case .channel_search(let id):
+                                let channel = Binding($viewState.channels[id])!
+                                ChannelSearch(channel: channel)
                         }
                     }
                     .sheet(item: $viewState.currentUserSheet) { (v) in
