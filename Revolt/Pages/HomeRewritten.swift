@@ -113,7 +113,7 @@ struct HomeRewritten: View {
                             .frame(width: geo.size.width)
                             .onTapGesture {
                                 if offset != 0.0 {
-                                    withAnimation {
+                                    withAnimation(.easeInOut) {
                                         showSidebar = false
                                         offset = .zero
                                     }
@@ -126,7 +126,7 @@ struct HomeRewritten: View {
                                     withAnimation {
                                         if offset > snapSide {
                                             forceOpen = true
-                                        } else if offset <= snapSide, forceOpen {
+                                        } else if offset <= snapSide {
                                             forceOpen = false
                                         }
                                         
@@ -134,8 +134,8 @@ struct HomeRewritten: View {
                                     }
                                 })
                                 .onEnded({ v in
-                                    withAnimation {
-                                        if v.translation.width > snapSide || forceOpen {
+                                    withAnimation(.easeInOut) {
+                                        if forceOpen {
                                             forceOpen = false
                                             offset = sidebarWidth
                                         } else {
@@ -147,7 +147,7 @@ struct HomeRewritten: View {
                 }
                 .onChange(of: showSidebar) { (_, after) in
                     if after {
-                        withAnimation {
+                        withAnimation(.easeInOut) {
                             offset = sidebarWidth
                             showSidebar = false
                         }
@@ -155,7 +155,7 @@ struct HomeRewritten: View {
                 }
             }
             .onChange(of: viewState.currentChannel, { before, after in
-                withAnimation {
+                withAnimation(.easeInOut) {
                     showSidebar = false
                     forceOpen = false
                     offset = .zero
