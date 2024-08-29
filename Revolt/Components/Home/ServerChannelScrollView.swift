@@ -14,6 +14,8 @@ struct ChannelListItem: View {
     var server: Server
     var channel: Channel
     
+    @State var inviteSheetUrl: InviteUrl? = nil
+    
     var body: some View {
         let isSelected = viewState.currentChannel.id == channel.id
         let unread = viewState.getUnreadCountFor(channel: channel)
@@ -37,9 +39,35 @@ struct ChannelListItem: View {
             }
             .padding(8)
         }
+        .contextMenu {
+            Button("Mark as read") {
+                Task {
+                    if let last_message = viewState.channelMessages[channel.id]?.last {
+                        try! await viewState.http.ackMessage(channel: channel.id, message: last_message).get()
+                    }
+                }
+            }
+            
+            Button("Notification options") {
+                viewState.path.append(NavigationDestination.channel_info(channel.id))
+            }
+            
+            Button("Create Invite") {
+                Task {
+                    let res = await viewState.http.createInvite(channel: channel.id)
+                    
+                    if case .success(let invite) = res {
+                        inviteSheetUrl = InviteUrl(url: URL(string: "https://rvlt.gg/\(invite.id)")!)
+                    }
+                }
+            }
+        }
         .background(backgroundColor)
         .foregroundStyle(foregroundColor)
         .clipShape(RoundedRectangle(cornerRadius: 5))
+        .sheet(item: $inviteSheetUrl) { url in
+            ShareInviteSheet(channel: channel, url: url.url)
+        }
     }
 }
 
