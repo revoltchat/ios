@@ -517,7 +517,8 @@ struct Contents: View {
 
     var body: some View {
         // loadBody()
-        Text(verbatim: text).font(Font.system(size: fontSize))
+        Text((try? AttributedString(markdown: text)) ?? AttributedString(stringLiteral: text))
+            .font(Font.system(size: fontSize))
     }
 }
 
