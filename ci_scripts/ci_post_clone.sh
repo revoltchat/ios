@@ -8,3 +8,6 @@
 
 // allow using macros
 defaults write com.apple.dt.Xcode IDESkipMacroFingerprintValidation -bool YES
+
+// resolve packages
+xcodebuild -resolvePackageDependencies
