@@ -24,4 +24,4 @@ echo "Authenticate to Sentry"
 sentry-cli login --auth-token $SENTRY_AUTH_TOKEN
 
 echo "Uploading dSYM to Sentry"
-sentry-cli debug-files upload -o <org> -p <project> $CI_ARCHIVE_PATH
+sentry-cli debug-files upload -o <org> -p <project> $CI_ARCHIVE_PATH --force-foreground
