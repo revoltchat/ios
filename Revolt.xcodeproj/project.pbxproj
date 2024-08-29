@@ -232,7 +232,7 @@
 		17B1A0462BFC471C005D4664 /* Types.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Types.swift; sourceTree = "<group>"; };
 		17B7128C2B03E9D700CFF61C /* FriendsList.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FriendsList.swift; sourceTree = "<group>"; };
 		17BADE002B7019270021BB62 /* EmojiPicker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmojiPicker.swift; sourceTree = "<group>"; };
-		17BBFE102C77949E000A8FB1 /* ci_post_xcodebuild.sh.sh */ = {isa = PBXFileReference; lastKnownFileType = text.script.sh; path = ci_post_xcodebuild.sh.sh; sourceTree = "<group>"; };
+		17BBFE102C77949E000A8FB1 /* ci_post_xcodebuild.sh */ = {isa = PBXFileReference; lastKnownFileType = text.script.sh; path = ci_post_xcodebuild.sh; sourceTree = "<group>"; };
 		17BC476A2B9CB51200A593DA /* ShareInviteSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShareInviteSheet.swift; sourceTree = "<group>"; };
 		17BF54CC2B1785E200178866 /* HomeWelcome.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeWelcome.swift; sourceTree = "<group>"; };
 		17BF54D02B17B24200178866 /* LanguageSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LanguageSettings.swift; sourceTree = "<group>"; };
@@ -361,7 +361,7 @@
 			isa = PBXGroup;
 			children = (
 				17378BD72C76CF51004E4235 /* ci_post_clone.sh */,
-				17BBFE102C77949E000A8FB1 /* ci_post_xcodebuild.sh.sh */,
+				17BBFE102C77949E000A8FB1 /* ci_post_xcodebuild.sh */,
 			);
 			path = ci_scripts;
 			sourceTree = "<group>";

@@ -1,3 +1,5 @@
+#!/bin/sh
+
 //  ci_post_clone.sh
 //  Revolt
 //
