@@ -336,13 +336,13 @@
 			path = Extensions;
 			sourceTree = "<group>";
 		};
-		171594C12B4B29F300D7C3C3 /* ServerSettings */ = {
+		171594C12B4B29F300D7C3C3 /* Server */ = {
 			isa = PBXGroup;
 			children = (
 				17F555262AFC229900958F2F /* ServerSettings.swift */,
 				171594C22B4B2A0D00D7C3C3 /* ServerOverviewSettings.swift */,
 			);
-			path = ServerSettings;
+			path = Server;
 			sourceTree = "<group>";
 		};
 		173190012B754BB900B6DA49 /* Resources */ = {
@@ -364,13 +364,55 @@
 			path = ci_scripts;
 			sourceTree = "<group>";
 		};
-		17429D952B4C91080036105A /* ChannelSettings */ = {
+		173D69892C7FF45200030E62 /* Channel */ = {
+			isa = PBXGroup;
+			children = (
+				173D698B2C7FF49200030E62 /* Settings */,
+				173D698A2C7FF45A00030E62 /* Messagable */,
+			);
+			path = Channel;
+			sourceTree = "<group>";
+		};
+		173D698A2C7FF45A00030E62 /* Messagable */ = {
+			isa = PBXGroup;
+			children = (
+				1773C03C2C07DD1F007B8867 /* MessageableChannel.swift */,
+				17D8BACE2B211DEE005F5447 /* ChannelInfo.swift */,
+			);
+			path = Messagable;
+			sourceTree = "<group>";
+		};
+		173D698B2C7FF49200030E62 /* Settings */ = {
+			isa = PBXGroup;
+			children = (
+				171594C12B4B29F300D7C3C3 /* Server */,
+				17429D952B4C91080036105A /* Channel */,
+			);
+			path = Settings;
+			sourceTree = "<group>";
+		};
+		173D698C2C7FF4C000030E62 /* Home */ = {
+			isa = PBXGroup;
+			children = (
+				DA99EC4929D5F35400419FDA /* Home.swift */,
+				17CE783B2B129983006C1D2C /* HomeRewritten.swift */,
+				17F502552B9BFB2800A3022D /* CreateGroup.swift */,
+				17F8B7082C7983730065F1DE /* CreateServer.swift */,
+				1782F5E52B08F60B00759D40 /* Discovery.swift */,
+				17BF54CC2B1785E200178866 /* HomeWelcome.swift */,
+				17B7128C2B03E9D700CFF61C /* FriendsList.swift */,
+				17F502532B9BFB1000A3022D /* AddFriend.swift */,
+			);
+			path = Home;
+			sourceTree = "<group>";
+		};
+		17429D952B4C91080036105A /* Channel */ = {
 			isa = PBXGroup;
 			children = (
 				17429D962B4C91170036105A /* ChannelSettings.swift */,
 				17429D982B4C931D0036105A /* ChannelOverviewSettings.swift */,
 			);
-			path = ChannelSettings;
+			path = Channel;
 			sourceTree = "<group>";
 		};
 		175465CB2C42147B0076B393 /* NotificationService */ = {
@@ -498,20 +540,10 @@
 		17DFB4612AE06A0F00E1D417 /* Pages */ = {
 			isa = PBXGroup;
 			children = (
-				17429D952B4C91080036105A /* ChannelSettings */,
-				171594C12B4B29F300D7C3C3 /* ServerSettings */,
+				173D698C2C7FF4C000030E62 /* Home */,
+				173D69892C7FF45200030E62 /* Channel */,
 				178BB1112B02E453001143A4 /* Login */,
 				17E019C72AF1277D00AB4663 /* Settings */,
-				DA99EC4929D5F35400419FDA /* Home.swift */,
-				17CE783B2B129983006C1D2C /* HomeRewritten.swift */,
-				1782F5E52B08F60B00759D40 /* Discovery.swift */,
-				17BF54CC2B1785E200178866 /* HomeWelcome.swift */,
-				17B7128C2B03E9D700CFF61C /* FriendsList.swift */,
-				17D8BACE2B211DEE005F5447 /* ChannelInfo.swift */,
-				17F502532B9BFB1000A3022D /* AddFriend.swift */,
-				17F502552B9BFB2800A3022D /* CreateGroup.swift */,
-				1773C03C2C07DD1F007B8867 /* MessageableChannel.swift */,
-				17F8B7082C7983730065F1DE /* CreateServer.swift */,
 			);
 			path = Pages;
 			sourceTree = "<group>";

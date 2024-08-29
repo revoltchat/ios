@@ -273,12 +273,14 @@ struct ChannelInfo: View {
                 
                 let no_role = getNoRoleSectionContents(users: users)
                 
-                Section("Members - \(no_role.count)") {
-                    ForEach(no_role, id: \.0.id) { (user, member) in
-                        UserDisplay(server: server, user: user, member: member)
+                if !no_role.isEmpty {
+                    Section("Members - \(no_role.count)") {
+                        ForEach(no_role, id: \.0.id) { (user, member) in
+                            UserDisplay(server: server, user: user, member: member)
+                        }
                     }
+                    .listRowBackground(viewState.theme.background2)
                 }
-                .listRowBackground(viewState.theme.background2)
                 
             }
             .scrollContentBackground(.hidden)
