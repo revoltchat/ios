@@ -6,7 +6,6 @@ DerivedData/
 .swiftpm/config/registries.json
 .swiftpm/xcode/package.xcworkspace/contents.xcworkspacedata
 .netrc
-Revolt.xcodeproj/project.xcworkspace/xcshareddata/swiftpm/Package.resolved
 
 .sentryclirc
 build/
