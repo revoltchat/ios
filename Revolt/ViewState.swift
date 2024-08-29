@@ -162,6 +162,7 @@ public class ViewState: ObservableObject {
     @Published var isOnboarding: Bool = false
     @Published var unreads: [String: Unread] = [:]
     @Published var currentUserSheet: UserMaybeMember? = nil
+    @Published var atTopOfChannel: Set<String> = []
 
     @Published var currentSelection: MainSelection = .dms {
         didSet {

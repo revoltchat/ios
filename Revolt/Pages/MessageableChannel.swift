@@ -97,7 +97,6 @@ struct MessageableChannelView: View {
     @EnvironmentObject var viewState: ViewState
     @ObservedObject var viewModel: MessageableChannelViewModel
     
-    @State var foundAllMessages = false
     @State var over18: Bool = false
     @State var showDetails: Bool = false
     @State var showingSelectEmoji = false
@@ -237,7 +236,7 @@ struct MessageableChannelView: View {
                     GeometryReader { geoProxy in
                         ScrollViewReader { proxy in
                             List {
-                                if foundAllMessages {
+                                if viewState.atTopOfChannel.contains(viewModel.channel.id) {
                                     VStack(alignment: .leading) {
                                         Text("#\(viewModel.channel.getName(viewState))")
                                             .font(.title)
@@ -248,8 +247,8 @@ struct MessageableChannelView: View {
                                     Text("Loading more messages...")
                                         .onAppear {
                                             Task {
-                                                if let new = await viewModel.loadMoreMessages(before: viewModel.messages.first) {
-                                                    foundAllMessages = new.messages.count < 50
+                                                if let new = await viewModel.loadMoreMessages(before: viewModel.messages.first), new.messages.count < 50 {
+                                                    viewState.atTopOfChannel.insert(viewModel.channel.id)
                                                 }
                                             }
                                         }
@@ -420,6 +419,6 @@ struct MessageableChannelView: View {
     @StateObject var viewState = ViewState.preview()
     let messages = Binding($viewState.channelMessages["0"])!
     
-    return MessageableChannelView(viewModel: .init(viewState: viewState, channel: viewState.channels["0"]!, server: viewState.servers[""], messages: messages), foundAllMessages: true, showSidebar: .constant(false))
+    return MessageableChannelView(viewModel: .init(viewState: viewState, channel: viewState.channels["0"]!, server: viewState.servers[""], messages: messages), showSidebar: .constant(false))
         .applyPreviewModifiers(withState: viewState)
 }
