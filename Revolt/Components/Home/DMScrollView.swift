@@ -73,7 +73,8 @@ struct DMScrollView: View {
                         viewState.selectDm(withId: channel.id)
                     } label: {
                         HStack {
-                            ChannelIcon(channel: channel)
+                            ChannelIcon(channel: channel, withUserPresence: true)
+                            
                             Spacer()
                             if let unread = viewState.getUnreadCountFor(channel: channel) {
                                 UnreadCounter(unread: unread)

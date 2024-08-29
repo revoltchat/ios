@@ -11,9 +11,11 @@ import Types
 
 struct ChannelIcon: View {
     @EnvironmentObject var viewState: ViewState
-    var channel: Channel
     
-    var spacing: CGFloat = 8
+    var channel: Channel
+    var withUserPresence: Bool = false
+    
+    var spacing: CGFloat = 12
     var initialSize: (CGFloat, CGFloat) = (16, 16)
     var frameSize: (CGFloat, CGFloat) = (24, 24)
     
@@ -63,7 +65,7 @@ struct ChannelIcon: View {
                 case .dm_channel(let c):
                     let recipient = viewState.users[c.recipients.first(where: { $0 != viewState.currentUser!.id })!]!
                     
-                    Avatar(user: recipient)
+                    Avatar(user: recipient, withPresence: withUserPresence)
                         .frame(width: initialSize.0, height: initialSize.1)
                         .frame(width: frameSize.0, height: frameSize.1)
 
