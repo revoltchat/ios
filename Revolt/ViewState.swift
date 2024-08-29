@@ -593,6 +593,13 @@ public class ViewState: ObservableObject {
                         }
                     }
                 }
+            case .message_append(let e):
+                if var message = messages[e.id] {
+                    var embeds = message.embeds ?? []
+                    embeds.append(e.append)
+                    message.embeds = embeds
+                    messages[e.id] = message
+                }
         }
     }
 
