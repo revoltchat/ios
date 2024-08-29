@@ -62,6 +62,8 @@
 		1777DD892ADC3C31003D6C72 /* Markdown.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1777DD882ADC3C31003D6C72 /* Markdown.swift */; };
 		1777DD8E2ADC4336003D6C72 /* RemoteImageTextAttachment.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1777DD8D2ADC4336003D6C72 /* RemoteImageTextAttachment.swift */; };
 		1782F5E62B08F60B00759D40 /* Discovery.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1782F5E52B08F60B00759D40 /* Discovery.swift */; };
+		17863A592C8094840051A52C /* Tile.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17863A582C8094840051A52C /* Tile.swift */; };
+		17863A5C2C8098AF0051A52C /* ExyteGrid in Frameworks */ = {isa = PBXBuildFile; productRef = 17863A5B2C8098AF0051A52C /* ExyteGrid */; };
 		1788F96E2C3CA19800A385A8 /* MessageEmbed.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1788F96D2C3CA19400A385A8 /* MessageEmbed.swift */; };
 		1788F9702C3CA3A600A385A8 /* Embed.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1788F96F2C3CA3A300A385A8 /* Embed.swift */; };
 		178BB10C2B02D84C001143A4 /* HCaptcha in Frameworks */ = {isa = PBXBuildFile; platformFilters = (ios, maccatalyst, ); productRef = 178BB10B2B02D84C001143A4 /* HCaptcha */; };
@@ -217,6 +219,7 @@
 		1777DD882ADC3C31003D6C72 /* Markdown.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Markdown.swift; sourceTree = "<group>"; };
 		1777DD8D2ADC4336003D6C72 /* RemoteImageTextAttachment.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemoteImageTextAttachment.swift; sourceTree = "<group>"; };
 		1782F5E52B08F60B00759D40 /* Discovery.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Discovery.swift; sourceTree = "<group>"; };
+		17863A582C8094840051A52C /* Tile.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Tile.swift; sourceTree = "<group>"; };
 		1788F96D2C3CA19400A385A8 /* MessageEmbed.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageEmbed.swift; sourceTree = "<group>"; };
 		1788F96F2C3CA3A300A385A8 /* Embed.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Embed.swift; sourceTree = "<group>"; };
 		178BB10F2B02D89A001143A4 /* HCaptchaView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HCaptchaView.swift; sourceTree = "<group>"; };
@@ -311,6 +314,7 @@
 				178BB10C2B02D84C001143A4 /* HCaptcha in Frameworks */,
 				DA99EC5329D6148200419FDA /* Alamofire in Frameworks */,
 				178BB10E2B02D84C001143A4 /* HCaptcha_RxSwift in Frameworks */,
+				17863A5C2C8098AF0051A52C /* ExyteGrid in Frameworks */,
 				174DA9E82B9E4D70001BC330 /* Parsing in Frameworks */,
 				17CCCF6E2ADA173B00D78D7A /* ULID in Frameworks */,
 				1773C0272C07DC32007B8867 /* Types.framework in Frameworks */,
@@ -448,6 +452,7 @@
 				1718F3CF2B0BCAA50018E524 /* UnreadCounter.swift */,
 				172754C82B399092002223FE /* Contents.swift */,
 				17BADE002B7019270021BB62 /* EmojiPicker.swift */,
+				17863A582C8094840051A52C /* Tile.swift */,
 			);
 			path = Components;
 			sourceTree = "<group>";
@@ -738,6 +743,7 @@
 				03268FCCFC7D4D1F8B6E9F6F /* Sentry */,
 				1746CF592B83C6750051FD47 /* CodableWrapper */,
 				174DA9E72B9E4D70001BC330 /* Parsing */,
+				17863A5B2C8098AF0051A52C /* ExyteGrid */,
 			);
 			productName = Revolt;
 			productReference = D49B704F29C4D3FE009494A5 /* Revolt.app */;
@@ -790,6 +796,7 @@
 				1746CF582B83C6750051FD47 /* XCRemoteSwiftPackageReference "CodableWrapper" */,
 				174DA9E62B9E4D70001BC330 /* XCRemoteSwiftPackageReference "swift-parsing" */,
 				1757A26B2BB7444D007EE8B9 /* XCRemoteSwiftPackageReference "client-sdk-swift" */,
+				17863A5A2C80988C0051A52C /* XCRemoteSwiftPackageReference "Grid" */,
 			);
 			productRefGroup = D49B705029C4D3FE009494A5 /* Products */;
 			projectDirPath = "";
@@ -933,6 +940,7 @@
 				1759C39A2B291A75006E6BBE /* MessageContentsView.swift in Sources */,
 				17E019D12AF14EC000AB4663 /* ServerIcon.swift in Sources */,
 				17F8B7092C7983730065F1DE /* CreateServer.swift in Sources */,
+				17863A592C8094840051A52C /* Tile.swift in Sources */,
 				172F2D012C22ED4D00948C00 /* IteratorProtocol.swift in Sources */,
 				1718F3D02B0BCAA50018E524 /* UnreadCounter.swift in Sources */,
 				17F502562B9BFB2800A3022D /* CreateGroup.swift in Sources */,
@@ -1518,6 +1526,14 @@
 				minimumVersion = 1.2.0;
 			};
 		};
+		17863A5A2C80988C0051A52C /* XCRemoteSwiftPackageReference "Grid" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/exyte/Grid";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 1.5.0;
+			};
+		};
 		178BB10A2B02D84C001143A4 /* XCRemoteSwiftPackageReference "HCaptcha-ios-sdk" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/hCaptcha/HCaptcha-ios-sdk";
@@ -1601,6 +1617,11 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 175997172B2FB90600C39CF6 /* XCRemoteSwiftPackageReference "SwiftUI-Flow" */;
 			productName = Flow;
+		};
+		17863A5B2C8098AF0051A52C /* ExyteGrid */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 17863A5A2C80988C0051A52C /* XCRemoteSwiftPackageReference "Grid" */;
+			productName = ExyteGrid;
 		};
 		178BB10B2B02D84C001143A4 /* HCaptcha */ = {
 			isa = XCSwiftPackageProductDependency;
