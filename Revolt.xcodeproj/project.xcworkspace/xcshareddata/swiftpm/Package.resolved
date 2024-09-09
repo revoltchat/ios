@@ -1,5 +1,5 @@
 {
-  "originHash" : "8524c290859ae0fbcc822d01cbe5ca37cb940c2f9e3922c12589bd17ad3b9759",
+  "originHash" : "ec5f361b9d1ca21a719403fee482dea699696e98d396c2fb57aac482052ce6ad",
   "pins" : [
     {
       "identity" : "alamofire",
@@ -69,8 +69,17 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/getsentry/sentry-cocoa/",
       "state" : {
-        "revision" : "f8d9bc344a052a26f51c8cecec93724b871ef36b",
-        "version" : "8.33.0"
+        "revision" : "5575af93efb776414f243e93d6af9f6258dc539a",
+        "version" : "8.36.0"
+      }
+    },
+    {
+      "identity" : "snapkit",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/SnapKit/SnapKit",
+      "state" : {
+        "revision" : "2842e6e84e82eb9a8dac0100ca90d9444b0307f4",
+        "version" : "5.7.1"
       }
     },
     {
@@ -80,6 +89,15 @@
       "state" : {
         "revision" : "c6bfd1af48efcc9a9ad203665db12375ba6b145a",
         "version" : "4.0.8"
+      }
+    },
+    {
+      "identity" : "subviewattachingtextview",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/vlas-voloshin/SubviewAttachingTextView",
+      "state" : {
+        "revision" : "6025828b6c05fbf5529616a70c702f7425899fe5",
+        "version" : "1.5.1"
       }
     },
     {
@@ -161,6 +179,15 @@
       "state" : {
         "revision" : "e21933de8ac3e8ba9e83aa71956cd27206eec6b9",
         "version" : "1.3.1"
+      }
+    },
+    {
+      "identity" : "videoplayercontainer",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/shayanbo/VideoPlayerContainer",
+      "state" : {
+        "revision" : "c67b4754daef7c0e20cd64a499612602cbb57a84",
+        "version" : "1.0.0"
       }
     },
     {
