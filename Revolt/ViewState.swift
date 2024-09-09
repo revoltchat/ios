@@ -785,6 +785,22 @@ public class ViewState: ObservableObject {
                 
         }
     }
+    
+    func resolveAvatarUrl(user: Types.User, member: Member?, masquerade: Masquerade?) -> URL {
+        if let avatar = masquerade?.avatar, let url = URL(string: avatar) {
+            return url
+        }
+        
+        if let avatar = member?.avatar, let url = URL(string: formatUrl(with: avatar)) {
+            return url
+        }
+        
+        if let avatar = user.avatar, let url = URL(string: formatUrl(with: avatar)) {
+            return url
+        }
+        
+        return URL(string: "\(http.baseURL)/users/\(user.id)/default_avatar")!
+    }
 }
 
 enum UnreadCount {

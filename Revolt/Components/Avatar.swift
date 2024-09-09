@@ -40,19 +40,12 @@ struct Avatar: View {
                     .clipped()
                     .clipShape(Circle())
             } else {
-                if let source = source {
-                    LazyImage(source: source, height: height, width: width, clipTo: Circle())
-                } else {
-                    let baseUrl = viewState.http.baseURL
-                    
-                    KFImage.url(URL(string: "\(baseUrl)/users/\(user.id)/default_avatar"))
-                        .placeholder { Color.clear }
-                        .resizable()
-                        .aspectRatio(contentMode: .fill)
-                        .frame(width: width, height: height)
-                        .clipped()
-                        .clipShape(Circle())
-                }
+                LazyImage(
+                    source: .url(viewState.resolveAvatarUrl(user: user, member: member, masquerade: masquerade)),
+                    height: height,
+                    width: width,
+                    clipTo: Circle()
+                )
             }
             
             if withPresence {

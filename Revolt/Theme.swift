@@ -409,6 +409,10 @@ public struct ThemeColor: Equatable, ShapeStyle, View {
         Color(red: r, green: g, blue: b, opacity: a)
     }
     
+    public var uiColor: UIColor {
+        UIColor(color)
+    }
+    
     public var hex: String {
         let r = String(Int(self.r * 255), radix: 16, uppercase: true)
         let g = String(Int(self.g * 255), radix: 16, uppercase: true)
