@@ -136,7 +136,7 @@ public class ViewState: ObservableObject {
 #endif
 
     var http: HTTPClient = HTTPClient(token: nil, baseURL: "https://app.revolt.chat/api")
-    var ws: WebSocketStream? = nil
+    @Published var ws: WebSocketStream? = nil
     var apiInfo: ApiInfo? = nil
     
     var launchTransaction: any Sentry.Span
@@ -508,6 +508,8 @@ public class ViewState: ObservableObject {
                 }
 
                 state = .connected
+                ws?.currentState = .connected
+                ws?.retryCount = 0
                 await verifyStateIntegrity()
                 
                 processReadySpan.finish()

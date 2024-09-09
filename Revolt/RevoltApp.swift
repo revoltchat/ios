@@ -86,7 +86,8 @@ struct ApplicationSwitcher: View {
     @Environment(\.colorScheme) var colorScheme
     @EnvironmentObject var viewState: ViewState
     @State var wasSignedOut = false
-
+    @State var banner: WsState? = nil
+    
     var body: some View {
         if viewState.state != .signedOut && !viewState.isOnboarding {
             InnerApp()
@@ -99,6 +100,46 @@ struct ApplicationSwitcher: View {
                         }
                     }
                 }
+                .overlay(alignment: .top) {
+                    if let banner = banner {
+                        HStack {
+                            switch banner {
+                                case .disconnected:
+                                    Image(systemName: "exclamationmark.triangle.fill")
+                                    Text("Disconnected")
+                                        .bold()
+                                    Text("Tap to reconnect")
+                                    
+                                case .connecting:
+                                    Image(systemName: "arrow.clockwise")
+                                    Text("Reconnecting...")
+                                case .connected:
+                                    Image(systemName: "checkmark")
+                                    Text("Connected")
+                            }
+                            
+                            Spacer()
+                        }
+                        .padding(8)
+                        .foregroundStyle(.black)
+                        .background {
+                            switch banner {
+                                case .disconnected:
+                                    return Color.red
+                                case .connecting:
+                                    return Color.yellow
+                                case .connected:
+                                    return Color.green
+                            }
+                        }
+                        .animation(.snappy, value: banner)
+                        .onTapGesture {
+                            if case .disconnected = banner {
+                                viewState.ws?.forceConnect()
+                            }
+                        }
+                    }
+                }
                 .onChange(of: colorScheme) { before, after in
                     // automatically switch the color scheme if the user pressed "auto" in the preferences menu
                     if viewState.theme.shouldFollowiOSTheme {
@@ -107,6 +148,18 @@ struct ApplicationSwitcher: View {
                         }
                     }
                 }
+                .onChange(of: viewState.ws?.currentState, { before, after in
+                    if case .connected = after {
+                        banner = .connected
+                        DispatchQueue.main.asyncAfter(deadline: .now() + .seconds(2)) {
+                            withAnimation {
+                                banner = nil
+                            }
+                        }
+                    } else if before != nil {
+                        banner = after
+                    }
+                })
         } else {
             Welcome(wasSignedOut: $wasSignedOut)
                 .transition(.slideNext)
