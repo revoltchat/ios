@@ -105,7 +105,7 @@ struct CategoryListItem: View {
                     
                     Spacer()
                 }
-                .padding(.horizontal, 6)
+                .padding(8)
             }
             
             if !isClosed {
