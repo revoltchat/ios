@@ -216,7 +216,9 @@ struct MessageBox: View {
                         if let emojiId = emoji.emojiId, let emoji = viewState.emojis[emojiId] {
                             names = [emoji.name]
                         } else {
-                            names = emoji.alternates.prepending(emoji.base).map { String(String.UnicodeScalarView($0.compactMap(Unicode.Scalar.init))) }
+                            var values = emoji.alternates
+                            values.append(emoji.base)
+                            names = values.map { String(String.UnicodeScalarView($0.compactMap(Unicode.Scalar.init))) }
                         }
                         
                         return names.contains(where: { $0.lowercased().starts(with: autocompleteSearchValue.lowercased()) })
