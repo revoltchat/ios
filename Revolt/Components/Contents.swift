@@ -662,6 +662,7 @@ struct InnerContents: UIViewRepresentable {
     func makeUIView(context: Context) -> UIViewType {
         let textview = SubviewAttachingTextView()
         textview.isEditable = false
+        textview.isSelectable = false
         textview.font = .systemFont(ofSize: fontSize)
         textview.backgroundColor = nil
         textview.isScrollEnabled = false
@@ -756,7 +757,7 @@ struct InnerContents: UIViewRepresentable {
                 let lowerInt = match.range.lowerBound.encodedOffset - (foundUserCount * 28)
                 let lower = String.Index(encodedOffset: lowerInt)
                 let upper = String.Index(encodedOffset: match.range.upperBound.encodedOffset - (foundUserCount * 28))
-
+                
                 let globalRange = Range(uncheckedBounds: (lower, upper))
                 
                 let currentAttrs = attrString.attributes(at: lowerInt, effectiveRange: nil)
@@ -789,7 +790,7 @@ struct InnerContents: UIViewRepresentable {
                 foundUserCount += 1
             }
         }
-
+        
         textview.attributedText = attrString
         
         InnerContents.recalculateHeight(view: textview, result: $calculatedHeight)
@@ -804,7 +805,6 @@ struct InnerContents: UIViewRepresentable {
         }
     }
 }
-
 
 struct Contents: View {
     @State var calculatedHeight: CGFloat = 0
