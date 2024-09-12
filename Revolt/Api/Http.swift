@@ -359,4 +359,8 @@ struct HTTPClient {
     func searchChannel(channel: String, query: String) async -> Result<SearchResponse, RevoltError> {
         await req(method: .post, route: "/channels/\(channel)/search", parameters: ChannelSearchPayload(query: query, sort: .latest, include_users: true))
     }
+    
+    func fetchMutuals(user: String) async -> Result<MutualsResponse, RevoltError> {
+        await req(method: .get, route: "/users/\(user)/mutual")
+    }
 }

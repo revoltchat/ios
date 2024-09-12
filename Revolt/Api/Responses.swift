@@ -79,3 +79,8 @@ struct SearchResponse: Decodable {
     var users: [User]
     var members: [Member]
 }
+
+struct MutualsResponse: Decodable {
+    var servers: [String]
+    var users: [String]
+}
