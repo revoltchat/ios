@@ -115,6 +115,7 @@
 		17F502562B9BFB2800A3022D /* CreateGroup.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17F502552B9BFB2800A3022D /* CreateGroup.swift */; };
 		17F555272AFC229900958F2F /* ServerSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17F555262AFC229900958F2F /* ServerSettings.swift */; };
 		17F8B7092C7983730065F1DE /* CreateServer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17F8B7082C7983730065F1DE /* CreateServer.swift */; };
+		17F9D7632C9208B500D0BB6F /* MessageReactionsSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17F9D7622C9208B500D0BB6F /* MessageReactionsSheet.swift */; };
 		36D461CF77D84B97B94929A9 /* Sentry in Frameworks */ = {isa = PBXBuildFile; productRef = 03268FCCFC7D4D1F8B6E9F6F /* Sentry */; };
 		D49B705329C4D3FE009494A5 /* RevoltApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = D49B705229C4D3FE009494A5 /* RevoltApp.swift */; };
 		D49B705729C4D3FE009494A5 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = D49B705629C4D3FE009494A5 /* Assets.xcassets */; };
@@ -281,6 +282,7 @@
 		17F502552B9BFB2800A3022D /* CreateGroup.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateGroup.swift; sourceTree = "<group>"; };
 		17F555262AFC229900958F2F /* ServerSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ServerSettings.swift; sourceTree = "<group>"; };
 		17F8B7082C7983730065F1DE /* CreateServer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateServer.swift; sourceTree = "<group>"; };
+		17F9D7622C9208B500D0BB6F /* MessageReactionsSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageReactionsSheet.swift; sourceTree = "<group>"; };
 		D49B704F29C4D3FE009494A5 /* Revolt.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Revolt.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		D49B705229C4D3FE009494A5 /* RevoltApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RevoltApp.swift; sourceTree = "<group>"; };
 		D49B705629C4D3FE009494A5 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
@@ -604,6 +606,7 @@
 				1748B2062B1FB88B00AA2D47 /* MessageReactions.swift */,
 				1759C3992B291A75006E6BBE /* MessageContentsView.swift */,
 				1759C39B2B291E2F006E6BBE /* SystemMessageView.swift */,
+				17F9D7622C9208B500D0BB6F /* MessageReactionsSheet.swift */,
 			);
 			path = MessageRenderer;
 			sourceTree = "<group>";
@@ -935,6 +938,7 @@
 				178BB1172B02E63B001143A4 /* LoadingSpinnerView.swift in Sources */,
 				17CE783F2B129E28006C1D2C /* ServerScrollView.swift in Sources */,
 				DA99EC5029D5F35900419FDA /* Login.swift in Sources */,
+				17F9D7632C9208B500D0BB6F /* MessageReactionsSheet.swift in Sources */,
 				178BB1102B02D89A001143A4 /* HCaptchaView.swift in Sources */,
 				17DFB4642AE06A5D00E1D417 /* Settings.swift in Sources */,
 				17F555272AFC229900958F2F /* ServerSettings.swift in Sources */,

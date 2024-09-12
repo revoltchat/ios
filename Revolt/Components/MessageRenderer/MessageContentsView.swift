@@ -56,6 +56,7 @@ struct MessageContentsView: View {
     @State var showMemberSheet: Bool = false
     @State var showReportSheet: Bool = false
     @State var showReactSheet: Bool = false
+    @State var showReactionsSheet: Bool = false
     @State var isStatic: Bool
 
     private var canManageMessages: Bool {
@@ -78,7 +79,7 @@ struct MessageContentsView: View {
 
     var body: some View {
         VStack(alignment: .leading, spacing: 2) {
-            if let content = Binding(viewModel.$message.content) {
+            if let content = Binding(viewModel.$message.content), !content.wrappedValue.isEmpty {
                 Contents(text: content, fontSize: 16)
                     //.font(.body)
             }
@@ -88,10 +89,13 @@ struct MessageContentsView: View {
                     MessageEmbed(embed: embed)
                 }
             }
-
-            VStack(alignment: .leading) {
-                ForEach(viewModel.message.attachments ?? []) { attachment in
-                    MessageAttachment(attachment: attachment)
+            
+            
+            if let attachments = viewModel.message.attachments {
+                VStack(alignment: .leading) {
+                    ForEach(attachments) { attachment in
+                        MessageAttachment(attachment: attachment)
+                    }
                 }
             }
 
@@ -118,6 +122,9 @@ struct MessageContentsView: View {
             .presentationDetents([.large])
             .presentationBackground(viewState.theme.background)
         }
+        .sheet(isPresented: $showReactionsSheet) {
+            MessageReactionsSheet(viewModel: viewModel)
+        }
         .contextMenu(menuItems: {
             if !isStatic {
                 Button(action: viewModel.reply, label: {
@@ -129,6 +136,14 @@ struct MessageContentsView: View {
                 } label: {
                     Label("React", systemImage: "face.smiling.inverse")
                 }
+                
+                if !(viewModel.message.reactions?.isEmpty ?? true) {
+                    Button {
+                        showReactionsSheet = true
+                    } label: {
+                        Label("Reactions", systemImage: "face.smiling.inverse")
+                    }
+               }
                 
                 Button {
                     copyText(text: viewModel.message.content ?? "")

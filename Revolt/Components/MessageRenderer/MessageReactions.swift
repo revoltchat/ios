@@ -101,20 +101,22 @@ struct MessageReactions: View {
         let restrict_reactions = interactions?.restrict_reactions ?? false
         let (required, optional) = getReactions()
         
-        HFlow(spacing: 4) {
-            ForEach(required, id: \.0) { (emoji, users) in
-                MessageReaction(channel: channel, message: message, emoji: emoji, users: users)
-            }
-            
-            if required.count != 0, optional.count != 0 {
-                Divider()
-                    .frame(height: 14)
-                    .foregroundStyle(viewState.theme.foreground3)
-                    .padding(.horizontal, 2)
-            }
-            
-            ForEach(optional, id: \.0) { (emoji, users) in
-                MessageReaction(channel: channel, message: message, emoji: emoji, users: users, disabled: restrict_reactions)
+        if !required.isEmpty || !optional.isEmpty {
+            HFlow(spacing: 4) {
+                ForEach(required, id: \.0) { (emoji, users) in
+                    MessageReaction(channel: channel, message: message, emoji: emoji, users: users)
+                }
+                
+                if required.count != 0, optional.count != 0 {
+                    Divider()
+                        .frame(height: 14)
+                        .foregroundStyle(viewState.theme.foreground3)
+                        .padding(.horizontal, 2)
+                }
+                
+                ForEach(optional, id: \.0) { (emoji, users) in
+                    MessageReaction(channel: channel, message: message, emoji: emoji, users: users, disabled: restrict_reactions)
+                }
             }
         }
     }
