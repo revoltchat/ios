@@ -15,6 +15,7 @@ enum LazyImageSource {
     case file(File)
     case emoji(String)
     case local(Data)
+    case id(String, String)
 }
 
 struct LazyImage<S: Shape>: View {
@@ -36,6 +37,8 @@ struct LazyImage<S: Shape>: View {
                 return .network(URL(string: viewState.formatUrl(fromEmoji: id))!)
             case .local(let data):
                 return .provider(RawImageDataProvider(data: data, cacheKey: String(data.hashValue)))
+            case .id(let id, let tag):
+                return .network(URL(string: viewState.formatUrl(fromId: id, withTag: tag))!)
         }
     }
 

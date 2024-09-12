@@ -16,12 +16,15 @@ struct Avatar: View {
     public var user: User
     public var member: Member? = nil
     public var masquerade: Masquerade? = nil
+    public var webhook: MessageWebhook? = nil
     public var width: CGFloat = 32
     public var height: CGFloat = 32
     public var withPresence: Bool = false
 
     var source: LazyImageSource? {
-        if let url = masquerade?.avatar {
+        if let avatar = webhook?.avatar {
+            return .id(avatar, "avatars")
+        } else if let url = masquerade?.avatar {
             return .url(URL(string: url)!)
         } else if let file = member?.avatar ?? user.avatar {
             return .file(file)

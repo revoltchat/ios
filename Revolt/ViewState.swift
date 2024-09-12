@@ -413,7 +413,11 @@ public class ViewState: ObservableObject {
     func formatUrl(fromEmoji emojiId: String) -> String {
         "\(apiInfo!.features.autumn.url)/emojis/\(emojiId)"
     }
-
+    
+    func formatUrl(fromId id: String, withTag tag: String) -> String {
+        "\(apiInfo!.features.autumn.url)/\(tag)/\(id)"
+    }
+    
     func backgroundWsTask() async {
         if ws != nil {
             return

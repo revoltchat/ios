@@ -36,30 +36,31 @@ struct MessageView: View {
     
     private func pfpView(size: AvatarSize) -> some View {
         ZStack(alignment: .topLeading) {
-            Avatar(user: viewModel.author, member: viewModel.member, masquerade: viewModel.message.masquerade, width: size.sizes.0, height: size.sizes.0)
+            Avatar(user: viewModel.author, member: viewModel.member, masquerade: viewModel.message.masquerade, webhook: viewModel.message.webhook, width: size.sizes.0, height: size.sizes.0)
             
             if viewModel.message.masquerade != nil {
-                Avatar(user: viewModel.author, member: viewModel.member, width: size.sizes.1, height: size.sizes.1)
+                Avatar(user: viewModel.author, member: viewModel.member, webhook: viewModel.message.webhook, width: size.sizes.1, height: size.sizes.1)
                     .padding(.leading, -size.sizes.2)
                     .padding(.top, -size.sizes.2)
             }
         }
         .onTapGesture {
-            if !isStatic {
+            if !isStatic || viewModel.message.webhook != nil {
                 viewState.openUserSheet(withId: viewModel.author.id, server: viewModel.server?.id)
             }
         }
     }
     
     private var nameView: some View {
-        let name = viewModel.message.masquerade?.name
+        let name = viewModel.message.webhook?.name
+            ?? viewModel.message.masquerade?.name
             ?? viewModel.member?.nickname
             ?? viewModel.author.display_name
             ?? viewModel.author.username
         
         return Text(verbatim: name)
             .onTapGesture {
-                if !isStatic {
+                if !isStatic || viewModel.message.webhook != nil {
                     viewState.openUserSheet(withId: viewModel.author.id, server: viewModel.server?.id)
                 }
             }
@@ -124,6 +125,11 @@ struct MessageView: View {
                             
                             if viewModel.author.bot != nil {
                                 MessageBadge(text: String(localized: "Bot"), color: viewState.theme.accent.color)
+                            }
+                            
+                            if viewModel.message.webhook != nil {
+                                MessageBadge(text: String(localized: "Webhook"), color: viewState.theme.accent.color)
+
                             }
                             
                             Text(createdAt(id: viewModel.message.id).formatted(Date.FormatStyle().hour(.twoDigits(amPM: .omitted)).minute(.twoDigits)))
