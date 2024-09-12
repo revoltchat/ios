@@ -676,122 +676,140 @@ struct InnerContents: UIViewRepresentable {
     }
     
     func updateUIView(_ textview: UIViewType, context: Context) {
-        let attrString = try! NSMutableAttributedString(markdown: text.replacing("\n", with: "\\\n").data(using: .utf8)!, options: .init(allowsExtendedAttributes: true, interpretedSyntax: .full))
-        
-        //attrString.setAttributes([.font: font], range: NSRange(location: 0, length: attrString.length))
-        
-        attrString.enumerateAttribute(.font, in: NSRange(location: 0, length: attrString.length), options: [], using: { font, range, _ in
-            let font = font != nil ? (font as! UIFont).withSize(fontSize) : UIFont.systemFont(ofSize: fontSize)
+        if !text.isEmpty {
+            var lines: [NSAttributedString] = []
             
-            //            let customFont = UIFont(name: "Twitter Color Emoji", size: fontSize)!
-            //            let descriptor = customFont.fontDescriptor
-            //            let fallback = descriptor.addingAttributes([.name: font.fontName])
-            //            let repaired = descriptor.addingAttributes([.cascadeList: [fallback]])
-            //            let newFont = UIFont(descriptor: repaired, size: 0.0)
-            
-            attrString.addAttribute(.font, value: font, range: range)
-        })
-        
-        attrString.enumerateAttribute(.foregroundColor, in: NSRange(location: 0, length: attrString.length), options: [], using: { color, range, _ in
-            attrString.addAttribute(.foregroundColor, value: color ?? foregroundColor, range: range)
-        })
-        //let run = attrString.string[String.Index(utf16Offset: range.location, in: attrString.string)..<String.Index(utf16Offset: range.location + range.length, in: attrString.string)]
-        
-        var foundEmojiCount = 0
-        
-        for match in attrString.string.matches(of: /:(\w{26}):/) {
-            let id = match.output.1
-            
-            let lowerInt = match.range.lowerBound.encodedOffset - (foundEmojiCount * 27)
-            let lower = String.Index(encodedOffset: lowerInt)
-            let upper = String.Index(encodedOffset: match.range.upperBound.encodedOffset - (foundEmojiCount * 27))
-            
-            let globalRange = Range(uncheckedBounds: (lower, upper))
-            
-            attrString.deleteCharacters(in: NSRange(globalRange, in: attrString.string))
-            
-            let view = EmojiView(imageSize: CGSize(width: fontSize, height: fontSize))
-            view.label = UILabel()
-            view.label.text = "Hello"
-            textview.addSubview(view)
-            view.imageView.kf.setImage(with: URL(string: "https://autumn.revolt.chat/emojis/\(id)")!, placeholder: .none)
-            
-            attrString.insert(NSAttributedString(attachment: SubviewTextAttachment(view: view, size: CGSize(width: fontSize, height: fontSize))), at: lowerInt)
-            
-            foundEmojiCount += 1
-        }
-        
-        var foundChannelLength = 0
-        
-        for match in attrString.string.matches(of: /<#(\w{26})>/) {
-            let id = match.output.1
-            
-            if let channel = viewState.channels[String(id)] {
-                let lowerInt = match.range.lowerBound.encodedOffset - foundChannelLength
-                let lower = String.Index(encodedOffset: lowerInt)
-                let upper = String.Index(encodedOffset: match.range.upperBound.encodedOffset - foundChannelLength)
+            for text in text.split(separator: "\n") {
                 
-                let globalRange = Range(uncheckedBounds: (lower, upper))
+                let attrString = try! NSMutableAttributedString(markdown: text.data(using: .utf8)!, options: .init(allowsExtendedAttributes: true, interpretedSyntax: .full))
                 
-                var currentAttrs = attrString.attributes(at: lowerInt, effectiveRange: nil)
+                attrString.enumerateAttribute(.font, in: NSRange(location: 0, length: attrString.length), options: [], using: { font, range, _ in
+                    let font = font != nil ? (font as! UIFont).withSize(fontSize) : UIFont.systemFont(ofSize: fontSize)
+                    
+                    // Custom emoji support
+//                    let customFont = UIFont(name: "Twitter Color Emoji", size: fontSize)!
+//                    let descriptor = customFont.fontDescriptor
+//                    let fallback = descriptor.addingAttributes([.name: font.fontName])
+//                    let repaired = descriptor.addingAttributes([.cascadeList: [fallback]])
+//                    let newFont = UIFont(descriptor: repaired, size: 0.0)
+                    
+                    attrString.addAttribute(.font, value: font, range: range)
+                })
                 
-                currentAttrs[.link] = URL(string: "revoltchat://channels?channel=\(id)")!
-                currentAttrs[.backgroundColor] = UIColor.clear.withAlphaComponent(0.1)
+                attrString.enumerateAttribute(.foregroundColor, in: NSRange(location: 0, length: attrString.length), options: [], using: { color, range, _ in
+                    attrString.addAttribute(.foregroundColor, value: color ?? foregroundColor, range: range)
+                })
+                //let run = attrString.string[String.Index(utf16Offset: range.location, in: attrString.string)..<String.Index(utf16Offset: range.location + range.length, in: attrString.string)]
                 
-                let channelName = channel.getName(viewState)
-                attrString.deleteCharacters(in: NSRange(globalRange, in: attrString.string))
-                attrString.insert(NSAttributedString(string: "#\(channelName)", attributes: currentAttrs), at: lowerInt)
+                var foundEmojiCount = 0
                 
-                foundChannelLength += 28 - channelName.count
-            }
-        }
-        
-        var foundUserCount = 0
-        
-        for match in attrString.string.matches(of: /<@(\w{26})>/) {
-            let id = match.output.1
-            
-            if let user = viewState.users[String(id)] {
-                let member = currentServer.flatMap { viewState.members[$0]![user.id] }
-                
-                let lowerInt = match.range.lowerBound.encodedOffset - (foundUserCount * 28)
-                let lower = String.Index(encodedOffset: lowerInt)
-                let upper = String.Index(encodedOffset: match.range.upperBound.encodedOffset - (foundUserCount * 28))
-                
-                let globalRange = Range(uncheckedBounds: (lower, upper))
-                
-                let currentAttrs = attrString.attributes(at: lowerInt, effectiveRange: nil)
-                let currentFont = (currentAttrs[.font] ?? font) as! UIFont
-                
-                attrString.deleteCharacters(in: NSRange(globalRange, in: attrString.string))
-                
-                let view = UserMentionView() {
-                    viewState.openUserSheet(user: user, member: member)
+                for match in attrString.string.matches(of: /:(\w{26}):/) {
+                    let id = match.output.1
+                    
+                    let lowerInt = match.range.lowerBound.encodedOffset - (foundEmojiCount * 27)
+                    let lower = String.Index(encodedOffset: lowerInt)
+                    let upper = String.Index(encodedOffset: match.range.upperBound.encodedOffset - (foundEmojiCount * 27))
+                    
+                    let globalRange = Range(uncheckedBounds: (lower, upper))
+                    
+                    attrString.deleteCharacters(in: NSRange(globalRange, in: attrString.string))
+                    
+                    let view = EmojiView(imageSize: CGSize(width: fontSize, height: fontSize))
+                    view.label = UILabel()
+                    view.label.text = "Hello"
+                    textview.addSubview(view)
+                    view.imageView.kf.setImage(with: URL(string: "https://autumn.revolt.chat/emojis/\(id)")!, placeholder: .none)
+                    
+                    attrString.insert(NSAttributedString(attachment: SubviewTextAttachment(view: view, size: CGSize(width: fontSize, height: fontSize))), at: lowerInt)
+                    
+                    foundEmojiCount += 1
                 }
                 
-                view.backgroundColor = viewState.theme.background2.uiColor
-                view.layer.cornerRadius = currentFont.pointSize / 2
+                var foundChannelLength = 0
                 
-                view.imageView.kf.setImage(
-                    with: viewState.resolveAvatarUrl(user: user, member: member, masquerade: nil),
-                    options: [
-                        .processor(ResizingImageProcessor(referenceSize: CGSize(width: currentFont.pointSize, height: currentFont.pointSize), mode: .aspectFill))
-                    ]
-                )
-                view.imageView.frame = CGRect(x: 0, y: 0, width: currentFont.pointSize, height: currentFont.pointSize)
+                for match in attrString.string.matches(of: /<#(\w{26})>/) {
+                    let id = match.output.1
+                    
+                    if let channel = viewState.channels[String(id)] {
+                        let lowerInt = match.range.lowerBound.encodedOffset - foundChannelLength
+                        let lower = String.Index(encodedOffset: lowerInt)
+                        let upper = String.Index(encodedOffset: match.range.upperBound.encodedOffset - foundChannelLength)
+                        
+                        let globalRange = Range(uncheckedBounds: (lower, upper))
+                        
+                        var currentAttrs = attrString.attributes(at: lowerInt, effectiveRange: nil)
+                        
+                        currentAttrs[.link] = URL(string: "revoltchat://channels?channel=\(id)")!
+                        currentAttrs[.backgroundColor] = UIColor.clear.withAlphaComponent(0.1)
+                        
+                        let channelName = channel.getName(viewState)
+                        attrString.deleteCharacters(in: NSRange(globalRange, in: attrString.string))
+                        attrString.insert(NSAttributedString(string: "#\(channelName)", attributes: currentAttrs), at: lowerInt)
+                        
+                        foundChannelLength += 28 - channelName.count
+                    }
+                }
                 
-                view.nameView.text = member?.nickname ?? user.display_name ?? user.username
-                view.nameView.font = .boldSystemFont(ofSize: currentFont.pointSize)
+                var foundUserCount = 0
                 
-                textview.addSubview(view)
+                for match in attrString.string.matches(of: /<@(\w{26})>/) {
+                    let id = match.output.1
+                    
+                    if let user = viewState.users[String(id)] {
+                        let member = currentServer.flatMap { viewState.members[$0]![user.id] }
+                        
+                        let lowerInt = match.range.lowerBound.encodedOffset - (foundUserCount * 28)
+                        let lower = String.Index(encodedOffset: lowerInt)
+                        let upper = String.Index(encodedOffset: match.range.upperBound.encodedOffset - (foundUserCount * 28))
+                        
+                        let globalRange = Range(uncheckedBounds: (lower, upper))
+                        
+                        let currentAttrs = attrString.attributes(at: lowerInt, effectiveRange: nil)
+                        let currentFont = (currentAttrs[.font] ?? font) as! UIFont
+                        
+                        attrString.deleteCharacters(in: NSRange(globalRange, in: attrString.string))
+                        
+                        let view = UserMentionView() {
+                            viewState.openUserSheet(user: user, member: member)
+                        }
+                        
+                        view.backgroundColor = viewState.theme.background2.uiColor
+                        view.layer.cornerRadius = currentFont.pointSize / 2
+                        
+                        view.imageView.kf.setImage(
+                            with: viewState.resolveAvatarUrl(user: user, member: member, masquerade: nil),
+                            options: [
+                                .processor(ResizingImageProcessor(referenceSize: CGSize(width: currentFont.pointSize, height: currentFont.pointSize), mode: .aspectFill))
+                            ]
+                        )
+                        view.imageView.frame = CGRect(x: 0, y: 0, width: currentFont.pointSize, height: currentFont.pointSize)
+                        
+                        view.nameView.text = member?.nickname ?? user.display_name ?? user.username
+                        view.nameView.font = .boldSystemFont(ofSize: currentFont.pointSize)
+                        
+                        textview.addSubview(view)
+                        
+                        attrString.insert(NSAttributedString(attachment: SubviewTextAttachment(view: view)), at: lowerInt)
+                        
+                        foundUserCount += 1
+                    }
+                }
                 
-                attrString.insert(NSAttributedString(attachment: SubviewTextAttachment(view: view)), at: lowerInt)
-                
-                foundUserCount += 1
+                lines.append(attrString)
             }
+            
+            var attrString = NSMutableAttributedString(attributedString: lines.remove(at: 0))
+            
+            for line in lines {
+                attrString.append(NSAttributedString(string: "\n"))
+                attrString.append(line)
+            }
+            
+            textview.attributedText = attrString
+        } else {
+            textview.attributedText = NSAttributedString()
         }
         
-        textview.attributedText = attrString
         
         InnerContents.recalculateHeight(view: textview, result: $calculatedHeight)
     }

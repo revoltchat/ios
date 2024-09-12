@@ -55,14 +55,12 @@ struct MessageEmbed: View {
                             }
                             
                             if let title = embed.title {
-                                Text(verbatim: title)
-                                    .font(.footnote)
-                                    .foregroundStyle(viewState.theme.foreground2)
-                            }
+                                Contents(text: .constant(title), fontSize: 13, foregroundColor: viewState.theme.foreground2.uiColor)
+                             }
                         }
                         
                         if let description = embed.description {
-                            Text(description)
+                            Contents(text: .constant(description), fontSize: 17, foregroundColor: viewState.theme.foreground.uiColor)
                         }
                         
                         if let media = embed.media {
@@ -88,16 +86,12 @@ struct MessageEmbed: View {
                             }
                             
                             if let site_name = embed.site_name {
-                                Text(verbatim: site_name)
-                                    .font(.footnote)
-                                    .foregroundStyle(viewState.theme.foreground2)
+                                Contents(text: .constant(site_name), fontSize: 13, foregroundColor: viewState.theme.foreground2.uiColor)
                             }
                         }
                         
                         if let title = embed.title {
-                            Text(verbatim: title)
-                                .foregroundStyle(viewState.theme.accent)
-                                .font(.headline)
+                            Contents(text: .constant(title), fontSize: 17, foregroundColor: viewState.theme.accent.uiColor)
                         }
                         
                         if let description = embed.description {
