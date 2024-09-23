@@ -56,6 +56,7 @@ struct MessageContentsView: View {
     @State var showMemberSheet: Bool = false
     @State var showReportSheet: Bool = false
     @State var showReactSheet: Bool = false
+    @State var showReactionsSheet: Bool = false
     @State var isStatic: Bool
 
     private var canManageMessages: Bool {
@@ -78,7 +79,7 @@ struct MessageContentsView: View {
 
     var body: some View {
         VStack(alignment: .leading, spacing: 2) {
-            if let content = Binding(viewModel.$message.content) {
+            if let content = Binding(viewModel.$message.content), !content.wrappedValue.isEmpty {
                 Contents(text: content, fontSize: 16)
                     //.font(.body)
             }
@@ -88,10 +89,13 @@ struct MessageContentsView: View {
                     MessageEmbed(embed: embed)
                 }
             }
-
-            VStack(alignment: .leading) {
-                ForEach(viewModel.message.attachments ?? []) { attachment in
-                    MessageAttachment(attachment: attachment)
+            
+            
+            if let attachments = viewModel.message.attachments {
+                VStack(alignment: .leading) {
+                    ForEach(attachments) { attachment in
+                        MessageAttachment(attachment: attachment)
+                    }
                 }
             }
 
@@ -118,62 +122,79 @@ struct MessageContentsView: View {
             .presentationDetents([.large])
             .presentationBackground(viewState.theme.background)
         }
-        .contextMenu(self.isStatic ? nil : ContextMenu {
-            Button(action: viewModel.reply, label: {
-                Label("Reply", systemImage: "arrowshape.turn.up.left.fill")
-            })
-
-            Button {
-                showReactSheet = true
-            } label: {
-                Label("React", systemImage: "face.smiling.inverse")
-            }
-
-            Button {
-                copyText(text: viewModel.message.content ?? "")
-            } label: {
-                Label("Copy text", systemImage: "doc.on.clipboard")
-            }
-            
-            if canDeleteMessage {
-                Button(role: .destructive, action: {
-                    Task {
-                        await viewModel.delete()
-                    }
-                }, label: {
-                    Label("Delete", systemImage: "trash")
+        .sheet(isPresented: $showReactionsSheet) {
+            MessageReactionsSheet(viewModel: viewModel)
+        }
+        .contextMenu(menuItems: {
+            if !isStatic {
+                Button(action: viewModel.reply, label: {
+                    Label("Reply", systemImage: "arrowshape.turn.up.left.fill")
                 })
-            }
-            
-            if !isMessageAuthor {
-                Button(role: .destructive, action: { showReportSheet.toggle() }, label: {
-                    Label("Report", systemImage: "exclamationmark.triangle")
-                })
-            } else {
+                
                 Button {
-                    viewModel.editing = viewModel.message
+                    showReactSheet = true
                 } label: {
-                    Label("Edit", systemImage: "pencil")
+                    Label("React", systemImage: "face.smiling.inverse")
                 }
-            }
-            
-            Button {
-                if let server = viewModel.server {
-                    copyUrl(url: URL(string: "https://revolt.chat/app/server/\(server.id)/channel/\(viewModel.channel.id)/\(viewModel.message.id)")!)
+                
+                if !(viewModel.message.reactions?.isEmpty ?? true) {
+                    Button {
+                        showReactionsSheet = true
+                    } label: {
+                        Label("Reactions", systemImage: "face.smiling.inverse")
+                    }
+               }
+                
+                Button {
+                    copyText(text: viewModel.message.content ?? "")
+                } label: {
+                    Label("Copy text", systemImage: "doc.on.clipboard")
+                }
+                
+                if canDeleteMessage {
+                    Button(role: .destructive, action: {
+                        Task {
+                            await viewModel.delete()
+                        }
+                    }, label: {
+                        Label("Delete", systemImage: "trash")
+                    })
+                }
+                
+                if !isMessageAuthor {
+                    Button(role: .destructive, action: { showReportSheet.toggle() }, label: {
+                        Label("Report", systemImage: "exclamationmark.triangle")
+                    })
                 } else {
-                    copyUrl(url: URL(string: "https://revolt.chat/app/channel/\(viewModel.channel.id)/\(viewModel.message.id)")!)
-
+                    Button {
+                        viewModel.editing = viewModel.message
+                    } label: {
+                        Label("Edit", systemImage: "pencil")
+                    }
                 }
-            } label: {
-                Label("Copy message link", systemImage: "doc.on.clipboard")
+                
+                Button {
+                    if let server = viewModel.server {
+                        copyUrl(url: URL(string: "https://revolt.chat/app/server/\(server.id)/channel/\(viewModel.channel.id)/\(viewModel.message.id)")!)
+                    } else {
+                        copyUrl(url: URL(string: "https://revolt.chat/app/channel/\(viewModel.channel.id)/\(viewModel.message.id)")!)
+                        
+                    }
+                } label: {
+                    Label("Copy message link", systemImage: "doc.on.clipboard")
+                }
+                
+                Button {
+                    copyText(text: viewModel.message.id)
+                } label: {
+                    Label("Copy ID", systemImage: "doc.on.clipboard")
+                }
             }
-            
-            Button {
-                copyText(text: viewModel.message.id)
-            } label: {
-                Label("Copy ID", systemImage: "doc.on.clipboard")
-            }
-        })
+        }) {
+            MessageView(viewModel: viewModel, isStatic: true)
+                .padding(8)
+                .environmentObject(viewState)
+        }
         .swipeActions(edge: .trailing) {
             isStatic ? nil :
             Button(action: viewModel.reply, label: {

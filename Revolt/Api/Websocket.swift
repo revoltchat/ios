@@ -110,9 +110,9 @@ extension WsMessage: Decodable {
 }
 
 enum WsState {
-    case Disconnected
-    case Connecting
-    case Connected
+    case disconnected
+    case connecting
+    case connected
 }
 
 class SendWsMessage: Encodable {
@@ -144,31 +144,30 @@ class Authenticate: SendWsMessage, CustomStringConvertible {
     }
 }
 
-class WebSocketStream {
+class WebSocketStream: ObservableObject {
+    private var url: URL
     private var client: WebSocket
     private var encoder: JSONEncoder
     private var decoder: JSONDecoder
     private var onEvent: (WsMessage) async -> ()
 
     public var token: String
-    public var currentState: WsState = .Disconnected
+    @Published public var currentState: WsState = .disconnected
+    public var retryCount: Int = 0
 
     init(url: String, token: String, onEvent: @escaping (WsMessage) async -> ()) {
         self.token = token
         self.encoder = JSONEncoder()
         self.decoder = JSONDecoder()
         self.onEvent = onEvent
-
-        let url = URL(string: url)!
-        let request = URLRequest(url: url)
-
+        self.url = URL(string: url)!
+        
+        let request = URLRequest(url: self.url)
         let ws = WebSocket(request: request)
         client = ws
 
         ws.onEvent = didReceive
         ws.connect()
-
-        client = ws
     }
 
     public func stop() {
@@ -178,18 +177,20 @@ class WebSocketStream {
     public func didReceive(event: WebSocketEvent) {
         switch event {
             case .connected(_):
-                currentState = .Connecting
+                currentState = .connecting
                 let payload = Authenticate(token: token)
                 print(payload.description)
 
-                do {
-                    let s = try encoder.encode(payload)
-                    client.write(string: String(data: s, encoding: .utf8)!)
-                } catch {}
+                let s = try! encoder.encode(payload)
+                client.write(string: String(data: s, encoding: .utf8)!)
                     
             case .disconnected(let reason, _):
                 print("disconnect \(reason)")
-                currentState = .Disconnected
+                currentState = .disconnected
+                
+                Task {
+                    await tryReconnect()
+                }
 
             case .text(let string):
 
@@ -202,11 +203,46 @@ class WebSocketStream {
                 } catch {
                     print(error)
                 }
+                
+            case .viabilityChanged(let viability):
+                if !viability {
+                    currentState = .disconnected
+                    Task {
+                        await tryReconnect()
+                    }
+                }
 
             case .error(let error):
+                currentState = .disconnected
+                self.stop()
                 print("error \(String(describing: error))")
+                
+                Task {
+                    await tryReconnect()
+                }
             default:
                 break
         }
+    }
+    
+    func forceConnect() {
+        let request = URLRequest(url: self.url)
+        let ws = WebSocket(request: request)
+        
+        client = ws
+        
+        ws.onEvent = didReceive
+        ws.connect()
+    }
+    
+    func tryReconnect() async {
+        let sleep = 0.25 * Double(pow(Double(2), Double(retryCount - 1)))
+        try! await Task.sleep(for: .seconds(sleep))
+        
+        currentState = .connecting
+        
+        forceConnect()
+        
+        retryCount += 1
     }
 }

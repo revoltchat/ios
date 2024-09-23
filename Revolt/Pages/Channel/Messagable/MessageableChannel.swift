@@ -204,7 +204,7 @@ struct MessageableChannelView: View {
             }
             .map { msgs in
                 return msgs.map { msg -> MessageContentsViewModel in
-                    let author = Binding($viewState.users[msg.author.wrappedValue])!
+                    let author = Binding($viewState.users[msg.author.wrappedValue]) ?? .constant(User(id: String(repeating: "0", count: 26), username: "Unknown", discriminator: "0000"))
                     
                     return MessageContentsViewModel(
                         viewState: viewState,

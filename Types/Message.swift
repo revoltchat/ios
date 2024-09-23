@@ -115,8 +115,13 @@ extension SystemMessageContent: Decodable {
     }
 }
 
+public struct MessageWebhook: Decodable, Equatable {
+    public var name: String?
+    public var avatar: String?
+}
+
 public struct Message: Identifiable, Decodable, Equatable {
-    public init(id: String, content: String? = nil, author: String, channel: String, system: SystemMessageContent? = nil, attachments: [File]? = nil, mentions: [String]? = nil, replies: [String]? = nil, edited: String? = nil, masquerade: Masquerade? = nil, interactions: Interactions? = nil, reactions: [String : [String]]? = nil, user: User? = nil, member: Member? = nil, embeds: [Embed]? = nil) {
+    public init(id: String, content: String? = nil, author: String, channel: String, system: SystemMessageContent? = nil, attachments: [File]? = nil, mentions: [String]? = nil, replies: [String]? = nil, edited: String? = nil, masquerade: Masquerade? = nil, interactions: Interactions? = nil, reactions: [String : [String]]? = nil, user: User? = nil, member: Member? = nil, embeds: [Embed]? = nil, webhook: MessageWebhook? = nil) {
         self.id = id
         self.content = content
         self.author = author
@@ -132,6 +137,7 @@ public struct Message: Identifiable, Decodable, Equatable {
         self.user = user
         self.member = member
         self.embeds = embeds
+        self.webhook = webhook
     }
     
     public var id: String
@@ -150,9 +156,10 @@ public struct Message: Identifiable, Decodable, Equatable {
     public var user: User?
     public var member: Member?
     public var embeds: [Embed]?
+    public var webhook: MessageWebhook?
     
     enum CodingKeys: String, CodingKey {
         case id = "_id"
-        case content, author, channel, system, attachments, mentions, replies, edited, masquerade, interactions, reactions, user, member, embeds
+        case content, author, channel, system, attachments, mentions, replies, edited, masquerade, interactions, reactions, user, member, embeds, webhook
     }
 }

@@ -30,7 +30,7 @@ struct Tile<Body: View>: View {
             VStack(alignment: .leading, spacing: 8) {
                 Text(title)
                     .bold()
-                    .font(.title)
+                    .font(.title3)
             
                 HStack {
                     VStack(alignment: .leading) {

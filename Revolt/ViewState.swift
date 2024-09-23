@@ -135,8 +135,8 @@ public class ViewState: ObservableObject {
     static var application: NSApplication? = nil
 #endif
 
-    var http: HTTPClient = HTTPClient(token: nil, baseURL: "https://revolt.chat/api")
-    var ws: WebSocketStream? = nil
+    var http: HTTPClient = HTTPClient(token: nil, baseURL: "https://app.revolt.chat/api")
+    @Published var ws: WebSocketStream? = nil
     var apiInfo: ApiInfo? = nil
     
     var launchTransaction: any Sentry.Span
@@ -413,7 +413,11 @@ public class ViewState: ObservableObject {
     func formatUrl(fromEmoji emojiId: String) -> String {
         "\(apiInfo!.features.autumn.url)/emojis/\(emojiId)"
     }
-
+    
+    func formatUrl(fromId id: String, withTag tag: String) -> String {
+        "\(apiInfo!.features.autumn.url)/\(tag)/\(id)"
+    }
+    
     func backgroundWsTask() async {
         if ws != nil {
             return
@@ -508,6 +512,8 @@ public class ViewState: ObservableObject {
                 }
 
                 state = .connected
+                ws?.currentState = .connected
+                ws?.retryCount = 0
                 await verifyStateIntegrity()
                 
                 processReadySpan.finish()
@@ -782,6 +788,22 @@ public class ViewState: ObservableObject {
                 userSettingsStore.store.lastOpenChannels.removeValue(forKey: "dms")
                 
         }
+    }
+    
+    func resolveAvatarUrl(user: Types.User, member: Member?, masquerade: Masquerade?) -> URL {
+        if let avatar = masquerade?.avatar, let url = URL(string: avatar) {
+            return url
+        }
+        
+        if let avatar = member?.avatar, let url = URL(string: formatUrl(with: avatar)) {
+            return url
+        }
+        
+        if let avatar = user.avatar, let url = URL(string: formatUrl(with: avatar)) {
+            return url
+        }
+        
+        return URL(string: "\(http.baseURL)/users/\(user.id)/default_avatar")!
     }
 }
 

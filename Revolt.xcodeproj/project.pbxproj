@@ -61,6 +61,7 @@
 		1777DD842ADC24CE003D6C72 /* ReversedSrollView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1777DD832ADC24CE003D6C72 /* ReversedSrollView.swift */; };
 		1777DD892ADC3C31003D6C72 /* Markdown.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1777DD882ADC3C31003D6C72 /* Markdown.swift */; };
 		1777DD8E2ADC4336003D6C72 /* RemoteImageTextAttachment.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1777DD8D2ADC4336003D6C72 /* RemoteImageTextAttachment.swift */; };
+		1781011E2C8CBC2900AC2756 /* SubviewAttachingTextView in Frameworks */ = {isa = PBXBuildFile; productRef = 1781011D2C8CBC2900AC2756 /* SubviewAttachingTextView */; };
 		1782F5E62B08F60B00759D40 /* Discovery.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1782F5E52B08F60B00759D40 /* Discovery.swift */; };
 		17863A592C8094840051A52C /* Tile.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17863A582C8094840051A52C /* Tile.swift */; };
 		17863A5C2C8098AF0051A52C /* ExyteGrid in Frameworks */ = {isa = PBXBuildFile; productRef = 17863A5B2C8098AF0051A52C /* ExyteGrid */; };
@@ -81,6 +82,7 @@
 		17B375812C41FEC300FC7E6E /* Types.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 17DE7DB22BFAEC3F00C99188 /* Types.framework */; };
 		17B7128D2B03E9D700CFF61C /* FriendsList.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17B7128C2B03E9D700CFF61C /* FriendsList.swift */; };
 		17BADE012B7019270021BB62 /* EmojiPicker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17BADE002B7019270021BB62 /* EmojiPicker.swift */; };
+		17BB26772C8E923600D70AFC /* SnapKit in Frameworks */ = {isa = PBXBuildFile; productRef = 17BB26762C8E923600D70AFC /* SnapKit */; };
 		17BC476B2B9CB51200A593DA /* ShareInviteSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17BC476A2B9CB51200A593DA /* ShareInviteSheet.swift */; };
 		17BF54CD2B1785E200178866 /* HomeWelcome.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17BF54CC2B1785E200178866 /* HomeWelcome.swift */; };
 		17BF54D12B17B24200178866 /* LanguageSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17BF54D02B17B24200178866 /* LanguageSettings.swift */; };
@@ -113,6 +115,7 @@
 		17F502562B9BFB2800A3022D /* CreateGroup.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17F502552B9BFB2800A3022D /* CreateGroup.swift */; };
 		17F555272AFC229900958F2F /* ServerSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17F555262AFC229900958F2F /* ServerSettings.swift */; };
 		17F8B7092C7983730065F1DE /* CreateServer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17F8B7082C7983730065F1DE /* CreateServer.swift */; };
+		17F9D7632C9208B500D0BB6F /* MessageReactionsSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17F9D7622C9208B500D0BB6F /* MessageReactionsSheet.swift */; };
 		36D461CF77D84B97B94929A9 /* Sentry in Frameworks */ = {isa = PBXBuildFile; productRef = 03268FCCFC7D4D1F8B6E9F6F /* Sentry */; };
 		D49B705329C4D3FE009494A5 /* RevoltApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = D49B705229C4D3FE009494A5 /* RevoltApp.swift */; };
 		D49B705729C4D3FE009494A5 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = D49B705629C4D3FE009494A5 /* Assets.xcassets */; };
@@ -279,6 +282,7 @@
 		17F502552B9BFB2800A3022D /* CreateGroup.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateGroup.swift; sourceTree = "<group>"; };
 		17F555262AFC229900958F2F /* ServerSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ServerSettings.swift; sourceTree = "<group>"; };
 		17F8B7082C7983730065F1DE /* CreateServer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateServer.swift; sourceTree = "<group>"; };
+		17F9D7622C9208B500D0BB6F /* MessageReactionsSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageReactionsSheet.swift; sourceTree = "<group>"; };
 		D49B704F29C4D3FE009494A5 /* Revolt.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Revolt.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		D49B705229C4D3FE009494A5 /* RevoltApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RevoltApp.swift; sourceTree = "<group>"; };
 		D49B705629C4D3FE009494A5 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
@@ -310,6 +314,7 @@
 				175997192B2FB90700C39CF6 /* Flow in Frameworks */,
 				1746CF5A2B83C6750051FD47 /* CodableWrapper in Frameworks */,
 				17D9C2BD2ADCA48D00426857 /* Kingfisher in Frameworks */,
+				1781011E2C8CBC2900AC2756 /* SubviewAttachingTextView in Frameworks */,
 				172754CC2B39989E002223FE /* SwiftParsec in Frameworks */,
 				178BB10C2B02D84C001143A4 /* HCaptcha in Frameworks */,
 				DA99EC5329D6148200419FDA /* Alamofire in Frameworks */,
@@ -319,6 +324,7 @@
 				17CCCF6E2ADA173B00D78D7A /* ULID in Frameworks */,
 				1773C0272C07DC32007B8867 /* Types.framework in Frameworks */,
 				DAAA4BF829F2274A00F41E52 /* OrderedCollections in Frameworks */,
+				17BB26772C8E923600D70AFC /* SnapKit in Frameworks */,
 				DAF84FFD2A0EFE1B00B01682 /* Starscream in Frameworks */,
 				36D461CF77D84B97B94929A9 /* Sentry in Frameworks */,
 			);
@@ -600,6 +606,7 @@
 				1748B2062B1FB88B00AA2D47 /* MessageReactions.swift */,
 				1759C3992B291A75006E6BBE /* MessageContentsView.swift */,
 				1759C39B2B291E2F006E6BBE /* SystemMessageView.swift */,
+				17F9D7622C9208B500D0BB6F /* MessageReactionsSheet.swift */,
 			);
 			path = MessageRenderer;
 			sourceTree = "<group>";
@@ -744,6 +751,8 @@
 				1746CF592B83C6750051FD47 /* CodableWrapper */,
 				174DA9E72B9E4D70001BC330 /* Parsing */,
 				17863A5B2C8098AF0051A52C /* ExyteGrid */,
+				1781011D2C8CBC2900AC2756 /* SubviewAttachingTextView */,
+				17BB26762C8E923600D70AFC /* SnapKit */,
 			);
 			productName = Revolt;
 			productReference = D49B704F29C4D3FE009494A5 /* Revolt.app */;
@@ -797,6 +806,8 @@
 				174DA9E62B9E4D70001BC330 /* XCRemoteSwiftPackageReference "swift-parsing" */,
 				1757A26B2BB7444D007EE8B9 /* XCRemoteSwiftPackageReference "client-sdk-swift" */,
 				17863A5A2C80988C0051A52C /* XCRemoteSwiftPackageReference "Grid" */,
+				1781011C2C8CBC2900AC2756 /* XCRemoteSwiftPackageReference "SubviewAttachingTextView" */,
+				17BB26752C8E923600D70AFC /* XCRemoteSwiftPackageReference "SnapKit" */,
 			);
 			productRefGroup = D49B705029C4D3FE009494A5 /* Products */;
 			projectDirPath = "";
@@ -927,6 +938,7 @@
 				178BB1172B02E63B001143A4 /* LoadingSpinnerView.swift in Sources */,
 				17CE783F2B129E28006C1D2C /* ServerScrollView.swift in Sources */,
 				DA99EC5029D5F35900419FDA /* Login.swift in Sources */,
+				17F9D7632C9208B500D0BB6F /* MessageReactionsSheet.swift in Sources */,
 				178BB1102B02D89A001143A4 /* HCaptchaView.swift in Sources */,
 				17DFB4642AE06A5D00E1D417 /* Settings.swift in Sources */,
 				17F555272AFC229900958F2F /* ServerSettings.swift in Sources */,
@@ -1526,6 +1538,14 @@
 				minimumVersion = 1.2.0;
 			};
 		};
+		1781011C2C8CBC2900AC2756 /* XCRemoteSwiftPackageReference "SubviewAttachingTextView" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/vlas-voloshin/SubviewAttachingTextView";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 1.5.1;
+			};
+		};
 		17863A5A2C80988C0051A52C /* XCRemoteSwiftPackageReference "Grid" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/exyte/Grid";
@@ -1540,6 +1560,14 @@
 			requirement = {
 				kind = upToNextMajorVersion;
 				minimumVersion = 2.5.1;
+			};
+		};
+		17BB26752C8E923600D70AFC /* XCRemoteSwiftPackageReference "SnapKit" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/SnapKit/SnapKit";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 5.7.1;
 			};
 		};
 		17CCCF6C2ADA173B00D78D7A /* XCRemoteSwiftPackageReference "ULID" */ = {
@@ -1563,7 +1591,7 @@
 			repositoryURL = "https://github.com/getsentry/sentry-cocoa/";
 			requirement = {
 				kind = upToNextMajorVersion;
-				minimumVersion = 8.30.0;
+				minimumVersion = 8.35.0;
 			};
 		};
 		DA99EC5129D6148200419FDA /* XCRemoteSwiftPackageReference "Alamofire" */ = {
@@ -1618,6 +1646,11 @@
 			package = 175997172B2FB90600C39CF6 /* XCRemoteSwiftPackageReference "SwiftUI-Flow" */;
 			productName = Flow;
 		};
+		1781011D2C8CBC2900AC2756 /* SubviewAttachingTextView */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 1781011C2C8CBC2900AC2756 /* XCRemoteSwiftPackageReference "SubviewAttachingTextView" */;
+			productName = SubviewAttachingTextView;
+		};
 		17863A5B2C8098AF0051A52C /* ExyteGrid */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = 17863A5A2C80988C0051A52C /* XCRemoteSwiftPackageReference "Grid" */;
@@ -1632,6 +1665,11 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 178BB10A2B02D84C001143A4 /* XCRemoteSwiftPackageReference "HCaptcha-ios-sdk" */;
 			productName = HCaptcha_RxSwift;
+		};
+		17BB26762C8E923600D70AFC /* SnapKit */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 17BB26752C8E923600D70AFC /* XCRemoteSwiftPackageReference "SnapKit" */;
+			productName = SnapKit;
 		};
 		17CCCF6D2ADA173B00D78D7A /* ULID */ = {
 			isa = XCSwiftPackageProductDependency;
