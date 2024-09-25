@@ -131,3 +131,8 @@ struct GroupInfoResponse: Decodable {
     var user_name: String
     var user_avatar: File?
 }
+
+struct RoleWithId: Decodable {
+    var id: String
+    var role: Role
+}

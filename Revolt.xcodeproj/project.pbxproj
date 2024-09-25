@@ -8,6 +8,8 @@
 
 /* Begin PBXBuildFile section */
 		1701E08C2C4C395900DD970F /* emoji_15_1_ordering.json in Resources */ = {isa = PBXBuildFile; fileRef = 1701E08B2C4C395900DD970F /* emoji_15_1_ordering.json */; };
+		170410972CA478D5002C1445 /* AllPermissionsSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 170410962CA478D5002C1445 /* AllPermissionsSettings.swift */; };
+		170410992CA478F6002C1445 /* DefaultRoleSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 170410982CA478F6002C1445 /* DefaultRoleSettings.swift */; };
 		170C23CE2C224B460057E399 /* UserSettingsStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 170C23CD2C224B460057E399 /* UserSettingsStore.swift */; };
 		170C23D32C224B6D0057E399 /* NotificationSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 170C23D02C224B6D0057E399 /* NotificationSettings.swift */; };
 		170C23D42C224B6D0057E399 /* ExperimentsSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 170C23CF2C224B6D0057E399 /* ExperimentsSettings.swift */; };
@@ -41,6 +43,10 @@
 		1759C39C2B291E2F006E6BBE /* SystemMessageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1759C39B2B291E2F006E6BBE /* SystemMessageView.swift */; };
 		175E01DE2ADAB3F6004F6431 /* LazyImage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 175E01DD2ADAB3F6004F6431 /* LazyImage.swift */; };
 		175E01E02ADAB554004F6431 /* Avatar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 175E01DF2ADAB554004F6431 /* Avatar.swift */; };
+		1764856E2CA383BD00AF8141 /* ServerRolesSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1764856D2CA383BD00AF8141 /* ServerRolesSettings.swift */; };
+		176485712CA3858100AF8141 /* RoleSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 176485702CA3858100AF8141 /* RoleSettings.swift */; };
+		176485732CA3882E00AF8141 /* Binding.swift in Sources */ = {isa = PBXBuildFile; fileRef = 176485722CA3882E00AF8141 /* Binding.swift */; };
+		176485752CA3947B00AF8141 /* PermissionToggle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 176485742CA3947B00AF8141 /* PermissionToggle.swift */; };
 		176FA6E82C9336A900EF73C0 /* ViewInvite.swift in Sources */ = {isa = PBXBuildFile; fileRef = 176FA6E72C9336A900EF73C0 /* ViewInvite.swift */; };
 		1773C0272C07DC32007B8867 /* Types.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 17DE7DB22BFAEC3F00C99188 /* Types.framework */; platformFilters = (ios, maccatalyst, macos, ); };
 		1773C0282C07DC32007B8867 /* Types.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 17DE7DB22BFAEC3F00C99188 /* Types.framework */; platformFilters = (ios, maccatalyst, macos, ); settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
@@ -186,6 +192,8 @@
 
 /* Begin PBXFileReference section */
 		1701E08B2C4C395900DD970F /* emoji_15_1_ordering.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = emoji_15_1_ordering.json; sourceTree = "<group>"; };
+		170410962CA478D5002C1445 /* AllPermissionsSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AllPermissionsSettings.swift; sourceTree = "<group>"; };
+		170410982CA478F6002C1445 /* DefaultRoleSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DefaultRoleSettings.swift; sourceTree = "<group>"; };
 		170C23CD2C224B460057E399 /* UserSettingsStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserSettingsStore.swift; sourceTree = "<group>"; };
 		170C23CF2C224B6D0057E399 /* ExperimentsSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExperimentsSettings.swift; sourceTree = "<group>"; };
 		170C23D02C224B6D0057E399 /* NotificationSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationSettings.swift; sourceTree = "<group>"; };
@@ -218,6 +226,10 @@
 		1759C39B2B291E2F006E6BBE /* SystemMessageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SystemMessageView.swift; sourceTree = "<group>"; };
 		175E01DD2ADAB3F6004F6431 /* LazyImage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LazyImage.swift; sourceTree = "<group>"; };
 		175E01DF2ADAB554004F6431 /* Avatar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Avatar.swift; sourceTree = "<group>"; };
+		1764856D2CA383BD00AF8141 /* ServerRolesSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ServerRolesSettings.swift; sourceTree = "<group>"; };
+		176485702CA3858100AF8141 /* RoleSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RoleSettings.swift; sourceTree = "<group>"; };
+		176485722CA3882E00AF8141 /* Binding.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Binding.swift; sourceTree = "<group>"; };
+		176485742CA3947B00AF8141 /* PermissionToggle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PermissionToggle.swift; sourceTree = "<group>"; };
 		176FA6E72C9336A900EF73C0 /* ViewInvite.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewInvite.swift; sourceTree = "<group>"; };
 		1773C03C2C07DD1F007B8867 /* MessageableChannel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageableChannel.swift; sourceTree = "<group>"; };
 		17772C172C30AF83000D1EDA /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -248,6 +260,7 @@
 		17C444572B06CC5400F97E4A /* ForgotPassword.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ForgotPassword.swift; sourceTree = "<group>"; };
 		17C45D4A2C6167D300CD8ED4 /* Revolt.profdata */ = {isa = PBXFileReference; lastKnownFileType = file; path = Revolt.profdata; sourceTree = "<group>"; };
 		17C9A34F2B0580D10043A387 /* Welcome.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Welcome.swift; sourceTree = "<group>"; };
+		17CC0CB32C937D4F005BA3A6 /* ServerBadges.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ServerBadges.swift; sourceTree = "<group>"; };
 		17CCCF6F2ADA17B600D78D7A /* Utils.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Utils.swift; sourceTree = "<group>"; };
 		17CE2E132AE709CE0059FB3A /* UserSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserSheet.swift; sourceTree = "<group>"; };
 		17CE783B2B129983006C1D2C /* HomeRewritten.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeRewritten.swift; sourceTree = "<group>"; };
@@ -347,6 +360,7 @@
 				17A589F92C44781F00B9D85A /* AnyTransition.swift */,
 				17A7FE362C49DE6F0083B22F /* Member.swift */,
 				17A7FE382C49EBD20083B22F /* Image.swift */,
+				176485722CA3882E00AF8141 /* Binding.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -356,6 +370,7 @@
 			children = (
 				17F555262AFC229900958F2F /* ServerSettings.swift */,
 				171594C22B4B2A0D00D7C3C3 /* ServerOverviewSettings.swift */,
+				1764856F2CA3855F00AF8141 /* ServerRoles */,
 			);
 			path = Server;
 			sourceTree = "<group>";
@@ -463,8 +478,21 @@
 				172754C82B399092002223FE /* Contents.swift */,
 				17BADE002B7019270021BB62 /* EmojiPicker.swift */,
 				17863A582C8094840051A52C /* Tile.swift */,
+				17CC0CB32C937D4F005BA3A6 /* ServerBadges.swift */,
+				176485742CA3947B00AF8141 /* PermissionToggle.swift */,
 			);
 			path = Components;
+			sourceTree = "<group>";
+		};
+		1764856F2CA3855F00AF8141 /* ServerRoles */ = {
+			isa = PBXGroup;
+			children = (
+				1764856D2CA383BD00AF8141 /* ServerRolesSettings.swift */,
+				176485702CA3858100AF8141 /* RoleSettings.swift */,
+				170410962CA478D5002C1445 /* AllPermissionsSettings.swift */,
+				170410982CA478F6002C1445 /* DefaultRoleSettings.swift */,
+			);
+			path = ServerRoles;
 			sourceTree = "<group>";
 		};
 		17772C162C30AF6D000D1EDA /* Delegates */ = {
@@ -918,11 +946,13 @@
 				173D698E2C7FF7FC00030E62 /* ChannelSearch.swift in Sources */,
 				17A589FA2C44781F00B9D85A /* AnyTransition.swift in Sources */,
 				17BF54CD2B1785E200178866 /* HomeWelcome.swift in Sources */,
+				170410972CA478D5002C1445 /* AllPermissionsSettings.swift in Sources */,
 				17DF7CB02C4ACDA1003E8FDC /* UIImage.swift in Sources */,
 				17F502542B9BFB1000A3022D /* AddFriend.swift in Sources */,
 				17C9A3502B0580D10043A387 /* Welcome.swift in Sources */,
 				17A7FE392C49EBD20083B22F /* Image.swift in Sources */,
 				17E019CF2AF146AD00AB4663 /* About.swift in Sources */,
+				170410992CA478F6002C1445 /* DefaultRoleSettings.swift in Sources */,
 				1773C03D2C07DD1F007B8867 /* MessageableChannel.swift in Sources */,
 				DAAA4C0B29F2CF1200F41E52 /* Websocket.swift in Sources */,
 				DA99EC4A29D5F35400419FDA /* Home.swift in Sources */,
@@ -956,14 +986,17 @@
 				173A336A2C422EF800B8A58E /* DeveloperSettings.swift in Sources */,
 				1759C39A2B291A75006E6BBE /* MessageContentsView.swift in Sources */,
 				17E019D12AF14EC000AB4663 /* ServerIcon.swift in Sources */,
+				176485752CA3947B00AF8141 /* PermissionToggle.swift in Sources */,
 				17F8B7092C7983730065F1DE /* CreateServer.swift in Sources */,
 				17863A592C8094840051A52C /* Tile.swift in Sources */,
+				176485732CA3882E00AF8141 /* Binding.swift in Sources */,
 				172F2D012C22ED4D00948C00 /* IteratorProtocol.swift in Sources */,
 				1718F3D02B0BCAA50018E524 /* UnreadCounter.swift in Sources */,
 				17F502562B9BFB2800A3022D /* CreateGroup.swift in Sources */,
 				17D9D2B72B0843DE00D57812 /* PermissionsCalculator.swift in Sources */,
 				178BB1142B02E475001143A4 /* CreateAccount.swift in Sources */,
 				D49B705329C4D3FE009494A5 /* RevoltApp.swift in Sources */,
+				17CC0CB42C937D4F005BA3A6 /* ServerBadges.swift in Sources */,
 				172F2CFF2C22ED3A00948C00 /* Bundle.swift in Sources */,
 				DA99EC4C29D5F35500419FDA /* ViewState.swift in Sources */,
 				17CE78412B12AA51006C1D2C /* ServerChannelScrollView.swift in Sources */,
@@ -972,6 +1005,7 @@
 				17772C182C30AF83000D1EDA /* AppDelegate.swift in Sources */,
 				17C444582B06CC5400F97E4A /* ForgotPassword.swift in Sources */,
 				17CE2E142AE709CE0059FB3A /* UserSheet.swift in Sources */,
+				1764856E2CA383BD00AF8141 /* ServerRolesSettings.swift in Sources */,
 				17429D992B4C931D0036105A /* ChannelOverviewSettings.swift in Sources */,
 				17966B652AE0842A00BAEC58 /* ChannelIcon.swift in Sources */,
 				172754C92B399092002223FE /* Contents.swift in Sources */,
@@ -991,6 +1025,7 @@
 				173F16272C3C22580009FDF9 /* ServerInfoSheet.swift in Sources */,
 				1718FB542AF8470400E9C511 /* ReportMessageSheetView.swift in Sources */,
 				17E019DA2AF199A600AB4663 /* MessageReply.swift in Sources */,
+				176485712CA3858100AF8141 /* RoleSettings.swift in Sources */,
 				17D5C9442B14DF500060C035 /* DMScrollView.swift in Sources */,
 				17D8BACF2B211DEE005F5447 /* ChannelInfo.swift in Sources */,
 				1777DD842ADC24CE003D6C72 /* ReversedSrollView.swift in Sources */,

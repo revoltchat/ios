@@ -16,7 +16,9 @@ struct ServerSettings: View {
     var body: some View {
         List {
             Section("Settings") {
-                NavigationLink(destination: { ServerOverviewSettings.fromState(viewState: viewState, server: $server) }) {
+                NavigationLink {
+                    ServerOverviewSettings(server: $server)
+                } label: {
                     Image(systemName: "info.circle.fill")
                     Text("Overview")
                 }
@@ -26,7 +28,9 @@ struct ServerSettings: View {
                     Text("Categories")
                 }
 
-                NavigationLink(destination: Text("Todo")) {
+                NavigationLink {
+                    ServerRolesSettings(server: $server)
+                } label: {
                     Image(systemName: "flag.fill")
                     Text("Roles")
                 }
@@ -82,7 +86,6 @@ struct ServerSettings: View {
             }
         }
         .toolbarBackground(viewState.theme.topBar.color, for: .automatic)
-
     }
 }
 

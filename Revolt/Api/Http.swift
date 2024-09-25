@@ -367,4 +367,24 @@ struct HTTPClient {
     func fetchInvite(code: String) async -> Result<InviteInfoResponse, RevoltError> {
         await req(method: .get, route: "/invites/\(code)")
     }
+    
+    func editRole(server: String, role: String, payload: RoleEditPayload) async -> Result<Role, RevoltError> {
+        await req(method: .patch, route: "/servers/\(server)/roles/\(role)", parameters: payload)
+    }
+    
+    func setRolePermissions(server: String, role: String, permissions: Overwrite) async -> Result<Server, RevoltError> {
+        await req(method: .put, route: "/servers/\(server)/permissions/\(role)", parameters: ["permissions": ["allow": permissions.a, "deny": permissions.d]])
+    }
+    
+    func deleteRole(server: String, role: String) async -> Result<EmptyResponse, RevoltError> {
+        await req(method: .delete, route: "/server/\(server)/roles/\(role)")
+    }
+    
+    func createRole(server: String, name: String) async -> Result<RoleWithId, RevoltError> {
+        await req(method: .post, route: "/servers/\(server)/roles", parameters: ["name": name])
+    }
+    
+    func setDefaultRolePermissions(server: String, permissions: Permissions) async -> Result<Server, RevoltError> {
+        await req(method: .put, route: "/servers/\(server)/permissions/default", parameters: ["permissions": permissions])
+    }
 }

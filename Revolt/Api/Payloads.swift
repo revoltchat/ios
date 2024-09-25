@@ -150,3 +150,15 @@ struct ChannelSearchPayload: Encodable {
     var sort: MessageSort?
     var include_users: Bool?
 }
+
+struct RoleEditPayload: Encodable {
+    enum Remove: String, Encodable {
+        case colour = "Colour"
+    }
+    
+    var name: String?
+    var colour: String?
+    var hoist: Bool?
+    var rank: Int?
+    var remove: [Remove]?
+}
