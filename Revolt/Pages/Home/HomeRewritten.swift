@@ -154,13 +154,13 @@ struct HomeRewritten: View {
                     }
                 }
             }
-            .onChange(of: viewState.currentChannel, { before, after in
-                withAnimation(.easeInOut) {
-                    showSidebar = false
-                    forceOpen = false
-                    offset = .zero
-                }
-            })
+//            .onChange(of: viewState.currentChannel, { before, after in
+//                withAnimation(.easeInOut) {
+//                    showSidebar = false
+//                    forceOpen = false
+//                    offset = .zero
+//                }
+//            })
 //            .onChange(of: viewState.currentSelection) { before, after in
 //                withAnimation {
 //                    switch after {
