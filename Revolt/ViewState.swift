@@ -116,6 +116,7 @@ enum NavigationDestination: Hashable, Codable {
     case create_group([String])
     case create_server
     case channel_search(String)
+    case invite(String)
 }
 
 struct UserMaybeMember: Identifiable {

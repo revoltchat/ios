@@ -154,24 +154,7 @@ struct ServerChannelScrollView: View {
                         }
                         
                         HStack(alignment: .center, spacing: 8) {
-                            if server.flags?.contains(.offical) == true {
-                                ZStack(alignment: .center) {
-                                    Image(systemName: "seal.fill")
-                                        .resizable()
-                                        .frame(width: 12, height: 12)
-                                        .foregroundStyle(.white)
-                                    
-                                    Image("monochrome")
-                                        .resizable()
-                                        .frame(width: 10, height: 10)
-                                        .colorInvert()
-                                }
-                            } else if server.flags?.contains(.verified) == true {
-                                Image(systemName: "checkmark.seal.fill")
-                                    .resizable()
-                                    .foregroundStyle(.black, .white)
-                                    .frame(width: 12, height: 12)
-                            }
+                            ServerBadges(value: server.flags)
                             
                             Text(server.name)
                                 .fontWeight(.medium)

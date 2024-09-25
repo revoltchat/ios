@@ -84,3 +84,50 @@ struct MutualsResponse: Decodable {
     var servers: [String]
     var users: [String]
 }
+
+enum InviteInfoResponse {
+    case server(ServerInfoResponse)
+    case group(GroupInfoResponse)
+}
+
+extension InviteInfoResponse: Decodable {
+    enum CodingKeys: String, CodingKey { case type }
+    enum Tag: String, Codable { case Server, Group }
+    
+    public init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        let singleValueContainer = try decoder.singleValueContainer()
+        
+        switch try container.decode(Tag.self, forKey: .type) {
+            case .Server:
+                self = .server(try singleValueContainer.decode(ServerInfoResponse.self))
+            case .Group:
+                self = .group(try singleValueContainer.decode(GroupInfoResponse.self))
+
+        }
+    }
+}
+
+struct ServerInfoResponse: Decodable {
+    var code: String
+    var server_id: String
+    var server_name: String
+    var server_icon: File?
+    var server_banner: File?
+    var server_flags: ServerFlags?
+    var channel_id: String
+    var channel_name: String
+    var channel_description: String?
+    var user_name: String
+    var user_avatar: File?
+    var member_count: Int
+}
+
+struct GroupInfoResponse: Decodable {
+    var code: String
+    var channel_id: String
+    var channel_name: String
+    var channel_description: String?
+    var user_name: String
+    var user_avatar: File?
+}

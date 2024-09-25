@@ -70,14 +70,23 @@ struct JoinServerAlert: View {
     
     @State var text: String = ""
     
+    func parseInvite() -> String? {
+        if let match = text.wholeMatch(of: /(?:(?:https?:\/\/)?rvlt\.gg\/)?(\w+)/) {
+            return String(match.output.1)
+        } else {
+            return nil
+        }
+    }
+    
     var body: some View {
         TextField("Invite code or link", text: $text)
 
         Button("Join") {
+            
             Task {
-                let join = try! await viewState.http.joinServer(code: text).get()
-                viewState.servers[join.server.id] = join.server
-                viewState.selectServer(withId: join.server.id)
+                if let invite_code = parseInvite(), (try! await viewState.http.fetchInvite(code: invite_code).get()) != nil {
+                    viewState.path.append(NavigationDestination.invite(invite_code))
+                }
             }
         }
         

@@ -22,20 +22,32 @@ struct ServerIcon<S: Shape>: View {
         if let icon = server.icon {
             LazyImage(source: .file(icon), height: height, width: height, clipTo: clipTo)
         } else {
-            ZStack(alignment: .center) {
-                let firstChar = server.name.first ?? "?"
-                
-                clipTo
-                    .fill(viewState.theme.background3)  // TODO: background3
-                    .frame(width: width, height: height)
-
-                Text(verbatim: "\(firstChar)")
-                    .bold()
-            }
+            FallbackServerIcon(name: server.name, width: width, height: height, clipTo: clipTo)
         }
     }
 }
 
+struct FallbackServerIcon<S: Shape>: View {
+    @EnvironmentObject var viewState: ViewState
+    
+    var name: String
+    var width: CGFloat?
+    var height: CGFloat?
+    var clipTo: S
+    
+    var body: some View {
+        ZStack(alignment: .center) {
+            let firstChar = name.first ?? "?"
+            
+            clipTo
+                .fill(viewState.theme.background3)
+                .frame(width: width, height: height)
+            
+            Text(verbatim: "\(firstChar)")
+                .bold()
+        }
+    }
+}
 
 struct ServerListIcon: View {
     @EnvironmentObject var viewState: ViewState

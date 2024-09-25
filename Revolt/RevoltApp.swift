@@ -226,6 +226,8 @@ struct InnerApp: View {
                             case .channel_search(let id):
                                 let channel = Binding($viewState.channels[id])!
                                 ChannelSearch(channel: channel)
+                            case .invite(let code):
+                                ViewInvite(code: code)
                         }
                     }
                     .sheet(item: $viewState.currentUserSheet) { (v) in

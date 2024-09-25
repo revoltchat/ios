@@ -363,4 +363,8 @@ struct HTTPClient {
     func fetchMutuals(user: String) async -> Result<MutualsResponse, RevoltError> {
         await req(method: .get, route: "/users/\(user)/mutual")
     }
+    
+    func fetchInvite(code: String) async -> Result<InviteInfoResponse, RevoltError> {
+        await req(method: .get, route: "/invites/\(code)")
+    }
 }

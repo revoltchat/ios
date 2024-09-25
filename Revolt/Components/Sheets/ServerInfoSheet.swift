@@ -29,10 +29,15 @@ struct ServerInfoSheet: View {
                     ServerIcon(server: server, height: 64, width: 64, clipTo: Rectangle())
                         .addBorder(.black, width: 2, cornerRadius: 8)
                     
-                    Text(server.name)
-                        .bold()
-                        .padding(.horizontal, 8)
-                        .padding(.bottom, 8)
+                    HStack(alignment: .center, spacing: 8) {
+                        ServerBadges(value: server.flags)
+                        
+                        Text(server.name)
+                            .bold()
+                    }
+                    .padding(.horizontal, 8)
+                    .padding(.bottom, 8)
+
                 }
                 .padding(.top, server.banner == nil ? 8 : 0)
                 .padding(.horizontal, 8)
