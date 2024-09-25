@@ -81,7 +81,7 @@ struct MessageView: View {
                             server: viewModel.server,
                             channel: viewModel.channel
                         )
-                            .padding(.leading, 42)
+                            .padding(.leading, 48)
                     }
                 }
             }
@@ -117,7 +117,7 @@ struct MessageView: View {
                 HStack(alignment: .top) {
                     pfpView(size: .regular)
                         .padding(.top, 2)
-                        .padding(.trailing, 12)
+                        .padding(.trailing, 8)
                     
                     VStack(alignment: .leading, spacing: 0) {
                         HStack {

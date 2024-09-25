@@ -284,7 +284,7 @@ struct MessageableChannelView: View {
                                             .id(message.message.id)
                                     }
                                     .animation(.easeInOut, value: highlighted)
-                                    .padding(.leading, 44)
+                                    .padding(.leading, 48)
                                     .listRowSeparator(.hidden)
                                     .listRowInsets(EdgeInsets(top: 0, leading: 12, bottom: 0, trailing: 12))
                                 
@@ -366,7 +366,8 @@ struct MessageableChannelView: View {
                                 }
                             }
                             .environment(\.defaultMinListRowHeight, 0)
-                            .scrollDismissesKeyboard(.immediately)
+                            .simultaneousGesture(TapGesture().onEnded { focused = false })
+                            // .scrollDismissesKeyboard(.immediately)
                         }
                     }
                     

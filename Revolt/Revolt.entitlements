@@ -9,6 +9,7 @@
 	<key>com.apple.developer.associated-domains</key>
 	<array>
 		<string>applinks:revolt.chat</string>
+		<string>applinks:rvlt.gg</string>
 	</array>
 	<key>com.apple.developer.push-to-talk</key>
 	<true/>
