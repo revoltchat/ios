@@ -94,7 +94,7 @@ struct AppearanceSettings: View {
 
                 
                 Section("Messages") {
-                    Toggle("Compact Mode", isOn: Binding(get: { false }, set: {_ in }))
+                    CheckboxListItem(title: "Compact Mode", isOn: Binding(get: { false }, set: {_ in }))
                         .listRowBackground(viewState.theme.background2)
                         .animation(.easeInOut, value: viewState.theme)
                 }

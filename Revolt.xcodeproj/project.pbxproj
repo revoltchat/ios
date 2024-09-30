@@ -91,6 +91,9 @@
 		17B7128D2B03E9D700CFF61C /* FriendsList.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17B7128C2B03E9D700CFF61C /* FriendsList.swift */; };
 		17BADE012B7019270021BB62 /* EmojiPicker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17BADE002B7019270021BB62 /* EmojiPicker.swift */; };
 		17BB26772C8E923600D70AFC /* SnapKit in Frameworks */ = {isa = PBXBuildFile; productRef = 17BB26762C8E923600D70AFC /* SnapKit */; };
+		17BB78B52CA4C45C000CAD87 /* ChannelPermissionsSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17BB78B42CA4C45C000CAD87 /* ChannelPermissionsSettings.swift */; };
+		17BB78B82CA4C64E000CAD87 /* ChannelRolePermissionsSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17BB78B72CA4C64E000CAD87 /* ChannelRolePermissionsSettings.swift */; };
+		17BB78BA2CA4DF25000CAD87 /* OptionSet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17BB78B92CA4DF25000CAD87 /* OptionSet.swift */; };
 		17BC476B2B9CB51200A593DA /* ShareInviteSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17BC476A2B9CB51200A593DA /* ShareInviteSheet.swift */; };
 		17BF54CD2B1785E200178866 /* HomeWelcome.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17BF54CC2B1785E200178866 /* HomeWelcome.swift */; };
 		17BF54D12B17B24200178866 /* LanguageSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17BF54D02B17B24200178866 /* LanguageSettings.swift */; };
@@ -254,6 +257,9 @@
 		17B1A0462BFC471C005D4664 /* Types.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Types.swift; sourceTree = "<group>"; };
 		17B7128C2B03E9D700CFF61C /* FriendsList.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FriendsList.swift; sourceTree = "<group>"; };
 		17BADE002B7019270021BB62 /* EmojiPicker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmojiPicker.swift; sourceTree = "<group>"; };
+		17BB78B42CA4C45C000CAD87 /* ChannelPermissionsSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChannelPermissionsSettings.swift; sourceTree = "<group>"; };
+		17BB78B72CA4C64E000CAD87 /* ChannelRolePermissionsSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChannelRolePermissionsSettings.swift; sourceTree = "<group>"; };
+		17BB78B92CA4DF25000CAD87 /* OptionSet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OptionSet.swift; sourceTree = "<group>"; };
 		17BBFE102C77949E000A8FB1 /* ci_post_xcodebuild.sh */ = {isa = PBXFileReference; lastKnownFileType = text.script.sh; path = ci_post_xcodebuild.sh; sourceTree = "<group>"; };
 		17BC476A2B9CB51200A593DA /* ShareInviteSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShareInviteSheet.swift; sourceTree = "<group>"; };
 		17BF54CC2B1785E200178866 /* HomeWelcome.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeWelcome.swift; sourceTree = "<group>"; };
@@ -363,6 +369,7 @@
 				17A7FE362C49DE6F0083B22F /* Member.swift */,
 				17A7FE382C49EBD20083B22F /* Image.swift */,
 				176485722CA3882E00AF8141 /* Binding.swift */,
+				17BB78B92CA4DF25000CAD87 /* OptionSet.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -445,6 +452,7 @@
 			children = (
 				17429D962B4C91170036105A /* ChannelSettings.swift */,
 				17429D982B4C931D0036105A /* ChannelOverviewSettings.swift */,
+				17BB78B62CA4C636000CAD87 /* ChannelPermissionsSettings */,
 			);
 			path = Channel;
 			sourceTree = "<group>";
@@ -462,6 +470,7 @@
 		175E01DC2ADAB3EA004F6431 /* Components */ = {
 			isa = PBXGroup;
 			children = (
+				17BB78BB2CA4E140000CAD87 /* Settings */,
 				17BC47692B9CB4F500A593DA /* Sheets */,
 				17CE783D2B129E0A006C1D2C /* Home */,
 				178BB1152B02E626001143A4 /* CommonElements */,
@@ -481,7 +490,6 @@
 				17BADE002B7019270021BB62 /* EmojiPicker.swift */,
 				17863A582C8094840051A52C /* Tile.swift */,
 				17CC0CB32C937D4F005BA3A6 /* ServerBadges.swift */,
-				176485742CA3947B00AF8141 /* PermissionToggle.swift */,
 			);
 			path = Components;
 			sourceTree = "<group>";
@@ -491,7 +499,6 @@
 			children = (
 				1764856D2CA383BD00AF8141 /* ServerRolesSettings.swift */,
 				176485702CA3858100AF8141 /* RoleSettings.swift */,
-				170410962CA478D5002C1445 /* AllPermissionsSettings.swift */,
 				170410982CA478F6002C1445 /* DefaultRoleSettings.swift */,
 			);
 			path = ServerRoles;
@@ -532,6 +539,24 @@
 				178BB1162B02E63A001143A4 /* LoadingSpinnerView.swift */,
 			);
 			path = CommonElements;
+			sourceTree = "<group>";
+		};
+		17BB78B62CA4C636000CAD87 /* ChannelPermissionsSettings */ = {
+			isa = PBXGroup;
+			children = (
+				17BB78B42CA4C45C000CAD87 /* ChannelPermissionsSettings.swift */,
+				17BB78B72CA4C64E000CAD87 /* ChannelRolePermissionsSettings.swift */,
+			);
+			path = ChannelPermissionsSettings;
+			sourceTree = "<group>";
+		};
+		17BB78BB2CA4E140000CAD87 /* Settings */ = {
+			isa = PBXGroup;
+			children = (
+				176485742CA3947B00AF8141 /* PermissionToggle.swift */,
+				170410962CA478D5002C1445 /* AllPermissionsSettings.swift */,
+			);
+			path = Settings;
 			sourceTree = "<group>";
 		};
 		17BC47692B9CB4F500A593DA /* Sheets */ = {
@@ -988,6 +1013,7 @@
 				17E019D72AF1998300AB4663 /* MessageAttachment.swift in Sources */,
 				DAAA4BFB29F2518900F41E52 /* MessageView.swift in Sources */,
 				173A336A2C422EF800B8A58E /* DeveloperSettings.swift in Sources */,
+				17BB78BA2CA4DF25000CAD87 /* OptionSet.swift in Sources */,
 				1759C39A2B291A75006E6BBE /* MessageContentsView.swift in Sources */,
 				17E019D12AF14EC000AB4663 /* ServerIcon.swift in Sources */,
 				176485752CA3947B00AF8141 /* PermissionToggle.swift in Sources */,
@@ -1006,6 +1032,7 @@
 				17CE78412B12AA51006C1D2C /* ServerChannelScrollView.swift in Sources */,
 				17E019C92AF1279100AB4663 /* AppearanceSettings.swift in Sources */,
 				1782F5E62B08F60B00759D40 /* Discovery.swift in Sources */,
+				17BB78B52CA4C45C000CAD87 /* ChannelPermissionsSettings.swift in Sources */,
 				17772C182C30AF83000D1EDA /* AppDelegate.swift in Sources */,
 				17C444582B06CC5400F97E4A /* ForgotPassword.swift in Sources */,
 				17CE2E142AE709CE0059FB3A /* UserSheet.swift in Sources */,
@@ -1015,6 +1042,7 @@
 				172754C92B399092002223FE /* Contents.swift in Sources */,
 				170C23CE2C224B460057E399 /* UserSettingsStore.swift in Sources */,
 				1777DD892ADC3C31003D6C72 /* Markdown.swift in Sources */,
+				17BB78B82CA4C64E000CAD87 /* ChannelRolePermissionsSettings.swift in Sources */,
 				17E019D52AF1937400AB4663 /* Theme.swift in Sources */,
 				1788F96E2C3CA19800A385A8 /* MessageEmbed.swift in Sources */,
 				175E01E02ADAB554004F6431 /* Avatar.swift in Sources */,

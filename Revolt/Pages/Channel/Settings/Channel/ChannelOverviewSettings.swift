@@ -20,7 +20,9 @@ struct ChannelOverviewSettings: View {
     
     struct ChannelSettingsValues: Equatable {
         var icon: Icon
+        var name: String
         var description: String
+        var nsfw: Bool
     }
     
     @State var currentValues: ChannelSettingsValues
@@ -34,7 +36,9 @@ struct ChannelOverviewSettings: View {
     static func fromState(viewState: ViewState, channel c: Binding<Channel>) -> Self {
         let settings = ChannelSettingsValues(
             icon: .remote(c.wrappedValue.icon),
-            description: c.wrappedValue.description ?? ""
+            name: c.wrappedValue.getName(viewState),
+            description: c.wrappedValue.description ?? "",
+            nsfw: c.wrappedValue.nsfw
         )
         
         return .init(currentValues: settings, channel: c)
@@ -70,11 +74,21 @@ struct ChannelOverviewSettings: View {
                 
             }
             .listRowBackground(viewState.theme.background)
-                        
+            
+            Section("Name") {
+                TextField("Channel Name", text: $currentValues.name)
+            }
+            .listRowBackground(viewState.theme.background)
+            
             Section("Server Description") {
                 TextField(text: $currentValues.description) {
                     Text("Add a topic...")
                 }
+            }
+            .listRowBackground(viewState.theme.background2)
+            
+            Section("NSFW") {
+                CheckboxListItem(title: "Set this channel to NSFW", isOn: $currentValues.nsfw)
             }
             .listRowBackground(viewState.theme.background2)
         }

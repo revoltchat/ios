@@ -209,7 +209,9 @@ struct InnerApp: View {
                                 ChannelInfo(channel: channel)
                             case .channel_settings(let id):
                                 let channel = Binding($viewState.channels[id])!
-                                ChannelSettings(channel: channel)
+                                let server = channel.wrappedValue.server.map { $viewState.servers[$0] } ?? .constant(nil)
+                                
+                                ChannelSettings(server: server, channel: channel)
                             case .discover:
                                 Discovery()
                             case .server_settings(let id):

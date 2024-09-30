@@ -68,7 +68,7 @@ extension ServerFlags: Codable {
     }
 }
 
-public struct SystemMessages: Codable {
+public struct SystemMessages: Codable, Equatable {
     public init(user_joined: String? = nil, user_left: String? = nil, user_kicked: String? = nil, user_banned: String? = nil) {
         self.user_joined = user_joined
         self.user_left = user_left

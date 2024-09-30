@@ -11,17 +11,23 @@ import Types
 
 struct ChannelSettings: View {
     @EnvironmentObject var viewState: ViewState
+    
+    @Binding var server: Server?
     @Binding var channel: Channel
     
     var body: some View {
         List {
             Section("Settings") {
-                NavigationLink(destination: { ChannelOverviewSettings.fromState(viewState: viewState, channel: $channel) }) {
+                NavigationLink {
+                    ChannelOverviewSettings.fromState(viewState: viewState, channel: $channel)
+                } label: {
                     Image(systemName: "info.circle.fill")
                     Text("Overview")
                 }
                 
-                NavigationLink(destination: Text("Todo")) {
+                NavigationLink {
+                    ChannelPermissionsSettings(server: $server, channel: $channel)
+                } label: {
                     Image(systemName: "list.bullet")
                     Text("Permissions")
                 }
@@ -53,9 +59,11 @@ struct ChannelSettings: View {
 }
 
 #Preview {
-    let viewState = ViewState.preview().applySystemScheme(theme: .light)
+    @StateObject var viewState = ViewState.preview().applySystemScheme(theme: .light)
+    let channel = Binding($viewState.channels["0"])!
+    let server = $viewState.servers["0"]
     
     return NavigationStack {
-        ChannelSettings(channel: .constant(viewState.channels["0"]!))
+        ChannelSettings(server: server, channel: channel)
     }.applyPreviewModifiers(withState: viewState)
 }

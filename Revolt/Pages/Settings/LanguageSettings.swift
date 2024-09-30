@@ -43,11 +43,7 @@ struct LanguageSettings: View {
         }
         .scrollContentBackground(.hidden)
         .background(viewState.theme.background)
-        .toolbar {
-            ToolbarItem(placement: .principal) {
-                Text("Sessions")
-            }
-        }
+        .navigationTitle("Language")
         .toolbarBackground(viewState.theme.topBar.color, for: .automatic)
     }
 }

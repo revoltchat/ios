@@ -24,6 +24,6 @@ struct DeveloperSettings: View {
         .background(viewState.theme.background)
         .scrollContentBackground(.hidden)
         .toolbarBackground(viewState.theme.topBar, for: .automatic)
-
+        .navigationTitle("Developer")
     }
 }

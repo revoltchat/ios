@@ -7,7 +7,7 @@
 
 import Foundation
 
-public struct SavedMessages: Decodable, Encodable, Equatable {
+public struct SavedMessages: Decodable, Encodable, Equatable, Identifiable {
     public init(id: String, user: String) {
         self.id = id
         self.user = user
@@ -22,7 +22,7 @@ public struct SavedMessages: Decodable, Encodable, Equatable {
     }
 }
 
-public struct DMChannel: Codable, Equatable {
+public struct DMChannel: Codable, Equatable, Identifiable {
     public init(id: String, active: Bool, recipients: [String], last_message_id: String? = nil) {
         self.id = id
         self.active = active
@@ -41,7 +41,7 @@ public struct DMChannel: Codable, Equatable {
     }
 }
 
-public struct GroupDMChannel: Codable, Equatable {
+public struct GroupDMChannel: Codable, Equatable, Identifiable {
     public init(id: String, recipients: [String], name: String, owner: String, icon: File? = nil, permissions: Permissions? = nil, description: String? = nil, nsfw: Bool? = nil, last_message_id: String? = nil) {
         self.id = id
         self.recipients = recipients
@@ -70,7 +70,7 @@ public struct GroupDMChannel: Codable, Equatable {
     }
 }
 
-public struct TextChannel: Codable, Equatable {
+public struct TextChannel: Codable, Equatable, Identifiable {
     public init(id: String, server: String, name: String, description: String? = nil, icon: File? = nil, default_permissions: Overwrite? = nil, role_permissions: [String : Overwrite]? = nil, nsfw: Bool? = nil, last_message_id: String? = nil, voice: VoiceInformation? = nil) {
         self.id = id
         self.server = server
@@ -101,7 +101,7 @@ public struct TextChannel: Codable, Equatable {
     }
 }
 
-public struct VoiceChannel: Codable, Equatable {
+public struct VoiceChannel: Codable, Equatable, Identifiable {
     public init(id: String, server: String, name: String, description: String? = nil, icon: File? = nil, default_permissions: Overwrite? = nil, role_permissions: [String : Overwrite]? = nil, nsfw: Bool? = nil) {
         self.id = id
         self.server = server
@@ -228,6 +228,36 @@ public enum Channel: Identifiable, Equatable {
                 textChannel.server
             case .voice_channel(let voiceChannel):
                 voiceChannel.server
+        }
+    }
+    
+    public var role_permissions: [String: Overwrite]? {
+        switch self {
+            case .saved_messages(let savedMessages):
+                nil
+            case .dm_channel(let dMChannel):
+                nil
+            case .group_dm_channel(let groupDMChannel):
+                nil
+            case .text_channel(let textChannel):
+                textChannel.role_permissions
+            case .voice_channel(let voiceChannel):
+                voiceChannel.role_permissions
+        }
+    }
+    
+    public var default_permissions: Overwrite? {
+        switch self {
+            case .saved_messages(let savedMessages):
+                nil
+            case .dm_channel(let dMChannel):
+                nil
+            case .group_dm_channel(let groupDMChannel):
+                nil
+            case .text_channel(let textChannel):
+                textChannel.default_permissions
+            case .voice_channel(let voiceChannel):
+                voiceChannel.default_permissions
         }
     }
 }

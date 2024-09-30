@@ -92,10 +92,17 @@ struct Settings: View {
                 }
 #if DEBUG
                 NavigationLink(destination: { DeveloperSettings() }) {
-                    Image(systemName: "face.smiling")
+                    Image(systemName: "hammer.fill")
+                        .resizable()
+                        .scaledToFit()
+                        .frame(width: 16, height: 16)
                     Text("Developer")
                 }
 #endif
+            }
+            .listRowBackground(viewState.theme.background2)
+            
+            Section {
                 Button {
                     presentLogoutDialog = true
                 } label: {
@@ -111,6 +118,7 @@ struct Settings: View {
                 }
             }
             .listRowBackground(viewState.theme.background2)
+            
         }
         .scrollContentBackground(.hidden)
         .scrollDisabled(true)

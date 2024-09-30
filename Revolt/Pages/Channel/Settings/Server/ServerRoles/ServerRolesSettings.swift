@@ -32,7 +32,8 @@ struct ServerRolesSettings: View {
                     DefaultRoleSettings(server: $server, permissions: server.default_permissions)
                 } label: {
                     Text("Default")
-                }            }
+                }
+            }
             .listRowBackground(viewState.theme.background2)
 
             Section {

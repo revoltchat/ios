@@ -48,7 +48,7 @@ struct RoleSettings: View {
             }
             .listRowBackground(viewState.theme.background2)
             
-            Toggle("Hoist role", isOn: $currentValue.hoist.bindOr(defaultTo: false))
+            CheckboxListItem(title: "Hoist role", isOn: $currentValue.hoist.bindOr(defaultTo: false))
                 .listRowBackground(viewState.theme.background2)
             
             Section("Role Rank") {
@@ -61,6 +61,7 @@ struct RoleSettings: View {
             Section("Edit Permissions") {
                 AllPermissionSettings(permissions: .role($currentValue.permissions))
             }
+            .listRowBackground(viewState.theme.background2)
             
             Button {
                 Task {

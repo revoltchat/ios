@@ -28,6 +28,7 @@ struct ServerOverviewSettings: View {
         var banner: SettingImage
         var name: String
         var description: String
+        var system_channels: SystemMessages
     }
     
     @State var initial: ServerSettingsValues
@@ -47,7 +48,8 @@ struct ServerOverviewSettings: View {
             icon: .remote(s.icon.wrappedValue),
             banner: .remote(s.banner.wrappedValue),
             name: s.name.wrappedValue,
-            description: s.description.wrappedValue ?? ""
+            description: s.description.wrappedValue ?? "",
+            system_channels: s.system_messages.wrappedValue ?? SystemMessages()
         )
         
         initial = settings
@@ -169,6 +171,15 @@ struct ServerOverviewSettings: View {
                 }
             }
             .listRowBackground(viewState.theme.background2)
+            
+            Section("System Messages") {
+                SystemChannelSelector(title: "User Joined", server: server, selection: $currentValues.system_channels.user_joined)
+                SystemChannelSelector(title: "User Left", server: server, selection: $currentValues.system_channels.user_left)
+                SystemChannelSelector(title: "User Kicked", server: server, selection: $currentValues.system_channels.user_kicked)
+                SystemChannelSelector(title: "User Banned", server: server, selection: $currentValues.system_channels.user_banned)
+
+            }
+            .listRowBackground(viewState.theme.background2)
         }
         .toolbar {
             ToolbarItem(placement: .principal) {
@@ -240,6 +251,36 @@ struct ServerOverviewSettings: View {
         .onChange(of: currentValues) { showSaveButton = true }
         .frame(maxWidth: .infinity)
         .background(viewState.theme.background)
+    }
+}
+
+struct SystemChannelSelector: View {
+    @EnvironmentObject var viewState: ViewState
+    
+    var title: String
+    var server: Server
+    
+    @Binding var selection: String?
+    
+    var body: some View {
+        Picker(title, selection: $selection) {
+            Text("Disabled")
+                .tag(nil as String?)
+            
+            ForEach(server.channels
+                .compactMap({
+                    switch viewState.channels[$0] {
+                        case .text_channel(let c):
+                            return .some(c)
+                        default:
+                            return .none
+                    }
+                })
+            ) { channel in
+                Text("#\(channel.name)")
+                    .tag(channel.id as String?)
+            }
+        }
     }
 }
 

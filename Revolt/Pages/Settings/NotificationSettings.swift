@@ -59,7 +59,7 @@ struct NotificationSettings: View {
         .toolbarBackground(viewState.theme.topBar, for: .automatic)
         .scrollContentBackground(.hidden)
         .background(viewState.theme.background)
-        
+        .navigationTitle("Notifications")
         .onAppear {
             pushNotificationsEnabled = !viewState.userSettingsStore.store.notifications.rejectedRemoteNotifications
             notificationsWhileAppRunningEnabled = viewState.userSettingsStore.store.notifications.wantsNotificationsWhileAppRunning

@@ -19,16 +19,16 @@ struct PermissionToggle<Label: View>: View {
             
             Spacer()
             
-            Picker("select permission", selection: $value) {
+            Picker("Select permission", selection: $value) {
                 Image(systemName: "xmark")
-                    .foregroundStyle(.red)
+                    .foregroundStyle(.red, .red)
                     .tag(Optional.some(false))
                 
                 Image(systemName: "square")
                     .tag(nil as Bool?)
                 
                 Image(systemName: "checkmark")
-                    .foregroundStyle(.green)
+                    .foregroundStyle(.green, .green)
                     .tag(Optional.some(true))
             }
             .tint(value == true ? .green : value == false ? .red : nil)
