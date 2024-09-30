@@ -14,6 +14,8 @@ import Types
 //import SwiftParsec
 import SubviewAttachingTextView
 import SnapKit
+import Highlightr
+import UIKit
 
 //enum ContentPart: Equatable {
 //    case text(AttributedString)
@@ -659,6 +661,8 @@ struct InnerContents: UIViewRepresentable {
     var font: UIFont
     var foregroundColor: UIColor
     
+    let highlighter = Highlightr()!
+    
     func makeUIView(context: Context) -> UIViewType {
         let textview = SubviewAttachingTextView()
         textview.isEditable = false
@@ -694,6 +698,27 @@ struct InnerContents: UIViewRepresentable {
 //                    let newFont = UIFont(descriptor: repaired, size: 0.0)
                     
                     attrString.addAttribute(.font, value: font, range: range)
+                })
+                
+                var foundCodeblockCount = 0
+                
+                attrString.enumerateAttribute(.presentationIntentAttributeName, in: NSRange(location: 0, length: attrString.length), using: { presentation, range, _ in
+                    if let intent = presentation as? __NSPresentationIntent {
+                        
+                        if intent.intentKind == __NSPresentationIntentKind.codeBlock {
+                            let lowerInt = range.lowerBound - foundCodeblockCount
+                            let lower = String.Index(encodedOffset: lowerInt)
+                            let upper = String.Index(encodedOffset: range.upperBound - foundCodeblockCount)
+                            let codeText = String(attrString.string[lower..<upper])
+                            
+                            let globalRange = Range(uncheckedBounds: (lower, upper))
+                            
+                            if let codeblockString = highlighter.highlight(codeText, as: intent.languageHint) {
+                                attrString.deleteCharacters(in: NSRange(globalRange, in: attrString.string))
+                                attrString.insert(codeblockString, at: lowerInt)
+                            }
+                        }
+                    }
                 })
                 
                 attrString.enumerateAttribute(.foregroundColor, in: NSRange(location: 0, length: attrString.length), options: [], using: { color, range, _ in
@@ -825,6 +850,8 @@ struct InnerContents: UIViewRepresentable {
 }
 
 struct Contents: View {
+    @EnvironmentObject var viewState: ViewState
+    
     @State var calculatedHeight: CGFloat = 0
     @Binding var text: String
     
@@ -843,8 +870,14 @@ struct Contents: View {
     }
     
     var body: some View {
-        InnerContents(text: $text, calculatedHeight: $calculatedHeight, fontSize: fontSize, font: font, foregroundColor: foregroundColor)
-            .frame(height: calculatedHeight)
+        if viewState.userSettingsStore.store.experiments.customMarkdown {
+            InnerContents(text: $text, calculatedHeight: $calculatedHeight, fontSize: fontSize, font: font, foregroundColor: foregroundColor)
+                .frame(height: calculatedHeight)
+        } else {
+            Text((try? AttributedString(markdown: text.data(using: .utf8)!)) ?? AttributedString(text))
+                .font(Font.system(size: fontSize))
+                .foregroundStyle(Color(uiColor: foregroundColor))
+        }
     }
 }
 

@@ -95,6 +95,37 @@ class NotificationOptionsData: Codable {
 }
 
 @Observable
+class ExperimentOptionsData: Codable {
+    var keyWasSet: () -> Void = {}
+    
+    var customMarkdown: Bool {
+        didSet(newSetting) {
+            keyWasSet()
+        }
+    }
+    
+    init(keyWasSet: @escaping () -> Void, customMarkdown: Bool) {
+        self.customMarkdown = customMarkdown
+        
+        self.keyWasSet = keyWasSet
+    }
+    
+    init(keyWasSet: @escaping () -> Void) {
+        customMarkdown = false
+        
+        self.keyWasSet = keyWasSet
+    }
+    
+    init() {
+        self.customMarkdown = false
+    }
+    
+    enum CodingKeys: String, CodingKey {
+        case _customMarkdown = "customMarkdown"
+    }
+}
+
+@Observable
 class PersistentUserSettingsStore: Codable {
     var keyWasSet: () -> Void = {}
     
@@ -111,11 +142,14 @@ class PersistentUserSettingsStore: Codable {
             keyWasSet()
         }
     }
+    
+    var experiments: ExperimentOptionsData
 
-    init(keyWasSet: @escaping () -> Void, notifications: NotificationOptionsData, lastOpenChannels: [String: String], closedCategories: [String: Set<String>]) {
+    init(keyWasSet: @escaping () -> Void, notifications: NotificationOptionsData, lastOpenChannels: [String: String], closedCategories: [String: Set<String>], experiments: ExperimentOptionsData) {
         self.notifications = notifications
         self.lastOpenChannels = lastOpenChannels
         self.closedCategories = closedCategories
+        self.experiments = experiments
         
         self.keyWasSet = keyWasSet
     }
@@ -124,10 +158,12 @@ class PersistentUserSettingsStore: Codable {
         self.notifications = NotificationOptionsData()
         self.lastOpenChannels = [:]
         self.closedCategories = [:]
+        self.experiments = ExperimentOptionsData()
     }
     
     fileprivate func updateDecodeWithCallback(keyWasSet: @escaping () -> Void) {
         self._notifications.keyWasSet = keyWasSet
+        self._experiments.keyWasSet = keyWasSet
         self.keyWasSet = keyWasSet
     }
     
@@ -135,6 +171,7 @@ class PersistentUserSettingsStore: Codable {
         case _notifications = "notifications"
         case _lastOpenChannels = "lastOpenChannels"
         case _closedCategories = "closedCategories"
+        case _experiments = "experiments"
     }
 }
 
