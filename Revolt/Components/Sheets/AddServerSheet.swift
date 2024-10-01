@@ -84,7 +84,7 @@ struct JoinServerAlert: View {
         Button("Join") {
             
             Task {
-                if let invite_code = parseInvite(), (try! await viewState.http.fetchInvite(code: invite_code).get()) != nil {
+                if let invite_code = parseInvite(), (try? await viewState.http.fetchInvite(code: invite_code).get()) != nil {
                     viewState.path.append(NavigationDestination.invite(invite_code))
                 }
             }

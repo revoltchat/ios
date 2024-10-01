@@ -136,6 +136,7 @@ public struct VoiceInformation: Codable, Equatable {
     public var max_users: Int?
 }
 
+@frozen
 public enum Channel: Identifiable, Equatable {
     case saved_messages(SavedMessages)
     case dm_channel(DMChannel)
