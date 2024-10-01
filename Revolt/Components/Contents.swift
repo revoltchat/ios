@@ -647,6 +647,8 @@ class UserMentionView: UIView {
     }
 }
 
+let highlighter = Highlightr()!
+
 
 struct InnerContents: UIViewRepresentable {
     @EnvironmentObject var viewState: ViewState
@@ -660,8 +662,6 @@ struct InnerContents: UIViewRepresentable {
     var fontSize: CGFloat
     var font: UIFont
     var foregroundColor: UIColor
-    
-    let highlighter = Highlightr()!
     
     func makeUIView(context: Context) -> UIViewType {
         let textview = SubviewAttachingTextView()
