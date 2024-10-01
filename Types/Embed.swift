@@ -139,13 +139,14 @@ public struct TextEmbed: Decodable, Hashable {
 public enum Embed: Hashable {
     case website(WebsiteEmbed)
     case image(JanuaryImage)
+    case video(JanuaryVideo)
     case text(TextEmbed)
     case none
 }
 
 extension Embed: Decodable {
     enum CodingKeys: String, CodingKey { case type }
-    enum Tag: String, Codable { case Website, Image, Text, None }
+    enum Tag: String, Codable { case Website, Image, Video, Text, None }
     
     public init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
@@ -156,6 +157,8 @@ extension Embed: Decodable {
                 self = .website(try singleValueContainer.decode(WebsiteEmbed.self))
             case .Image:
                 self = .image(try singleValueContainer.decode(JanuaryImage.self))
+            case .Video:
+                self = .video(try singleValueContainer.decode(JanuaryVideo.self))
             case .Text:
                 self = .text(try singleValueContainer.decode(TextEmbed.self))
             case .None:

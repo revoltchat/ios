@@ -40,6 +40,11 @@ struct MessageEmbed: View {
         switch embed {
             case .image(let image):
                 LazyImage(source: .url(URL(string: image.url)!), clipTo: Rectangle())
+            case .video(let video):
+                if let url = URL(string: video.url) {
+                    VideoPlayer(player: AVPlayer(url: url))
+                        .frame(width: CGFloat(integerLiteral: video.width), height: CGFloat(integerLiteral: video.height))
+                }
             case .text(let embed):
                 HStack(spacing: 0) {
                     UnevenRoundedRectangle(topLeadingRadius: 6, bottomLeadingRadius: 6)
