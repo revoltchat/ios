@@ -12,14 +12,12 @@ import Types
 struct HomeWelcome: View {
     @Environment(\.openURL) var openURL: OpenURLAction
     @EnvironmentObject var viewState: ViewState
-    @Binding var showSidebar: Bool
+    var toggleSidebar: () -> ()
 
     var body: some View {
         VStack {
-            PageToolbar(showSidebar: $showSidebar) {
+            PageToolbar(toggleSidebar: toggleSidebar) {
                 Text("Home")
-            } trailing: {
-                EmptyView()
             }
             
             Spacer()
@@ -114,6 +112,6 @@ struct HomeButton<Icon: View>: View {
 }
 
 #Preview {
-    HomeWelcome(showSidebar: .constant(false))
+    HomeWelcome(toggleSidebar: {})
         .applyPreviewModifiers(withState: ViewState.preview())
 }

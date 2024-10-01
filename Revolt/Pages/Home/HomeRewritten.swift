@@ -11,7 +11,7 @@ struct MaybeChannelView: View {
     @EnvironmentObject var viewState: ViewState
     @Binding var currentChannel: ChannelSelection
     @Binding var currentSelection: MainSelection
-    @Binding var showSidebar: Bool
+    var toggleSidebar: () -> ()
     
     var body: some View {
         switch currentChannel {
@@ -26,24 +26,22 @@ struct MaybeChannelView: View {
                             server: currentSelection.id.map { viewState.servers[$0]! },
                             messages: messages
                         ),
-                        showSidebar: $showSidebar
+                        toggleSidebar: toggleSidebar
                     )
 
                 } else {
                     Text("Unknown Channel :(")
                 }
             case .home:
-                HomeWelcome(showSidebar: $showSidebar)
+                HomeWelcome(toggleSidebar: toggleSidebar)
             case .friends:
                 VStack(spacing: 0) {
-                    PageToolbar(showSidebar: $showSidebar) {
+                    PageToolbar(toggleSidebar: toggleSidebar) {
                         Image(systemName: "person.3.sequence")
                             .frame(width: 16, height: 16)
                             .frame(width: 24, height: 24)
                         
                         Text("Friends")
-                    } trailing: {
-                        EmptyView()
                     }
                     
                     FriendsList()
@@ -63,8 +61,18 @@ struct HomeRewritten: View {
     
     @State var offset = CGFloat.zero
     @State var forceOpen: Bool = false
+    @State var calculatedSize = CGFloat.zero
     
-    @State var showSidebar = false
+    func toggleSidebar() {
+        print(offset, calculatedSize)
+        withAnimation {
+            if offset != .zero {
+                offset = .zero
+            } else {
+                offset = calculatedSize
+            }
+        }
+    }
     
     var body: some View {
         if isIPad || isMac {
@@ -75,14 +83,14 @@ struct HomeRewritten: View {
                     
                     switch currentSelection {
                         case .server(_):
-                            ServerChannelScrollView(currentSelection: $currentSelection, currentChannel: $currentChannel)
+                            ServerChannelScrollView(currentSelection: $currentSelection, currentChannel: $currentChannel, toggleSidebar: toggleSidebar)
                         case .dms:
                             DMScrollView(currentChannel: $currentChannel)
                     }
                 }
                 .frame(maxWidth: 300)
                 
-                MaybeChannelView(currentChannel: $currentChannel, currentSelection: $currentSelection, showSidebar: $showSidebar)
+                MaybeChannelView(currentChannel: $currentChannel, currentSelection: $currentSelection, toggleSidebar: toggleSidebar)
                     .frame(maxWidth: .infinity)
             }
         } else {
@@ -97,7 +105,7 @@ struct HomeRewritten: View {
                         
                         switch currentSelection {
                             case .server(_):
-                                ServerChannelScrollView(currentSelection: $currentSelection, currentChannel: $currentChannel)
+                                ServerChannelScrollView(currentSelection: $currentSelection, currentChannel: $currentChannel, toggleSidebar: toggleSidebar)
 
                             case .dms:
                                 DMScrollView(currentChannel: $currentChannel)
@@ -107,14 +115,13 @@ struct HomeRewritten: View {
                     .background(viewState.theme.background2.color)
                     
                     ZStack {
-                        MaybeChannelView(currentChannel: $currentChannel, currentSelection: $currentSelection, showSidebar: $showSidebar)
+                        MaybeChannelView(currentChannel: $currentChannel, currentSelection: $currentSelection, toggleSidebar: toggleSidebar)
                             .disabled(offset != 0.0)
                             .offset(x: offset)
                             .frame(width: geo.size.width)
                             .onTapGesture {
                                 if offset != 0.0 {
                                     withAnimation(.easeInOut) {
-                                        showSidebar = false
                                         offset = .zero
                                     }
                                 }
@@ -145,14 +152,7 @@ struct HomeRewritten: View {
                                 })
                         )
                 }
-                .onChange(of: showSidebar) { (_, after) in
-                    if after {
-                        withAnimation(.easeInOut) {
-                            offset = sidebarWidth
-                            showSidebar = false
-                        }
-                    }
-                }
+                .task { calculatedSize = sidebarWidth }
             }
 //            .onChange(of: viewState.currentChannel, { before, after in
 //                withAnimation(.easeInOut) {

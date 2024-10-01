@@ -109,7 +109,7 @@ struct MessageableChannelView: View {
     @State var replies: [Reply] = []
     @State var scrollPosition: String? = nil
     
-    @Binding var showSidebar: Bool
+    var toggleSidebar: () -> ()
     
     @FocusState var focused: Bool
     
@@ -224,15 +224,13 @@ struct MessageableChannelView: View {
     
     var body: some View {
         VStack(spacing: 0) {
-            PageToolbar(showSidebar: $showSidebar) {
+            PageToolbar(toggleSidebar: toggleSidebar) {
                 NavigationLink(value: NavigationDestination.channel_info(viewModel.channel.id)) {
                     ChannelIcon(channel: viewModel.channel)
 
                     Image(systemName: "chevron.right")
                         .frame(height: 4)
                 }
-            } trailing: {
-                EmptyView()
             }
             
             ZStack {
@@ -424,6 +422,6 @@ struct MessageableChannelView: View {
     @StateObject var viewState = ViewState.preview()
     let messages = Binding($viewState.channelMessages["0"])!
     
-    return MessageableChannelView(viewModel: .init(viewState: viewState, channel: viewState.channels["0"]!, server: viewState.servers[""], messages: messages), showSidebar: .constant(false))
+    return MessageableChannelView(viewModel: .init(viewState: viewState, channel: viewState.channels["0"]!, server: viewState.servers[""], messages: messages), toggleSidebar: {})
         .applyPreviewModifiers(withState: viewState)
 }

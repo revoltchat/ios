@@ -14,6 +14,8 @@ struct ChannelListItem: View {
     var server: Server
     var channel: Channel
     
+    var toggleSidebar: () -> ()
+    
     @State var inviteSheetUrl: InviteUrl? = nil
     
     var body: some View {
@@ -24,6 +26,8 @@ struct ChannelListItem: View {
         let backgroundColor = isSelected ? viewState.theme.background : viewState.theme.background2
         
         Button {
+            toggleSidebar()
+            
             viewState.selectChannel(inServer: server.id, withId: channel.id)
         } label: {
             HStack {
@@ -43,7 +47,7 @@ struct ChannelListItem: View {
             Button("Mark as read") {
                 Task {
                     if let last_message = viewState.channelMessages[channel.id]?.last {
-                        try! await viewState.http.ackMessage(channel: channel.id, message: last_message).get()
+                        let _ = try! await viewState.http.ackMessage(channel: channel.id, message: last_message).get()
                     }
                 }
             }
@@ -77,6 +81,8 @@ struct CategoryListItem: View {
     var server: Server
     var category: Types.Category
     var selectedChannel: String?
+    
+    var toggleSidebar: () -> ()
 
     var body: some View {
         let isClosed = viewState.userSettingsStore.store.closedCategories[server.id]?.contains(category.id) ?? false
@@ -110,7 +116,7 @@ struct CategoryListItem: View {
             
             if !isClosed {
                 ForEach(category.channels.compactMap({ viewState.channels[$0] }), id: \.id) { channel in
-                    ChannelListItem(server: server, channel: channel)
+                    ChannelListItem(server: server, channel: channel, toggleSidebar: toggleSidebar)
                 }
             }
         }
@@ -121,6 +127,7 @@ struct ServerChannelScrollView: View {
     @EnvironmentObject var viewState: ViewState
     @Binding var currentSelection: MainSelection
     @Binding var currentChannel: ChannelSelection
+    var toggleSidebar: () -> ()
     
     @State var showServerSheet: Bool = false
     
@@ -185,11 +192,11 @@ struct ServerChannelScrollView: View {
                 }
                                 
                 ForEach(nonCategoryChannels.compactMap({ viewState.channels[$0] })) { channel in
-                    ChannelListItem(server: server, channel: channel)
+                    ChannelListItem(server: server, channel: channel, toggleSidebar: toggleSidebar)
                 }
                 
                 ForEach(server.categories ?? []) { category in
-                    CategoryListItem(server: server, category: category)
+                    CategoryListItem(server: server, category: category, toggleSidebar: toggleSidebar)
                 }
             }
             .padding(.horizontal, 8)
@@ -208,6 +215,6 @@ struct ServerChannelScrollView: View {
 
 #Preview {
     let state = ViewState.preview()
-    return ServerChannelScrollView(currentSelection: .constant(MainSelection.server("0")), currentChannel: .constant(ChannelSelection.channel("2")))
+    return ServerChannelScrollView(currentSelection: .constant(MainSelection.server("0")), currentChannel: .constant(ChannelSelection.channel("2")), toggleSidebar: {})
         .applyPreviewModifiers(withState: state)
 }

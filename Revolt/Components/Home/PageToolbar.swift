@@ -11,17 +11,22 @@ import Types
 
 struct PageToolbar<C: View, T: View>: View {
     @EnvironmentObject var viewState: ViewState
-    @Binding var showSidebar: Bool
-    @ViewBuilder var contents: () -> C
-    @ViewBuilder var trailing: () -> T
+    var toggleSidebar: () -> ()
+    
+    var contents: () -> C
+    var trailing: (() -> T)?
+    
+    init(toggleSidebar: @escaping () -> (), @ViewBuilder contents: @escaping () -> C, trailing: (() -> T)? = nil) {
+        self.toggleSidebar = toggleSidebar
+        self.contents = contents
+        self.trailing = trailing
+    }
     
     var body: some View {
         ZStack {
             HStack(alignment: .center) {
                 Button {
-                    withAnimation {
-                        showSidebar = true
-                    }
+                    toggleSidebar()
                 } label: {
                     Image(systemName: "line.3.horizontal")
                         .resizable()
@@ -31,7 +36,9 @@ struct PageToolbar<C: View, T: View>: View {
                 
                 Spacer()
                 
-                trailing()
+                if let trailing {
+                    trailing()
+                }
             }
             
             HStack(alignment: .center) {
@@ -54,8 +61,17 @@ struct PageToolbar<C: View, T: View>: View {
     }
 }
 
+extension PageToolbar where T == EmptyView {
+    init(toggleSidebar: @escaping () -> (), @ViewBuilder contents: @escaping () -> C) {
+        self.toggleSidebar = toggleSidebar
+        self.contents = contents
+        self.trailing = nil
+    }
+}
+
 #Preview {
-    PageToolbar(showSidebar: .constant(false)) {
+    
+    PageToolbar(toggleSidebar: {}) {
         Text("Placeholder")
     } trailing: {
         Text("Ending")
