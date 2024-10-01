@@ -85,7 +85,7 @@ struct HomeRewritten: View {
                         case .server(_):
                             ServerChannelScrollView(currentSelection: $currentSelection, currentChannel: $currentChannel, toggleSidebar: toggleSidebar)
                         case .dms:
-                            DMScrollView(currentChannel: $currentChannel)
+                            DMScrollView(currentChannel: $currentChannel, toggleSidebar: toggleSidebar)
                     }
                 }
                 .frame(maxWidth: 300)
@@ -108,7 +108,7 @@ struct HomeRewritten: View {
                                 ServerChannelScrollView(currentSelection: $currentSelection, currentChannel: $currentChannel, toggleSidebar: toggleSidebar)
 
                             case .dms:
-                                DMScrollView(currentChannel: $currentChannel)
+                                DMScrollView(currentChannel: $currentChannel, toggleSidebar: toggleSidebar)
                         }
                     }
                     .frame(width: sidebarWidth)

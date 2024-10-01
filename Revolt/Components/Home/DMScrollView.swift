@@ -13,11 +13,14 @@ struct DMScrollView: View {
     @EnvironmentObject var viewState: ViewState
 
     @Binding var currentChannel: ChannelSelection
+    
+    var toggleSidebar: () -> ()
 
     var body: some View {
         List {
             Section {
                 Button {
+                    toggleSidebar()
                     viewState.currentChannel = .home
                 } label: {
                     HStack(spacing: 8) {
@@ -33,6 +36,7 @@ struct DMScrollView: View {
                 }
 
                 Button {
+                    toggleSidebar()
                     viewState.currentChannel = .friends
                 } label: {
                     HStack(spacing: 8) {
@@ -50,6 +54,7 @@ struct DMScrollView: View {
                 Button {
                     Task {
                         let channel = try! await viewState.http.openDm(user: viewState.currentUser!.id).get()
+                        toggleSidebar()
                         viewState.currentChannel = .channel(channel.id)
                     }
                 } label: {
@@ -70,6 +75,8 @@ struct DMScrollView: View {
             Section("Conversations") {
                 ForEach(viewState.dms.filter { switch $0 { case .saved_messages: return false; default: return true } }) { channel in
                     Button {
+                        toggleSidebar()
+
                         viewState.selectDm(withId: channel.id)
                     } label: {
                         HStack {
@@ -100,7 +107,7 @@ struct DMScrollView_Previews: PreviewProvider {
     @StateObject static var viewState = ViewState.preview()
 
     static var previews: some View {
-        DMScrollView(currentChannel: $viewState.currentChannel)
+        DMScrollView(currentChannel: $viewState.currentChannel, toggleSidebar: {})
             .applyPreviewModifiers(withState: viewState)
     }
 }

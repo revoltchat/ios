@@ -179,14 +179,14 @@ struct ServerChannelScrollView: View {
                                 }
                             }
                         }
-                            .frame(maxWidth: .infinity)
-                            .padding(.horizontal, 16)
-                            .padding(.bottom, 8)
-                            .if(server.banner != nil) { $0.background(
-                                UnevenRoundedRectangle(bottomLeadingRadius: 12, bottomTrailingRadius: 12)
-                                    .foregroundStyle(LinearGradient(colors: [Color(red: 32/255, green: 26/255, blue: 25/255, opacity: 0.5), .clear], startPoint: .bottom, endPoint: .top))
-                                )
-                            }
+                        .frame(maxWidth: .infinity)
+                        .padding(.horizontal, 16)
+                        .padding(.bottom, 8)
+                        .if(server.banner != nil) { $0.background(
+                            UnevenRoundedRectangle(bottomLeadingRadius: 12, bottomTrailingRadius: 12)
+                                .foregroundStyle(LinearGradient(colors: [Color(red: 32/255, green: 26/255, blue: 25/255, opacity: 0.5), .clear], startPoint: .bottom, endPoint: .top))
+                            )
+                        }
                     }
                     .padding(.bottom, 10)
                 }

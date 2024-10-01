@@ -78,7 +78,7 @@ struct ChannelOverviewSettings: View {
             Section("Name") {
                 TextField("Channel Name", text: $currentValues.name)
             }
-            .listRowBackground(viewState.theme.background)
+            .listRowBackground(viewState.theme.background2)
             
             Section("Server Description") {
                 TextField(text: $currentValues.description) {
