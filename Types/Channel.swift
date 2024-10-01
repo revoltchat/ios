@@ -7,7 +7,7 @@
 
 import Foundation
 
-public struct SavedMessages: Decodable, Encodable, Equatable, Identifiable {
+public struct SavedMessages: Codable, Equatable, Identifiable {
     public init(id: String, user: String) {
         self.id = id
         self.user = user
@@ -294,52 +294,19 @@ extension Channel: Encodable {
         switch self {
             case .saved_messages(let c):
                 try tagContainer.encode(Tag.SavedMessages, forKey: .channel_type)
-                var container = encoder.container(keyedBy: SavedMessages.CodingKeys.self)
-                try container.encode(c.id, forKey: .id)
-                try container.encode(c.user, forKey: .user)
+                try c.encode(to: encoder)
             case .dm_channel(let c):
                 try tagContainer.encode(Tag.DirectMessage, forKey: .channel_type)
-                var container = encoder.container(keyedBy: DMChannel.CodingKeys.self)
-                try container.encode(c.id, forKey: .id)
-                try container.encode(c.last_message_id, forKey: .last_message_id)
-                try container.encode(c.recipients, forKey: .recipients)
-                try container.encode(c.active, forKey: .active)
+                try c.encode(to: encoder)
             case .group_dm_channel(let c):
                 try tagContainer.encode(Tag.Group, forKey: .channel_type)
-                var container = encoder.container(keyedBy: GroupDMChannel.CodingKeys.self)
-                try container.encode(c.id, forKey: .id)
-                try container.encode(c.description, forKey: .description)
-                try container.encode(c.icon, forKey: .icon)
-                try container.encode(c.last_message_id, forKey: .last_message_id)
-                try container.encode(c.nsfw, forKey: .nsfw)
-                try container.encode(c.name, forKey: .name)
-                try container.encode(c.owner, forKey: .owner)
-                try container.encode(c.permissions, forKey: .permissions)
-                try container.encode(c.recipients, forKey: .recipients)
+                try c.encode(to: encoder)
             case .text_channel(let c):
                 try tagContainer.encode(Tag.TextChannel, forKey: .channel_type)
-                var container = encoder.container(keyedBy: TextChannel.CodingKeys.self)
-                try container.encode(c.id, forKey: .id)
-                try container.encode(c.description, forKey: .description)
-                try container.encode(c.icon, forKey: .icon)
-                try container.encode(c.last_message_id, forKey: .last_message_id)
-                try container.encode(c.nsfw, forKey: .nsfw)
-                try container.encode(c.server, forKey: .server)
-                try container.encode(c.name, forKey: .name)
-                try container.encode(c.default_permissions, forKey: .default_permissions)
-                try container.encode(c.role_permissions, forKey: .role_permissions)
-                try container.encode(c.voice, forKey: .voice)
+                try c.encode(to: encoder)
             case .voice_channel(let c):
                 try tagContainer.encode(Tag.VoiceChannel, forKey: .channel_type)
-                var container = encoder.container(keyedBy: VoiceChannel.CodingKeys.self)
-                try container.encode(c.id, forKey: .id)
-                try container.encode(c.description, forKey: .description)
-                try container.encode(c.icon, forKey: .icon)
-                try container.encode(c.nsfw, forKey: .nsfw)
-                try container.encode(c.server, forKey: .server)
-                try container.encode(c.name, forKey: .name)
-                try container.encode(c.default_permissions, forKey: .default_permissions)
-                try container.encode(c.role_permissions, forKey: .role_permissions)
+                try c.encode(to: encoder)
         }
     }
 }

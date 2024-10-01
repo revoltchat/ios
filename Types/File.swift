@@ -10,8 +10,6 @@ import Foundation
 public struct SizedMetadata: Codable, Equatable, Hashable {
     public var height: Int
     public var width: Int
-    
-    enum CodingKeys: String, CodingKey { case height, width }
 }
 
 public struct SimpleMetadata: Codable, Equatable, Hashable {}
@@ -52,20 +50,19 @@ extension FileMetadata: Codable {
         switch self {
             case .image(let m):
                 try tagContainer.encode(Tag.Image, forKey: .type)
-                var container = encoder.container(keyedBy: SizedMetadata.CodingKeys.self)
-                try container.encode(m.height, forKey: .height)
-                try container.encode(m.width, forKey: .width)
+                try m.encode(to: encoder)
             case .video(let m):
                 try tagContainer.encode(Tag.Video, forKey: .type)
-                var container = encoder.container(keyedBy: SizedMetadata.CodingKeys.self)
-                try container.encode(m.height, forKey: .height)
-                try container.encode(m.width, forKey: .width)
+                try m.encode(to: encoder)
             case .file(let m):
                 try tagContainer.encode(Tag.File, forKey: .type)
+                try m.encode(to: encoder)
             case .text(let m):
                 try tagContainer.encode(Tag.Text, forKey: .type)
+                try m.encode(to: encoder)
             case .audio(let m):
                 try tagContainer.encode(Tag.Audio, forKey: .type)
+                try m.encode(to: encoder)
         }
 
     }

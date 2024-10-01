@@ -7,7 +7,7 @@
 
 import Foundation
 
-public struct Server: Decodable, Identifiable {
+public struct Server: Codable, Identifiable {
     public init(id: String, owner: String, name: String, channels: [String], default_permissions: Permissions, description: String? = nil, categories: [Category]? = nil, system_messages: SystemMessages? = nil, roles: [String : Role]? = nil, icon: File? = nil, banner: File? = nil, nsfw: Bool? = nil, flags: ServerFlags? = nil) {
         self.id = id
         self.owner = owner

@@ -80,9 +80,9 @@ public enum SystemMessageContent: Equatable {
     case channel_ownership_changed(ChannelOwnershipChangedSystemContent)
 }
 
-extension SystemMessageContent: Decodable {
+extension SystemMessageContent: Codable {
     enum CodingKeys: String, CodingKey { case type }
-    enum Tag: String, Decodable { case text, user_added, user_remove, user_joined, user_left, user_kicked, user_banned, channel_renamed, channel_description_changed, channel_icon_changed, channel_ownership_changed }
+    enum Tag: String, Codable { case text, user_added, user_remove, user_joined, user_left, user_kicked, user_banned, channel_renamed, channel_description_changed, channel_icon_changed, channel_ownership_changed }
     
     public init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
@@ -113,14 +113,54 @@ extension SystemMessageContent: Decodable {
                 self = .channel_ownership_changed(try singleValueContainer.decode(ChannelOwnershipChangedSystemContent.self))
         }
     }
+    
+    public func encode(to encoder: any Encoder) throws {
+        var tagContainer = encoder.container(keyedBy: CodingKeys.self)
+        
+        switch self {
+            case .text(let content):
+                try tagContainer.encode(Tag.text, forKey: .type)
+                try content.encode(to: encoder)
+            case .user_added(let content):
+                try tagContainer.encode(Tag.user_added, forKey: .type)
+                try content.encode(to: encoder)
+            case .user_removed(let content):
+                try tagContainer.encode(Tag.user_remove, forKey: .type)
+                try content.encode(to: encoder)
+            case .user_joined(let content):
+                try tagContainer.encode(Tag.user_joined, forKey: .type)
+                try content.encode(to: encoder)
+            case .user_left(let content):
+                try tagContainer.encode(Tag.user_left, forKey: .type)
+                try content.encode(to: encoder)
+            case .user_kicked(let content):
+                try tagContainer.encode(Tag.user_kicked, forKey: .type)
+                try content.encode(to: encoder)
+            case .user_banned(let content):
+                try tagContainer.encode(Tag.user_banned, forKey: .type)
+                try content.encode(to: encoder)
+            case .channel_renamed(let content):
+                try tagContainer.encode(Tag.channel_renamed, forKey: .type)
+                try content.encode(to: encoder)
+            case .channel_description_changed(let content):
+                try tagContainer.encode(Tag.channel_description_changed, forKey: .type)
+                try content.encode(to: encoder)
+            case .channel_icon_changed(let content):
+                try tagContainer.encode(Tag.channel_icon_changed, forKey: .type)
+                try content.encode(to: encoder)
+            case .channel_ownership_changed(let content):
+                try tagContainer.encode(Tag.channel_ownership_changed, forKey: .type)
+                try content.encode(to: encoder)
+        }
+    }
 }
 
-public struct MessageWebhook: Decodable, Equatable {
+public struct MessageWebhook: Codable, Equatable {
     public var name: String?
     public var avatar: String?
 }
 
-public struct Message: Identifiable, Decodable, Equatable {
+public struct Message: Identifiable, Codable, Equatable {
     public init(id: String, content: String? = nil, author: String, channel: String, system: SystemMessageContent? = nil, attachments: [File]? = nil, mentions: [String]? = nil, replies: [String]? = nil, edited: String? = nil, masquerade: Masquerade? = nil, interactions: Interactions? = nil, reactions: [String : [String]]? = nil, user: User? = nil, member: Member? = nil, embeds: [Embed]? = nil, webhook: MessageWebhook? = nil) {
         self.id = id
         self.content = content

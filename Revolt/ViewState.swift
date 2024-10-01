@@ -6,6 +6,7 @@ import Collections
 import Sentry
 import Types
 import UserNotifications
+import KeychainAccess
 
 enum UserStateError: Error {
     case signInError
@@ -65,11 +66,7 @@ extension LoginResponse: Decodable {
 }
 
 enum ConnectionState {
-    case signedOut
-    case notConnecting
-    case reconnecting
-    case connecting
-    case connected
+    case connecting, connected, signedOut
 }
 
 struct QueuedMessage {
@@ -136,29 +133,73 @@ public class ViewState: ObservableObject {
     static var application: NSApplication? = nil
 #endif
 
+    let keychain = Keychain(service: "chat.revolt.app")
     var http: HTTPClient = HTTPClient(token: nil, baseURL: "https://app.revolt.chat/api")
-    @Published var ws: WebSocketStream? = nil
-    var apiInfo: ApiInfo? = nil
-    
     var launchTransaction: any Sentry.Span
+    
+    @Published var ws: WebSocketStream? = nil
+    
+    @Published var apiInfo: ApiInfo? = nil {
+        didSet {
+            UserDefaults.standard.set(try! JSONEncoder().encode(apiInfo), forKey: "apiInfo")
+        }
+    }
 
     @Published var sessionToken: String? = nil {
         didSet {
-            UserDefaults.standard.set(sessionToken, forKey: "sessionToken")
+            keychain["sessionToken"] = sessionToken
         }
     }
-    @Published var users: [String: Types.User] = [:]
-    @Published var servers: OrderedDictionary<String, Server> = [:]
-    @Published var channels: [String: Channel] = [:]
-    @Published var messages: [String: Message] = [:]
-    @Published var channelMessages: [String: [String]] = [:]
-    @Published var members: [String: [String: Member]] = [:]
-    @Published var dms: [Channel] = []
-    @Published var emojis: [String: Emoji] = [:]
+    @Published var users: [String: Types.User] {
+        didSet {
+            UserDefaults.standard.set(try! JSONEncoder().encode(users), forKey: "users")
+        }
+    }
+    @Published var servers: OrderedDictionary<String, Server> {
+        didSet {
+            UserDefaults.standard.set(try! JSONEncoder().encode(servers), forKey: "servers")
+        }
+    }
+    @Published var channels: [String: Channel] {
+        didSet {
+            UserDefaults.standard.set(try! JSONEncoder().encode(channels), forKey: "channels")
+        }
+    }
+    @Published var messages: [String: Message] {
+        didSet {
+            UserDefaults.standard.set(try! JSONEncoder().encode(messages), forKey: "messages")
+        }
+    }
+    @Published var channelMessages: [String: [String]] {
+        didSet {
+            UserDefaults.standard.set(try! JSONEncoder().encode(channelMessages), forKey: "channelMessages")
+        }
+    }
+    @Published var members: [String: [String: Member]] {
+        didSet {
+            UserDefaults.standard.set(try! JSONEncoder().encode(members), forKey: "members")
+        }
+    }
+    @Published var dms: [Channel] {
+        didSet {
+            UserDefaults.standard.set(try! JSONEncoder().encode(dms), forKey: "dms")
+        }
+    }
+    @Published var emojis: [String: Emoji] {
+        didSet {
+            UserDefaults.standard.set(try! JSONEncoder().encode(emojis), forKey: "emojis")
+        }
+    }
+    
+    @Published var currentUser: Types.User? = nil {
+        didSet {
+            UserDefaults.standard.set(try! JSONEncoder().encode(currentUser), forKey: "currentUser")
+        }
+    }
 
-    @Published var state: ConnectionState = .notConnecting
+    @Published var state: ConnectionState = .connecting
+    @Published var forceMainScreen: Bool = false
     @Published var queuedMessages: Dictionary<String, [QueuedMessage]> = [:]
-    @Published var currentUser: Types.User? = nil
     @Published var loadingMessages: Set<String> = Set()
     @Published var currentlyTyping: [String: OrderedSet<String>] = [:]
     @Published var isOnboarding: Bool = false
@@ -166,13 +207,13 @@ public class ViewState: ObservableObject {
     @Published var currentUserSheet: UserMaybeMember? = nil
     @Published var atTopOfChannel: Set<String> = []
 
-    @Published var currentSelection: MainSelection = .dms {
+    @Published var currentSelection: MainSelection {
         didSet {
             UserDefaults.standard.set(try! JSONEncoder().encode(currentSelection), forKey: "currentSelection")
         }
     }
 
-    @Published var currentChannel: ChannelSelection = .home {
+    @Published var currentChannel: ChannelSelection {
         didSet {
             UserDefaults.standard.set(try! JSONEncoder().encode(currentChannel), forKey: "currentChannel")
         }
@@ -199,37 +240,48 @@ public class ViewState: ObservableObject {
     
     var userSettingsStore: UserSettingsData
 
+    static func decodeUserDefaults<T: Decodable>(forKey key: String, withDecoder decoder: JSONDecoder) throws -> T? {
+        if let value = UserDefaults.standard.data(forKey: key) {
+            return try decoder.decode(T.self, from: value)
+        } else {
+            return nil
+        }
+    }
+    
+    static func decodeUserDefaults<T: Decodable>(forKey key: String, withDecoder decoder: JSONDecoder, defaultingTo def: T) -> T {
+        return (try? decodeUserDefaults(forKey: key, withDecoder: decoder)) ?? def
+    }
+
     init() {
         launchTransaction = SentrySDK.startTransaction(name: "launch", operation: "launch")
         let decoder = JSONDecoder()
         
-        self.userSettingsStore = UserSettingsData.maybeRead(viewState: nil)
-        self.sessionToken = UserDefaults.standard.string(forKey: "sessionToken")
-
-        if let currentSelection = UserDefaults.standard.data(forKey: "currentSelection") {
-            self.currentSelection = (try? decoder.decode(MainSelection.self, from: currentSelection)) ?? .dms
-        } else {
-            self.currentSelection = .dms
-        }
-
-        if let currentChannel = UserDefaults.standard.data(forKey: "currentChannel") {
-            self.currentChannel = (try? decoder.decode(ChannelSelection.self, from: currentChannel)) ?? .home
-        } else {
-            self.currentChannel = .home
-        }
+        self.apiInfo = ViewState.decodeUserDefaults(forKey: "apiInfo", withDecoder: decoder, defaultingTo: nil)
         
-        if let locale = UserDefaults.standard.data(forKey: "locale") {
-            self.currentLocale = try! decoder.decode(Locale?.self, from: locale)
-        } else {
-            self.currentLocale = nil
-        }
+        self.userSettingsStore = UserSettingsData.maybeRead(viewState: nil)
+        self.sessionToken = keychain["sessionToken"]
+
+        self.users = ViewState.decodeUserDefaults(forKey: "users", withDecoder: decoder, defaultingTo: [:])
+        self.servers = ViewState.decodeUserDefaults(forKey: "servers", withDecoder: decoder, defaultingTo: [:])
+        self.channels = ViewState.decodeUserDefaults(forKey: "channels", withDecoder: decoder, defaultingTo: [:])
+        self.messages = ViewState.decodeUserDefaults(forKey: "messages", withDecoder: decoder, defaultingTo: [:])
+        self.channelMessages = ViewState.decodeUserDefaults(forKey: "channelMessages", withDecoder: decoder, defaultingTo: [:])
+        self.members = ViewState.decodeUserDefaults(forKey: "members", withDecoder: decoder, defaultingTo: [:])
+        self.dms = ViewState.decodeUserDefaults(forKey: "dms", withDecoder: decoder, defaultingTo: [])
+        self.emojis = ViewState.decodeUserDefaults(forKey: "emojis", withDecoder: decoder, defaultingTo: [:])
+        
+        self.currentSelection = ViewState.decodeUserDefaults(forKey: "currentSelection", withDecoder: decoder, defaultingTo: .dms)
+        self.currentChannel = ViewState.decodeUserDefaults(forKey: "currentChannel", withDecoder: decoder, defaultingTo: .home)
+        self.currentLocale = ViewState.decodeUserDefaults(forKey: "locale", withDecoder: decoder, defaultingTo: nil)
 
         self.currentSessionId = UserDefaults.standard.string(forKey: "currentSessionId")
 
-        if let themeData = UserDefaults.standard.data(forKey: "theme") {
-            self.theme = try! decoder.decode(Theme.self, from: themeData)
-        } else {
-            self.theme = .dark
+        self.theme = ViewState.decodeUserDefaults(forKey: "theme", withDecoder: decoder, defaultingTo: .dark)
+        
+        self.currentUser = ViewState.decodeUserDefaults(forKey: "currentUser", withDecoder: decoder, defaultingTo: nil)
+        
+        if self.currentUser != nil, self.apiInfo != nil {
+            self.forceMainScreen = true
         }
 
         self.users["00000000000000000000000000"] = User(id: "00000000000000000000000000", username: "Revolt", discriminator: "0000")
@@ -437,7 +489,7 @@ public class ViewState: ObservableObject {
             self.apiInfo = apiInfo
         } catch {
             SentrySDK.capture(error: error)
-            state = .notConnecting
+            state = .connecting
             fetchApiInfoSpan.finish()
             return
         }
@@ -476,12 +528,18 @@ public class ViewState: ObservableObject {
                 
                 for channel in event.channels {
                     channels[channel.id] = channel
-                    channelMessages[channel.id] = []
+                    
+                    if channelMessages[channel.id] == nil {
+                        channelMessages[channel.id] = []
+                    }
                 }
 
                 for server in event.servers {
                     servers[server.id] = server
-                    members[server.id] = [:]
+                    
+                    if members[server.id] == nil {
+                        members[server.id] = [:]
+                    }
                 }
 
                 for user in event.users {
@@ -499,7 +557,9 @@ public class ViewState: ObservableObject {
                 dms = try! await http.fetchDms().get()
 
                 for dm in dms {
-                    channelMessages[dm.id] = []
+                    if channelMessages[dm.id] == nil {
+                        channelMessages[dm.id] = []
+                    }
                 }
 
                 let unreads = try! await http.fetchUnreads().get()
@@ -519,6 +579,18 @@ public class ViewState: ObservableObject {
                 
                 processReadySpan.finish()
                 launchTransaction.finish()
+                
+                for channel in channels.values {
+                    if let last_message_id = channel.last_message_id,
+                       let last_cached_message = channelMessages[channel.id]?.last,
+                       last_message_id != last_cached_message
+                    {
+                        if last_message_id != last_cached_message {
+                            // TODO: load newer messages - blocked on rewriting loading messages up and down the channel
+                            channelMessages[channel.id] = []
+                        }
+                    }
+                }
 
             case .message(let m):
                 if let user = m.user {
@@ -717,6 +789,11 @@ public class ViewState: ObservableObject {
         if currentUser == nil {
             logger.warning("Current user is empty, logging out")
             try! await signOut().get()
+        }
+        
+        if let token = UserDefaults.standard.string(forKey: "sessionToken") {
+            UserDefaults.standard.removeObject(forKey: "sessionToken")
+            keychain["sessionToken"] = token
         }
         
         if case .channel(let id) = currentChannel {

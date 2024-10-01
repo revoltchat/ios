@@ -7,7 +7,7 @@
 
 import Foundation
 
-public struct MemberId: Decodable, Equatable {
+public struct MemberId: Codable, Equatable {
     public init(server: String, user: String) {
         self.server = server
         self.user = user
@@ -17,7 +17,7 @@ public struct MemberId: Decodable, Equatable {
     public var user: String
 }
 
-public struct Member: Decodable, Equatable {
+public struct Member: Codable, Equatable {
     public init(id: MemberId, nickname: String? = nil, avatar: File? = nil, roles: [String]? = nil, joined_at: String, timeout: String? = nil) {
         self.id = id
         self.nickname = nickname
