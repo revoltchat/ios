@@ -232,6 +232,10 @@ struct ServerOverviewSettings: View {
                                 edits.description = currentValues.description
                             }
                             
+                            if currentValues.system_channels != initial.system_channels {
+                                edits.system_messages = currentValues.system_channels
+                            }
+                            
                             viewState.servers[server.id] = try! await viewState.http.editServer(server: server.id, edits: edits).get()
                             
                             initial = currentValues
