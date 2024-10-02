@@ -38,7 +38,9 @@ struct ServerSettings: View {
             .listRowBackground(viewState.theme.background2)
             
             Section("Customisation") {
-                NavigationLink(destination: Text("Todo")) {
+                NavigationLink {
+                    ServerEmojiSettings(server: $server)
+                } label: {
                     Image(systemName: "face.smiling")
                     Text("Emojis")
                 }

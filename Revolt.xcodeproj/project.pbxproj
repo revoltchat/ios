@@ -38,6 +38,7 @@
 		174DA9E82B9E4D70001BC330 /* Parsing in Frameworks */ = {isa = PBXBuildFile; productRef = 174DA9E72B9E4D70001BC330 /* Parsing */; };
 		1750EF6E2B0585B300DD3EB3 /* ResendEmail.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1750EF6D2B0585B300DD3EB3 /* ResendEmail.swift */; };
 		1751239B2CAC687C00D30C23 /* KeychainAccess in Frameworks */ = {isa = PBXBuildFile; productRef = 1751239A2CAC687C00D30C23 /* KeychainAccess */; };
+		1751239D2CAC8A1100D30C23 /* ServerEmojiSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1751239C2CAC8A1100D30C23 /* ServerEmojiSettings.swift */; };
 		175465CD2C42147B0076B393 /* NotificationService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 175465CC2C42147B0076B393 /* NotificationService.swift */; };
 		175465D12C42147B0076B393 /* NotificationService.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = 175465CA2C42147B0076B393 /* NotificationService.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		175997192B2FB90700C39CF6 /* Flow in Frameworks */ = {isa = PBXBuildFile; productRef = 175997182B2FB90700C39CF6 /* Flow */; };
@@ -124,6 +125,7 @@
 		17E019DA2AF199A600AB4663 /* MessageReply.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17E019D92AF199A600AB4663 /* MessageReply.swift */; };
 		17E019DC2AF1B25100AB4663 /* SessionsSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17E019DB2AF1B25100AB4663 /* SessionsSettings.swift */; };
 		17E28E082AF319D500F6069F /* AddServerSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17E28E072AF319D500F6069F /* AddServerSheet.swift */; };
+		17E72F832CACEAB8009E7C40 /* SwiftyCrop in Frameworks */ = {isa = PBXBuildFile; productRef = 17E72F822CACEAB8009E7C40 /* SwiftyCrop */; };
 		17F502542B9BFB1000A3022D /* AddFriend.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17F502532B9BFB1000A3022D /* AddFriend.swift */; };
 		17F502562B9BFB2800A3022D /* CreateGroup.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17F502552B9BFB2800A3022D /* CreateGroup.swift */; };
 		17F555272AFC229900958F2F /* ServerSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17F555262AFC229900958F2F /* ServerSettings.swift */; };
@@ -223,6 +225,7 @@
 		17429D982B4C931D0036105A /* ChannelOverviewSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChannelOverviewSettings.swift; sourceTree = "<group>"; };
 		1748B2062B1FB88B00AA2D47 /* MessageReactions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageReactions.swift; sourceTree = "<group>"; };
 		1750EF6D2B0585B300DD3EB3 /* ResendEmail.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ResendEmail.swift; sourceTree = "<group>"; };
+		1751239C2CAC8A1100D30C23 /* ServerEmojiSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ServerEmojiSettings.swift; sourceTree = "<group>"; };
 		175465CA2C42147B0076B393 /* NotificationService.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = NotificationService.appex; sourceTree = BUILT_PRODUCTS_DIR; };
 		175465CC2C42147B0076B393 /* NotificationService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationService.swift; sourceTree = "<group>"; };
 		175465CE2C42147B0076B393 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -342,6 +345,7 @@
 				172754CC2B39989E002223FE /* SwiftParsec in Frameworks */,
 				178BB10C2B02D84C001143A4 /* HCaptcha in Frameworks */,
 				DA99EC5329D6148200419FDA /* Alamofire in Frameworks */,
+				17E72F832CACEAB8009E7C40 /* SwiftyCrop in Frameworks */,
 				178BB10E2B02D84C001143A4 /* HCaptcha_RxSwift in Frameworks */,
 				17863A5C2C8098AF0051A52C /* ExyteGrid in Frameworks */,
 				174DA9E82B9E4D70001BC330 /* Parsing in Frameworks */,
@@ -382,6 +386,7 @@
 				17F555262AFC229900958F2F /* ServerSettings.swift */,
 				171594C22B4B2A0D00D7C3C3 /* ServerOverviewSettings.swift */,
 				1764856F2CA3855F00AF8141 /* ServerRoles */,
+				1751239C2CAC8A1100D30C23 /* ServerEmojiSettings.swift */,
 			);
 			path = Server;
 			sourceTree = "<group>";
@@ -816,6 +821,7 @@
 				17BB26762C8E923600D70AFC /* SnapKit */,
 				173E8AEE2C94CA7D009B7649 /* Highlightr */,
 				1751239A2CAC687C00D30C23 /* KeychainAccess */,
+				17E72F822CACEAB8009E7C40 /* SwiftyCrop */,
 			);
 			productName = Revolt;
 			productReference = D49B704F29C4D3FE009494A5 /* Revolt.app */;
@@ -873,6 +879,7 @@
 				17BB26752C8E923600D70AFC /* XCRemoteSwiftPackageReference "SnapKit" */,
 				173E8AED2C94CA7D009B7649 /* XCRemoteSwiftPackageReference "Highlightr" */,
 				175123992CAC687C00D30C23 /* XCRemoteSwiftPackageReference "KeychainAccess" */,
+				17E72F812CACEAB8009E7C40 /* XCRemoteSwiftPackageReference "SwiftyCrop" */,
 			);
 			productRefGroup = D49B705029C4D3FE009494A5 /* Products */;
 			projectDirPath = "";
@@ -986,6 +993,7 @@
 				17A7FE392C49EBD20083B22F /* Image.swift in Sources */,
 				17E019CF2AF146AD00AB4663 /* About.swift in Sources */,
 				170410992CA478F6002C1445 /* DefaultRoleSettings.swift in Sources */,
+				1751239D2CAC8A1100D30C23 /* ServerEmojiSettings.swift in Sources */,
 				1773C03D2C07DD1F007B8867 /* MessageableChannel.swift in Sources */,
 				DAAA4C0B29F2CF1200F41E52 /* Websocket.swift in Sources */,
 				DA99EC4A29D5F35400419FDA /* Home.swift in Sources */,
@@ -1678,6 +1686,14 @@
 				minimumVersion = 7.9.1;
 			};
 		};
+		17E72F812CACEAB8009E7C40 /* XCRemoteSwiftPackageReference "SwiftyCrop" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/benedom/SwiftyCrop";
+			requirement = {
+				branch = master;
+				kind = branch;
+			};
+		};
 		6DCF7E838FEB4C359405B802 /* XCRemoteSwiftPackageReference "sentry-cocoa" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/getsentry/sentry-cocoa/";
@@ -1782,6 +1798,11 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 17D9C2BB2ADCA48D00426857 /* XCRemoteSwiftPackageReference "Kingfisher" */;
 			productName = Kingfisher;
+		};
+		17E72F822CACEAB8009E7C40 /* SwiftyCrop */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 17E72F812CACEAB8009E7C40 /* XCRemoteSwiftPackageReference "SwiftyCrop" */;
+			productName = SwiftyCrop;
 		};
 		17F3EFAC2B13D042002C34B5 /* HCaptcha */ = {
 			isa = XCSwiftPackageProductDependency;

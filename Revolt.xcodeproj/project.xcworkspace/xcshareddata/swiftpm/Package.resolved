@@ -191,6 +191,15 @@
       }
     },
     {
+      "identity" : "swiftycrop",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/benedom/SwiftyCrop",
+      "state" : {
+        "branch" : "master",
+        "revision" : "6ee0b98647d8068066b8c77876acb868ad2294a5"
+      }
+    },
+    {
       "identity" : "ulid.swift",
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/yaslab/ULID.swift",

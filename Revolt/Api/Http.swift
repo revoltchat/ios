@@ -387,4 +387,12 @@ struct HTTPClient {
     func setDefaultRolePermissions(server: String, permissions: Permissions) async -> Result<Server, RevoltError> {
         await req(method: .put, route: "/servers/\(server)/permissions/default", parameters: ["permissions": permissions])
     }
+    
+    func uploadEmoji(id: String, name: String, parent: EmojiParent, nsfw: Bool) async -> Result<Emoji, RevoltError> {
+        await req(method: .put, route: "/custom/emoji/\(id)", parameters: CreateEmojiPayload(id: id, name: name, parent: parent, nsfw: nsfw))
+    }
+    
+    func deleteEmoji(emoji: String) async -> Result<EmptyResponse, RevoltError> {
+        await req(method: .delete, route: "/custom/emoji/\(emoji)")
+    }
 }

@@ -162,3 +162,10 @@ struct RoleEditPayload: Encodable {
     var rank: Int?
     var remove: [Remove]?
 }
+
+struct CreateEmojiPayload: Encodable {
+    var id: String
+    var name: String
+    var parent: EmojiParent
+    var nsfw: Bool?
+}
