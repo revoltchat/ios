@@ -23,15 +23,7 @@ struct ChannelPermissionsSettings: View {
                 case .dm_channel(let dMChannel):
                     EmptyView()
                 case .group_dm_channel(var groupDMChannel):
-                    AllPermissionSettings(
-                        permissions: .defaultRole(Binding {
-                            groupDMChannel.permissions ?? .defaultDirectMessages
-                        } set: {
-                            groupDMChannel.permissions = $0
-                        }),
-                        filter: [.readMessageHistory, .sendMessages, .manageMessages, .inviteOthers, .sendEmbeds, .uploadFiles, .masquerade, .react, .manageChannel, .managePermissions]
-                    )
-                    .listRowBackground(viewState.theme.background2)
+                    GroupDMChannelPermissionsSettings(channel: groupDMChannel)
                 case .text_channel, .voice_channel:
                     Section {
                         ForEach(Array(server!.roles ?? [:]).sorted(by: { a, b in a.value.rank < b.value.rank }), id: \.key) { pair in
@@ -54,7 +46,12 @@ struct ChannelPermissionsSettings: View {
                         }
                         
                         NavigationLink {
-                            ChannelRolePermissionsSettings(server: Binding($server)!, channel: $channel, roleId: "default", permissions: .overwrite(channel.default_permissions ?? Overwrite(a: .none, d: .none)))
+                            ChannelRolePermissionsSettings(
+                                server: Binding($server)!,
+                                channel: $channel,
+                                roleId: nil,
+                                permissions: .overwrite(channel.default_permissions ?? Overwrite(a: .none, d: .none))
+                            )
                                 .navigationTitle("Default")
                         } label: {
                             Text("Default")

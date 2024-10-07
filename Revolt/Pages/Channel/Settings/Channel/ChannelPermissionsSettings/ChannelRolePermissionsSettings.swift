@@ -20,11 +20,11 @@ struct ChannelRolePermissionsSettings: View {
     @Binding var server: Server
     @Binding var channel: Channel
     
-    var roleId: String
+    var roleId: String?
     @State var initial: Value
     @State var currentValue: Value
     
-    init(server: Binding<Server>, channel: Binding<Channel>, roleId: String, permissions: Value) {
+    init(server: Binding<Server>, channel: Binding<Channel>, roleId: String?, permissions: Value) {
         self._server = server
         self._channel = channel
         self.roleId = roleId
@@ -32,25 +32,27 @@ struct ChannelRolePermissionsSettings: View {
         self.currentValue = permissions
     }
     
+    var permissionBinding: AllPermissionSettings.RolePermissions {
+        switch currentValue {
+            case .permission(let permissions):
+                    return .defaultRole(Binding {
+                        permissions
+                    } set: {
+                        currentValue = .permission($0)
+                    })
+            case .overwrite(let overwrite):
+                    return .role(Binding {
+                        overwrite
+                    } set: {
+                        currentValue = .overwrite($0)
+                    })
+        }
+    }
+    
     var body: some View {
         List {
             AllPermissionSettings(
-                permissions: {
-                    switch currentValue {
-                        case .permission(let permissions):
-                            .defaultRole(Binding {
-                                permissions
-                            } set: {
-                                currentValue = .permission($0)
-                            })
-                        case .overwrite(let overwrite):
-                            .role(Binding {
-                                overwrite
-                            } set: {
-                                currentValue = .overwrite($0)
-                            })
-                    }
-                }(),
+                permissions: permissionBinding,
                 filter: [.viewChannel, .readMessageHistory, .sendMessages, .manageMessages, .inviteOthers, .sendEmbeds, .uploadFiles, .masquerade, .react, .manageChannel, .managePermissions]
             )
                 .listRowBackground(viewState.theme.background2)
@@ -66,7 +68,29 @@ struct ChannelRolePermissionsSettings: View {
             ToolbarItem(placement: placement) {
                 if initial != currentValue {
                     Button {
-                        
+                        Task {
+                            var output: Result<Channel, RevoltError>? = nil
+                            
+                            if let roleId {
+                                switch currentValue {
+                                    case .permission(let permissions):
+                                        ()  // unreachable
+                                    case .overwrite(let overwrite):
+                                        output = await viewState.http.setRoleChannelPermissions(channel: channel.id, role: roleId, overwrite: overwrite)
+                                }
+                            } else {
+                                switch currentValue {
+                                    case .permission(let permissions):
+                                        output = await viewState.http.setDefaultRoleChannelPermissions(channel: channel.id, permissions: permissions)
+                                    case .overwrite(let overwrite):
+                                        output = await viewState.http.setDefaultRoleChannelPermissions(channel: channel.id, overwrite: overwrite)
+                                }
+                            }
+                            
+                            if let output, let channel = try? output.get() {
+                                initial = currentValue
+                            }
+                        }
                     } label: {
                         Text("Save")
                             .foregroundStyle(viewState.theme.accent)

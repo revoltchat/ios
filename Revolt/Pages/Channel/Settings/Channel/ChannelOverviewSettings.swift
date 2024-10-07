@@ -78,14 +78,14 @@ struct ChannelOverviewSettings: View {
             Section("Name") {
                 TextField("Channel Name", text: $currentValues.name)
             }
-            .listRowBackground(viewState.theme.background2)
+            .listRowBackground(viewState.theme.background3)
             
             Section("Server Description") {
                 TextField(text: $currentValues.description) {
                     Text("Add a topic...")
                 }
             }
-            .listRowBackground(viewState.theme.background2)
+            .listRowBackground(viewState.theme.background3)
             
             Section("NSFW") {
                 CheckboxListItem(title: "Set this channel to NSFW", isOn: $currentValues.nsfw)

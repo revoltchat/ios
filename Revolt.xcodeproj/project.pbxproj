@@ -33,6 +33,7 @@
 		173F16272C3C22580009FDF9 /* ServerInfoSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 173F16262C3C22540009FDF9 /* ServerInfoSheet.swift */; };
 		17429D972B4C91170036105A /* ChannelSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17429D962B4C91170036105A /* ChannelSettings.swift */; };
 		17429D992B4C931D0036105A /* ChannelOverviewSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17429D982B4C931D0036105A /* ChannelOverviewSettings.swift */; };
+		1746A4B62CAF57C300095CF3 /* GroupDMChannelPermissionsSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1746A4B52CAF57C300095CF3 /* GroupDMChannelPermissionsSettings.swift */; };
 		1746CF5A2B83C6750051FD47 /* CodableWrapper in Frameworks */ = {isa = PBXBuildFile; productRef = 1746CF592B83C6750051FD47 /* CodableWrapper */; };
 		1748B2072B1FB88B00AA2D47 /* MessageReactions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1748B2062B1FB88B00AA2D47 /* MessageReactions.swift */; };
 		174DA9E82B9E4D70001BC330 /* Parsing in Frameworks */ = {isa = PBXBuildFile; productRef = 174DA9E72B9E4D70001BC330 /* Parsing */; };
@@ -223,6 +224,7 @@
 		173F16262C3C22540009FDF9 /* ServerInfoSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ServerInfoSheet.swift; sourceTree = "<group>"; };
 		17429D962B4C91170036105A /* ChannelSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChannelSettings.swift; sourceTree = "<group>"; };
 		17429D982B4C931D0036105A /* ChannelOverviewSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChannelOverviewSettings.swift; sourceTree = "<group>"; };
+		1746A4B52CAF57C300095CF3 /* GroupDMChannelPermissionsSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GroupDMChannelPermissionsSettings.swift; sourceTree = "<group>"; };
 		1748B2062B1FB88B00AA2D47 /* MessageReactions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageReactions.swift; sourceTree = "<group>"; };
 		1750EF6D2B0585B300DD3EB3 /* ResendEmail.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ResendEmail.swift; sourceTree = "<group>"; };
 		1751239C2CAC8A1100D30C23 /* ServerEmojiSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ServerEmojiSettings.swift; sourceTree = "<group>"; };
@@ -553,6 +555,7 @@
 			children = (
 				17BB78B42CA4C45C000CAD87 /* ChannelPermissionsSettings.swift */,
 				17BB78B72CA4C64E000CAD87 /* ChannelRolePermissionsSettings.swift */,
+				1746A4B52CAF57C300095CF3 /* GroupDMChannelPermissionsSettings.swift */,
 			);
 			path = ChannelPermissionsSettings;
 			sourceTree = "<group>";
@@ -1071,6 +1074,7 @@
 				17E019DA2AF199A600AB4663 /* MessageReply.swift in Sources */,
 				176485712CA3858100AF8141 /* RoleSettings.swift in Sources */,
 				17D5C9442B14DF500060C035 /* DMScrollView.swift in Sources */,
+				1746A4B62CAF57C300095CF3 /* GroupDMChannelPermissionsSettings.swift in Sources */,
 				17D8BACF2B211DEE005F5447 /* ChannelInfo.swift in Sources */,
 				1777DD842ADC24CE003D6C72 /* ReversedSrollView.swift in Sources */,
 			);

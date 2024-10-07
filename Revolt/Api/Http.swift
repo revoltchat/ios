@@ -388,6 +388,18 @@ struct HTTPClient {
         await req(method: .put, route: "/servers/\(server)/permissions/default", parameters: ["permissions": permissions])
     }
     
+    func setDefaultRoleChannelPermissions(channel: String, permissions: Permissions) async -> Result<Channel, RevoltError> {
+        await req(method: .put, route: "/channels/\(channel)/permissions/default", parameters: ["permissions": permissions])
+    }
+    
+    func setDefaultRoleChannelPermissions(channel: String, overwrite: Overwrite) async -> Result<Channel, RevoltError> {
+        await req(method: .put, route: "/channels/\(channel)/permissions/default", parameters: ["permissions": ["allow": overwrite.a, "deny": overwrite.d]])
+    }
+    
+    func setRoleChannelPermissions(channel: String, role: String, overwrite: Overwrite) async -> Result<Channel, RevoltError> {
+        await req(method: .put, route: "/channels/\(channel)/permissions/\(role)", parameters: ["permissions": ["allow": overwrite.a, "deny": overwrite.d]])
+    }
+    
     func uploadEmoji(id: String, name: String, parent: EmojiParent, nsfw: Bool) async -> Result<Emoji, RevoltError> {
         await req(method: .put, route: "/custom/emoji/\(id)", parameters: CreateEmojiPayload(id: id, name: name, parent: parent, nsfw: nsfw))
     }
