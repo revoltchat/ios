@@ -163,14 +163,14 @@ struct ServerOverviewSettings: View {
                     Text("Server Name")
                 }
             }
-            .listRowBackground(viewState.theme.background2)
+            .listRowBackground(viewState.theme.background3)
             
             Section("Server Description") {
                 TextField(text: $currentValues.description, axis: .vertical) {
                     Text("Add a topic...")
                 }
             }
-            .listRowBackground(viewState.theme.background2)
+            .listRowBackground(viewState.theme.background3)
             
             Section("System Messages") {
                 SystemChannelSelector(title: "User Joined", server: server, selection: $currentValues.system_channels.user_joined)

@@ -32,7 +32,7 @@ struct RoleSettings: View {
                     Text("Role Name")
                 }
             }
-            .listRowBackground(viewState.theme.background2)
+            .listRowBackground(viewState.theme.background3)
             
             Section("Role Colour") {
                 HStack {
@@ -46,7 +46,7 @@ struct RoleSettings: View {
                     
                 }
             }
-            .listRowBackground(viewState.theme.background2)
+            .listRowBackground(viewState.theme.background3)
             
             CheckboxListItem(title: "Hoist role", isOn: $currentValue.hoist.bindOr(defaultTo: false))
                 .listRowBackground(viewState.theme.background2)
@@ -56,7 +56,7 @@ struct RoleSettings: View {
                     Text("Role Name")
                 }
             }
-            .listRowBackground(viewState.theme.background2)
+            .listRowBackground(viewState.theme.background3)
             
             Section("Edit Permissions") {
                 AllPermissionSettings(permissions: .role($currentValue.permissions))
@@ -118,7 +118,7 @@ struct RoleSettings: View {
                             initial = try! await viewState.http.editRole(server: server.id, role: roleId, payload: payload).get()
                             
                             if initial.permissions != currentValue.permissions {
-                                let _ = try! await viewState.http.setRolePermissions(server: server.id, role: roleId, permissions: currentValue.permissions).get()
+                                let _ = try! await viewState.http.setRolePermissions(server: server.id, role: roleId, overwrite: currentValue.permissions).get()
                                 initial.permissions = currentValue.permissions
                             }
                             

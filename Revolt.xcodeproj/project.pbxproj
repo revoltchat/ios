@@ -33,6 +33,7 @@
 		173F16272C3C22580009FDF9 /* ServerInfoSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 173F16262C3C22540009FDF9 /* ServerInfoSheet.swift */; };
 		17429D972B4C91170036105A /* ChannelSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17429D962B4C91170036105A /* ChannelSettings.swift */; };
 		17429D992B4C931D0036105A /* ChannelOverviewSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17429D982B4C931D0036105A /* ChannelOverviewSettings.swift */; };
+		1746A4AD2CADD76100095CF3 /* ServerBanSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1746A4AC2CADD76100095CF3 /* ServerBanSettings.swift */; };
 		1746A4B62CAF57C300095CF3 /* GroupDMChannelPermissionsSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1746A4B52CAF57C300095CF3 /* GroupDMChannelPermissionsSettings.swift */; };
 		1746CF5A2B83C6750051FD47 /* CodableWrapper in Frameworks */ = {isa = PBXBuildFile; productRef = 1746CF592B83C6750051FD47 /* CodableWrapper */; };
 		1748B2072B1FB88B00AA2D47 /* MessageReactions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1748B2062B1FB88B00AA2D47 /* MessageReactions.swift */; };
@@ -224,6 +225,7 @@
 		173F16262C3C22540009FDF9 /* ServerInfoSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ServerInfoSheet.swift; sourceTree = "<group>"; };
 		17429D962B4C91170036105A /* ChannelSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChannelSettings.swift; sourceTree = "<group>"; };
 		17429D982B4C931D0036105A /* ChannelOverviewSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChannelOverviewSettings.swift; sourceTree = "<group>"; };
+		1746A4AC2CADD76100095CF3 /* ServerBanSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ServerBanSettings.swift; sourceTree = "<group>"; };
 		1746A4B52CAF57C300095CF3 /* GroupDMChannelPermissionsSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GroupDMChannelPermissionsSettings.swift; sourceTree = "<group>"; };
 		1748B2062B1FB88B00AA2D47 /* MessageReactions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageReactions.swift; sourceTree = "<group>"; };
 		1750EF6D2B0585B300DD3EB3 /* ResendEmail.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ResendEmail.swift; sourceTree = "<group>"; };
@@ -389,6 +391,7 @@
 				171594C22B4B2A0D00D7C3C3 /* ServerOverviewSettings.swift */,
 				1764856F2CA3855F00AF8141 /* ServerRoles */,
 				1751239C2CAC8A1100D30C23 /* ServerEmojiSettings.swift */,
+				1746A4AC2CADD76100095CF3 /* ServerBanSettings.swift */,
 			);
 			path = Server;
 			sourceTree = "<group>";
@@ -992,6 +995,7 @@
 				170410972CA478D5002C1445 /* AllPermissionsSettings.swift in Sources */,
 				17DF7CB02C4ACDA1003E8FDC /* UIImage.swift in Sources */,
 				17F502542B9BFB1000A3022D /* AddFriend.swift in Sources */,
+				1746A4AD2CADD76100095CF3 /* ServerBanSettings.swift in Sources */,
 				17C9A3502B0580D10043A387 /* Welcome.swift in Sources */,
 				17A7FE392C49EBD20083B22F /* Image.swift in Sources */,
 				17E019CF2AF146AD00AB4663 /* About.swift in Sources */,

@@ -7,7 +7,7 @@
 
 import Foundation
 
-public struct MemberId: Codable, Equatable {
+public struct MemberId: Codable, Equatable, Identifiable, Hashable {
     public init(server: String, user: String) {
         self.server = server
         self.user = user
@@ -15,6 +15,10 @@ public struct MemberId: Codable, Equatable {
     
     public var server: String
     public var user: String
+    
+    public var id: String {
+        "\(server)\(user)"
+    }
 }
 
 public struct Member: Codable, Equatable {

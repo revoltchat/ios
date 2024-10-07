@@ -372,8 +372,8 @@ struct HTTPClient {
         await req(method: .patch, route: "/servers/\(server)/roles/\(role)", parameters: payload)
     }
     
-    func setRolePermissions(server: String, role: String, permissions: Overwrite) async -> Result<Server, RevoltError> {
-        await req(method: .put, route: "/servers/\(server)/permissions/\(role)", parameters: ["permissions": ["allow": permissions.a, "deny": permissions.d]])
+    func setRolePermissions(server: String, role: String, overwrite: Overwrite) async -> Result<Server, RevoltError> {
+        await req(method: .put, route: "/servers/\(server)/permissions/\(role)", parameters: ["permissions": ["allow": overwrite.a, "deny": overwrite.d]])
     }
     
     func deleteRole(server: String, role: String) async -> Result<EmptyResponse, RevoltError> {
@@ -406,5 +406,9 @@ struct HTTPClient {
     
     func deleteEmoji(emoji: String) async -> Result<EmptyResponse, RevoltError> {
         await req(method: .delete, route: "/custom/emoji/\(emoji)")
+    }
+    
+    func fetchBans(server: String) async -> Result<BansResponse, RevoltError> {
+        await req(method: .get, route: "/servers/\(server)/bans")
     }
 }

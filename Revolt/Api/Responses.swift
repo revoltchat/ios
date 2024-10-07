@@ -136,3 +136,23 @@ struct RoleWithId: Decodable {
     var id: String
     var role: Role
 }
+
+struct MembersWithUsers: Decodable {
+    var members: [Member]
+    var users: [User]
+}
+
+struct Ban: Decodable, Identifiable {
+    var id: MemberId
+    var reason: String?
+    
+    enum CodingKeys: String, CodingKey {
+        case id = "_id"
+        case reason
+    }
+}
+
+struct BansResponse: Decodable {
+    var users: [User]
+    var bans: [Ban]
+}

@@ -58,7 +58,9 @@ struct ServerSettings: View {
                     Text("Invites")
                 }
                 
-                NavigationLink(destination: Text("Todo")) {
+                NavigationLink {
+                    ServerBanSettings(server: $server)
+                } label: {
                     Image(systemName: "person.fill.xmark")
                     Text("Bans")
                 }
