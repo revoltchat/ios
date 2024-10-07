@@ -1,277 +1,202 @@
-//import SwiftUI
-//import OrderedCollections
 //
-//struct ChannelNavigationLink: View {
-//    @EnvironmentObject var viewState: ViewState
-//    var channel: Channel
-//    
-//    var body: some View {
-//        NavigationLink(value: ChannelSelection.channel(channel.id)) {
-//            HStack {
-//                ChannelIcon(channel: channel)
-//                
-//                Spacer()
-//                
-//                if let unread = viewState.getUnreadCountFor(channel: channel) {
-//                    UnreadCounter(unread: unread)
+//  HomeRewritten.swift
+//  Revolt
+//
+//  Created by Angelo on 25/11/2023.
+//
+import SwiftUI
+import Types
+
+struct MaybeChannelView: View {
+    @EnvironmentObject var viewState: ViewState
+    @Binding var currentChannel: ChannelSelection
+    @Binding var currentSelection: MainSelection
+    var toggleSidebar: () -> ()
+    
+    var body: some View {
+        switch currentChannel {
+            case .channel(let channelId):
+                if let channel = viewState.channels[channelId] {
+                    let messages = Binding($viewState.channelMessages[channelId])!
+                    
+                    MessageableChannelView(
+                        viewModel: MessageableChannelViewModel(
+                            viewState: viewState,
+                            channel: channel,
+                            server: currentSelection.id.map { viewState.servers[$0]! },
+                            messages: messages
+                        ),
+                        toggleSidebar: toggleSidebar
+                    )
+
+                } else {
+                    Text("Unknown Channel :(")
+                }
+            case .home:
+                HomeWelcome(toggleSidebar: toggleSidebar)
+            case .friends:
+                VStack(spacing: 0) {
+                    PageToolbar(toggleSidebar: toggleSidebar) {
+                        Image(systemName: "person.3.sequence")
+                            .frame(width: 16, height: 16)
+                            .frame(width: 24, height: 24)
+                        
+                        Text("Friends")
+                    }
+                    
+                    FriendsList()
+                }
+                .background(viewState.theme.background.color)
+            case .noChannel:
+                Text("Looks a bit empty in here.")
+        }
+    }
+}
+
+struct HomeRewritten: View {
+    @EnvironmentObject var viewState: ViewState
+    
+    @Binding var currentSelection: MainSelection
+    @Binding var currentChannel: ChannelSelection
+    
+    @State var offset = CGFloat.zero
+    @State var forceOpen: Bool = false
+    @State var calculatedSize = CGFloat.zero
+    
+    func toggleSidebar() {
+        print(offset, calculatedSize)
+        withAnimation {
+            if offset != .zero {
+                offset = .zero
+            } else {
+                offset = calculatedSize
+            }
+        }
+    }
+    
+    var body: some View {
+        if isIPad || isMac {
+            HStack(spacing: 0) {
+                HStack(spacing: 0) {
+                    ServerScrollView()
+                        .frame(maxWidth: 60)
+                    
+                    switch currentSelection {
+                        case .server(_):
+                            ServerChannelScrollView(currentSelection: $currentSelection, currentChannel: $currentChannel, toggleSidebar: toggleSidebar)
+                        case .dms:
+                            DMScrollView(currentChannel: $currentChannel, toggleSidebar: toggleSidebar)
+                    }
+                }
+                .frame(maxWidth: 300)
+                
+                MaybeChannelView(currentChannel: $currentChannel, currentSelection: $currentSelection, toggleSidebar: toggleSidebar)
+                    .frame(maxWidth: .infinity)
+            }
+        } else {
+            GeometryReader { geo in
+                let sidebarWidth = min(geo.size.width * 0.85, 600)
+                let snapSide = sidebarWidth * (1 / 3)
+                
+                ZStack(alignment: .topLeading) {
+                    HStack(spacing: 0) {
+                        ServerScrollView()
+                            .frame(maxWidth: 60)
+                        
+                        switch currentSelection {
+                            case .server(_):
+                                ServerChannelScrollView(currentSelection: $currentSelection, currentChannel: $currentChannel, toggleSidebar: toggleSidebar)
+
+                            case .dms:
+                                DMScrollView(currentChannel: $currentChannel, toggleSidebar: toggleSidebar)
+                        }
+                    }
+                    .frame(width: sidebarWidth)
+                    .background(viewState.theme.background2.color)
+                    
+                    ZStack {
+                        MaybeChannelView(currentChannel: $currentChannel, currentSelection: $currentSelection, toggleSidebar: toggleSidebar)
+                            .disabled(offset != 0.0)
+                            .offset(x: offset)
+                            .frame(width: geo.size.width)
+                            .onTapGesture {
+                                if offset != 0.0 {
+                                    withAnimation(.easeInOut) {
+                                        offset = .zero
+                                    }
+                                }
+                            }
+                    }
+                    .simultaneousGesture(
+                        DragGesture(minimumDistance: 50.0)
+                                .onChanged({ g in
+                                    withAnimation {
+                                        if offset > snapSide {
+                                            forceOpen = true
+                                        } else if offset <= snapSide {
+                                            forceOpen = false
+                                        }
+                                        
+                                        offset = min(max(g.translation.width, 0), sidebarWidth)
+                                    }
+                                })
+                                .onEnded({ v in
+                                    withAnimation(.easeInOut) {
+                                        if forceOpen {
+                                            forceOpen = false
+                                            offset = sidebarWidth
+                                        } else {
+                                            offset = .zero
+                                        }
+                                    }
+                                })
+                        )
+                }
+                .task { calculatedSize = sidebarWidth }
+            }
+//            .onChange(of: viewState.currentChannel, { before, after in
+//                withAnimation(.easeInOut) {
+//                    showSidebar = false
+//                    forceOpen = false
+//                    offset = .zero
 //                }
-//            }
-//        }
-//    }
-//}
-//
-//struct CategorySection: View {
-//    @EnvironmentObject var viewState: ViewState
-//    var category: Category
-//
-//    var body: some View {
-//        Section(header: Text(category.title)) {
-//            ForEach(category.channels.compactMap({ viewState.channels[$0] }), id: \.id) { channel in
-//                ChannelNavigationLink(channel: channel)
-//            }
-//        }
-//
-//    }
-//}
-//
-//
-//struct Home: View {
-//    @EnvironmentObject var viewState: ViewState
-//    @State var showJoinServerSheet: Bool = false
-//
-//    var currentSelection: Server? {
-//        if let id = viewState.currentSelection?.id {
-//            return viewState.servers[id]!
-//        }
-//        
-//        return nil
-//    }
-//    
-//    var body: some View {
-//        VStack(alignment: .leading) {
-//            NavigationSplitView {
-//                List(selection: $viewState.currentSelection) {
-//                    NavigationLink(value: MainSelection.dms) {
-//                        Avatar(user: viewState.currentUser!, withPresence: true)
-//                            .frame(width: 16, height: 16)
-//                            .frame(width: 24, height: 24)
-//
-//                        Text("Direct Messages")
-//                    }
-//                    .listRowBackground(viewState.theme.background2.color)
-//
-//                    Section("Servers") {
-//                        ForEach(viewState.servers.elements, id: \.key) { elem in
-//                            NavigationLink(value: MainSelection.server(elem.key)) {
-//                                HStack(spacing: 12) {
-//                                    ServerIcon(server: elem.value, height: 32, width: 32, clipTo: Circle())
-//                                    Text(elem.value.name)
-//                                    
-//                                    Spacer()
-//                                    
-//                                    if let unread = viewState.getUnreadCountFor(server: elem.value) {
-//                                        UnreadCounter(unread: unread)
-//                                    }
-//                                }
+//            })
+//            .onChange(of: viewState.currentSelection) { before, after in
+//                withAnimation {
+//                    switch after {
+//                        case .dms:
+//                            if let last = viewState.userSettingsStore.store.lastOpenChannels["dms"] {
+//                                currentChannel = .channel(last)
+//                            } else {
+//                                currentChannel = .home
 //                            }
-//                        }
-//                    }
-//                    .listRowBackground(viewState.theme.background2.color)
-//                    
-//                    Section {
-//                        Button {
-//                            showJoinServerSheet.toggle()
-//                        } label: {
-//                            HStack(spacing: 12) {
-//                                Image(systemName: "plus")
-//                                    .resizable()
-//                                    .frame(width: 16, height: 16)
-//                                    .frame(width: 24, height: 24)
-//                                
-//                                Text("Add a server")
-//                            }
-//                        }
-//                        
-//                        NavigationLink(destination: Discovery.init) {
-//                            HStack(spacing: 12) {
-//                                Image(systemName: "safari.fill")
-//                                    .resizable()
-//                                    .frame(width: 16, height: 16)
-//                                    .frame(width: 24, height: 24)
-//                                
-//                                Text("Discover")
-//                            }
-//                        }
-//                        
-//                        NavigationLink(destination: Settings.init) {
-//                            HStack(spacing: 12) {
-//                                Image(systemName: "gearshape.fill")
-//                                    .resizable()
-//                                    .frame(width: 16, height: 16)
-//                                    .frame(width: 24, height: 24)
-//                                
-//                                Text("Settings")
-//                            }
-//                        }
-//                    }
-//                    .listRowBackground(viewState.theme.background2.color)
-//
-//                    
-//                }
-//                .scrollContentBackground(.hidden)
-//                .background(viewState.theme.background.color)
-//
-//            } content: {
-//                switch viewState.currentSelection {
-//                    case .server(let selectedServerId):
-//                        let selectedServer = viewState.servers[selectedServerId]!
-//                        
-//                        let categoryChannels = selectedServer.categories?.flatMap(\.channels) ?? []
-//                        let nonCategoryChannels = selectedServer.channels.filter({ !categoryChannels.contains($0) })
-//                        
-//                        List(selection: $viewState.currentChannel) {
-//                            if let banner = selectedServer.banner {
-//                                if nonCategoryChannels.isEmpty {
-//                                    LazyImage(source: .file(banner), height: 100, clipTo: RoundedRectangle(cornerRadius: 10))
-//                                        .listRowBackground(viewState.theme.background.color)
-//                                        .listRowInsets(EdgeInsets(top: 0, leading: 0, bottom: 0, trailing: 0))
-//                                    
-//                                } else {
-//                                    LazyImage(source: .file(banner), height: 100, clipTo: UnevenRoundedRectangle(topLeadingRadius: 10, bottomLeadingRadius: 0, bottomTrailingRadius: 0, topTrailingRadius: 10, style: .continuous))
-//                                        .listRowBackground(viewState.theme.background.color)
-//                                        .listRowInsets(EdgeInsets(top: 0, leading: 0, bottom: 0, trailing: 0))
-//                                }
-//                            }
-//                            
-//                            ForEach(nonCategoryChannels.compactMap({ viewState.channels[$0] })) { channel in
-//                                ChannelNavigationLink(channel: channel)
-//                            }
-//                            .listRowBackground(viewState.theme.background2.color)
-//                            
-//                            ForEach(selectedServer.categories ?? []) { category in
-//                                CategorySection(category: category)
-//                            }
-//                            .listRowBackground(viewState.theme.background2.color)
-//                            
-//                            Section {
-//                                NavigationLink(value: ChannelSelection.server_settings) {
-//                                    HStack(spacing: 12) {
-//                                        Image(systemName: "gearshape.fill")
-//                                            .resizable()
-//                                            .frame(width: 16, height: 16)
-//                                            .frame(width: 24, height: 24)
-//                                        
-//                                        Text("Settings")
-//                                    }
-//                                }
-//                            }
-//                            .listRowBackground(viewState.theme.background2.color)
-//                        }
-//                        .scrollContentBackground(.hidden)
-//                        .background(viewState.theme.background.color)
-//                        .listStyle(SidebarListStyle())
-//                        .toolbar {
-//                            ToolbarItem(placement: .principal) {
-//                                HStack {
-//                                    ServerIcon(server: selectedServer, height: 32, width: 32, clipTo: Circle())
-//                                    
-//                                    Text(selectedServer.name)
-//                                }
-//                            }
-//                        }
-//                        .toolbarBackground(viewState.theme.topBar.color, for: .automatic)
-//
-//                    case .dms:
-//                        List(selection: $viewState.currentChannel) {
-//                            NavigationLink(destination: FriendsList.init) {
-//                                Image(systemName: "person.fill")
-//                                    .symbolRenderingMode(.hierarchical)
-//                                    .resizable()
-//                                    .frame(width: 16, height: 16)
-//                                    .frame(width: 24, height: 24)
-//                                
-//                                Text("Friends")
-//                            }
-//                            .listRowBackground(viewState.theme.background2.color)
-//                            
-//                            let channel: SavedMessages = viewState.dms.compactMap { channel in
-//                                if case .saved_messages(let c) = channel {
-//                                    return c
-//                                }
-//                                
-//                                return nil
-//                            }.first!
-//                            
-//                            NavigationLink(value: channel.id) {
-//                                ChannelIcon(channel: .saved_messages(channel))
-//                            }
-//                            .listRowBackground(viewState.theme.background2.color)
-//                            
-//                            Section("Conversations") {
-//                                ForEach(viewState.dms.filter {
-//                                    switch $0 {
-//                                        case .saved_messages(_):
-//                                            return false
+//                        case .server(let id):
+//                            if let last = viewState.userSettingsStore.store.lastOpenChannels[id] {
+//                                currentChannel = .channel(last)
+//                            } else if let server = viewState.servers[id] {
+//                                if let firstChannel = server.channels.compactMap({
+//                                    switch viewState.channels[$0] {
+//                                        case .text_channel(let c):
+//                                            return c
 //                                        default:
-//                                            return true
+//                                            return nil
 //                                    }
-//                                }) { channel in
-//                                    NavigationLink(value: channel.id) {
-//                                        ChannelIcon(channel: channel)
-//                                    }
+//                                }).first {
+//                                    currentChannel = .channel(firstChannel.id)
+//                                } else {
+//                                    currentChannel = .noChannel
 //                                }
 //                            }
-//                            .listRowBackground(viewState.theme.background2.color)
-//                        }
-//                        .scrollContentBackground(.hidden)
-//                        .background(viewState.theme.background.color)
-//                        .listStyle(SidebarListStyle())
-//                        .toolbar {
-//                            ToolbarItem(placement: .principal) {
-//                                HStack {
-//                                    Avatar(user: viewState.currentUser!, width: 32, height: 32)
-//                                    
-//                                    Text("Direct Messages")
-//                                }
-//                            }
-//                        }
-//                        .toolbarBackground(viewState.theme.topBar.color, for: .automatic)
-//                    case nil:
-//                        Text("Select a server")
-//                }
-//            } detail: {
-//                if let selectedChannel = viewState.currentChannel {
-//                    switch selectedChannel {
-//                        case .channel(let channelId):
-//                            let channel = viewState.channels[channelId]!
-//                            
-//                            let messages = Binding($viewState.channelMessages[channelId])!
-//                            
-//                            MessageableChannelView(viewModel: MessageableChannelViewModel(viewState: viewState, channel: channel, server: currentSelection, messages: messages), showSidebar: .constant(false))
-//                        case .server_settings:
-//                            ServerSettings(serverId: viewState.currentSelection!.id!)
-//                        case .home:
-//                            VStack(alignment: .center) {
-//                                Image("wide")
-//                                Text("Home")
-//                            }
-//                            .frame(minWidth: .infinity)
 //                    }
-//                } else {
-//                    Text("Select a channel")
 //                }
-//                
 //            }
-//            .background(viewState.theme.background.color)
-//            .sheet(isPresented: $showJoinServerSheet, content: JoinServer.init)
-//        }
-//    }
-//}
-//
-//struct Home_Previews: PreviewProvider {
-//    static var previews: some View {
-//        Home()
-//            .environmentObject(ViewState.preview())
-//            .previewLayout(.sizeThatFits)
-//    }
-//}
+        }
+    }
+}
+
+#Preview {
+    @StateObject var state = ViewState.preview().applySystemScheme(theme: .dark)
+    
+    return HomeRewritten(currentSelection: $state.currentSelection, currentChannel: $state.currentChannel)
+            .environmentObject(state)
+}
