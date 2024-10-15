@@ -116,19 +116,7 @@ struct ShareInviteSheet: View {
         }
         .padding(.top, 8)
         .background(viewState.theme.background)
-        .overlay {
-            if copiedToClipboard {
-                Text("Copied to Clipboard")
-                    .fontWeight(.semibold)
-                    .foregroundStyle(viewState.theme.foreground)
-                    .padding()
-                    .background(viewState.theme.accent, in: RoundedRectangle(cornerRadius: 20))
-                    .padding(.bottom)
-                    .shadow(radius: 5)
-                    .transition(.move(edge: .bottom))
-                    .frame(maxHeight: .infinity, alignment: .bottom)
-            }
-        }
+        .alertPopup(content: "Copied to clipboard", show: copiedToClipboard)
     }
 }
 

@@ -56,4 +56,23 @@ extension View {
             .background(viewState.theme.background.color)
         
     }
+    
+    @MainActor
+    func alertPopup<V: View>(show: Bool, @ViewBuilder content: @escaping () -> V) -> some View {
+        AlertPopup(show: show, inner: self, popup: content)
+    }
+    
+    @MainActor
+    func alertPopup(content: String, show: Bool) -> some View {
+        self.alertPopup(show: show) {
+            Text(content)
+        }
+    }
+    
+    @MainActor
+    func alertPopup(content: String?) -> some View {
+        self.alertPopup(show: content != nil) {
+            Text(content ?? "")
+        }
+    }
 }

@@ -99,46 +99,47 @@ struct ApplicationSwitcher: View {
                         }
                     }
                 }
-//                .overlay(alignment: .top) {
-//                    if let banner = banner {
-//                        HStack {
-//                            switch banner {
-//                                case .disconnected:
-//                                    Image(systemName: "exclamationmark.triangle.fill")
-//                                    Text("Disconnected")
-//                                        .bold()
-//                                    Text("Tap to reconnect")
-//                                    
-//                                case .connecting:
-//                                    Image(systemName: "arrow.clockwise")
-//                                    Text("Reconnecting...")
-//                                case .connected:
-//                                    Image(systemName: "checkmark")
-//                                    Text("Connected")
-//                            }
-//                            
-//                            Spacer()
-//                        }
-//                        .padding(8)
-//                        .foregroundStyle(.black)
-//                        .background {
-//                            switch banner {
-//                                case .disconnected:
-//                                    return Color.red
-//                                case .connecting:
-//                                    return Color.yellow
-//                                case .connected:
-//                                    return Color.green
-//                            }
-//                        }
-//                        .animation(.snappy, value: banner)
-//                        .onTapGesture {
-//                            if case .disconnected = banner {
-//                                viewState.ws?.forceConnect()
-//                            }
-//                        }
-//                    }
-//                }
+                .alertPopup(show: banner !=  nil) {
+                    if let banner = banner {
+                        HStack {
+                            switch banner {
+                                case .disconnected:
+                                    Image(systemName: "exclamationmark.triangle.fill")
+                                    Text("Disconnected")
+                                        .bold()
+                                    Text("Tap to reconnect")
+
+                                case .connecting:
+                                    Image(systemName: "arrow.clockwise")
+                                    Text("Reconnecting")
+                                case .connected:
+                                    Image(systemName: "checkmark")
+                                    Text("Connected")
+                            }
+                        }
+                        .padding(8)
+                        .foregroundStyle(.black)
+                        .background {
+                            let colour: Color
+
+                            let _ = switch banner {
+                                case .disconnected:
+                                    colour = Color.red
+                                case .connecting:
+                                    colour = Color.yellow
+                                case .connected:
+                                    colour = Color.green
+                            }
+                            
+                            RoundedRectangle(cornerRadius: 20).foregroundStyle(colour)
+                        }
+                        .onTapGesture {
+                            if case .disconnected = banner {
+                                viewState.ws?.forceConnect()
+                            }
+                        }
+                    }
+                }
                 .onChange(of: colorScheme) { before, after in
                     // automatically switch the color scheme if the user pressed "auto" in the preferences menu
                     if viewState.theme.shouldFollowiOSTheme {
