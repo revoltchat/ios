@@ -100,33 +100,33 @@ struct ChannelInfo: View {
         }
     }
     
-    func getRoleSectionContents(users: [(User, Member?)], role: String) -> [(User, Member?)] {
-        var role_members: [(User, Member?)] = []
+    func getRoleSectionContents(users: [UserMaybeMember], role: String) -> [UserMaybeMember] {
+        var role_members: [UserMaybeMember] = []
         let other_hoisted_roles = getRoleSectionHeaders().filter { $0.0 != role }
         let server = viewState.servers[channel.server!]!
         
-        for (user, member) in users {
-            let sorted_member_roles = member!.roles?.sorted(by: { (a, b) in server.roles![a]!.rank < server.roles![b]!.rank }) ?? []
+        for u in users {
+            let sorted_member_roles = u.member!.roles?.sorted(by: { (a, b) in server.roles![a]!.rank < server.roles![b]!.rank }) ?? []
             
             if let current_role_pos = sorted_member_roles.firstIndex(of: role),
                other_hoisted_roles.allSatisfy({ other_role in (sorted_member_roles.firstIndex(of: other_role.0) ?? Int.max ) > current_role_pos })
             {
-                role_members.append((user, member))
+                role_members.append(u)
             }
         }
         
         return role_members
     }
     
-    func getNoRoleSectionContents(users: [(User, Member?)]) -> [(User, Member?)] {
+    func getNoRoleSectionContents(users: [UserMaybeMember]) -> [UserMaybeMember] {
         switch channel {
             case .text_channel, .voice_channel:
-                var no_role_members: [(User, Member?)] = []
+                var no_role_members: [UserMaybeMember] = []
                 let section_headers = getRoleSectionHeaders().map { $0.0 }
                 
-                for (user, member) in users {
-                    if (member?.roles ?? []).allSatisfy({ !section_headers.contains($0) }) {
-                        no_role_members.append((user, member))
+                for u in users {
+                    if (u.member?.roles ?? []).allSatisfy({ !section_headers.contains($0) }) {
+                        no_role_members.append(u)
                     }
                 }
                 
@@ -138,21 +138,21 @@ struct ChannelInfo: View {
 
     }
     
-    func getUsers() -> [(User, Member?)] {
+    func getUsers() -> [UserMaybeMember] {
         switch channel {
             case .saved_messages(_):
-                return [(viewState.currentUser!, nil)]
+                return [UserMaybeMember(user: viewState.currentUser!)]
 
             case .dm_channel(let dMChannel):
-                return dMChannel.recipients.map { (viewState.users[$0]!, nil) }
+                return dMChannel.recipients.map { UserMaybeMember(user: viewState.users[$0]!) }
                 
             case .group_dm_channel(let groupDMChannel):
-                return groupDMChannel.recipients.map { (viewState.users[$0]!, nil) }
+                return groupDMChannel.recipients.map { UserMaybeMember(user: viewState.users[$0]!) }
 
             case .text_channel(_), .voice_channel(_):
                 return viewState.members[channel.server!]!.values.compactMap {
-                    if let user = viewState.users[$0.id.user] {
-                        return (user, $0)
+                    if let user = viewState.users[$0.id.user], user.status != nil, user.status?.presence != nil, user.status?.presence != .Invisible {
+                        return UserMaybeMember(user: user, member: $0)
                     } else {
                         return nil
                     }
@@ -259,8 +259,8 @@ struct ChannelInfo: View {
                     
                     if !role_users.isEmpty {
                         Section("\(role.name) - \(role_users.count)") {
-                            ForEach(role_users, id: \.0.id) { (user, member) in
-                                UserDisplay(server: server, user: user, member: member)
+                            ForEach(role_users) { u in
+                                UserDisplay(server: server, user: u.user, member: u.member)
                             }
                         }
                         .listRowBackground(viewState.theme.background2)
@@ -273,13 +273,12 @@ struct ChannelInfo: View {
                 
                 if !no_role.isEmpty {
                     Section("Members - \(no_role.count)") {
-                        ForEach(no_role, id: \.0.id) { (user, member) in
-                            UserDisplay(server: server, user: user, member: member)
+                        ForEach(no_role) { u in
+                            UserDisplay(server: server, user: u.user, member: u.member)
                         }
                     }
                     .listRowBackground(viewState.theme.background2)
                 }
-                
             }
             .scrollContentBackground(.hidden)
             .background(viewState.theme.background.color)
