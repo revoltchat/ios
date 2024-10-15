@@ -141,7 +141,10 @@ public class ViewState: ObservableObject {
     
     @Published var apiInfo: ApiInfo? = nil {
         didSet {
-            UserDefaults.standard.set(try! JSONEncoder().encode(apiInfo), forKey: "apiInfo")
+            let apiInfo = apiInfo
+            DispatchQueue.global(qos: .background).async {
+                UserDefaults.standard.set(try! JSONEncoder().encode(apiInfo), forKey: "apiInfo")
+            }
         }
     }
 
@@ -152,54 +155,81 @@ public class ViewState: ObservableObject {
     }
     @Published var users: [String: Types.User] {
         didSet {
-            UserDefaults.standard.set(try! JSONEncoder().encode(users), forKey: "users")
+            let users = users
+            DispatchQueue.global(qos: .background).async {
+                UserDefaults.standard.set(try! JSONEncoder().encode(users), forKey: "users")
+            }
         }
     }
     @Published var servers: OrderedDictionary<String, Server> {
         didSet {
-            UserDefaults.standard.set(try! JSONEncoder().encode(servers), forKey: "servers")
+            let servers = servers
+            DispatchQueue.global(qos: .background).async {
+                UserDefaults.standard.set(try! JSONEncoder().encode(servers), forKey: "servers")
+            }
         }
     }
     @Published var channels: [String: Channel] {
         didSet {
-            UserDefaults.standard.set(try! JSONEncoder().encode(channels), forKey: "channels")
+            let channels = channels
+            DispatchQueue.global(qos: .background).async {
+                UserDefaults.standard.set(try! JSONEncoder().encode(channels), forKey: "channels")
+            }
         }
     }
     @Published var messages: [String: Message] {
         didSet {
-            UserDefaults.standard.set(try! JSONEncoder().encode(messages), forKey: "messages")
+            let messages = messages
+            DispatchQueue.global(qos: .background).async {
+                UserDefaults.standard.set(try! JSONEncoder().encode(messages), forKey: "messages")
+            }
         }
     }
     @Published var channelMessages: [String: [String]] {
         didSet {
-            UserDefaults.standard.set(try! JSONEncoder().encode(channelMessages), forKey: "channelMessages")
+            let channelMessages = channelMessages
+            DispatchQueue.global(qos: .background).async {
+                UserDefaults.standard.set(try! JSONEncoder().encode(channelMessages), forKey: "channelMessages")
+            }
         }
     }
     @Published var members: [String: [String: Member]] {
         didSet {
-            UserDefaults.standard.set(try! JSONEncoder().encode(members), forKey: "members")
+            let members = members
+            DispatchQueue.global(qos: .background).async {
+                UserDefaults.standard.set(try! JSONEncoder().encode(members), forKey: "members")
+            }
         }
     }
     @Published var dms: [Channel] {
         didSet {
-            UserDefaults.standard.set(try! JSONEncoder().encode(dms), forKey: "dms")
+            let dms = dms
+            DispatchQueue.global(qos: .background).async {
+                UserDefaults.standard.set(try! JSONEncoder().encode(dms), forKey: "dms")
+            }
         }
     }
     @Published var emojis: [String: Emoji] {
         didSet {
-            UserDefaults.standard.set(try! JSONEncoder().encode(emojis), forKey: "emojis")
+            let emojis = emojis
+            DispatchQueue.global(qos: .background).async {
+                UserDefaults.standard.set(try! JSONEncoder().encode(emojis), forKey: "emojis")
+            }
         }
     }
     
     @Published var currentUser: Types.User? = nil {
         didSet {
-            UserDefaults.standard.set(try! JSONEncoder().encode(currentUser), forKey: "currentUser")
+            let currentUser = currentUser
+            DispatchQueue.global(qos: .background).async {
+                UserDefaults.standard.set(try! JSONEncoder().encode(currentUser), forKey: "currentUser")
+            }
         }
     }
 
     @Published var state: ConnectionState = .connecting
     @Published var forceMainScreen: Bool = false
-    @Published var queuedMessages: Dictionary<String, [QueuedMessage]> = [:]
+    @Published var queuedMessages: [String: [QueuedMessage]] = [:]
     @Published var loadingMessages: Set<String> = Set()
     @Published var currentlyTyping: [String: OrderedSet<String>] = [:]
     @Published var isOnboarding: Bool = false
