@@ -64,7 +64,6 @@ struct HomeRewritten: View {
     @State var calculatedSize = CGFloat.zero
     
     func toggleSidebar() {
-        print(offset, calculatedSize)
         withAnimation {
             if offset != .zero {
                 offset = .zero
@@ -130,13 +129,13 @@ struct HomeRewritten: View {
                     .simultaneousGesture(
                         DragGesture(minimumDistance: 50.0)
                                 .onChanged({ g in
-                                    withAnimation {
-                                        if offset > snapSide {
-                                            forceOpen = true
-                                        } else if offset <= snapSide {
-                                            forceOpen = false
-                                        }
+                                    if offset > snapSide {
+                                        forceOpen = true
+                                    } else if offset <= snapSide {
+                                        forceOpen = false
+                                    }
                                         
+                                    withAnimation {
                                         offset = min(max(g.translation.width, 0), sidebarWidth)
                                     }
                                 })
