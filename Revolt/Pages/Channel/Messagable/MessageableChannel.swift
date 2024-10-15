@@ -108,6 +108,9 @@ struct MessageableChannelView: View {
     @State var highlighted: String? = nil
     @State var replies: [Reply] = []
     @State var scrollPosition: String? = nil
+    @State var topMessage: MessageContentsViewModel? = nil
+    @State var bottomMessage: MessageContentsViewModel? = nil
+    @State var messages: [[MessageContentsViewModel]] = []
     
     var toggleSidebar: () -> ()
     
@@ -162,8 +165,10 @@ struct MessageableChannelView: View {
     }
     
     func getMessages(scrollProxy: ScrollViewProxy) -> [[MessageContentsViewModel]] {
+        let messages: [[MessageContentsViewModel]]
+        
         if isCompactMode {
-            return $viewModel.messages.map { $messageId -> Binding<Message> in
+            messages = $viewModel.messages.map { $messageId -> Binding<Message> in
                 let message = Binding($viewState.messages[messageId])!
                 
                 return message
@@ -184,7 +189,7 @@ struct MessageableChannelView: View {
                 )]
             }
         } else {
-            return $viewModel.messages.map { $messageId -> Binding<Message> in
+            messages = $viewModel.messages.map { $messageId -> Binding<Message> in
                 let message = Binding($viewState.messages[messageId])!
                 
                 return message
@@ -220,6 +225,25 @@ struct MessageableChannelView: View {
                 }
             }
         }
+        
+        Task(priority: .high) {
+            topMessage = messages.first?.first
+            bottomMessage = messages.last?.last
+            
+            if messages.isEmpty {
+                await loadMoreMessages(before: nil)
+            }
+        }
+        
+        return messages
+    }
+    
+    func loadMoreMessages(before message: String?) async {
+        if !viewState.atTopOfChannel.contains(viewModel.channel.id) {
+            if let new = await viewModel.loadMoreMessages(before: message), new.messages.count < 50 {
+                viewState.atTopOfChannel.insert(viewModel.channel.id)
+            }
+        }
     }
     
     var body: some View {
@@ -247,17 +271,9 @@ struct MessageableChannelView: View {
                                     .listRowBackground(viewState.theme.background)
                                 } else {
                                     Text("Loading more messages...")
-                                        .onAppear {
-                                            Task {
-                                                if let new = await viewModel.loadMoreMessages(before: viewModel.messages.first), new.messages.count < 50 {
-                                                    viewState.atTopOfChannel.insert(viewModel.channel.id)
-                                                }
-                                            }
-                                        }
                                         .listRowBackground(viewState.theme.background)
+                                        .listRowSeparator(.hidden)
                                 }
-                                                     
-                                let messages = getMessages(scrollProxy: proxy)
                                 
                                 ForEach(messages, id: \.last!.message.id) { group in
                                     let first = group.first!
@@ -302,26 +318,39 @@ struct MessageableChannelView: View {
                                     }
                                 }
                                 
-                                Color.clear
-                                    .listRowSeparator(.hidden)
-                                    .id("bottom")
-                                    .listRowInsets(EdgeInsets(top: 0, leading: 0, bottom: 0, trailing: 0))
-                                    .listRowBackground(Color.clear)
-                                    .frame(height: 0)
-                                    .onAppear {
-                                        if let lastMessage = messages.last?.last {
-                                            Task {
-                                                await viewState.http.ackMessage(channel: viewModel.channel.id, message: lastMessage.message.id)
-                                            }
-                                        }
-                                    }
-                                    .onChange(of: messages) { (_, _) in
-                                        withAnimation {
-                                            proxy.scrollTo("bottom")
-                                        }
-                                    }
-                                
+//                                Color.clear
+//                                    .listRowSeparator(.hidden)
+//                                    .id("bottom")
+//                                    .listRowInsets(EdgeInsets(top: 0, leading: 0, bottom: 0, trailing: 0))
+//                                    .listRowBackground(Color.clear)
+//                                    .frame(height: 0)
+//                                    .onAppear {
+//                                        if let lastMessage = messages.last?.last {
+//                                        }
+//                                    }
+//                                    .onChange(of: messages) { (_, _) in
+//                                        withAnimation {
+//                                            proxy.scrollTo("bottom")
+//                                        }
+//                                    }
                             }
+                            .task {
+                                messages = getMessages(scrollProxy: proxy)
+                            }
+                            .onChange(of: viewModel.messages, { _, _ in
+                                messages = getMessages(scrollProxy: proxy)
+                            })
+                            .onScrollTargetVisibilityChange(idType: String.self, { ids in
+                                if let firstId = ids.first, firstId == topMessage?.message.id {
+                                    Task {
+                                        await loadMoreMessages(before: firstId)
+                                    }
+                                } else if let lastId = ids.last, lastId == bottomMessage?.message.id {
+                                    Task {
+                                        await viewState.http.ackMessage(channel: viewModel.channel.id, message: lastId)
+                                    }
+                                }
+                            })
                             .safeAreaPadding(EdgeInsets(top: 0, leading: 0, bottom: 24, trailing: 0))
                             .defaultScrollAnchor(.bottom)
                             .listStyle(.plain)
