@@ -62,11 +62,10 @@ struct InnerMessageReplyView: View {
     }
     
     var body: some View {
-        if let message = message {
-            let author = viewState.users[message.author] ?? User(id: "0", username: "Unknown User", discriminator: "0000")
-            let member = server.flatMap { viewState.members[$0.id] }.flatMap { $0[message.author] }
-
-            HStack(spacing: 4) {
+        HStack(spacing: 4) {
+            if let message {
+                let author = viewState.users[message.author] ?? User(id: "0", username: "Unknown User", discriminator: "0000")
+                let member = server.flatMap { viewState.members[$0.id] }.flatMap { $0[message.author] }
                 
                 Avatar(user: author, member: member, masquerade: message.masquerade, width: 16, height: 16)
                 
@@ -82,19 +81,31 @@ struct InnerMessageReplyView: View {
                 }
                 
                 if let content = message.content {
-                    Text(content)
+                    Contents(text: .constant(content))
                         .font(.caption)
                         .foregroundStyle(viewState.theme.foreground2)
                         .lineLimit(1)
                         .truncationMode(.tail)
                 }
+            } else {
+                Image(systemName: "person.circle.fill")
+                    .resizable()
+                    .frame(width: 16, height: 16)
+                    .foregroundStyle(viewState.theme.foreground2)
+                
+                Text("@Unknown")
+                    .font(.caption)
+                    .foregroundStyle(viewState.theme.foreground2)
+                
+                Text("Unknown message")
+                    .font(.caption)
+                    .foregroundStyle(viewState.theme.foreground2)
             }
-            .onTapGesture {
+        }
+        .onTapGesture {
+            if let message {
                 channelScrollPosition.scrollTo(message: message.id)
             }
-        } else {
-            Text("Unknown message")
-                .foregroundStyle(viewState.theme.foreground2)
         }
     }
 }

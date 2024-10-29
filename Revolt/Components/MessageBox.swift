@@ -39,26 +39,25 @@ struct ReplyView: View {
     @EnvironmentObject var viewState: ViewState
     @ObservedObject var viewModel: ReplyViewModel
 
-    @ViewBuilder
     var body: some View {
         let reply = $viewModel.replies[viewModel.idx]
 
         let user = viewState.users[reply.message.author.wrappedValue]!
         let member = viewModel.server.flatMap { viewState.members[$0.id]?[user.id] }
 
-        HStack(alignment: .center) {
+        HStack(alignment: .center, spacing: 8) {
             Button(action: viewModel.remove) {
                 Image(systemName: "xmark")
                     .resizable()
-                    .frame(width: 12, height: 12)
-                    .foregroundStyle(viewState.theme.foreground2)
+                    .frame(width: 10, height: 10)
+                    .foregroundStyle(viewState.theme.foreground3)
             }
             
             Avatar(user: user, width: 16, height: 16)
             
             Text(reply.message.masquerade.wrappedValue?.name ?? member?.nickname ?? user.display_name ?? user.username)
                 .font(.caption)
-                .lineLimit(1)
+                .fixedSize()
                 .foregroundStyle(member?.displayColour(theme: viewState.theme, server: viewModel.server!) ?? AnyShapeStyle(viewState.theme.foreground.color))
             
             if !(reply.message.wrappedValue.attachments?.isEmpty ?? true) {
@@ -72,7 +71,7 @@ struct ReplyView: View {
                     .lineLimit(1)
                     .truncationMode(.tail)
             }
-            Spacer()
+            
             Button(action: { viewModel.replies[viewModel.idx].mention.toggle() }) {
                 if viewModel.replies[viewModel.idx].mention {
                     Text("@ on")
@@ -232,7 +231,7 @@ struct MessageBox: View {
                 let model = ReplyViewModel(idx: reply.offset, replies: $channelReplies, channel: channel, server: server)
                 
                 ReplyView(viewModel: model)
-                    .padding(.horizontal, 8)
+                    .padding(.horizontal, 4)
             }
             VStack(alignment: .leading, spacing: 8) {
                 if selectedPhotos.count > 0 {

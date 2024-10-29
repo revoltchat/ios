@@ -662,10 +662,17 @@ struct InnerContents: UIViewRepresentable {
     var fontSize: CGFloat
     var font: UIFont
     var foregroundColor: UIColor
+    var lineLimit: Int?
     
     func makeUIView(context: Context) -> UIViewType {
         let textview = SubviewAttachingTextView()
         textview.isEditable = false
+        
+        if let lineLimit {
+            textview.textContainer.maximumNumberOfLines = lineLimit
+            textview.textContainer.lineBreakMode = .byTruncatingTail
+        }
+        
         textview.isSelectable = false
         textview.font = .systemFont(ofSize: fontSize)
         textview.backgroundColor = nil
@@ -851,6 +858,7 @@ struct InnerContents: UIViewRepresentable {
 
 struct Contents: View {
     @EnvironmentObject var viewState: ViewState
+    @Environment(\.lineLimit) var lineLimit: Int?
     
     @State var calculatedHeight: CGFloat = 0
     @Binding var text: String
@@ -864,19 +872,20 @@ struct Contents: View {
     init(text: Binding<String>, currentServer: String? = nil, fontSize: CGFloat? = nil, font: UIFont? = nil, foregroundColor: UIColor? = nil) {
         self._text = text
         self.currentServer = currentServer
-        self.fontSize = fontSize ?? UIFont.systemFontSize
+        self.fontSize = fontSize ?? font?.pointSize ?? UIFont.systemFontSize
         self.font = font ?? .systemFont(ofSize: fontSize ?? UIFont.systemFontSize)
         self.foregroundColor = foregroundColor ?? .white
     }
     
     var body: some View {
         if viewState.userSettingsStore.store.experiments.customMarkdown {
-            InnerContents(text: $text, calculatedHeight: $calculatedHeight, fontSize: fontSize, font: font, foregroundColor: foregroundColor)
+            InnerContents(text: $text, calculatedHeight: $calculatedHeight, fontSize: fontSize, font: font, foregroundColor: foregroundColor, lineLimit: lineLimit)
                 .frame(height: calculatedHeight)
         } else {
             Text((try? AttributedString(markdown: text.data(using: .utf8)!)) ?? AttributedString(text))
                 .font(Font.system(size: fontSize))
                 .foregroundStyle(Color(uiColor: foregroundColor))
+                .lineLimit(lineLimit)
         }
     }
 }

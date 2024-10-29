@@ -125,7 +125,7 @@ struct MessageContentsView: View {
         .sheet(isPresented: $showReactionsSheet) {
             MessageReactionsSheet(viewModel: viewModel)
         }
-        .contextMenu(menuItems: {
+        .contextMenu {
             if !isStatic {
                 Button(action: viewModel.reply, label: {
                     Label("Reply", systemImage: "arrowshape.turn.up.left.fill")
@@ -190,10 +190,6 @@ struct MessageContentsView: View {
                     Label("Copy ID", systemImage: "doc.on.clipboard")
                 }
             }
-        }) {
-            MessageView(viewModel: viewModel, isStatic: true)
-                .padding(8)
-                .environmentObject(viewState)
         }
         .swipeActions(edge: .trailing) {
             isStatic ? nil :
