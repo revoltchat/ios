@@ -164,66 +164,66 @@ struct MessageableChannelView: View {
         return "\(base) \(ending)"
     }
     
+    func getAuthor(message: Binding<Message>) -> Binding<User> {
+        Binding($viewState.users[message.author.wrappedValue]) ?? .constant(User(id: String(repeating: "0", count: 26), username: "Unknown", discriminator: "0000"))
+    }
+    
     func getMessages(scrollProxy: ScrollViewProxy) -> [[MessageContentsViewModel]] {
+        
+        let flatMessages = $viewModel.messages.compactMap { $messageId in Binding($viewState.messages[messageId]) }
+        
+        // Remove unknown messages
+        DispatchQueue.main.async {
+            viewModel.messages = flatMessages.map { $m in m.id }
+        }
+        
         let messages: [[MessageContentsViewModel]]
         
         if isCompactMode {
-            messages = $viewModel.messages.map { $messageId -> Binding<Message> in
-                let message = Binding($viewState.messages[messageId])!
-                
-                return message
-            }
-            .map { msg in
-                let author = Binding($viewState.users[msg.author.wrappedValue])!
-                
-                return [MessageContentsViewModel(
-                    viewState: viewState,
-                    message: msg,
-                    author: author,
-                    member: viewModel.getMember(message: msg.wrappedValue),
-                    server: $viewModel.server,
-                    channel: $viewModel.channel,
-                    replies: $replies,
-                    channelScrollPosition: ChannelScrollController(proxy: scrollProxy, highlighted: $highlighted),
-                    editing: $currentlyEditing
-                )]
-            }
-        } else {
-            messages = $viewModel.messages.map { $messageId -> Binding<Message> in
-                let message = Binding($viewState.messages[messageId])!
-                
-                return message
-            }
-            .reduce([]) { (messages: [[Binding<Message>]], $msg) in
-                if let lastMessage = messages.last?.last?.wrappedValue {
-                    if lastMessage.author == msg.author && (msg.replies?.count ?? 0) == 0,  // same author
-                       createdAt(id: lastMessage.id).distance(to: createdAt(id: msg.id)) < (5 * 60)  // at most 5 mins apart
-                    {
-                        return messages.prefix(upTo: messages.endIndex - 1) + [messages.last! + [$msg]]
-                    }
-                    
-                    return messages + [[$msg]]
-                }
-                
-                return [[$msg]]
-            }
-            .map { msgs in
-                return msgs.map { msg -> MessageContentsViewModel in
-                    let author = Binding($viewState.users[msg.author.wrappedValue]) ?? .constant(User(id: String(repeating: "0", count: 26), username: "Unknown", discriminator: "0000"))
-                    
-                    return MessageContentsViewModel(
+            messages = flatMessages
+                .map { msg in
+                    return [MessageContentsViewModel(
                         viewState: viewState,
                         message: msg,
-                        author: author,
+                        author: getAuthor(message: msg),
                         member: viewModel.getMember(message: msg.wrappedValue),
                         server: $viewModel.server,
                         channel: $viewModel.channel,
                         replies: $replies,
                         channelScrollPosition: ChannelScrollController(proxy: scrollProxy, highlighted: $highlighted),
                         editing: $currentlyEditing
-                    )
+                    )]
                 }
-            }
+        } else {
+            messages = flatMessages
+                .reduce([]) { (messages: [[Binding<Message>]], $msg) in
+                    if let lastMessage = messages.last?.last?.wrappedValue {
+                        if lastMessage.author == msg.author && (msg.replies?.count ?? 0) == 0,  // same author
+                           createdAt(id: lastMessage.id).distance(to: createdAt(id: msg.id)) < (5 * 60)  // at most 5 mins apart
+                        {
+                            return messages.prefix(upTo: messages.endIndex - 1) + [messages.last! + [$msg]]
+                        }
+                        
+                        return messages + [[$msg]]
+                    }
+                    
+                    return [[$msg]]
+                }
+                .map { msgs in
+                    return msgs.map { msg in
+                        return MessageContentsViewModel(
+                            viewState: viewState,
+                            message: msg,
+                            author: getAuthor(message: msg),
+                            member: viewModel.getMember(message: msg.wrappedValue),
+                            server: $viewModel.server,
+                            channel: $viewModel.channel,
+                            replies: $replies,
+                            channelScrollPosition: ChannelScrollController(proxy: scrollProxy, highlighted: $highlighted),
+                            editing: $currentlyEditing
+                        )
+                    }
+                }
         }
         
         Task(priority: .high) {
@@ -315,6 +315,7 @@ struct MessageableChannelView: View {
                                                 .foregroundStyle(viewState.theme.accent)
                                         }
                                         .listRowBackground(viewState.theme.background)
+                                        .listRowSeparator(.hidden)
                                     }
                                 }
                                 
