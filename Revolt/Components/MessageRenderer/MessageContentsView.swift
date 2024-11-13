@@ -48,7 +48,6 @@ class MessageContentsViewModel: ObservableObject, Equatable {
             withAnimation {
                 channelReplies.append(Reply(message: message))
             }
-            channelReplies.append(Reply(message: message))
         }
     }
 }
