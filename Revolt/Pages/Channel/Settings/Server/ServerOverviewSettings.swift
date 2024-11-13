@@ -13,16 +13,6 @@ import Types
 struct ServerOverviewSettings: View {
     @EnvironmentObject var viewState: ViewState
     
-    struct LocalFile: Equatable {
-        var content: Data
-        var filename: String
-    }
-    
-    enum SettingImage: Equatable {
-        case remote(File?)
-        case local(LocalFile?)
-    }
-    
     struct ServerSettingsValues: Equatable {
         var icon: SettingImage
         var banner: SettingImage

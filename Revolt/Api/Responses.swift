@@ -142,6 +142,11 @@ struct MembersWithUsers: Decodable {
     var users: [User]
 }
 
+struct BotsResponse: Decodable {
+    var bots: [Bot]
+    var users: [User]
+}
+
 struct Ban: Decodable, Identifiable {
     var id: MemberId
     var reason: String?

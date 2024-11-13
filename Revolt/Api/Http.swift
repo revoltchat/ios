@@ -408,6 +408,22 @@ struct HTTPClient {
         await req(method: .delete, route: "/custom/emoji/\(emoji)")
     }
     
+    func fetchBots() async -> Result<BotsResponse, RevoltError> {
+        await req(method: .get, route: "/bots/@me")
+    }
+    
+    func createBot(username: String) async -> Result<Bot, RevoltError> {
+        await req(method: .post, route: "/bots/create", parameters: ["name": username])
+    }
+    
+    func deleteBot(id: String) async -> Result<EmptyResponse, RevoltError> {
+        await req(method: .delete, route: "/bots/\(id)")
+    }
+    
+    func editBot(id: String, parameters: EditBotPayload) async -> Result<Bot, RevoltError> {
+        await req(method: .patch, route: "/bots/\(id)", parameters: parameters)
+    }
+    
     func fetchBans(server: String) async -> Result<BansResponse, RevoltError> {
         await req(method: .get, route: "/servers/\(server)/bans")
     }

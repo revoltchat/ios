@@ -58,19 +58,19 @@ extension View {
     }
     
     @MainActor
-    func alertPopup<V: View>(show: Bool, @ViewBuilder content: @escaping () -> V) -> some View {
+    func alertPopup<V: View>(show: Bool, @ViewBuilder content: @escaping () -> V) -> AlertPopup<Self, V> {
         AlertPopup(show: show, inner: self, popup: content)
     }
     
     @MainActor
-    func alertPopup(content: String, show: Bool) -> some View {
+    func alertPopup(content: String, show: Bool) -> AlertPopup<Self, Text> {
         self.alertPopup(show: show) {
             Text(content)
         }
     }
     
     @MainActor
-    func alertPopup(content: String?) -> some View {
+    func alertPopup(content: String?) -> AlertPopup<Self, Text> {
         self.alertPopup(show: content != nil) {
             Text(content ?? "")
         }

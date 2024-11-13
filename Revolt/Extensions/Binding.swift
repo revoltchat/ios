@@ -15,4 +15,17 @@ extension Binding {
             set: { self.wrappedValue = $0 }
         )
     }
+    
+    func bindEmptyToNil() -> Binding<String> where Value == String? {
+        .init(
+            get: { self.wrappedValue ?? "" },
+            set: { new in
+                if new.isEmpty {
+                    self.wrappedValue = nil
+                } else {
+                    self.wrappedValue = new
+                }
+            }
+        )
+    }
 }

@@ -169,3 +169,20 @@ struct CreateEmojiPayload: Encodable {
     var parent: EmojiParent
     var nsfw: Bool?
 }
+
+struct EditBotPayload: Encodable {
+    enum Remove: String, Encodable {
+        case token = "Token"
+    }
+    
+    var name: String?
+    var isPublic: Bool?
+    var analytics: Bool?
+    var interactions_url: String?
+    var remove: [Remove]?
+    
+    enum CodingKeys: String, CodingKey {
+        case name, analytics, interactions_url, remove
+        case isPublic = "public"
+    }
+}

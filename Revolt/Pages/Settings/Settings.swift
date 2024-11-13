@@ -74,6 +74,20 @@ struct Settings: View {
                 }
             }
             .listRowBackground(viewState.theme.background2)
+            
+
+            Section("Revolt") {
+                NavigationLink {
+                    BotSettings()
+                } label: {
+                    Image(systemName: "desktopcomputer")
+                        .resizable()
+                        .scaledToFit()
+                        .frame(width: 16, height: 16)
+                    Text("Bots")
+                }
+
+            }.listRowBackground(viewState.theme.background2)
 
             Section("Misc") {
                 NavigationLink(destination: About()) {

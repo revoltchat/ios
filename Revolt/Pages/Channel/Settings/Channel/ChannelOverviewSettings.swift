@@ -13,11 +13,6 @@ import Types
 struct ChannelOverviewSettings: View {
     @EnvironmentObject var viewState: ViewState
     
-    enum Icon: Equatable {
-        case remote(File?)
-        case local(Data)
-    }
-    
     struct ChannelSettingsValues: Equatable {
         var icon: Icon
         var name: String

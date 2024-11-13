@@ -34,6 +34,9 @@
 		17429D972B4C91170036105A /* ChannelSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17429D962B4C91170036105A /* ChannelSettings.swift */; };
 		17429D992B4C931D0036105A /* ChannelOverviewSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17429D982B4C931D0036105A /* ChannelOverviewSettings.swift */; };
 		1746A4AD2CADD76100095CF3 /* ServerBanSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1746A4AC2CADD76100095CF3 /* ServerBanSettings.swift */; };
+		1746A4AF2CAF26C900095CF3 /* BotSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1746A4AE2CAF26C900095CF3 /* BotSettings.swift */; };
+		1746A4B12CAF279B00095CF3 /* Bot.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1746A4B02CAF279B00095CF3 /* Bot.swift */; };
+		1746A4B42CAF2C4E00095CF3 /* BotSetting.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1746A4B32CAF2C4E00095CF3 /* BotSetting.swift */; };
 		1746A4B62CAF57C300095CF3 /* GroupDMChannelPermissionsSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1746A4B52CAF57C300095CF3 /* GroupDMChannelPermissionsSettings.swift */; };
 		1746CF5A2B83C6750051FD47 /* CodableWrapper in Frameworks */ = {isa = PBXBuildFile; productRef = 1746CF592B83C6750051FD47 /* CodableWrapper */; };
 		1748B2072B1FB88B00AA2D47 /* MessageReactions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1748B2062B1FB88B00AA2D47 /* MessageReactions.swift */; };
@@ -99,6 +102,7 @@
 		17BC476B2B9CB51200A593DA /* ShareInviteSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17BC476A2B9CB51200A593DA /* ShareInviteSheet.swift */; };
 		17BF54CD2B1785E200178866 /* HomeWelcome.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17BF54CC2B1785E200178866 /* HomeWelcome.swift */; };
 		17BF54D12B17B24200178866 /* LanguageSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17BF54D02B17B24200178866 /* LanguageSettings.swift */; };
+		17C212442CD19E77002D486C /* Section.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17C212432CD19E75002D486C /* Section.swift */; };
 		17C444582B06CC5400F97E4A /* ForgotPassword.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17C444572B06CC5400F97E4A /* ForgotPassword.swift */; };
 		17C9A3502B0580D10043A387 /* Welcome.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17C9A34F2B0580D10043A387 /* Welcome.swift */; };
 		17CC0CB42C937D4F005BA3A6 /* ServerBadges.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17CC0CB32C937D4F005BA3A6 /* ServerBadges.swift */; };
@@ -224,6 +228,9 @@
 		17429D962B4C91170036105A /* ChannelSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChannelSettings.swift; sourceTree = "<group>"; };
 		17429D982B4C931D0036105A /* ChannelOverviewSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChannelOverviewSettings.swift; sourceTree = "<group>"; };
 		1746A4AC2CADD76100095CF3 /* ServerBanSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ServerBanSettings.swift; sourceTree = "<group>"; };
+		1746A4AE2CAF26C900095CF3 /* BotSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BotSettings.swift; sourceTree = "<group>"; };
+		1746A4B02CAF279B00095CF3 /* Bot.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Bot.swift; sourceTree = "<group>"; };
+		1746A4B32CAF2C4E00095CF3 /* BotSetting.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BotSetting.swift; sourceTree = "<group>"; };
 		1746A4B52CAF57C300095CF3 /* GroupDMChannelPermissionsSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GroupDMChannelPermissionsSettings.swift; sourceTree = "<group>"; };
 		1748B2062B1FB88B00AA2D47 /* MessageReactions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageReactions.swift; sourceTree = "<group>"; };
 		1750EF6D2B0585B300DD3EB3 /* ResendEmail.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ResendEmail.swift; sourceTree = "<group>"; };
@@ -268,6 +275,7 @@
 		17BC476A2B9CB51200A593DA /* ShareInviteSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShareInviteSheet.swift; sourceTree = "<group>"; };
 		17BF54CC2B1785E200178866 /* HomeWelcome.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeWelcome.swift; sourceTree = "<group>"; };
 		17BF54D02B17B24200178866 /* LanguageSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LanguageSettings.swift; sourceTree = "<group>"; };
+		17C212432CD19E75002D486C /* Section.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Section.swift; sourceTree = "<group>"; };
 		17C444572B06CC5400F97E4A /* ForgotPassword.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ForgotPassword.swift; sourceTree = "<group>"; };
 		17C45D4A2C6167D300CD8ED4 /* Revolt.profdata */ = {isa = PBXFileReference; lastKnownFileType = file; path = Revolt.profdata; sourceTree = "<group>"; };
 		17C9A34F2B0580D10043A387 /* Welcome.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Welcome.swift; sourceTree = "<group>"; };
@@ -366,6 +374,7 @@
 		170C23D82C224BA40057E399 /* Extensions */ = {
 			isa = PBXGroup;
 			children = (
+				17C212432CD19E75002D486C /* Section.swift */,
 				17DF7CAF2C4ACD9D003E8FDC /* UIImage.swift */,
 				172F2D022C22ED5A00948C00 /* Collection.swift */,
 				172F2D002C22ED4A00948C00 /* IteratorProtocol.swift */,
@@ -462,6 +471,15 @@
 				17BB78B62CA4C636000CAD87 /* ChannelPermissionsSettings */,
 			);
 			path = Channel;
+			sourceTree = "<group>";
+		};
+		1746A4B22CAF29AE00095CF3 /* BotSettings */ = {
+			isa = PBXGroup;
+			children = (
+				1746A4AE2CAF26C900095CF3 /* BotSettings.swift */,
+				1746A4B32CAF2C4E00095CF3 /* BotSetting.swift */,
+			);
+			path = BotSettings;
 			sourceTree = "<group>";
 		};
 		175465CB2C42147B0076B393 /* NotificationService */ = {
@@ -613,6 +631,7 @@
 				17DE7E0B2BFAFDDD00C99188 /* User.swift */,
 				17DE7DB42BFAEC3F00C99188 /* Types.h */,
 				17DE7E1B2BFAFE5600C99188 /* File.swift */,
+				1746A4B02CAF279B00095CF3 /* Bot.swift */,
 			);
 			path = Types;
 			sourceTree = "<group>";
@@ -656,6 +675,7 @@
 				17E019D22AF17F9D00AB4663 /* ProfileSettings.swift */,
 				17E019DB2AF1B25100AB4663 /* SessionsSettings.swift */,
 				17BF54D02B17B24200178866 /* LanguageSettings.swift */,
+				1746A4B22CAF29AE00095CF3 /* BotSettings */,
 			);
 			path = Settings;
 			sourceTree = "<group>";
@@ -965,6 +985,7 @@
 				1773C0342C07DC99007B8867 /* Member.swift in Sources */,
 				1773C0352C07DC99007B8867 /* Message.swift in Sources */,
 				1773C0362C07DC99007B8867 /* Permissions.swift in Sources */,
+				1746A4B12CAF279B00095CF3 /* Bot.swift in Sources */,
 				1773C0372C07DC99007B8867 /* Role.swift in Sources */,
 				1773C0382C07DC99007B8867 /* Server.swift in Sources */,
 				1773C0392C07DC99007B8867 /* User.swift in Sources */,
@@ -979,6 +1000,7 @@
 			files = (
 				170C23D32C224B6D0057E399 /* NotificationSettings.swift in Sources */,
 				170C23D42C224B6D0057E399 /* ExperimentsSettings.swift in Sources */,
+				1746A4AF2CAF26C900095CF3 /* BotSettings.swift in Sources */,
 				170C23D52C224B6D0057E399 /* SettingsCommon.swift in Sources */,
 				170C23D62C224B6D0057E399 /* UserSettings.swift in Sources */,
 				178BB11B2B02FCDD001143A4 /* Responses.swift in Sources */,
@@ -994,6 +1016,7 @@
 				17A7FE392C49EBD20083B22F /* Image.swift in Sources */,
 				17E019CF2AF146AD00AB4663 /* About.swift in Sources */,
 				170410992CA478F6002C1445 /* DefaultRoleSettings.swift in Sources */,
+				1746A4B42CAF2C4E00095CF3 /* BotSetting.swift in Sources */,
 				1751239D2CAC8A1100D30C23 /* ServerEmojiSettings.swift in Sources */,
 				1773C03D2C07DD1F007B8867 /* MessageableChannel.swift in Sources */,
 				DAAA4C0B29F2CF1200F41E52 /* Websocket.swift in Sources */,
@@ -1023,6 +1046,7 @@
 				1750EF6E2B0585B300DD3EB3 /* ResendEmail.swift in Sources */,
 				17E019D72AF1998300AB4663 /* MessageAttachment.swift in Sources */,
 				DAAA4BFB29F2518900F41E52 /* MessageView.swift in Sources */,
+				17C212442CD19E77002D486C /* Section.swift in Sources */,
 				173A336A2C422EF800B8A58E /* DeveloperSettings.swift in Sources */,
 				17BB78BA2CA4DF25000CAD87 /* OptionSet.swift in Sources */,
 				1759C39A2B291A75006E6BBE /* MessageContentsView.swift in Sources */,
