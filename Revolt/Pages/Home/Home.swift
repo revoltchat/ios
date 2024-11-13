@@ -114,6 +114,11 @@ struct HomeRewritten: View {
                     .background(viewState.theme.background2.color)
                     
                     ZStack {
+                        viewState.theme.messageBox
+                            .offset(x: offset)
+                            .frame(width: geo.size.width)
+                            .ignoresSafeArea(.all)
+                        
                         MaybeChannelView(currentChannel: $currentChannel, currentSelection: $currentSelection, toggleSidebar: toggleSidebar)
                             .disabled(offset != 0.0)
                             .offset(x: offset)

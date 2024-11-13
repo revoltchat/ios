@@ -161,7 +161,7 @@ struct MessageableChannelView: View {
         
         let ending = users.count == 1 ? "is typing" : "are typing"
         
-        return "\(base) \(ending)"
+        return "\(base) \(ending)..."
     }
     
     func getAuthor(message: Binding<Message>) -> Binding<User> {
@@ -353,7 +353,6 @@ struct MessageableChannelView: View {
                                 }
                             })
                             .safeAreaPadding(EdgeInsets(top: 0, leading: 0, bottom: 24, trailing: 0))
-                            .defaultScrollAnchor(.bottom)
                             .listStyle(.plain)
                             .listRowSeparator(.hidden)
                             .overlay(alignment: .top) {
@@ -388,16 +387,19 @@ struct MessageableChannelView: View {
                                         Spacer()
                                     }
                                     .frame(maxWidth: .infinity)
-                                    .padding(.horizontal, 8)
+                                    .padding(.horizontal, 12)
                                     .padding(.top, 2)
                                     .background(viewState.theme.messageBox)
                                 }
                             }
                             .environment(\.defaultMinListRowHeight, 0)
-                            .simultaneousGesture(TapGesture().onEnded { focused = false })
-                            // .scrollDismissesKeyboard(.immediately)
+                            //.gesture(TapGesture().onEnded { focused = false }, isEnabled: focused)
+                            .scrollDismissesKeyboard(.never)
                         }
+                        .defaultScrollAnchor(.bottom)
+                        .scrollDismissesKeyboard(.never)
                     }
+                    .gesture(TapGesture().onEnded { focused = false }, isEnabled: focused)
                     
                     MessageBox(
                         channel: viewModel.channel,
@@ -449,7 +451,7 @@ struct MessageableChannelView: View {
 }
 
 #Preview {
-    @StateObject var viewState = ViewState.preview()
+    @Previewable @StateObject var viewState = ViewState.preview()
     let messages = Binding($viewState.channelMessages["0"])!
     
     return MessageableChannelView(viewModel: .init(viewState: viewState, channel: viewState.channels["0"]!, server: viewState.servers[""], messages: messages), toggleSidebar: {})

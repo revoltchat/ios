@@ -246,6 +246,8 @@ struct MainApp: View {
                     ViewInvite(code: code)
             }
         }
+        .environment(\.currentServer, viewState.currentSelection.id.flatMap { viewState.servers[$0] })
+        .environment(\.currentChannel, viewState.currentChannel.id.flatMap { viewState.channels[$0] })
         .sheet(item: $viewState.currentUserSheet) { (v) in
             UserSheet(user: v.user, member: v.member)
         }

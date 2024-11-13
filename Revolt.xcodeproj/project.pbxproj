@@ -26,6 +26,7 @@
 		172F2D012C22ED4D00948C00 /* IteratorProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 172F2D002C22ED4A00948C00 /* IteratorProtocol.swift */; };
 		172F2D032C22ED5C00948C00 /* Collection.swift in Sources */ = {isa = PBXBuildFile; fileRef = 172F2D022C22ED5A00948C00 /* Collection.swift */; };
 		172F2D052C22ED8500948C00 /* CheckboxStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 172F2D042C22ED8100948C00 /* CheckboxStyle.swift */; };
+		17340A472CE051DC00AD8A19 /* UIFont.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17340A462CE051D900AD8A19 /* UIFont.swift */; };
 		1739DB962B08E53B00D23DAD /* MessageBadge.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1739DB952B08E53B00D23DAD /* MessageBadge.swift */; };
 		173A336A2C422EF800B8A58E /* DeveloperSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 173A33692C422EF800B8A58E /* DeveloperSettings.swift */; };
 		173D698E2C7FF7FC00030E62 /* ChannelSearch.swift in Sources */ = {isa = PBXBuildFile; fileRef = 173D698D2C7FF7FC00030E62 /* ChannelSearch.swift */; };
@@ -40,6 +41,7 @@
 		1746A4B62CAF57C300095CF3 /* GroupDMChannelPermissionsSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1746A4B52CAF57C300095CF3 /* GroupDMChannelPermissionsSettings.swift */; };
 		1746CF5A2B83C6750051FD47 /* CodableWrapper in Frameworks */ = {isa = PBXBuildFile; productRef = 1746CF592B83C6750051FD47 /* CodableWrapper */; };
 		1748B2072B1FB88B00AA2D47 /* MessageReactions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1748B2062B1FB88B00AA2D47 /* MessageReactions.swift */; };
+		174BB4612CC1C48900D6EC32 /* EnvironmentValues.swift in Sources */ = {isa = PBXBuildFile; fileRef = 174BB4602CC1C48400D6EC32 /* EnvironmentValues.swift */; };
 		174DA9E82B9E4D70001BC330 /* Parsing in Frameworks */ = {isa = PBXBuildFile; productRef = 174DA9E72B9E4D70001BC330 /* Parsing */; };
 		1750EF6E2B0585B300DD3EB3 /* ResendEmail.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1750EF6D2B0585B300DD3EB3 /* ResendEmail.swift */; };
 		1751239B2CAC687C00D30C23 /* KeychainAccess in Frameworks */ = {isa = PBXBuildFile; productRef = 1751239A2CAC687C00D30C23 /* KeychainAccess */; };
@@ -220,6 +222,7 @@
 		172F2D002C22ED4A00948C00 /* IteratorProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IteratorProtocol.swift; sourceTree = "<group>"; };
 		172F2D022C22ED5A00948C00 /* Collection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Collection.swift; sourceTree = "<group>"; };
 		172F2D042C22ED8100948C00 /* CheckboxStyle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CheckboxStyle.swift; sourceTree = "<group>"; };
+		17340A462CE051D900AD8A19 /* UIFont.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIFont.swift; sourceTree = "<group>"; };
 		17378BD72C76CF51004E4235 /* ci_post_clone.sh */ = {isa = PBXFileReference; lastKnownFileType = text.script.sh; path = ci_post_clone.sh; sourceTree = "<group>"; };
 		1739DB952B08E53B00D23DAD /* MessageBadge.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageBadge.swift; sourceTree = "<group>"; };
 		173A33692C422EF800B8A58E /* DeveloperSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeveloperSettings.swift; sourceTree = "<group>"; };
@@ -233,6 +236,7 @@
 		1746A4B32CAF2C4E00095CF3 /* BotSetting.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BotSetting.swift; sourceTree = "<group>"; };
 		1746A4B52CAF57C300095CF3 /* GroupDMChannelPermissionsSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GroupDMChannelPermissionsSettings.swift; sourceTree = "<group>"; };
 		1748B2062B1FB88B00AA2D47 /* MessageReactions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageReactions.swift; sourceTree = "<group>"; };
+		174BB4602CC1C48400D6EC32 /* EnvironmentValues.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EnvironmentValues.swift; sourceTree = "<group>"; };
 		1750EF6D2B0585B300DD3EB3 /* ResendEmail.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ResendEmail.swift; sourceTree = "<group>"; };
 		1751239C2CAC8A1100D30C23 /* ServerEmojiSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ServerEmojiSettings.swift; sourceTree = "<group>"; };
 		175465CA2C42147B0076B393 /* NotificationService.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = NotificationService.appex; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -374,7 +378,9 @@
 		170C23D82C224BA40057E399 /* Extensions */ = {
 			isa = PBXGroup;
 			children = (
+				17340A462CE051D900AD8A19 /* UIFont.swift */,
 				17C212432CD19E75002D486C /* Section.swift */,
+				174BB4602CC1C48400D6EC32 /* EnvironmentValues.swift */,
 				17DF7CAF2C4ACD9D003E8FDC /* UIImage.swift */,
 				172F2D022C22ED5A00948C00 /* Collection.swift */,
 				172F2D002C22ED4A00948C00 /* IteratorProtocol.swift */,
@@ -1032,6 +1038,7 @@
 				1759C39C2B291E2F006E6BBE /* SystemMessageView.swift in Sources */,
 				17E019DC2AF1B25100AB4663 /* SessionsSettings.swift in Sources */,
 				172F2D052C22ED8500948C00 /* CheckboxStyle.swift in Sources */,
+				174BB4612CC1C48900D6EC32 /* EnvironmentValues.swift in Sources */,
 				178BB1192B02FBD1001143A4 /* Payloads.swift in Sources */,
 				178BB1172B02E63B001143A4 /* LoadingSpinnerView.swift in Sources */,
 				17CE783F2B129E28006C1D2C /* ServerScrollView.swift in Sources */,
@@ -1053,6 +1060,7 @@
 				17E019D12AF14EC000AB4663 /* ServerIcon.swift in Sources */,
 				176485752CA3947B00AF8141 /* PermissionToggle.swift in Sources */,
 				17F8B7092C7983730065F1DE /* CreateServer.swift in Sources */,
+				17340A472CE051DC00AD8A19 /* UIFont.swift in Sources */,
 				17863A592C8094840051A52C /* Tile.swift in Sources */,
 				176485732CA3882E00AF8141 /* Binding.swift in Sources */,
 				172F2D012C22ED4D00948C00 /* IteratorProtocol.swift in Sources */,

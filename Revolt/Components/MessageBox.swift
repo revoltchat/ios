@@ -10,70 +10,63 @@ import SwiftUI
 import PhotosUI
 import Types
 
-struct Reply {
+struct Reply: Identifiable, Equatable {
     var message: Message
     var mention: Bool = false
-}
-
-class ReplyViewModel: ObservableObject {
-    var idx: Int
-
-    @Binding var replies: [Reply]
-
-    var channel: Channel
-    var server: Server?
-
-    func remove() {
-        replies.remove(at: idx)
-    }
-
-    internal init(idx: Int, replies: Binding<[Reply]>, channel: Channel, server: Server?) {
-        self.idx = idx
-        _replies = replies
-        self.channel = channel
-        self.server = server
-    }
+    
+    var id: String { message.id }
 }
 
 struct ReplyView: View {
     @EnvironmentObject var viewState: ViewState
-    @ObservedObject var viewModel: ReplyViewModel
+    
+    @Binding var reply: Reply
+    
+    @Binding var replies: [Reply]
+    
+    var channel: Channel
+    var server: Server?
 
+    func remove() {
+        withAnimation {
+            replies.removeAll(where: { $0.id == reply.id })
+        }
+    }
+    
     var body: some View {
-        let reply = $viewModel.replies[viewModel.idx]
-
-        let user = viewState.users[reply.message.author.wrappedValue]!
-        let member = viewModel.server.flatMap { viewState.members[$0.id]?[user.id] }
+        let user = viewState.users[reply.message.author]!
+        let member = server.flatMap { viewState.members[$0.id]?[user.id] }
 
         HStack(alignment: .center, spacing: 8) {
-            Button(action: viewModel.remove) {
+            Button(action: remove) {
                 Image(systemName: "xmark")
                     .resizable()
                     .frame(width: 10, height: 10)
                     .foregroundStyle(viewState.theme.foreground3)
+                    .bold()
             }
             
             Avatar(user: user, width: 16, height: 16)
             
-            Text(reply.message.masquerade.wrappedValue?.name ?? member?.nickname ?? user.display_name ?? user.username)
+            Text(reply.message.masquerade?.name ?? member?.nickname ?? user.display_name ?? user.username)
                 .font(.caption)
                 .fixedSize()
-                .foregroundStyle(member?.displayColour(theme: viewState.theme, server: viewModel.server!) ?? AnyShapeStyle(viewState.theme.foreground.color))
+                .foregroundStyle(member?.displayColour(theme: viewState.theme, server: server!) ?? AnyShapeStyle(viewState.theme.foreground.color))
             
-            if !(reply.message.wrappedValue.attachments?.isEmpty ?? true) {
+            if !(reply.message.attachments?.isEmpty ?? true) {
                 Text(Image(systemName: "doc.text.fill"))
                     .font(.caption)
                     .foregroundStyle(viewState.theme.foreground2)
             }
             
-            if let content = Binding(reply.message.content) {
+            if let content = Binding($reply.message.content) {
                 Contents(text: content, fontSize: 12)
                     .lineLimit(1)
                     .truncationMode(.tail)
             }
             
-            Button(action: { viewModel.replies[viewModel.idx].mention.toggle() }) {
-                if viewModel.replies[viewModel.idx].mention {
+            Button(action: { reply.mention.toggle() }) {
+                if reply.mention {
                     Text("@ on")
                         .foregroundColor(.accentColor)
                 } else {
@@ -153,9 +146,9 @@ struct MessageBox: View {
 
         if let message = editing {
             Task {
-                await viewState.http.editMessage(channel: channel.id, message: message.id, edits: MessageEdit(content: c))
-                
                 editing = nil
+
+                await viewState.http.editMessage(channel: channel.id, message: message.id, edits: MessageEdit(content: c))
             }
             
         } else {
@@ -227,12 +220,13 @@ struct MessageBox: View {
 
     var body: some View {
         VStack(alignment: .leading, spacing: 4) {
-            ForEach(Array(channelReplies.enumerated()), id: \.element.message.id) { reply in
-                let model = ReplyViewModel(idx: reply.offset, replies: $channelReplies, channel: channel, server: server)
-                
-                ReplyView(viewModel: model)
+            ForEach($channelReplies) { reply in
+                ReplyView(reply: reply, replies: $channelReplies, channel: channel, server: server)
                     .padding(.horizontal, 4)
+                    //.transition(.move(edge: .bottom))
             }
+            .animation(.default, value: channelReplies)
+            
             VStack(alignment: .leading, spacing: 8) {
                 if selectedPhotos.count > 0 {
                     ScrollView(.horizontal) {
@@ -443,10 +437,12 @@ struct MessageBox: View {
                             if let a {
                                 selectedPhotos = []
                                 selectedPhotoItems = []
-                                channelReplies = []
                                 autoCompleteType = nil
                                 autocompleteSearchValue = ""
                                 content = a.content ?? ""
+                            } else {
+                                channelReplies = []
+                                content = ""
                             }
                         })
                         .sheet(isPresented: $showingSelectEmoji) {

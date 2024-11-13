@@ -109,7 +109,8 @@ struct MessageEmbed: View {
                         } else if let video = embed.video {
                             if let url = URL(string: video.url) {
                                 VideoPlayer(player: AVPlayer(url: url))
-                                    .frame(width: CGFloat(integerLiteral: video.width), height: CGFloat(integerLiteral: video.height))
+                                    .aspectRatio(CGSize(width: video.width, height: video.height), contentMode: .fit)
+                                    .frame(maxWidth: CGFloat(integerLiteral: video.width), maxHeight: CGFloat(integerLiteral: video.height))
                             }
                         } else if let image = embed.image {
                             if image.size == JanuaryImage.Size.large {

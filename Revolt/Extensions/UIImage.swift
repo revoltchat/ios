@@ -30,11 +30,33 @@ extension UIImage {
         }
     }
     
-    func imageWith(newSize size: CGSize) -> UIImage {
-        UIGraphicsBeginImageContextWithOptions(size, false, 0)
-        defer { UIGraphicsEndImageContext() }
-        draw(in: CGRect(x: 0.0, y: 0.0, width: size.width, height: size.height))
-        return UIGraphicsGetImageFromCurrentImageContext()!
+    func imageWith(newSize: CGSize) -> UIImage {
+        let image = UIGraphicsImageRenderer(size: newSize).image { _ in
+            draw(in: CGRect(origin: .zero, size: newSize))
+        }
+        
+        return image.withRenderingMode(renderingMode)
+    }
+    
+    func imageWith(targetSize: CGSize) -> UIImage {
+        let widthRatio  = targetSize.width  / size.width
+        let heightRatio = targetSize.height / size.height
+        
+        var newSize: CGSize
+        if(widthRatio > heightRatio) {
+            newSize = CGSize(width: size.width * heightRatio, height: size.height * heightRatio)
+        } else {
+            newSize = CGSize(width: size.width * widthRatio,  height: size.height * widthRatio)
+        }
+        
+        let rect = CGRect(x: 0, y: 0, width: newSize.width, height: newSize.height)
+        
+        UIGraphicsBeginImageContextWithOptions(newSize, false, 1.0)
+        draw(in: rect)
+        let newImage = UIGraphicsGetImageFromCurrentImageContext()
+        UIGraphicsEndImageContext()
+        
+        return newImage!
     }
     
     var roundedImage: UIImage {

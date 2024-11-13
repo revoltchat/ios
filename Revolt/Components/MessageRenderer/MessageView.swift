@@ -28,7 +28,8 @@ struct MessageView: View {
     @EnvironmentObject var viewState: ViewState
     
     @State var showReportSheet: Bool = false
-    @State var isStatic: Bool
+    @State var isStatic: Bool = false
+    @State var onlyShowContent: Bool = false
     
     var isCompactMode: (Bool, Bool) {
         return TEMP_IS_COMPACT_MODE
@@ -37,16 +38,16 @@ struct MessageView: View {
     private func pfpView(size: AvatarSize) -> some View {
         ZStack(alignment: .topLeading) {
             Avatar(user: viewModel.author, member: viewModel.member, masquerade: viewModel.message.masquerade, webhook: viewModel.message.webhook, width: size.sizes.0, height: size.sizes.0)
-            
+                .onTapGesture {
+                    if !isStatic || viewModel.message.webhook != nil {
+                        viewState.openUserSheet(withId: viewModel.author.id, server: viewModel.server?.id)
+                    }
+                }
+
             if viewModel.message.masquerade != nil {
                 Avatar(user: viewModel.author, member: viewModel.member, webhook: viewModel.message.webhook, width: size.sizes.1, height: size.sizes.1)
                     .padding(.leading, -size.sizes.2)
                     .padding(.top, -size.sizes.2)
-            }
-        }
-        .onTapGesture {
-            if !isStatic || viewModel.message.webhook != nil {
-                viewState.openUserSheet(withId: viewModel.author.id, server: viewModel.server?.id)
             }
         }
     }
@@ -86,70 +87,74 @@ struct MessageView: View {
                 }
             }
             
-            if isCompactMode.0 {
-                HStack(alignment: .top, spacing: 4) {
-                    HStack(alignment: .center, spacing: 4) {
-                        Text(createdAt(id: viewModel.message.id).formatted(Date.FormatStyle().hour(.twoDigits(amPM: .omitted)).minute(.twoDigits)))
-                            .font(.caption)
-                            .foregroundStyle(viewState.theme.foreground2)
-                        
-                        if isCompactMode.1 {
-                            pfpView(size: .compact)
-                        }
-                        
-                        nameView
-                        
-                        if viewModel.author.bot != nil {
-                            MessageBadge(text: String(localized: "Bot"), color: viewState.theme.accent.color)
-                        }
-                    }
-                    
-                    MessageContentsView(viewModel: viewModel, isStatic: isStatic)
-                    
-                    if viewModel.message.edited != nil {
-                        Text("(edited)")
-                            .font(.caption)
-                            .foregroundStyle(.gray)
-                    }
-                }
-                    
+            if viewModel.message.system != nil {
+                SystemMessageView(message: $viewModel.message)
             } else {
-                HStack(alignment: .top) {
-                    pfpView(size: .regular)
-                        .padding(.top, 2)
-                        .padding(.trailing, 8)
-                    
-                    VStack(alignment: .leading, spacing: 0) {
-                        HStack {
+                if isCompactMode.0 {
+                    HStack(alignment: .top, spacing: 4) {
+                        HStack(alignment: .center, spacing: 4) {
+                            Text(createdAt(id: viewModel.message.id).formatted(Date.FormatStyle().hour(.twoDigits(amPM: .omitted)).minute(.twoDigits)))
+                                .font(.caption)
+                                .foregroundStyle(viewState.theme.foreground2)
+                            
+                            if isCompactMode.1 {
+                                pfpView(size: .compact)
+                            }
+                            
                             nameView
                             
                             if viewModel.author.bot != nil {
                                 MessageBadge(text: String(localized: "Bot"), color: viewState.theme.accent.color)
                             }
-                            
-                            if viewModel.message.webhook != nil {
-                                MessageBadge(text: String(localized: "Webhook"), color: viewState.theme.accent.color)
-
-                            }
-                            
-                            Text(createdAt(id: viewModel.message.id).formatted(Date.FormatStyle().hour(.twoDigits(amPM: .omitted)).minute(.twoDigits)))
-                                .font(.caption)
-                                .foregroundStyle(viewState.theme.foreground2)
-                            
-                            if viewModel.message.edited != nil {
-                                Text("(edited)")
-                                    .font(.caption)
-                                    .foregroundStyle(.gray)
-                            }
                         }
                         
-                        MessageContentsView(viewModel: viewModel, isStatic: isStatic)
+                        MessageContentsView(viewModel: viewModel, isStatic: isStatic, onlyShowContent: onlyShowContent)
+                        
+                        if viewModel.message.edited != nil {
+                            Text("(edited)")
+                                .font(.caption)
+                                .foregroundStyle(.gray)
+                        }
+                    }
+                } else {
+                    HStack(alignment: .top) {
+                        pfpView(size: .regular)
+                            .padding(.top, 2)
+                            .padding(.trailing, 8)
+                        
+                        VStack(alignment: .leading, spacing: 0) {
+                            HStack {
+                                nameView
+                                
+                                if viewModel.author.bot != nil {
+                                    MessageBadge(text: String(localized: "Bot"), color: viewState.theme.accent.color)
+                                }
+                                
+                                if viewModel.message.webhook != nil {
+                                    MessageBadge(text: String(localized: "Webhook"), color: viewState.theme.accent.color)
+                                    
+                                }
+                                
+                                Text(createdAt(id: viewModel.message.id).formatted(Date.FormatStyle().hour(.twoDigits(amPM: .omitted)).minute(.twoDigits)))
+                                    .font(.caption)
+                                    .foregroundStyle(viewState.theme.foreground2)
+                                
+                                if viewModel.message.edited != nil {
+                                    Text("(edited)")
+                                        .font(.caption)
+                                        .foregroundStyle(.gray)
+                                }
+                            }
+                            
+                            MessageContentsView(viewModel: viewModel, isStatic: isStatic, onlyShowContent: onlyShowContent)
+                        }
                     }
                 }
             }
         }
         .font(Font.system(size: 14.0))
         .listRowSeparator(.hidden)
+        .environment(\.currentMessage, viewModel)
     }
 }
 
