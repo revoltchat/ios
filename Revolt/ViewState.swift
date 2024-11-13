@@ -266,7 +266,11 @@ public class ViewState: ObservableObject {
         }
     }
 
-    @Published var path: NavigationPath = NavigationPath()
+    @Published var path: NavigationPath {
+        didSet {
+            UserDefaults.standard.set(try! JSONEncoder().encode(path.codable), forKey: "path")
+        }
+    }
     
     var userSettingsStore: UserSettingsData
 
@@ -309,6 +313,12 @@ public class ViewState: ObservableObject {
         self.theme = ViewState.decodeUserDefaults(forKey: "theme", withDecoder: decoder, defaultingTo: .dark)
         
         self.currentUser = ViewState.decodeUserDefaults(forKey: "currentUser", withDecoder: decoder, defaultingTo: nil)
+        
+        if let value = UserDefaults.standard.data(forKey: "path"), let path = try? decoder.decode(NavigationPath.CodableRepresentation.self, from: value) {
+            self.path = NavigationPath(path)
+        } else {
+            self.path = NavigationPath()
+        }
         
         if self.currentUser != nil, self.apiInfo != nil {
             self.forceMainScreen = true
