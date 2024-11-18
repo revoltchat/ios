@@ -12,6 +12,7 @@ struct MaybeChannelView: View {
     @Binding var currentChannel: ChannelSelection
     @Binding var currentSelection: MainSelection
     var toggleSidebar: () -> ()
+    @Binding var disableScroll: Bool
     
     var body: some View {
         switch currentChannel {
@@ -26,7 +27,8 @@ struct MaybeChannelView: View {
                             server: currentSelection.id.map { viewState.servers[$0]! },
                             messages: messages
                         ),
-                        toggleSidebar: toggleSidebar
+                        toggleSidebar: toggleSidebar,
+                        disableScroll: $disableScroll
                     )
 
                 } else {
@@ -62,6 +64,7 @@ struct HomeRewritten: View {
     @State var offset = CGFloat.zero
     @State var forceOpen: Bool = false
     @State var calculatedSize = CGFloat.zero
+    @State var disableScroll = false
     
     func toggleSidebar() {
         withAnimation {
@@ -89,7 +92,7 @@ struct HomeRewritten: View {
                 }
                 .frame(maxWidth: 300)
                 
-                MaybeChannelView(currentChannel: $currentChannel, currentSelection: $currentSelection, toggleSidebar: toggleSidebar)
+                MaybeChannelView(currentChannel: $currentChannel, currentSelection: $currentSelection, toggleSidebar: toggleSidebar, disableScroll: $disableScroll)
                     .frame(maxWidth: .infinity)
             }
         } else {
@@ -119,7 +122,7 @@ struct HomeRewritten: View {
                             .frame(width: geo.size.width)
                             .ignoresSafeArea(.all)
                         
-                        MaybeChannelView(currentChannel: $currentChannel, currentSelection: $currentSelection, toggleSidebar: toggleSidebar)
+                        MaybeChannelView(currentChannel: $currentChannel, currentSelection: $currentSelection, toggleSidebar: toggleSidebar, disableScroll: $disableScroll)
                             .disabled(offset != 0.0)
                             .offset(x: offset)
                             .frame(width: geo.size.width)
@@ -134,6 +137,10 @@ struct HomeRewritten: View {
                     .simultaneousGesture(
                         DragGesture(minimumDistance: 50.0)
                                 .onChanged({ g in
+                                    if g.translation.width >= 50 {
+                                        disableScroll = true
+                                    }
+                                    
                                     if offset > snapSide {
                                         forceOpen = true
                                     } else if offset <= snapSide {
@@ -145,6 +152,8 @@ struct HomeRewritten: View {
                                     }
                                 })
                                 .onEnded({ v in
+                                    disableScroll = false
+                                    
                                     withAnimation(.easeInOut) {
                                         if forceOpen {
                                             forceOpen = false
@@ -153,7 +162,8 @@ struct HomeRewritten: View {
                                             offset = .zero
                                         }
                                     }
-                                })
+                                }),
+                        including: .all
                         )
                 }
                 .task { calculatedSize = sidebarWidth }

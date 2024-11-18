@@ -114,6 +114,8 @@ struct MessageableChannelView: View {
     
     var toggleSidebar: () -> ()
     
+    @Binding var disableScroll: Bool
+    
     @FocusState var focused: Bool
     
     var isCompactMode: Bool {
@@ -395,6 +397,7 @@ struct MessageableChannelView: View {
                             .environment(\.defaultMinListRowHeight, 0)
                             //.gesture(TapGesture().onEnded { focused = false }, isEnabled: focused)
                             .scrollDismissesKeyboard(.never)
+                            .scrollDisabled(disableScroll)
                         }
                         .defaultScrollAnchor(.bottom)
                         .scrollDismissesKeyboard(.never)
@@ -454,6 +457,6 @@ struct MessageableChannelView: View {
     @Previewable @StateObject var viewState = ViewState.preview()
     let messages = Binding($viewState.channelMessages["0"])!
     
-    return MessageableChannelView(viewModel: .init(viewState: viewState, channel: viewState.channels["0"]!, server: viewState.servers[""], messages: messages), toggleSidebar: {})
+    return MessageableChannelView(viewModel: .init(viewState: viewState, channel: viewState.channels["0"]!, server: viewState.servers[""], messages: messages), toggleSidebar: {}, disableScroll: .constant(false))
         .applyPreviewModifiers(withState: viewState)
 }
