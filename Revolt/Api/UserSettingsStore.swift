@@ -67,6 +67,7 @@ struct UserSettingsNotificationsData: Codable {
 class DiscardableUserStore: Codable {
     var user: Types.User?
     var accountData: UserSettingsAccountData?
+    var notificationSettings: UserSettingsNotificationsData = .init(server: [:], channel: [:])
     
     /// This is null when we havent asked for permission yet
     fileprivate func clear() {
@@ -323,7 +324,7 @@ class UserSettingsData {
     
     func fetchFromApi() async {
         while viewState == nil {
-            try! await Task.sleep(for: .seconds(1))
+            try! await Task.sleep(for: .seconds(0.1))
         }
         let state = viewState!
         if await state.state == .signedOut {
@@ -337,11 +338,15 @@ class UserSettingsData {
                 mfaStatus: try await state.http.fetchMFAStatus().get()
             )
             
+            let settingsValues = try await state.http.fetchSettings(keys: ["notifications"]).get()
+            let notificationValue = try! settingsValues["notifications"].unwrapped().b.replacingOccurrences(of: #"\""#, with: #"""#)
+            self.cache.notificationSettings = try! JSONDecoder().decode(UserSettingsNotificationsData.self, from: try! notificationValue.data(using: .utf8).unwrapped())
+            
             self.cacheState = .cached
             writeCacheToFile()
         } catch {
             self.cacheState = .failed
-            switch error as! RevoltError {
+            switch error as? RevoltError {
                 case .Alamofire(let afErr):
                     if afErr.responseCode == 401 {
                         await state.setSignedOutState()
