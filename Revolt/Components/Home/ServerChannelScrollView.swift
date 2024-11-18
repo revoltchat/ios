@@ -18,12 +18,32 @@ struct ChannelListItem: View {
     
     @State var inviteSheetUrl: InviteUrl? = nil
     
-    var body: some View {
+    func getValues() -> (Bool, UnreadCount?, ThemeColor, ThemeColor) {
         let isSelected = viewState.currentChannel.id == channel.id
         let unread = viewState.getUnreadCountFor(channel: channel)
-
-        let foregroundColor = isSelected || unread != nil ? viewState.theme.foreground : viewState.theme.foreground3
+        
+        let notificationValue = viewState.userSettingsStore.cache.notificationSettings.channel[channel.id]
+        let isMuted = notificationValue == .muted || notificationValue == NotificationState.none
+        
+        let foregroundColor: ThemeColor
+        
+        if isSelected {
+            foregroundColor = viewState.theme.foreground
+        } else if isMuted {
+            foregroundColor = viewState.theme.foreground3
+        } else if unread != nil {
+            foregroundColor = viewState.theme.foreground
+        } else {
+            foregroundColor = viewState.theme.foreground3
+        }
+        
         let backgroundColor = isSelected ? viewState.theme.background : viewState.theme.background2
+                
+        return (isMuted, unread, backgroundColor, foregroundColor)
+    }
+    
+    var body: some View {
+        let (isMuted, unread, backgroundColor, foregroundColor) = getValues()
         
         Button {
             toggleSidebar()
@@ -33,10 +53,11 @@ struct ChannelListItem: View {
             HStack {
                 ChannelIcon(channel: channel)
                     .fontWeight(.medium)
+                    .opacity(isMuted ? 0.4 : 1)
                 
                 Spacer()
                 
-                if let unread = unread {
+                if let unread = unread, !isMuted {
                     UnreadCounter(unread: unread)
                         .padding(.trailing)
                 }

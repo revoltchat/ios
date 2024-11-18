@@ -22,6 +22,7 @@
 		1718FB542AF8470400E9C511 /* ReportMessageSheetView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1718FB532AF8470400E9C511 /* ReportMessageSheetView.swift */; };
 		172754C92B399092002223FE /* Contents.swift in Sources */ = {isa = PBXBuildFile; fileRef = 172754C82B399092002223FE /* Contents.swift */; };
 		172754CC2B39989E002223FE /* SwiftParsec in Frameworks */ = {isa = PBXBuildFile; productRef = 172754CB2B39989E002223FE /* SwiftParsec */; };
+		172B0CAB2CEAE0C200012CE2 /* Optional.swift in Sources */ = {isa = PBXBuildFile; fileRef = 172B0CAA2CEAE0C000012CE2 /* Optional.swift */; };
 		172F2CFF2C22ED3A00948C00 /* Bundle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 172F2CFE2C22ED3600948C00 /* Bundle.swift */; };
 		172F2D012C22ED4D00948C00 /* IteratorProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 172F2D002C22ED4A00948C00 /* IteratorProtocol.swift */; };
 		172F2D032C22ED5C00948C00 /* Collection.swift in Sources */ = {isa = PBXBuildFile; fileRef = 172F2D022C22ED5A00948C00 /* Collection.swift */; };
@@ -76,6 +77,7 @@
 		1773C03D2C07DD1F007B8867 /* MessageableChannel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1773C03C2C07DD1F007B8867 /* MessageableChannel.swift */; };
 		17772C182C30AF83000D1EDA /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17772C172C30AF83000D1EDA /* AppDelegate.swift */; };
 		1777DD892ADC3C31003D6C72 /* Markdown.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1777DD882ADC3C31003D6C72 /* Markdown.swift */; };
+		177DA1172CEADBB1000FC7EA /* AnyCodable in Frameworks */ = {isa = PBXBuildFile; productRef = 177DA1162CEADBB1000FC7EA /* AnyCodable */; };
 		1781011E2C8CBC2900AC2756 /* SubviewAttachingTextView in Frameworks */ = {isa = PBXBuildFile; productRef = 1781011D2C8CBC2900AC2756 /* SubviewAttachingTextView */; };
 		1782F5E62B08F60B00759D40 /* Discovery.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1782F5E52B08F60B00759D40 /* Discovery.swift */; };
 		17863A592C8094840051A52C /* Tile.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17863A582C8094840051A52C /* Tile.swift */; };
@@ -218,6 +220,7 @@
 		1718F3CF2B0BCAA50018E524 /* UnreadCounter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UnreadCounter.swift; sourceTree = "<group>"; };
 		1718FB532AF8470400E9C511 /* ReportMessageSheetView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReportMessageSheetView.swift; sourceTree = "<group>"; };
 		172754C82B399092002223FE /* Contents.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Contents.swift; sourceTree = "<group>"; };
+		172B0CAA2CEAE0C000012CE2 /* Optional.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Optional.swift; sourceTree = "<group>"; };
 		172F2CFE2C22ED3600948C00 /* Bundle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Bundle.swift; sourceTree = "<group>"; };
 		172F2D002C22ED4A00948C00 /* IteratorProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IteratorProtocol.swift; sourceTree = "<group>"; };
 		172F2D022C22ED5A00948C00 /* Collection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Collection.swift; sourceTree = "<group>"; };
@@ -378,6 +381,7 @@
 		170C23D82C224BA40057E399 /* Extensions */ = {
 			isa = PBXGroup;
 			children = (
+				172B0CAA2CEAE0C000012CE2 /* Optional.swift */,
 				17340A462CE051D900AD8A19 /* UIFont.swift */,
 				17C212432CD19E75002D486C /* Section.swift */,
 				174BB4602CC1C48400D6EC32 /* EnvironmentValues.swift */,
@@ -848,6 +852,7 @@
 				173E8AEE2C94CA7D009B7649 /* Highlightr */,
 				1751239A2CAC687C00D30C23 /* KeychainAccess */,
 				17E72F822CACEAB8009E7C40 /* SwiftyCrop */,
+				177DA1162CEADBB1000FC7EA /* AnyCodable */,
 			);
 			productName = Revolt;
 			productReference = D49B704F29C4D3FE009494A5 /* Revolt.app */;
@@ -906,6 +911,7 @@
 				173E8AED2C94CA7D009B7649 /* XCRemoteSwiftPackageReference "Highlightr" */,
 				175123992CAC687C00D30C23 /* XCRemoteSwiftPackageReference "KeychainAccess" */,
 				17E72F812CACEAB8009E7C40 /* XCRemoteSwiftPackageReference "SwiftyCrop" */,
+				177DA1152CEADBB1000FC7EA /* XCRemoteSwiftPackageReference "AnyCodable" */,
 			);
 			productRefGroup = D49B705029C4D3FE009494A5 /* Products */;
 			projectDirPath = "";
@@ -1057,6 +1063,7 @@
 				173A336A2C422EF800B8A58E /* DeveloperSettings.swift in Sources */,
 				17BB78BA2CA4DF25000CAD87 /* OptionSet.swift in Sources */,
 				1759C39A2B291A75006E6BBE /* MessageContentsView.swift in Sources */,
+				172B0CAB2CEAE0C200012CE2 /* Optional.swift in Sources */,
 				17E019D12AF14EC000AB4663 /* ServerIcon.swift in Sources */,
 				176485752CA3947B00AF8141 /* PermissionToggle.swift in Sources */,
 				17F8B7092C7983730065F1DE /* CreateServer.swift in Sources */,
@@ -1670,6 +1677,14 @@
 				minimumVersion = 1.2.0;
 			};
 		};
+		177DA1152CEADBB1000FC7EA /* XCRemoteSwiftPackageReference "AnyCodable" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/Flight-School/AnyCodable";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 0.6.7;
+			};
+		};
 		1781011C2C8CBC2900AC2756 /* XCRemoteSwiftPackageReference "SubviewAttachingTextView" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/vlas-voloshin/SubviewAttachingTextView";
@@ -1795,6 +1810,11 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 175997172B2FB90600C39CF6 /* XCRemoteSwiftPackageReference "SwiftUI-Flow" */;
 			productName = Flow;
+		};
+		177DA1162CEADBB1000FC7EA /* AnyCodable */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 177DA1152CEADBB1000FC7EA /* XCRemoteSwiftPackageReference "AnyCodable" */;
+			productName = AnyCodable;
 		};
 		1781011D2C8CBC2900AC2756 /* SubviewAttachingTextView */ = {
 			isa = XCSwiftPackageProductDependency;

@@ -7,6 +7,7 @@
 
 import Foundation
 import Types
+import AnyCodable
 
 struct AccountCreateVerifyResponse: Decodable {
     struct Inner: Decodable {
@@ -161,3 +162,25 @@ struct BansResponse: Decodable {
     var users: [User]
     var bans: [Ban]
 }
+
+struct Tuple2<A, B> {
+    var a: A
+    var b: B
+}
+
+extension Tuple2: Codable where A: Codable, B: Codable {
+    func encode(to encoder: any Encoder) throws {
+        try [AnyCodable(a), AnyCodable(b)].encode(to: encoder)
+    }
+    
+    init(from decoder: any Decoder) throws {
+        let cont = try decoder.singleValueContainer()
+        
+        let list = try cont.decode([AnyCodable].self)
+        
+        self.a = list[0].value as! A
+        self.b = list[1].value as! B
+    }
+}
+
+typealias SettingsResponse = [String: Tuple2<Int, String>]

@@ -770,18 +770,33 @@ public class ViewState: ObservableObject {
     }
 
     func getUnreadCountFor(server: Server) -> UnreadCount? {
-        let channelUnreads = server.channels.compactMap({ channels[$0] }).map({ getUnreadCountFor(channel: $0) })
+        if let serverNotificationValue = userSettingsStore.cache.notificationSettings.server[server.id] {
+            if serverNotificationValue == .muted && serverNotificationValue == .none {
+                return nil
+            }
+        }
+        
+        let channelUnreads = server.channels
+            .compactMap { channels[$0] }
+            .map { ($0, getUnreadCountFor(channel: $0)) }
 
         var mentionCount = 0
         var hasUnread = false
 
-        for unread in channelUnreads {
+        for (channel, unread) in channelUnreads {
+            let channelNotificationValue = userSettingsStore.cache.notificationSettings.channel[channel.id]
+            
             if let unread = unread {
                 switch unread {
                     case .unread:
-                        hasUnread = true
+                        if channelNotificationValue != NotificationState.none && channelNotificationValue != .muted {
+                            hasUnread = true
+                        }
+                        
                     case .mentions(let count):
-                        mentionCount += count
+                        if channelNotificationValue != NotificationState.none && channelNotificationValue != .mention {
+                            mentionCount += count
+                        }
                 }
             }
         }

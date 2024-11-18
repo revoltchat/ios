@@ -34,6 +34,35 @@ struct UserSettingsAccountData: Codable {
     var mfaStatus: AccountSettingsMFAStatus
 }
 
+enum NotificationState: String, Encodable {
+    case all, mention, muted, none
+}
+
+extension NotificationState: Decodable {
+    enum Inner: String, Decodable {
+        case all, mention, muted, none
+    }
+    
+    init(from decoder: any Decoder) throws {
+        do {
+            switch try decoder.singleValueContainer().decode(Inner.self) {
+                case .all: self = .all
+                case .mention: self = .mention
+                case .muted: self = .muted
+                case .none: self = .none
+            }
+        } catch {
+            self = .all
+        }
+    }
+}
+
+
+struct UserSettingsNotificationsData: Codable {
+    var server: [String: NotificationState]
+    var channel: [String: NotificationState]
+}
+
 @Observable
 class DiscardableUserStore: Codable {
     var user: Types.User?
@@ -43,11 +72,13 @@ class DiscardableUserStore: Codable {
     fileprivate func clear() {
         user = nil
         accountData = nil
+        notificationSettings = .init(server: [:], channel: [:])
     }
     
     enum CodingKeys: String, CodingKey {
         case _user = "user"
         case _accountData = "accountData"
+        case _notificationSettings = "notificationSettings"
     }
 }
 

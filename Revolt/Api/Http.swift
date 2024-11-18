@@ -408,6 +408,10 @@ struct HTTPClient {
         await req(method: .delete, route: "/custom/emoji/\(emoji)")
     }
     
+    func fetchSettings(keys: [String]) async -> Result<SettingsResponse, RevoltError> {
+        await req(method: .post, route: "/sync/settings/fetch", parameters: ["keys": keys])
+    }
+    
     func fetchBots() async -> Result<BotsResponse, RevoltError> {
         await req(method: .get, route: "/bots/@me")
     }
