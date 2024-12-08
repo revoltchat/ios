@@ -134,7 +134,7 @@ public class ViewState: ObservableObject {
 #endif
 
     let keychain = Keychain(service: "chat.revolt.app")
-    var http: HTTPClient = HTTPClient(token: nil, baseURL: nil)
+    var http: HTTPClient = HTTPClient(token: nil, baseURL: "")
     var launchTransaction: any Sentry.Span
     
     @Published var ws: WebSocketStream? = nil
