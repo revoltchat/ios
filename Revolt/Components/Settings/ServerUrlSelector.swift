@@ -12,6 +12,7 @@ struct ServerUrlSelector: View {
     @EnvironmentObject var viewState: ViewState
     @Environment(\.colorScheme) var colorScheme
     
+    private let officialServer = "https://api.revolt.chat"
     @State private var showCustomServer = false
     @State private var customDomain: String = ""
     @State private var isValidating = false
@@ -36,20 +37,27 @@ struct ServerUrlSelector: View {
         validationSuccess = nil
         
         let baseUrl: String
-        if domain.starts(with: "http://") || domain.starts(with: "https://") {
-            baseUrl = domain.hasSuffix("/") ? String(domain.dropLast()) : domain
+        if domain == officialServer {
+            print("Using official server URL without /api")
+            baseUrl = officialServer
+        } else if domain.starts(with: "http://") || domain.starts(with: "https://") {
+            baseUrl = (domain.hasSuffix("/") ? String(domain.dropLast()) : domain) + "/api"
         } else {
-            baseUrl = "https://" + (domain.hasSuffix("/") ? String(domain.dropLast()) : domain)
+            baseUrl = "https://" + (domain.hasSuffix("/") ? String(domain.dropLast()) : domain) + "/api"
         }
         
+        
+        // Store the full base URL including protocol
+        viewState.userSettingsStore.store.serverUrl = baseUrl
+        
         // Set temporary HTTP client to validate
-        let tempHttp = HTTPClient(token: nil, baseURL: "\(baseUrl)/api")
+        let tempHttp = HTTPClient(token: nil, baseURL: baseUrl)
         
         Task {
             do {
                 let fetchedApiInfo = try await tempHttp.fetchApiInfo().get()
                 viewState.apiInfo = fetchedApiInfo
-                viewState.http = HTTPClient(token: viewState.http.token, baseURL: fetchedApiInfo.app + "/api")
+                
                 isValidating = false
                 validationSuccess = "Successfully connected to server"
                 connectionStatus = .success
@@ -91,7 +99,8 @@ struct ServerUrlSelector: View {
                     withAnimation {
                         showCustomServer.toggle()
                         if !showCustomServer {
-                            validateAndUpdateApiInfo("api.revolt.chat")
+                            validateAndUpdateApiInfo(officialServer)
+                            viewState.userSettingsStore.store.serverUrl = officialServer
                         }
                     }
                 }) {
@@ -156,8 +165,9 @@ struct ServerUrlSelector: View {
         }
         .padding(.bottom)
         .onAppear {
-            if viewState.apiInfo == nil {
-                validateAndUpdateApiInfo("api.revolt.chat")
+            if viewState.userSettingsStore.store.serverUrl.isEmpty {
+                viewState.userSettingsStore.store.serverUrl = officialServer
+                validateAndUpdateApiInfo(officialServer)
             }
         }
     }
