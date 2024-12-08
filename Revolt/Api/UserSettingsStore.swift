@@ -163,6 +163,12 @@ class PersistentUserSettingsStore: Codable {
     
     var notifications: NotificationOptionsData
     
+    var serverUrl: String {
+        didSet {
+            keyWasSet()
+        }
+    }
+    
     var lastOpenChannels: [String: String] {
         didSet {
             keyWasSet()
@@ -177,8 +183,9 @@ class PersistentUserSettingsStore: Codable {
     
     var experiments: ExperimentOptionsData
 
-    init(keyWasSet: @escaping () -> Void, notifications: NotificationOptionsData, lastOpenChannels: [String: String], closedCategories: [String: Set<String>], experiments: ExperimentOptionsData) {
+    init(keyWasSet: @escaping () -> Void, notifications: NotificationOptionsData, serverUrl: String, lastOpenChannels: [String: String], closedCategories: [String: Set<String>], experiments: ExperimentOptionsData) {
         self.notifications = notifications
+        self.serverUrl = serverUrl
         self.lastOpenChannels = lastOpenChannels
         self.closedCategories = closedCategories
         self.experiments = experiments
@@ -188,6 +195,7 @@ class PersistentUserSettingsStore: Codable {
     
     init() {
         self.notifications = NotificationOptionsData()
+        self.serverUrl = ""
         self.lastOpenChannels = [:]
         self.closedCategories = [:]
         self.experiments = ExperimentOptionsData()
@@ -201,6 +209,7 @@ class PersistentUserSettingsStore: Codable {
     
     enum CodingKeys: String, CodingKey {
         case _notifications = "notifications"
+        case _serverUrl = "serverUrl"
         case _lastOpenChannels = "lastOpenChannels"
         case _closedCategories = "closedCategories"
         case _experiments = "experiments"
@@ -338,9 +347,14 @@ class UserSettingsData {
                 mfaStatus: try await state.http.fetchMFAStatus().get()
             )
             
-            let settingsValues = try await state.http.fetchSettings(keys: ["notifications"]).get()
-            let notificationValue = try! settingsValues["notifications"].unwrapped().b.replacingOccurrences(of: #"\""#, with: #"""#)
-            self.cache.notificationSettings = try! JSONDecoder().decode(UserSettingsNotificationsData.self, from: try! notificationValue.data(using: .utf8).unwrapped())
+            if let settingsValues = try await state.http.fetchSettings(keys: ["notifications"]).get()["notifications"] {
+                let notificationString = String(describing: settingsValues)
+                let cleanValue = notificationString.replacingOccurrences(of: #"\""#, with: #"""#)
+                if let data = cleanValue.data(using: String.Encoding.utf8),
+                   let notificationSettings = try? JSONDecoder().decode(UserSettingsNotificationsData.self, from: data) {
+                    self.cache.notificationSettings = notificationSettings
+                }
+            }
             
             self.cacheState = .cached
             writeCacheToFile()
