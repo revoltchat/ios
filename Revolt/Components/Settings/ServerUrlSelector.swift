@@ -38,30 +38,63 @@ struct ServerUrlSelector: View {
         
         let baseUrl: String
         if domain == officialServer {
-            print("Using official server URL without /api")
             baseUrl = officialServer
-        } else if domain.starts(with: "http://") || domain.starts(with: "https://") {
-            baseUrl = (domain.hasSuffix("/") ? String(domain.dropLast()) : domain) + "/api"
         } else {
-            baseUrl = "https://" + (domain.hasSuffix("/") ? String(domain.dropLast()) : domain) + "/api"
+            // First try the domain as-is
+            let cleanDomain = domain.hasSuffix("/") ? String(domain.dropLast()) : domain
+            baseUrl = (domain.starts(with: "http://") || domain.starts(with: "https://")) ? cleanDomain : "https://" + cleanDomain
         }
         
-        
-        // Store the full base URL including protocol
-        viewState.userSettingsStore.store.serverUrl = baseUrl
-        
-        // Set temporary HTTP client to validate
-        let tempHttp = HTTPClient(token: nil, baseURL: baseUrl)
-        
-        Task {
+        // Function to try validation with a URL
+        func tryValidation(url: String) async -> Bool {
+            let tempHttp = HTTPClient(token: nil, baseURL: url)
             do {
                 let fetchedApiInfo = try await tempHttp.fetchApiInfo().get()
-                viewState.apiInfo = fetchedApiInfo
-                
-                isValidating = false
-                validationSuccess = "Successfully connected to server"
-                connectionStatus = .success
+                // Validate that this is actually a Revolt API
+                guard 
+                    !fetchedApiInfo.revolt.isEmpty,          // Check revolt version exists
+                    fetchedApiInfo.features.january != nil,  // Check for required features
+                    fetchedApiInfo.features.autumn != nil,   // Check for required features
+                    !fetchedApiInfo.ws.isEmpty,              // Check websocket URL exists
+                    !fetchedApiInfo.app.isEmpty              // Check app URL exists
+                else {
+                    return false
+                }
+
+                await MainActor.run {
+                    viewState.apiInfo = fetchedApiInfo
+                    viewState.userSettingsStore.store.serverUrl = url
+                    
+                    if url != baseUrl {
+                        customDomain = url // Update textbox if we added /api
+                    }
+
+                    isValidating = false
+                    validationSuccess = "Successfully connected to server"
+                    connectionStatus = .success
+                }
+                return true
             } catch {
+                return false
+            }
+        }
+        
+        Task {
+            // Try original URL first
+            if await tryValidation(url: baseUrl) {
+                return
+            }
+            
+            // If not official server and first attempt failed, try with /api
+            if domain != officialServer {
+                let apiUrl = baseUrl + "/api"
+                if await tryValidation(url: apiUrl) {
+                    return
+                }
+            }
+            
+            // If both attempts failed, show error
+            await MainActor.run {
                 isValidating = false
                 validationError = "Unable to connect to server"
                 connectionStatus = .failed
@@ -126,6 +159,9 @@ struct ServerUrlSelector: View {
                         }
                     }
                     .onChange(of: customDomain) { oldValue, newValue in
+                        print("onChange: \(oldValue) -> \(newValue)")
+                        print("connectionStatus: \(connectionStatus)")
+                        print("validationSuccess: \(validationSuccess)")
                         if oldValue != newValue {
                             connectionStatus = .untested
                             validationError = nil
@@ -134,7 +170,8 @@ struct ServerUrlSelector: View {
                     }
                     
                     Button(action: {
-                        if !customDomain.isEmpty {
+                        i
+                        ';f !customDomain.isEmpty {
                             validateAndUpdateApiInfo(customDomain)
                         }
                     }) {
