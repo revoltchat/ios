@@ -501,6 +501,7 @@ public class ViewState: ObservableObject {
     func setSignedOutState() {
         withAnimation {
             state = .signedOut
+            userSettingsStore.store.serverUrl = ""  // Clear server URL on sign out
         }
     }
     
