@@ -421,8 +421,12 @@ public class ViewState: ObservableObject {
     }
 
     private func innerSignIn(_ body: [String: Any], _ callback: @escaping((LoginState) -> ())) async {
-        let baseUrl = apiInfo?.app
-        AF.request("\(baseUrl)/api/auth/session/login", method: .post, parameters: body, encoding: JSONEncoding.default)
+        guard let baseUrl = apiInfo?.app else {
+            return callback(.Invalid)
+        }
+        
+        let loginUrl = "\(baseUrl)/api/auth/session/login"
+        AF.request(loginUrl, method: .post, parameters: body, encoding: JSONEncoding.default)
             .responseData { response in
 
                 switch response.result {
@@ -1003,4 +1007,3 @@ extension Channel {
         }
     }
 }
-
