@@ -54,6 +54,8 @@ struct CreateAccount: View {
 //                            Text(verbatim: error)
 //                                .foregroundStyle(.red)
 //                        }
+                        ServerUrlSelector()
+
                         TextField(
                             "Email",
                             text: $email

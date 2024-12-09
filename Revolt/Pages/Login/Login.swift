@@ -58,6 +58,8 @@ struct LogIn: View {
                 .foregroundStyle((colorScheme == .light) ? Color.black : Color.white)
 
             Group {
+                ServerUrlSelector()
+                
                 if let error = errorMessage {
                     Text(verbatim: error)
                         .foregroundStyle(.red)

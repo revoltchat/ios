@@ -12,7 +12,8 @@ struct RevoltApp: App {
     #endif
     
     @Environment(\.locale) var systemLocale: Locale
-    @StateObject var state = ViewState.shared ?? ViewState()
+    @StateObject var state = ViewState()
+    @Environment(\.scenePhase) var scenePhase
 
     init() {
         if !isPreview {
@@ -35,6 +36,12 @@ struct RevoltApp: App {
                 .background(state.theme.background.color)
                 .foregroundStyle(state.theme.foreground.color)
                 .typesettingLanguage((state.currentLocale ?? systemLocale).language)
+                .onAppear {
+                    // Remove this - let the saved URL persist
+                    // if state.userSettingsStore.store.serverUrl.isEmpty {
+                    //     state.userSettingsStore.store.serverUrl = "api.revolt.chat"
+                    // }
+                }
                 .onOpenURL { url in
                     print(url)
                     let components = NSURLComponents(string: url.absoluteString)
@@ -190,15 +197,25 @@ struct InnerApp: View {
                     case .connecting:
                         VStack {
                             Text("Connecting...")
-#if DEBUG
+                            #if DEBUG
                             Button {
-                                viewState.destroyCache()
-                                viewState.sessionToken = nil
-                                viewState.state = .signedOut
+                                withAnimation {
+                                    viewState.destroyCache()
+                                    viewState.sessionToken = nil
+                                    viewState.state = .signedOut
+                                    viewState.isOnboarding = false
+                                    viewState.forceMainScreen = false
+                                }
                             } label: {
                                 Text("Developer: Nuke everything and force welcome screen")
+                                    .padding()
+                                    .background(viewState.theme.background2)
+                                    .foregroundStyle(viewState.theme.accent)
+                                    .clipShape(RoundedRectangle(cornerRadius: 8))
                             }
-#endif
+                            .buttonStyle(.plain)
+                            .padding(.top)
+                            #endif
                         }
                     case .connected:
                         MainApp()

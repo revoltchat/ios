@@ -870,6 +870,16 @@ struct UserSettings: View {
     var body: some View {
         List {
             Section("Account Info") {
+                HStack {
+                    Text("Server")
+                    Spacer()
+                    if let apiInfo = viewState.apiInfo {
+                        Text(URL(string: apiInfo.app)?.host ?? "")
+                            .foregroundStyle(.secondary)
+                    }
+                }
+                .listRowBackground(viewState.theme.background2)
+                
                 Button(action: {
                     presentChangeUsernameSheet = true
                 }) {

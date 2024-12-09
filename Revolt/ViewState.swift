@@ -134,7 +134,7 @@ public class ViewState: ObservableObject {
 #endif
 
     let keychain = Keychain(service: "chat.revolt.app")
-    var http: HTTPClient = HTTPClient(token: nil, baseURL: "https://app.revolt.chat/api")
+    var http: HTTPClient = HTTPClient(token: nil, baseURL: "")
     var launchTransaction: any Sentry.Span
     
     @Published var ws: WebSocketStream? = nil
@@ -144,6 +144,9 @@ public class ViewState: ObservableObject {
             let apiInfo = apiInfo
             DispatchQueue.global(qos: .background).async {
                 UserDefaults.standard.set(try! JSONEncoder().encode(apiInfo), forKey: "apiInfo")
+                if let apiInfo = apiInfo {
+                    self.http = HTTPClient(token: self.http.token, baseURL: apiInfo.app + "/api")
+                }
             }
         }
     }
@@ -290,6 +293,16 @@ public class ViewState: ObservableObject {
         launchTransaction = SentrySDK.startTransaction(name: "launch", operation: "launch")
         let decoder = JSONDecoder()
         
+        // Load stored settings
+        let settings = UserSettingsData.maybeRead(viewState: nil)
+        
+        // Only create HTTP client if we have a server URL
+        if !settings.store.serverUrl.isEmpty {
+            self.http = HTTPClient(token: nil, baseURL: "\(settings.store.serverUrl)")
+        } else {
+            self.http = HTTPClient(token: nil, baseURL: "")
+        }
+        
         self.apiInfo = ViewState.decodeUserDefaults(forKey: "apiInfo", withDecoder: decoder, defaultingTo: nil)
         
         self.userSettingsStore = UserSettingsData.maybeRead(viewState: nil)
@@ -371,12 +384,19 @@ public class ViewState: ObservableObject {
     }
 
     func signInWithVerify(code: String, email: String, password: String) async -> Bool {
+        guard let baseUrl = apiInfo?.app else {
+            return false
+        }
+        
+        // Update HTTP client with current server URL
+        self.http = HTTPClient(token: nil, baseURL: baseUrl)
+        
         do {
             _ = try await self.http.createAccount_VerificationCode(code: code).get()
         } catch {
             return false
         }
-
+        
         await signIn(email: email, password: password, callback: {a in print(String(describing: a))})
         // awful workaround for the verification endpoint returning invalid session tokens
         return true
@@ -389,13 +409,31 @@ public class ViewState: ObservableObject {
     }
 
     func signIn(email: String, password: String, callback: @escaping((LoginState) -> ())) async {
-        let body = ["email": email, "password": password, "friendly_name": "Revolt IOS"]
-
-        await innerSignIn(body, callback)
+        // First fetch API info
+        let baseUrl = apiInfo?.app
+        
+        do {
+            let fetchedApiInfo = try await http.fetchApiInfo().get()
+            self.apiInfo = fetchedApiInfo
+            self.http.apiInfo = fetchedApiInfo
+            self.http = HTTPClient(token: nil, baseURL: fetchedApiInfo.app + "/api")
+            
+            // Now proceed with login
+            let body = ["email": email, "password": password, "friendly_name": "Revolt IOS"]
+            await innerSignIn(body, callback)
+        } catch {
+            callback(.Invalid)
+            return
+        }
     }
 
     private func innerSignIn(_ body: [String: Any], _ callback: @escaping((LoginState) -> ())) async {
-        AF.request("\(http.baseURL)/auth/session/login", method: .post, parameters: body, encoding: JSONEncoding.default)
+        guard let baseUrl = apiInfo?.app else {
+            return callback(.Invalid)
+        }
+        
+        let loginUrl = "\(baseUrl)/api/auth/session/login"
+        AF.request(loginUrl, method: .post, parameters: body, encoding: JSONEncoding.default)
             .responseData { response in
 
                 switch response.result {
@@ -450,6 +488,7 @@ public class ViewState: ObservableObject {
         
         withAnimation {
             state = .signedOut
+            userSettingsStore.store.serverUrl = ""  // Clear server URL on sign out
         }
         
         // IMPORTANT: do not destroy the cache/session here. It'll cause the app to crash before it can transition to the welcome screen.
@@ -462,6 +501,7 @@ public class ViewState: ObservableObject {
     func setSignedOutState() {
         withAnimation {
             state = .signedOut
+            userSettingsStore.store.serverUrl = ""  // Clear server URL on sign out
         }
     }
     
@@ -975,4 +1015,3 @@ extension Channel {
         }
     }
 }
-
