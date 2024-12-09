@@ -384,12 +384,19 @@ public class ViewState: ObservableObject {
     }
 
     func signInWithVerify(code: String, email: String, password: String) async -> Bool {
+        guard let baseUrl = apiInfo?.app else {
+            return false
+        }
+        
+        // Update HTTP client with current server URL
+        self.http = HTTPClient(token: nil, baseURL: baseUrl)
+        
         do {
             _ = try await self.http.createAccount_VerificationCode(code: code).get()
         } catch {
             return false
         }
-
+        
         await signIn(email: email, password: password, callback: {a in print(String(describing: a))})
         // awful workaround for the verification endpoint returning invalid session tokens
         return true
