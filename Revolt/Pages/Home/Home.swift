@@ -13,6 +13,7 @@ struct MaybeChannelView: View {
     @Binding var currentSelection: MainSelection
     var toggleSidebar: () -> ()
     @Binding var disableScroll: Bool
+    @Binding var disableSidebar: Bool
     
     var body: some View {
         switch currentChannel {
@@ -28,7 +29,8 @@ struct MaybeChannelView: View {
                             messages: messages
                         ),
                         toggleSidebar: toggleSidebar,
-                        disableScroll: $disableScroll
+                        disableScroll: $disableScroll,
+                        disableSidebar: $disableSidebar
                     )
 
                 } else {
@@ -65,6 +67,9 @@ struct HomeRewritten: View {
     @State var forceOpen: Bool = false
     @State var calculatedSize = CGFloat.zero
     @State var disableScroll = false
+    @State var disableSidebar = false
+    
+    var minGestureLength: CGFloat = 20
     
     func toggleSidebar() {
         withAnimation {
@@ -92,7 +97,7 @@ struct HomeRewritten: View {
                 }
                 .frame(maxWidth: 300)
                 
-                MaybeChannelView(currentChannel: $currentChannel, currentSelection: $currentSelection, toggleSidebar: toggleSidebar, disableScroll: $disableScroll)
+                MaybeChannelView(currentChannel: $currentChannel, currentSelection: $currentSelection, toggleSidebar: toggleSidebar, disableScroll: $disableScroll, disableSidebar: $disableSidebar)
                     .frame(maxWidth: .infinity)
             }
         } else {
@@ -122,7 +127,7 @@ struct HomeRewritten: View {
                             .frame(width: geo.size.width)
                             .ignoresSafeArea(.all)
                         
-                        MaybeChannelView(currentChannel: $currentChannel, currentSelection: $currentSelection, toggleSidebar: toggleSidebar, disableScroll: $disableScroll)
+                        MaybeChannelView(currentChannel: $currentChannel, currentSelection: $currentSelection, toggleSidebar: toggleSidebar, disableScroll: $disableScroll, disableSidebar: $disableSidebar)
                             .disabled(offset != 0.0)
                             .offset(x: offset)
                             .frame(width: geo.size.width)
@@ -135,9 +140,9 @@ struct HomeRewritten: View {
                             }
                     }
                     .simultaneousGesture(
-                        DragGesture(minimumDistance: 50.0)
+                        DragGesture(minimumDistance: minGestureLength)
                                 .onChanged({ g in
-                                    if g.translation.width >= 50 {
+                                    if g.translation.width >= minGestureLength {
                                         disableScroll = true
                                     }
                                     
@@ -163,7 +168,7 @@ struct HomeRewritten: View {
                                         }
                                     }
                                 }),
-                        including: .all
+                        isEnabled: !disableSidebar
                         )
                 }
                 .task { calculatedSize = sidebarWidth }
