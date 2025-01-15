@@ -134,7 +134,7 @@ public class ViewState: ObservableObject {
 #endif
 
     let keychain = Keychain(service: "chat.revolt.app")
-    var http: HTTPClient = HTTPClient(token: nil, baseURL: "https://app.revolt.chat/api")
+    var http: HTTPClient = HTTPClient(token: nil, baseURL: "https://api.revolt.chat/")
     var launchTransaction: any Sentry.Span
     
     @Published var ws: WebSocketStream? = nil
@@ -314,6 +314,8 @@ public class ViewState: ObservableObject {
         
         self.currentUser = ViewState.decodeUserDefaults(forKey: "currentUser", withDecoder: decoder, defaultingTo: nil)
         
+        self.path = NavigationPath()
+        
         if let value = UserDefaults.standard.data(forKey: "path"), let path = try? decoder.decode(NavigationPath.CodableRepresentation.self, from: value) {
             self.path = NavigationPath(path)
         } else {
@@ -329,6 +331,10 @@ public class ViewState: ObservableObject {
         
         self.userSettingsStore.viewState = self // this is a cursed workaround
         ViewState.shared = self
+        
+        if let user = self.currentUser {
+            SentrySDK.setUser(Sentry.User(userId: user.id))
+        }
     }
 
     func applySystemScheme(theme: ColorScheme, followSystem: Bool = false) -> Self {

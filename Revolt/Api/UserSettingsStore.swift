@@ -339,8 +339,8 @@ class UserSettingsData {
             )
             
             let settingsValues = try await state.http.fetchSettings(keys: ["notifications"]).get()
-            let notificationValue = try! settingsValues["notifications"].unwrapped().b.replacingOccurrences(of: #"\""#, with: #"""#)
-            self.cache.notificationSettings = try! JSONDecoder().decode(UserSettingsNotificationsData.self, from: try! notificationValue.data(using: .utf8).unwrapped())
+            let notificationValue = try settingsValues["notifications"].unwrapped().b.replacingOccurrences(of: #"\""#, with: #"""#)
+            self.cache.notificationSettings = try JSONDecoder().decode(UserSettingsNotificationsData.self, from: try notificationValue.data(using: .utf8).unwrapped())
             
             self.cacheState = .cached
             writeCacheToFile()
