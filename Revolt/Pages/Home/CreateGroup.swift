@@ -16,20 +16,7 @@ struct CreateGroup: View {
     @State var selectedUsers: Set<User> = Set()
     @State var error: String? = nil
     
-    func getFriends() ->  [User] {
-        var friends: [User] = []
-
-        for user in viewState.users.values {
-            switch user.relationship ?? .None {
-                case .Friend:
-                    friends.append(user)
-                default:
-                    ()
-            }
-        }
-        
-        return friends
-    }
+    @State var allFriends: [User] = []
     
     var body: some View {
         VStack(spacing: 4) {
@@ -46,7 +33,7 @@ struct CreateGroup: View {
                 .padding([.horizontal, .top], 16)
             
             List(selection: $selectedUsers) {
-                ForEach(getFriends().filter { user in searchText.isEmpty || (user.username.contains(searchText) || (user.display_name?.contains(searchText) ?? false))}) { user in
+                ForEach(allFriends.filter { user in searchText.isEmpty || (user.username.contains(searchText) || (user.display_name?.contains(searchText) ?? false))}) { user in
                     let binding = Binding(
                         get: { selectedUsers.contains(user) },
                         set: { v in
@@ -78,6 +65,16 @@ struct CreateGroup: View {
             #if os(iOS)
             .environment(\.editMode, .constant(EditMode.active))
             #endif
+        }
+        .task {
+            allFriends = viewState.users.values.filter({ user in
+                switch user.relationship ?? .None {
+                    case .Friend:
+                        return true
+                    default:
+                        return false
+                }
+            })
         }
         .background(viewState.theme.background.color)
         .toolbarBackground(viewState.theme.topBar.color, for: .automatic)
