@@ -29,6 +29,32 @@ struct SystemMessageView: View {
                     
                     Text("\(member?.nickname ?? user.display_name ?? user.username) joined")
 
+                case .message_pinned(let content):
+                    let user = viewState.users[content.by]!
+                    let member = viewState.channels[message.channel]!.server.flatMap { viewState.members[$0]?[user.id] }
+                    
+                    Image(systemName: "pin.fill")
+                        .resizable()
+                        .scaledToFit()
+                        .frame(width: 16, height: 16)
+
+                    Avatar(user: user, member: member, masquerade: message.masquerade, width: 24, height: 24)
+                    
+                    Text("\(member?.nickname ?? user.display_name ?? user.username) pinned a message")
+
+                case .message_unpinned(let content):
+                    let user = viewState.users[content.by]!
+                    let member = viewState.channels[message.channel]!.server.flatMap { viewState.members[$0]?[user.id] }
+                    
+                    Image(systemName: "pin.slash.fill")
+                        .resizable()
+                        .scaledToFit()
+                        .frame(width: 16, height: 16)
+
+                    Avatar(user: user, member: member, masquerade: message.masquerade, width: 24, height: 24)
+                    
+                    Text("\(member?.nickname ?? user.display_name ?? user.username) unpinned a message")
+
                 default:
                     Text("unknown")
             }

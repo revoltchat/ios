@@ -114,6 +114,7 @@ enum NavigationDestination: Hashable, Codable {
     case create_server
     case channel_search(String)
     case invite(String)
+    case channel_pins(String)
 }
 
 struct UserMaybeMember: Identifiable {
@@ -134,7 +135,7 @@ public class ViewState: ObservableObject {
 #endif
 
     let keychain = Keychain(service: "chat.revolt.app")
-    var http: HTTPClient = HTTPClient(token: nil, baseURL: "https://api.revolt.chat/")
+    var http: HTTPClient = HTTPClient(token: nil, baseURL: "https://api.revolt.chat/0.8")
     var launchTransaction: any Sentry.Span
     
     @Published var ws: WebSocketStream? = nil
@@ -314,13 +315,13 @@ public class ViewState: ObservableObject {
         
         self.currentUser = ViewState.decodeUserDefaults(forKey: "currentUser", withDecoder: decoder, defaultingTo: nil)
         
-        self.path = NavigationPath()
+        // self.path = NavigationPath()
         
-        if let value = UserDefaults.standard.data(forKey: "path"), let path = try? decoder.decode(NavigationPath.CodableRepresentation.self, from: value) {
-            self.path = NavigationPath(path)
-        } else {
-            self.path = NavigationPath()
-        }
+       if let value = UserDefaults.standard.data(forKey: "path"), let path = try? decoder.decode(NavigationPath.CodableRepresentation.self, from: value) {
+           self.path = NavigationPath(path)
+       } else {
+           self.path = NavigationPath()
+       }
         
         if self.currentUser != nil, self.apiInfo != nil {
             self.forceMainScreen = true
@@ -568,6 +569,7 @@ public class ViewState: ObservableObject {
     }
 
     func onEvent(_ event: WsMessage) async {
+        print(event)
         switch event {
             case .ready(let event):
                 let processReadySpan = launchTransaction.startChild(operation: "processReady")
@@ -655,10 +657,23 @@ public class ViewState: ObservableObject {
                 let message = messages[event.id]
 
                 if var message = message {
-                    message.edited = event.data.edited
+                    if let edited = event.data.edited {
+                        message.edited = edited
+                    }
 
                     if let content = event.data.content {
                         message.content = content
+                    }
+                    
+                    if let pinned = event.data.pinned {
+                        message.pinned = pinned
+                    }
+                    
+                    for remove in event.remove ?? [] {
+                        switch remove {
+                            case .pinned:
+                                message.pinned = nil
+                        }
                     }
 
                     messages[event.id] = message

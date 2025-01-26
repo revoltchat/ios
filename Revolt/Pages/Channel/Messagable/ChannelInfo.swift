@@ -162,11 +162,12 @@ struct ChannelInfo: View {
     
     var body: some View {
         VStack(alignment: .center) {
-            VStack {
-                if let description = channel.description {
-                    Text(verbatim: description)
+            VStack(alignment: .center, spacing: 8) {
+                if let description = Binding($channel.description) {
+                    Contents(text: description)
                         .font(.footnote)
                         .foregroundStyle(viewState.theme.foreground2.color)
+                        .multilineTextAlignment(.center)
                 }
                 
                 HStack {
@@ -179,6 +180,19 @@ struct ChannelInfo: View {
                             Text("Search")
                         }
                     }
+                    
+                    Spacer()
+                    
+                    NavigationLink(value: NavigationDestination.channel_pins(channel.id)) {
+                        VStack(alignment: .center) {
+                            Image(systemName: "pin.circle.fill")
+                                .resizable()
+                                .frame(width: 32, height: 32)
+                            
+                            Text("Pins")
+                        }
+                    }
+
                     
                     Spacer()
                     

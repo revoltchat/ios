@@ -412,6 +412,18 @@ struct HTTPClient {
         await req(method: .post, route: "/sync/settings/fetch", parameters: ["keys": keys])
     }
     
+    func fetchChannelPins(channel: String) async -> Result<SearchResponse, RevoltError> {
+        await req(method: .post, route: "/channels/\(channel)/search", parameters: ChannelSearchPayload(pinned: true, sort: .latest, include_users: true))
+    }
+    
+    func pinMessage(channel: String, message: String) async -> Result<EmptyResponse, RevoltError> {
+        await req(method: .post, route: "/channels/\(channel)/messages/\(message)/pin")
+    }
+    
+    func unpinMessage(channel: String, message: String) async -> Result<EmptyResponse, RevoltError> {
+        await req(method: .delete, route: "/channels/\(channel)/messages/\(message)/pin")
+    }
+    
     func fetchBots() async -> Result<BotsResponse, RevoltError> {
         await req(method: .get, route: "/bots/@me")
     }
@@ -426,6 +438,14 @@ struct HTTPClient {
     
     func editBot(id: String, parameters: EditBotPayload) async -> Result<Bot, RevoltError> {
         await req(method: .patch, route: "/bots/\(id)", parameters: parameters)
+    }
+    
+    func fetchMembers(server: String, excludeOffline: Bool) async -> Result<MembersWithUsers, RevoltError> {
+        await req(method: .get, route: "/servers/\(server)/members?exclude_offline=\(excludeOffline ? "true" : "false")")
+    }
+    
+    func fetchInvites(server: String) async -> Result<[Invite], RevoltError> {
+        await req(method: .get, route: "/servers/\(server)/invites")
     }
     
     func fetchBans(server: String) async -> Result<BansResponse, RevoltError> {

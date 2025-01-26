@@ -34,13 +34,19 @@ struct ReadyEvent: Decodable {
 
 struct MessageUpdateEventData: Decodable {
     var content: String?
-    var edited: String
+    var edited: String?
+    var pinned: Bool?
 }
 
 struct MessageUpdateEvent: Decodable {
+    enum Remove: String, Decodable {
+        case pinned = "Pinned"
+    }
+    
     var channel: String
     var id: String
     var data: MessageUpdateEventData
+    var remove: [Remove]?
 }
 
 struct ChannelTyping: Decodable {
@@ -193,6 +199,7 @@ class WebSocketStream: ObservableObject {
                 }
 
             case .text(let string):
+                client.write(ping: Data())
 
                 do {
                     let e = try decoder.decode(WsMessage.self, from: string.data(using: .utf8)!)

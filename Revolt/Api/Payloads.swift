@@ -143,7 +143,8 @@ struct ChannelSearchPayload: Encodable {
         case oldest = "Oldest"
     }
     
-    var query: String
+    var query: String?
+    var pinned: Bool?
     var limit: Int?
     var before: String?
     var after: String?

@@ -50,6 +50,14 @@ class MessageContentsViewModel: ObservableObject, Equatable {
             }
         }
     }
+    
+    func pin() async {
+        await viewState.http.pinMessage(channel: channel.id, message: message.id)
+    }
+    
+    func unpin() async {
+        await viewState.http.unpinMessage(channel: channel.id, message: message.id)
+    }
 }
 
 struct MessageContentsView: View {
@@ -176,7 +184,27 @@ struct MessageContentsView: View {
                     } label: {
                         Label("Reactions", systemImage: "face.smiling.inverse")
                     }
-               }
+                }
+                
+                if canManageMessages {
+                    if !(viewModel.message.pinned ?? false) {
+                        Button {
+                            Task {
+                                await viewModel.pin()
+                            }
+                        } label: {
+                            Label("Pin Message", systemImage: "pin.fill")
+                        }
+                    } else {
+                        Button {
+                            Task {
+                                await viewModel.unpin()
+                            }
+                        } label: {
+                            Label("Unpin Message", systemImage: "pin.slash.fill")
+                        }
+                    }
+                }
                 
                 Button {
                     copyText(text: viewModel.message.content ?? "")

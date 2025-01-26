@@ -134,6 +134,7 @@
 		17E019DC2AF1B25100AB4663 /* SessionsSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17E019DB2AF1B25100AB4663 /* SessionsSettings.swift */; };
 		17E28E082AF319D500F6069F /* AddServerSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17E28E072AF319D500F6069F /* AddServerSheet.swift */; };
 		17E346772CBC53A3000FBE6C /* AlertPopup.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17E346762CBC53A3000FBE6C /* AlertPopup.swift */; };
+		17E5AA172CD8686D00C1EA19 /* ChannelPins.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17E5AA162CD8686800C1EA19 /* ChannelPins.swift */; };
 		17E72F832CACEAB8009E7C40 /* SwiftyCrop in Frameworks */ = {isa = PBXBuildFile; productRef = 17E72F822CACEAB8009E7C40 /* SwiftyCrop */; };
 		17F502542B9BFB1000A3022D /* AddFriend.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17F502532B9BFB1000A3022D /* AddFriend.swift */; };
 		17F502562B9BFB2800A3022D /* CreateGroup.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17F502552B9BFB2800A3022D /* CreateGroup.swift */; };
@@ -321,6 +322,7 @@
 		17E019DB2AF1B25100AB4663 /* SessionsSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SessionsSettings.swift; sourceTree = "<group>"; };
 		17E28E072AF319D500F6069F /* AddServerSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddServerSheet.swift; sourceTree = "<group>"; };
 		17E346762CBC53A3000FBE6C /* AlertPopup.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlertPopup.swift; sourceTree = "<group>"; };
+		17E5AA162CD8686800C1EA19 /* ChannelPins.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChannelPins.swift; sourceTree = "<group>"; };
 		17F502532B9BFB1000A3022D /* AddFriend.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddFriend.swift; sourceTree = "<group>"; };
 		17F502552B9BFB2800A3022D /* CreateGroup.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateGroup.swift; sourceTree = "<group>"; };
 		17F555262AFC229900958F2F /* ServerSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ServerSettings.swift; sourceTree = "<group>"; };
@@ -445,6 +447,7 @@
 				1773C03C2C07DD1F007B8867 /* MessageableChannel.swift */,
 				17D8BACE2B211DEE005F5447 /* ChannelInfo.swift */,
 				173D698D2C7FF7FC00030E62 /* ChannelSearch.swift */,
+				17E5AA162CD8686800C1EA19 /* ChannelPins.swift */,
 			);
 			path = Messagable;
 			sourceTree = "<group>";
@@ -1052,6 +1055,7 @@
 				17F9D7632C9208B500D0BB6F /* MessageReactionsSheet.swift in Sources */,
 				178BB1102B02D89A001143A4 /* HCaptchaView.swift in Sources */,
 				17DFB4642AE06A5D00E1D417 /* Settings.swift in Sources */,
+				17E5AA172CD8686D00C1EA19 /* ChannelPins.swift in Sources */,
 				17F555272AFC229900958F2F /* ServerSettings.swift in Sources */,
 				17E019D32AF17F9D00AB4663 /* ProfileSettings.swift in Sources */,
 				DAAA4C0929F2974300F41E52 /* Http.swift in Sources */,

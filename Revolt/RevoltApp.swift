@@ -244,6 +244,10 @@ struct MainApp: View {
                     ChannelSearch(channel: channel)
                 case .invite(let code):
                     ViewInvite(code: code)
+                case .channel_pins(let id):
+                    let channel = Binding($viewState.channels[id])!
+                    ChannelPins(channel: channel)
+
             }
         }
         .environment(\.currentServer, viewState.currentSelection.id.flatMap { viewState.servers[$0] })
