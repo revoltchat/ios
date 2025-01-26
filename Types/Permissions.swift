@@ -239,7 +239,7 @@ extension Permissions: Codable {
 }
 
 
-public struct Overwrite: Codable, Equatable {
+public struct Overwrite: Codable, Equatable, Hashable {
     public init(a: Permissions, d: Permissions) {
         self.a = a
         self.d = d

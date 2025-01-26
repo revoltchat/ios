@@ -93,6 +93,7 @@
 		178BB11B2B02FCDD001143A4 /* Responses.swift in Sources */ = {isa = PBXBuildFile; fileRef = 178BB11A2B02FCDD001143A4 /* Responses.swift */; };
 		178E26BC2B1542820015CAC7 /* PageToolbar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 178E26BB2B1542820015CAC7 /* PageToolbar.swift */; };
 		17966B652AE0842A00BAEC58 /* ChannelIcon.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17966B642AE0842A00BAEC58 /* ChannelIcon.swift */; };
+		17A21DF62CFA71AC0024C9F0 /* AddBot.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17A21DF52CFA71AA0024C9F0 /* AddBot.swift */; };
 		17A589FA2C44781F00B9D85A /* AnyTransition.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17A589F92C44781F00B9D85A /* AnyTransition.swift */; };
 		17A7FE372C49DE6F0083B22F /* Member.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17A7FE362C49DE6F0083B22F /* Member.swift */; };
 		17A7FE392C49EBD20083B22F /* Image.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17A7FE382C49EBD20083B22F /* Image.swift */; };
@@ -270,6 +271,7 @@
 		178BB11A2B02FCDD001143A4 /* Responses.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Responses.swift; sourceTree = "<group>"; };
 		178E26BB2B1542820015CAC7 /* PageToolbar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PageToolbar.swift; sourceTree = "<group>"; };
 		17966B642AE0842A00BAEC58 /* ChannelIcon.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChannelIcon.swift; sourceTree = "<group>"; };
+		17A21DF52CFA71AA0024C9F0 /* AddBot.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddBot.swift; sourceTree = "<group>"; };
 		17A589F92C44781F00B9D85A /* AnyTransition.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnyTransition.swift; sourceTree = "<group>"; };
 		17A7FE362C49DE6F0083B22F /* Member.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Member.swift; sourceTree = "<group>"; };
 		17A7FE382C49EBD20083B22F /* Image.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Image.swift; sourceTree = "<group>"; };
@@ -489,6 +491,7 @@
 		1746A4B22CAF29AE00095CF3 /* BotSettings */ = {
 			isa = PBXGroup;
 			children = (
+				17A21DF52CFA71AA0024C9F0 /* AddBot.swift */,
 				1746A4AE2CAF26C900095CF3 /* BotSettings.swift */,
 				1746A4B32CAF2C4E00095CF3 /* BotSetting.swift */,
 			);
@@ -1022,6 +1025,7 @@
 				176FA6E82C9336A900EF73C0 /* ViewInvite.swift in Sources */,
 				173D698E2C7FF7FC00030E62 /* ChannelSearch.swift in Sources */,
 				17A589FA2C44781F00B9D85A /* AnyTransition.swift in Sources */,
+				17A21DF62CFA71AC0024C9F0 /* AddBot.swift in Sources */,
 				17BF54CD2B1785E200178866 /* HomeWelcome.swift in Sources */,
 				170410972CA478D5002C1445 /* AllPermissionsSettings.swift in Sources */,
 				17DF7CB02C4ACDA1003E8FDC /* UIImage.swift in Sources */,

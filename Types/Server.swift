@@ -7,7 +7,7 @@
 
 import Foundation
 
-public struct Server: Codable, Identifiable {
+public struct Server: Codable, Identifiable, Equatable, Hashable {
     public init(id: String, owner: String, name: String, channels: [String], default_permissions: Permissions, description: String? = nil, categories: [Category]? = nil, system_messages: SystemMessages? = nil, roles: [String : Role]? = nil, icon: File? = nil, banner: File? = nil, nsfw: Bool? = nil, flags: ServerFlags? = nil) {
         self.id = id
         self.owner = owner
@@ -44,7 +44,7 @@ public struct Server: Codable, Identifiable {
     }
 }
 
-public struct ServerFlags: OptionSet {
+public struct ServerFlags: OptionSet, Hashable, Equatable {
     public init(rawValue: Int) {
         self.rawValue = rawValue
     }
@@ -68,7 +68,7 @@ extension ServerFlags: Codable {
     }
 }
 
-public struct SystemMessages: Codable, Equatable {
+public struct SystemMessages: Codable, Equatable, Hashable {
     public init(user_joined: String? = nil, user_left: String? = nil, user_kicked: String? = nil, user_banned: String? = nil) {
         self.user_joined = user_joined
         self.user_left = user_left
@@ -82,7 +82,7 @@ public struct SystemMessages: Codable, Equatable {
     public var user_banned: String?
 }
 
-public struct Category: Codable, Identifiable {
+public struct Category: Codable, Identifiable, Equatable, Hashable {
     public init(id: String, title: String, channels: [String]) {
         self.id = id
         self.title = title

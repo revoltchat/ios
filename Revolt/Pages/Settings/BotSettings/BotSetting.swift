@@ -85,7 +85,7 @@ struct BotSetting: View {
                 .foregroundStyle(viewState.theme.accent)
                 
                 NavigationLink {
-                    Text("TODO")
+                    AddBot(user: initial.user, bot: initial.bot)
                 } label: {
                     Text("Add Bot")
                         .foregroundStyle(viewState.theme.accent)
@@ -101,7 +101,7 @@ struct BotSetting: View {
             .listRowBackground(viewState.theme.background3)
             
             Section {
-                Toggle("Public Bot", isOn: $currentValues.bot.isPublic)
+                CheckboxListItem(title: "Public Bot", isOn: $currentValues.bot.isPublic)
             } footer: {
                 Text("Allows others to invite the bot to their servers and groups")
             }

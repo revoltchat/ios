@@ -24,14 +24,18 @@ struct Settings: View {
     var body: some View {
         List {
             Section("User Settings") {
-                NavigationLink(destination: { UserSettings() }) {
+                NavigationLink {
+                    UserSettings()
+                } label: {
                     Image(systemName: "person.fill")
                         .resizable()
                         .scaledToFit()
                         .frame(width: 16, height: 16)
                     Text("My Account")
                 }
-                NavigationLink(destination: { ProfileSettings() }) {
+                NavigationLink {
+                    ProfileSettings()
+                } label: {
                     Image(systemName: "person.text.rectangle.fill")
                         .resizable()
                         .scaledToFit()
@@ -39,7 +43,9 @@ struct Settings: View {
                     Text("Profile")
                 }
 
-                NavigationLink(destination: { SessionsSettings() }) {
+                NavigationLink {
+                    SessionsSettings()
+                } label: {
                     Image(systemName: "checkmark.shield.fill")
                         .resizable()
                         .scaledToFit()
@@ -50,7 +56,9 @@ struct Settings: View {
             .listRowBackground(viewState.theme.background2)
 
             Section("Client Settings") {
-                NavigationLink(destination: { AppearanceSettings() }) {
+                NavigationLink {
+                    AppearanceSettings()
+                } label: {
                     Image(systemName: "paintpalette.fill")
                         .resizable()
                         .scaledToFit()
@@ -58,14 +66,18 @@ struct Settings: View {
                     Text("Appearance")
                 }
 
-                NavigationLink(destination: { NotificationSettings() }) {
+                NavigationLink {
+                    NotificationSettings()
+                } label: {
                     Image(systemName: "bell.fill")
                         .resizable()
                         .scaledToFit()
                         .frame(width: 16, height: 16)
                     Text("Notifications")
                 }
-                NavigationLink(destination: { LanguageSettings() }) {
+                NavigationLink {
+                    LanguageSettings()
+                } label: {
                     Image(systemName: "globe")
                         .resizable()
                         .scaledToFit()
@@ -75,7 +87,6 @@ struct Settings: View {
             }
             .listRowBackground(viewState.theme.background2)
             
-
             Section("Revolt") {
                 NavigationLink {
                     BotSettings()
@@ -90,14 +101,18 @@ struct Settings: View {
             }.listRowBackground(viewState.theme.background2)
 
             Section("Misc") {
-                NavigationLink(destination: About()) {
+                NavigationLink {
+                    About()
+                } label: {
                     Image(systemName: "info.circle.fill")
                         .resizable()
                         .scaledToFit()
                         .frame(width: 16, height: 16)
                     Text("About")
                 }
-                NavigationLink(destination: { ExperimentsSettings() }) {
+                NavigationLink {
+                    ExperimentsSettings()
+                } label: {
                     Image(systemName: "flask.fill")
                         .resizable()
                         .scaledToFit()
@@ -105,7 +120,9 @@ struct Settings: View {
                     Text("Experiments")
                 }
 #if DEBUG
-                NavigationLink(destination: { DeveloperSettings() }) {
+                NavigationLink {
+                    DeveloperSettings()
+                } label: {
                     Image(systemName: "hammer.fill")
                         .resizable()
                         .scaledToFit()
@@ -135,13 +152,8 @@ struct Settings: View {
             
         }
         .scrollContentBackground(.hidden)
-        .scrollDisabled(true)
         .frame(maxWidth: .infinity, maxHeight: .infinity)
-        .toolbar {
-            ToolbarItem(placement: .principal) {
-                Text(String(localized: "Settings", comment: "Settings Tooltip"))
-            }
-        }
+        .navigationTitle("Settings")
         .toolbarBackground(viewState.theme.topBar.color, for: .automatic)
         .background(viewState.theme.background)
         .confirmationDialog("Are you sure?", isPresented: $presentLogoutDialog, titleVisibility: .visible) {

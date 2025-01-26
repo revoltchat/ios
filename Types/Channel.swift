@@ -7,7 +7,7 @@
 
 import Foundation
 
-public struct SavedMessages: Codable, Equatable, Identifiable {
+public struct SavedMessages: Codable, Equatable, Identifiable, Hashable {
     public init(id: String, user: String) {
         self.id = id
         self.user = user
@@ -22,7 +22,7 @@ public struct SavedMessages: Codable, Equatable, Identifiable {
     }
 }
 
-public struct DMChannel: Codable, Equatable, Identifiable {
+public struct DMChannel: Codable, Equatable, Identifiable, Hashable {
     public init(id: String, active: Bool, recipients: [String], last_message_id: String? = nil) {
         self.id = id
         self.active = active
@@ -41,7 +41,7 @@ public struct DMChannel: Codable, Equatable, Identifiable {
     }
 }
 
-public struct GroupDMChannel: Codable, Equatable, Identifiable {
+public struct GroupDMChannel: Codable, Equatable, Identifiable, Hashable {
     public init(id: String, recipients: [String], name: String, owner: String, icon: File? = nil, permissions: Permissions? = nil, description: String? = nil, nsfw: Bool? = nil, last_message_id: String? = nil) {
         self.id = id
         self.recipients = recipients
@@ -70,7 +70,7 @@ public struct GroupDMChannel: Codable, Equatable, Identifiable {
     }
 }
 
-public struct TextChannel: Codable, Equatable, Identifiable {
+public struct TextChannel: Codable, Equatable, Identifiable, Hashable {
     public init(id: String, server: String, name: String, description: String? = nil, icon: File? = nil, default_permissions: Overwrite? = nil, role_permissions: [String : Overwrite]? = nil, nsfw: Bool? = nil, last_message_id: String? = nil, voice: VoiceInformation? = nil) {
         self.id = id
         self.server = server
@@ -101,7 +101,7 @@ public struct TextChannel: Codable, Equatable, Identifiable {
     }
 }
 
-public struct VoiceChannel: Codable, Equatable, Identifiable {
+public struct VoiceChannel: Codable, Equatable, Identifiable, Hashable {
     public init(id: String, server: String, name: String, description: String? = nil, icon: File? = nil, default_permissions: Overwrite? = nil, role_permissions: [String : Overwrite]? = nil, nsfw: Bool? = nil) {
         self.id = id
         self.server = server
@@ -128,7 +128,7 @@ public struct VoiceChannel: Codable, Equatable, Identifiable {
     }
 }
 
-public struct VoiceInformation: Codable, Equatable {
+public struct VoiceInformation: Codable, Equatable, Hashable {
     public init(max_users: Int? = nil) {
         self.max_users = max_users
     }
@@ -137,7 +137,7 @@ public struct VoiceInformation: Codable, Equatable {
 }
 
 @frozen
-public enum Channel: Identifiable, Equatable {
+public enum Channel: Identifiable, Equatable, Hashable {
     case saved_messages(SavedMessages)
     case dm_channel(DMChannel)
     case group_dm_channel(GroupDMChannel)
@@ -175,17 +175,33 @@ public enum Channel: Identifiable, Equatable {
     }
     
     public var description: String? {
-        switch self {
-            case .saved_messages(_):
-                nil
-            case .dm_channel(_):
-                nil
-            case .group_dm_channel(let c):
-                c.description
-            case .text_channel(let c):
-                c.description
-            case .voice_channel(let c):
-                c.description
+        get {
+            switch self {
+                case .saved_messages(_):
+                    nil
+                case .dm_channel(_):
+                    nil
+                case .group_dm_channel(let c):
+                    c.description
+                case .text_channel(let c):
+                    c.description
+                case .voice_channel(let c):
+                    c.description
+            }
+        }
+        set {
+            switch self {
+                case .saved_messages(let savedMessages):
+                    ()
+                case .dm_channel(let dMChannel):
+                    ()
+                case .group_dm_channel(var groupDMChannel):
+                    groupDMChannel.description = newValue
+                case .text_channel(var textChannel):
+                    textChannel.description = newValue
+                case .voice_channel(var voiceChannel):
+                    voiceChannel.description = newValue
+            }
         }
     }
     
