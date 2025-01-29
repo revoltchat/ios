@@ -7,7 +7,7 @@
 
 import Foundation
 
-public struct EmojiParentServer: Decodable, Equatable {
+public struct EmojiParentServer: Codable, Equatable {
     public init(id: String) {
         self.id = id
     }
@@ -15,18 +15,27 @@ public struct EmojiParentServer: Decodable, Equatable {
     public var id: String
 }
 
-public struct EmojiParentDetached: Decodable, Equatable {
+public struct EmojiParentDetached: Codable, Equatable {
     
 }
 
 public enum EmojiParent: Equatable {
     case server(EmojiParentServer)
     case detached(EmojiParentDetached)
+    
+    public var id: String? {
+        switch self {
+            case .server(let p):
+                return p.id
+            case .detached:
+                return nil
+        }
+    }
 }
 
-extension EmojiParent: Decodable {
+extension EmojiParent: Codable {
     enum CodingKeys: String, CodingKey { case type }
-    enum Tag: String, Decodable { case Server, Detached }
+    enum Tag: String, Codable { case Server, Detached }
     
     public init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
@@ -39,9 +48,23 @@ extension EmojiParent: Decodable {
                 self = .detached(try singleValueContainer.decode(EmojiParentDetached.self))
         }
     }
+    
+    public func encode(to encoder: any Encoder) throws {
+        var tagContainer = encoder.container(keyedBy: CodingKeys.self)
+        
+        switch self {
+            case .server(let e):
+                try tagContainer.encode(Tag.Server, forKey: .type)
+                try e.encode(to: encoder)
+            case .detached(let e):
+                try tagContainer.encode(Tag.Detached, forKey: .type)
+                try e.encode(to: encoder)
+
+        }
+    }
 }
 
-public struct Emoji: Decodable, Equatable, Identifiable {
+public struct Emoji: Codable, Equatable, Identifiable {
     public init(id: String, parent: EmojiParent, creator_id: String, name: String, animated: Bool? = nil, nsfw: Bool? = nil) {
         self.id = id
         self.parent = parent

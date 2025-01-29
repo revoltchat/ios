@@ -5,18 +5,25 @@ import Types
 
 @main
 struct RevoltApp: App {
+    #if os(iOS)
+    @UIApplicationDelegateAdaptor(AppDelegate.self) var appDelegate
+    #elseif os(macOS)
+    @NSApplicationDelegateAdaptor(AppDelegate.self) var appDelegate
+    #endif
+    
     @Environment(\.locale) var systemLocale: Locale
-    @StateObject var state = ViewState()
+    @StateObject var state = ViewState.shared ?? ViewState()
 
     init() {
-        SentrySDK.start { options in
-            options.dsn = "https://4049414032e74d9098a44e67779aa648@sentry.revolt.chat/7"
-            options.tracesSampleRate = 1.0
-            options.profilesSampleRate = 1.0
-            options.enableTracing = true
-            options.attachViewHierarchy = true
-            //options.enableAppLaunchProfiling = true
-            //options.enableMetrics = true
+        if !isPreview {
+            SentrySDK.start { options in
+                options.dsn = "https://4049414032e74d9098a44e67779aa648@sentry.revolt.chat/7"
+                options.tracesSampleRate = 1.0
+                options.profilesSampleRate = 1.0
+                options.attachViewHierarchy = true
+                options.enableAppLaunchProfiling = true
+                //options.enableMetrics = true
+            }
         }
     }
 
@@ -35,7 +42,7 @@ struct RevoltApp: App {
                         case "http", "https":
                                 switch url.pathComponents[safe: 1] {
                                     case "app", "login":
-                                        state.currentServer = .dms
+                                        state.currentSelection = .dms
                                         state.currentChannel = .home
                                     default:
                                         ()
@@ -55,9 +62,9 @@ struct RevoltApp: App {
                                     if let id = queryItems["channel"] {
                                         if let channel = state.channels[id] {
                                             if let server = channel.server {
-                                                state.currentServer = .server(server)
+                                                state.currentSelection = .server(server)
                                             } else {
-                                                state.currentServer = .dms
+                                                state.currentSelection = .dms
                                             }
 
                                             state.currentChannel = .channel(id)
@@ -77,13 +84,61 @@ struct RevoltApp: App {
 struct ApplicationSwitcher: View {
     @Environment(\.colorScheme) var colorScheme
     @EnvironmentObject var viewState: ViewState
-
-    @ViewBuilder
+    @State var wasSignedOut = false
+    @State var banner: WsState? = nil
+    
     var body: some View {
-        if viewState.sessionToken != nil && !viewState.isOnboarding {
+        if viewState.state != .signedOut && !viewState.isOnboarding {
             InnerApp()
+                .transition(.slide)
                 .task {
                     await viewState.backgroundWsTask()
+                    if viewState.state != .signedOut {
+                        withAnimation {
+                            viewState.state = .connecting
+                        }
+                    }
+                }
+                .alertPopup(show: banner !=  nil) {
+                    if let banner = banner {
+                        HStack {
+                            switch banner {
+                                case .disconnected:
+                                    Image(systemName: "exclamationmark.triangle.fill")
+                                    Text("Disconnected")
+                                        .bold()
+                                    Text("Tap to reconnect")
+
+                                case .connecting:
+                                    Image(systemName: "arrow.clockwise")
+                                    Text("Reconnecting")
+                                case .connected:
+                                    Image(systemName: "checkmark")
+                                    Text("Connected")
+                            }
+                        }
+                        .padding(8)
+                        .foregroundStyle(.black)
+                        .background {
+                            let colour: Color
+
+                            let _ = switch banner {
+                                case .disconnected:
+                                    colour = Color.red
+                                case .connecting:
+                                    colour = Color.yellow
+                                case .connected:
+                                    colour = Color.green
+                            }
+                            
+                            RoundedRectangle(cornerRadius: 20).foregroundStyle(colour)
+                        }
+                        .onTapGesture {
+                            if case .disconnected = banner {
+                                viewState.ws?.forceConnect()
+                            }
+                        }
+                    }
                 }
                 .onChange(of: colorScheme) { before, after in
                     // automatically switch the color scheme if the user pressed "auto" in the preferences menu
@@ -93,8 +148,30 @@ struct ApplicationSwitcher: View {
                         }
                     }
                 }
+                .onChange(of: viewState.ws?.currentState, { before, after in
+                    if case .connected = after {
+                        banner = .connected
+                        DispatchQueue.main.asyncAfter(deadline: .now() + .seconds(2)) {
+                            withAnimation {
+                                banner = nil
+                            }
+                        }
+                    } else if before != nil {
+                        banner = after
+                    }
+                })
         } else {
-            Welcome()
+            Welcome(wasSignedOut: $wasSignedOut)
+                .transition(.slideNext)
+                .onAppear {
+                    if viewState.state == .signedOut && viewState.sessionToken != nil { // signging out
+                        viewState.sessionToken = nil
+                        viewState.destroyCache()
+                        withAnimation {
+                            wasSignedOut = true
+                        }
+                    }
+                }
         }
     }
 }
@@ -104,126 +181,85 @@ struct InnerApp: View {
 
     var body: some View {
         NavigationStack(path: $viewState.path) {
-            switch viewState.state {
-                case .connecting:
-                    Text("Connecting...")
-                case .connected:
-                    HomeRewritten(
-                        currentSelection: $viewState.currentServer,
-                        currentChannel: $viewState.currentChannel,
-                        currentServer: viewState.currentServer.id.flatMap { viewState.servers[$0] }
-                    )
-                    .navigationDestination(for: NavigationDestination.self) { dest in
-                        switch dest {
-                            case .channel_info(let id):
-                                let channel =  Binding($viewState.channels[id])!
-                                ChannelInfo(channel: channel)
-                            case .channel_settings(let id):
-                                let channel =  Binding($viewState.channels[id])!
-                                ChannelSettings(channel: channel)
-                            case .discover:
-                                Discovery()
-                            case .server_settings(let id):
-                                let server = Binding($viewState.servers[id])!
-                                ServerSettings(server: server)
-                            case .settings:
-                                Settings()
-                            case .add_friend:
-                                AddFriend()
-                            case .create_group(let initial_users):
-                                CreateGroup(selectedUsers: Set(initial_users.compactMap { viewState.users[$0] }))
-                            case .add_server:
-                                AddServer()
+            if viewState.forceMainScreen {
+                MainApp()
+            } else {
+                switch viewState.state {
+                    case .signedOut:
+                        Text("Signed out... How did you get here?")
+                    case .connecting:
+                        VStack {
+                            Text("Connecting...")
+#if DEBUG
+                            Button {
+                                viewState.destroyCache()
+                                viewState.sessionToken = nil
+                                viewState.state = .signedOut
+                            } label: {
+                                Text("Developer: Nuke everything and force welcome screen")
+                            }
+#endif
                         }
-                    }
-                    .sheet(item: $viewState.currentUserSheet) { (v) in
-                        UserSheet(user: v.user, member: v.member)
-                    }
+                    case .connected:
+                        MainApp()
+                }
             }
         }
     }
 }
 
-extension View {
-    func placeholder<Content: View>(
-        when shouldShow: Bool,
-        alignment: Alignment = .leading,
-        @ViewBuilder placeholder: () -> Content
-    ) -> some View {
-        ZStack(alignment: alignment) {
-            placeholder()
-                .opacity(shouldShow ? 1 : 0)
-                .allowsHitTesting(false)
-            self
+struct MainApp: View {
+    @EnvironmentObject var viewState: ViewState
+    
+    var body: some View {
+        HomeRewritten(
+            currentSelection: $viewState.currentSelection,
+            currentChannel: $viewState.currentChannel
+        )
+        .navigationDestination(for: NavigationDestination.self) { dest in
+            switch dest {
+                case .channel_info(let id):
+                    let channel = Binding($viewState.channels[id])!
+                    ChannelInfo(channel: channel)
+                case .channel_settings(let id):
+                    let channel = Binding($viewState.channels[id])!
+                    let server = channel.wrappedValue.server.map { $viewState.servers[$0] } ?? .constant(nil)
+                    
+                    ChannelSettings(server: server, channel: channel)
+                case .discover:
+                    Discovery()
+                case .server_settings(let id):
+                    let server = Binding($viewState.servers[id])!
+                    ServerSettings(server: server)
+                case .settings:
+                    Settings()
+                case .add_friend:
+                    AddFriend()
+                case .create_group(let initial_users):
+                    CreateGroup(selectedUsers: Set(initial_users.compactMap { viewState.users[$0] }))
+                case .create_server:
+                    CreateServer()
+                case .channel_search(let id):
+                    let channel = Binding($viewState.channels[id])!
+                    ChannelSearch(channel: channel)
+                case .invite(let code):
+                    ViewInvite(code: code)
+                case .channel_pins(let id):
+                    let channel = Binding($viewState.channels[id])!
+                    ChannelPins(channel: channel)
+
+            }
         }
-    }
-
-    @ViewBuilder
-    func `if`<Content: View>(_ conditional: Bool, content: (Self) -> Content) -> some View {
-        if conditional {
-            content(self)
-        } else {
-            self
+        .environment(\.currentServer, viewState.currentSelection.id.flatMap { viewState.servers[$0] })
+        .environment(\.currentChannel, viewState.currentChannel.id.flatMap { viewState.channels[$0] })
+        .sheet(item: $viewState.currentUserSheet) { (v) in
+            UserSheet(user: v.user, member: v.member)
         }
-    }
-
-    @ViewBuilder
-    func `if`<Content: View, Else: View>(_ conditional: Bool, content: (Self) -> Content, else other: (Self) -> Else) -> some View {
-        if conditional {
-            content(self)
-        } else {
-            other(self)
-        }
-    }
-
-    @MainActor
-    func applyPreviewModifiers(withState viewState: ViewState) -> some View {
-        self.environmentObject(viewState)
-            .tint(viewState.theme.accent.color)
-            .foregroundStyle(viewState.theme.foreground.color)
-            .background(viewState.theme.background.color)
-
     }
 }
 
-extension Bundle {
-    var releaseVersionNumber: String? {
-        return infoDictionary?["CFBundleShortVersionString"] as? String
-    }
-    var buildVersionNumber: String? {
-        return infoDictionary?["CFBundleVersion"] as? String
-    }
-}
-
-extension IteratorProtocol {
-    mutating func next(n: Int) -> [Self.Element] {
-        var values: [Self.Element] = []
-
-        for _ in 0...n {
-            if let v = self.next() {
-                values.append(v)
-            }
-        }
-
-        return values
-    }
-
-    mutating func groups(n: Int) -> [[Self.Element]] {
-        var values: [[Self.Element]] = []
-
-        while true {
-            let group = self.next(n: n)
-
-            if group.count > 0 {
-                values.append(group)
-            }
-
-            if group.count != n {
-                return values
-            }
-        }
-    }
-}
+// replace with settings eventually
+let TEMP_IS_COMPACT_MODE: (Bool, Bool) = (false, true)
 
 #if targetEnvironment(macCatalyst)
 let isIPad = UIDevice.current.userInterfaceIdiom == .pad
@@ -239,39 +275,27 @@ let isIPhone = false
 let isMac = true
 #endif
 
-extension Collection {
-    subscript (safe index: Index) -> Element? {
-        return indices.contains(index) ? self[index] : nil
-    }
-}
-
-
-struct CheckboxStyle: ToggleStyle {
-    @EnvironmentObject var viewState: ViewState
-
-    func makeBody(configuration: Self.Configuration) -> some View {
-        return HStack {
-            configuration.label
-
-            Spacer()
-
-            if configuration.isOn {
-                Image(systemName: "checkmark")
-                    .resizable()
-                    .frame(width: 16, height: 16)
-                    .foregroundColor(viewState.theme.accent.color)
-            }
-
-        }
-        .onTapGesture { configuration.isOn.toggle() }
-    }
-}
-
 
 var isPreview: Bool {
 #if DEBUG
     ProcessInfo.processInfo.environment["XCODE_RUNNING_FOR_PREVIEWS"] == "1"
 #else
     false
+#endif
+}
+
+func copyText(text: String) {
+#if os(macOS)
+    NSPasteboard.general.setString(text, forType: .string)
+#else
+    UIPasteboard.general.string = text
+#endif
+    }
+
+func copyUrl(url: URL) {
+#if os(macOS)
+    NSPasteboard.general.setString(url.absoluteString, forType: .URL)
+#else
+    UIPasteboard.general.url = url
 #endif
 }

@@ -131,3 +131,59 @@ struct ServerEdit: Encodable {
     var analytics: Bool?
     var remove: [Remove]?
 }
+
+struct MessageEdit: Encodable {
+    var content: String?
+}
+
+struct ChannelSearchPayload: Encodable {
+    enum MessageSort: String, Encodable {
+        case relevance = "Relevance"
+        case latest = "Latest"
+        case oldest = "Oldest"
+    }
+    
+    var query: String?
+    var pinned: Bool?
+    var limit: Int?
+    var before: String?
+    var after: String?
+    var sort: MessageSort?
+    var include_users: Bool?
+}
+
+struct RoleEditPayload: Encodable {
+    enum Remove: String, Encodable {
+        case colour = "Colour"
+    }
+    
+    var name: String?
+    var colour: String?
+    var hoist: Bool?
+    var rank: Int?
+    var remove: [Remove]?
+}
+
+struct CreateEmojiPayload: Encodable {
+    var id: String
+    var name: String
+    var parent: EmojiParent
+    var nsfw: Bool?
+}
+
+struct EditBotPayload: Encodable {
+    enum Remove: String, Encodable {
+        case token = "Token"
+    }
+    
+    var name: String?
+    var isPublic: Bool?
+    var analytics: Bool?
+    var interactions_url: String?
+    var remove: [Remove]?
+    
+    enum CodingKeys: String, CodingKey {
+        case name, analytics, interactions_url, remove
+        case isPublic = "public"
+    }
+}

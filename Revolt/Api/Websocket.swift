@@ -21,6 +21,10 @@ enum WsMessage {
     case channel_ack(ChannelAckEvent)
     case voice_channel_join(VoiceChannelJoin)
     case voice_channel_leave(VoiceChannelLeave)
+    case message_react(MessageReactEvent)
+    case message_unreact(MessageReactEvent)
+    case message_append(MessageAppend)
+    case user_voice_state_update(UserVoiceStateUpdate)
 }
 
 struct ReadyEvent: Decodable {
@@ -34,8 +38,8 @@ struct ReadyEvent: Decodable {
 
 struct UserVoiceState: Decodable, Identifiable {
     var id: String
-    var can_receive: Bool
-    var can_publish: Bool
+    var is_receiving: Bool
+    var is_publishing: Bool
     var screensharing: Bool
     var camera: Bool
 }
@@ -47,13 +51,19 @@ struct ChannelVoiceState: Decodable, Identifiable {
 
 struct MessageUpdateEventData: Decodable {
     var content: String?
-    var edited: String
+    var edited: String?
+    var pinned: Bool?
 }
 
 struct MessageUpdateEvent: Decodable {
+    enum Remove: String, Decodable {
+        case pinned = "Pinned"
+    }
+    
     var channel: String
     var id: String
     var data: MessageUpdateEventData
+    var remove: [Remove]?
 }
 
 struct ChannelTyping: Decodable {
@@ -68,7 +78,7 @@ struct MessageDeleteEvent: Decodable {
 
 struct ChannelAckEvent: Decodable {
     var id: String
-    var user_id: String
+    var user: String
     var message_id: String
 }
 
@@ -82,9 +92,28 @@ struct VoiceChannelLeave: Decodable {
     var user: String
 }
 
+struct MessageReactEvent: Decodable {
+    var id: String
+    var channel_id: String
+    var user_id: String
+    var emoji_id: String
+}
+
+struct MessageAppend: Decodable {
+    var id: String
+    var channel: String
+    var append: Embed
+}
+
+struct UserVoiceStateUpdate: Decodable {
+    var id: String
+    var channel_id: String
+    var data: PartialUserVoiceUpdate
+}
+
 extension WsMessage: Decodable {
     enum CodingKeys: String, CodingKey { case type }
-    enum Tag: String, Decodable { case Authenticated, InvalidSession, Ready, Message, MessageUpdate, ChannelStartTyping, ChannelStopTyping, MessageDelete, ChannelAck, VoiceChannelJoin, VoiceChannelLeave }
+    enum Tag: String, Decodable { case Authenticated, InvalidSession, Ready, Message, MessageUpdate, ChannelStartTyping, ChannelStopTyping, MessageDelete, ChannelAck, MessageReact, MessageUnreact, MessageAppend, VoiceChannelJoin, VoiceChannelLeave, UserVoiceStateUpdate }
 
     init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
@@ -113,14 +142,22 @@ extension WsMessage: Decodable {
                 self = .voice_channel_join(try singleValueContainer.decode(VoiceChannelJoin.self))
             case .VoiceChannelLeave:
                 self = .voice_channel_leave(try singleValueContainer.decode(VoiceChannelLeave.self))
+            case .MessageReact:
+                self = .message_react(try singleValueContainer.decode(MessageReactEvent.self))
+            case .MessageUnreact:
+                self = .message_unreact(try singleValueContainer.decode(MessageReactEvent.self))
+            case .MessageAppend:
+                self = .message_append(try singleValueContainer.decode(MessageAppend.self))
+            case .UserVoiceStateUpdate:
+                self = .user_voice_state_update(try singleValueContainer.decode(UserVoiceStateUpdate.self))
         }
     }
 }
 
 enum WsState {
-    case Disconnected
-    case Connecting
-    case Connected
+    case disconnected
+    case connecting
+    case connected
 }
 
 class SendWsMessage: Encodable {
@@ -152,31 +189,30 @@ class Authenticate: SendWsMessage, CustomStringConvertible {
     }
 }
 
-class WebSocketStream {
+class WebSocketStream: ObservableObject {
+    private var url: URL
     private var client: WebSocket
     private var encoder: JSONEncoder
     private var decoder: JSONDecoder
     private var onEvent: (WsMessage) async -> ()
 
     public var token: String
-    public var currentState: WsState = .Disconnected
+    @Published public var currentState: WsState = .disconnected
+    public var retryCount: Int = 0
 
     init(url: String, token: String, onEvent: @escaping (WsMessage) async -> ()) {
         self.token = token
         self.encoder = JSONEncoder()
         self.decoder = JSONDecoder()
         self.onEvent = onEvent
-
-        let url = URL(string: url)!
-        let request = URLRequest(url: url)
-
+        self.url = URL(string: url)!
+        
+        let request = URLRequest(url: self.url)
         let ws = WebSocket(request: request)
         client = ws
 
         ws.onEvent = didReceive
         ws.connect()
-
-        client = ws
     }
 
     public func stop() {
@@ -186,20 +222,23 @@ class WebSocketStream {
     public func didReceive(event: WebSocketEvent) {
         switch event {
             case .connected(_):
-                currentState = .Connecting
+                currentState = .connecting
                 let payload = Authenticate(token: token)
                 print(payload.description)
 
-                do {
-                    let s = try encoder.encode(payload)
-                    client.write(string: String(data: s, encoding: .utf8)!)
-                } catch {}
-
+                let s = try! encoder.encode(payload)
+                client.write(string: String(data: s, encoding: .utf8)!)
+                    
             case .disconnected(let reason, _):
                 print("disconnect \(reason)")
-                currentState = .Disconnected
+                currentState = .disconnected
+                
+                Task {
+                    await tryReconnect()
+                }
 
             case .text(let string):
+                client.write(ping: Data())
 
                 do {
                     let e = try decoder.decode(WsMessage.self, from: string.data(using: .utf8)!)
@@ -210,11 +249,46 @@ class WebSocketStream {
                 } catch {
                     print(error)
                 }
+                
+            case .viabilityChanged(let viability):
+                if !viability {
+                    currentState = .disconnected
+                    Task {
+                        await tryReconnect()
+                    }
+                }
 
             case .error(let error):
+                currentState = .disconnected
+                self.stop()
                 print("error \(String(describing: error))")
+                
+                Task {
+                    await tryReconnect()
+                }
             default:
                 break
         }
+    }
+    
+    func forceConnect() {
+        let request = URLRequest(url: self.url)
+        let ws = WebSocket(request: request)
+        
+        client = ws
+        
+        ws.onEvent = didReceive
+        ws.connect()
+    }
+    
+    func tryReconnect() async {
+        let sleep = 0.25 * Double(pow(Double(2), Double(retryCount - 1)))
+        try! await Task.sleep(for: .seconds(sleep))
+        
+        currentState = .connecting
+        
+        forceConnect()
+        
+        retryCount += 1
     }
 }

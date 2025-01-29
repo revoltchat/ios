@@ -35,7 +35,7 @@ extension UserPermissions: Codable {
     }
 }
 
-public struct Permissions: OptionSet {
+public struct Permissions: OptionSet, Hashable {
     public init(rawValue: Int) {
         self.rawValue = rawValue
     }
@@ -93,6 +93,137 @@ public struct Permissions: OptionSet {
         self.formUnion(overwrite.a)
         self.formIntersection(Permissions.all.subtracting(overwrite.d))
     }
+    
+    public var name: String {
+        switch self {
+            case .manageChannel:
+                return "Manage Channels"
+            case .manageServer:
+                return "Manage Server"
+            case .managePermissions:
+                return "Manage Permissions"
+            case .manageRole:
+                return "Manage Roles"
+            case .manageCustomisation:
+                return "Manage Customisations"
+            case .kickMembers:
+                return "Kick Members"
+            case .banMembers:
+                return "Ban Members"
+            case .timeoutMembers:
+                return "Timeout Members"
+            case .assignRoles:
+                return "Assign Roles"
+            case .manageNickname:
+                return "Manage Nicknames"
+            case .changeNicknames:
+                return "Change Nicknames"
+            case .changeAvatars:
+                return "Change Avatars"
+            case .removeAvatars:
+                return "Remove Avatars"
+            case .viewChannel:
+                return "View Channel"
+            case .readMessageHistory:
+                return "Read Message History"
+            case .sendMessages:
+                return "Send Messages"
+            case .manageMessages:
+                return "Manage Messages"
+            case .manageWebhooks:
+                return "Manage Webhooks"
+            case .inviteOthers:
+                return "Invite Others"
+            case .sendEmbeds:
+                return "Send Embeds"
+            case .uploadFiles:
+                return "Upload Files"
+            case .masquerade:
+                return "Masquerade"
+            case .react:
+                return "Use Reactions"
+            case .connect:
+                return "Connect"
+            case .speak:
+                return "Speak"
+            case .video:
+                return "Video"
+            case .muteMembers:
+                return "Mute Members"
+            case .deafenMembers:
+                return "Deafen Members"
+            case .moveMembers:
+                return "Move Members"
+            default:
+                return "Unknown"
+        }
+    }
+    
+    public var description: String {
+        switch self {
+            case .manageChannel:
+                return "Allows members to create, edit and delete channels."
+            case .manageServer:
+                return "Allows members to change this server's name, description, icon and other related information."
+            case .managePermissions:
+                return "Allows members to change permissions for channels and roles with a lower ranking."
+            case .manageRole:
+                return "Allows members to create, edit and delete roles with a lower rank than theirs, and modify role permissions on channels."
+            case .manageCustomisation:
+                return "Allows members to create, edit and delete emojis."
+            case .kickMembers:
+                return "Allows members to remove members from this server. Kicked members may rejoin with an invite."
+            case .banMembers:
+                return "Allows members to permanently remove members from this server."
+            case .timeoutMembers:
+                return "Allows members to temporarily prevent users from interacting with the server."
+            case .assignRoles:
+                return "Allows members to assign roles below their own rank to other members."
+            case .manageNickname:
+                return "Allows members to change the nicknames of other members."
+            case .changeNicknames:
+                return "Allows members to change their nickname on this server."
+            case .removeAvatars:
+                return "Allows members to remove the server avatars of other members on this server."
+            case .changeAvatars:
+                return "Allows members to change their avatar on this server."
+            case .viewChannel:
+                return "Allows members to view any channels they have this permission on."
+            case .readMessageHistory:
+                return "Allows members to read the message history of this channel."
+            case .sendMessages:
+                return "Allows members to send messages in text channels."
+            case .manageMessages:
+                return "Allows members to delete messages sent by other members."
+            case .manageWebhooks:
+                return "Allows members to control webhooks in a channel."
+            case .inviteOthers:
+                return "Allows members to invite other users to a channel."
+            case .sendEmbeds:
+                return "Allows members to send embedded content, whether from links or custom text embeds."
+            case .uploadFiles:
+                return "Allows members to upload files in text channels."
+            case .masquerade:
+                return "Allows members to change their name and avatar per-message."
+            case .react:
+                return "Allows members to react to messages."
+            case .connect:
+                return "Allows members to connect to a voice channel."
+            case .speak:
+                return "Allows members to speak in a voice channel."
+            case .video:
+                return "Allows members to stream video in a voice channel."
+            case .muteMembers:
+                return "Allows members to mute others in a voice channel."
+            case .deafenMembers:
+                return "Allows members to deafen others in a voice channel."
+            case .moveMembers:
+                return "Allows members to move others between voice channels."
+            default:
+                return "Unknown"
+        }
+    }
+
 }
 
 extension Permissions: Codable {
@@ -108,7 +239,12 @@ extension Permissions: Codable {
 }
 
 
-public struct Overwrite: Codable, Equatable {
+public struct Overwrite: Codable, Equatable, Hashable {
+    public init(a: Permissions, d: Permissions) {
+        self.a = a
+        self.d = d
+    }
+    
     public var a: Permissions
     public var d: Permissions
 }

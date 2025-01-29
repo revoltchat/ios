@@ -1,6 +1,6 @@
 name: "Build iOS app"
 
-on: [push, workflow_dispatch]
+on: []
 
 jobs:
   build_with_signing:

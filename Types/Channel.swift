@@ -7,7 +7,7 @@
 
 import Foundation
 
-public struct SavedMessages: Decodable, Encodable, Equatable {
+public struct SavedMessages: Codable, Equatable, Identifiable, Hashable {
     public init(id: String, user: String) {
         self.id = id
         self.user = user
@@ -22,7 +22,7 @@ public struct SavedMessages: Decodable, Encodable, Equatable {
     }
 }
 
-public struct DMChannel: Codable, Equatable {
+public struct DMChannel: Codable, Equatable, Identifiable, Hashable {
     public init(id: String, active: Bool, recipients: [String], last_message_id: String? = nil) {
         self.id = id
         self.active = active
@@ -41,7 +41,7 @@ public struct DMChannel: Codable, Equatable {
     }
 }
 
-public struct GroupDMChannel: Codable, Equatable {
+public struct GroupDMChannel: Codable, Equatable, Identifiable, Hashable {
     public init(id: String, recipients: [String], name: String, owner: String, icon: File? = nil, permissions: Permissions? = nil, description: String? = nil, nsfw: Bool? = nil, last_message_id: String? = nil) {
         self.id = id
         self.recipients = recipients
@@ -70,7 +70,7 @@ public struct GroupDMChannel: Codable, Equatable {
     }
 }
 
-public struct TextChannel: Codable, Equatable {
+public struct TextChannel: Codable, Equatable, Identifiable, Hashable {
     public init(id: String, server: String, name: String, description: String? = nil, icon: File? = nil, default_permissions: Overwrite? = nil, role_permissions: [String : Overwrite]? = nil, nsfw: Bool? = nil, last_message_id: String? = nil, voice: VoiceInformation? = nil) {
         self.id = id
         self.server = server
@@ -101,7 +101,7 @@ public struct TextChannel: Codable, Equatable {
     }
 }
 
-public struct VoiceChannel: Codable, Equatable {
+public struct VoiceChannel: Codable, Equatable, Identifiable, Hashable {
     public init(id: String, server: String, name: String, description: String? = nil, icon: File? = nil, default_permissions: Overwrite? = nil, role_permissions: [String : Overwrite]? = nil, nsfw: Bool? = nil) {
         self.id = id
         self.server = server
@@ -128,7 +128,7 @@ public struct VoiceChannel: Codable, Equatable {
     }
 }
 
-public struct VoiceInformation: Codable, Equatable {
+public struct VoiceInformation: Codable, Equatable, Hashable {
     public init(max_users: Int? = nil) {
         self.max_users = max_users
     }
@@ -136,7 +136,8 @@ public struct VoiceInformation: Codable, Equatable {
     public var max_users: Int?
 }
 
-public enum Channel: Identifiable, Equatable {
+@frozen
+public enum Channel: Identifiable, Equatable, Hashable {
     case saved_messages(SavedMessages)
     case dm_channel(DMChannel)
     case group_dm_channel(GroupDMChannel)
@@ -174,17 +175,33 @@ public enum Channel: Identifiable, Equatable {
     }
     
     public var description: String? {
-        switch self {
-            case .saved_messages(_):
-                nil
-            case .dm_channel(_):
-                nil
-            case .group_dm_channel(let c):
-                c.description
-            case .text_channel(let c):
-                c.description
-            case .voice_channel(let c):
-                c.description
+        get {
+            switch self {
+                case .saved_messages(_):
+                    nil
+                case .dm_channel(_):
+                    nil
+                case .group_dm_channel(let c):
+                    c.description
+                case .text_channel(let c):
+                    c.description
+                case .voice_channel(let c):
+                    c.description
+            }
+        }
+        set {
+            switch self {
+                case .saved_messages(let savedMessages):
+                    ()
+                case .dm_channel(let dMChannel):
+                    ()
+                case .group_dm_channel(var groupDMChannel):
+                    groupDMChannel.description = newValue
+                case .text_channel(var textChannel):
+                    textChannel.description = newValue
+                case .voice_channel(var voiceChannel):
+                    voiceChannel.description = newValue
+            }
         }
     }
     
@@ -230,6 +247,36 @@ public enum Channel: Identifiable, Equatable {
                 voiceChannel.server
         }
     }
+    
+    public var role_permissions: [String: Overwrite]? {
+        switch self {
+            case .saved_messages(let savedMessages):
+                nil
+            case .dm_channel(let dMChannel):
+                nil
+            case .group_dm_channel(let groupDMChannel):
+                nil
+            case .text_channel(let textChannel):
+                textChannel.role_permissions
+            case .voice_channel(let voiceChannel):
+                voiceChannel.role_permissions
+        }
+    }
+    
+    public var default_permissions: Overwrite? {
+        switch self {
+            case .saved_messages(let savedMessages):
+                nil
+            case .dm_channel(let dMChannel):
+                nil
+            case .group_dm_channel(let groupDMChannel):
+                nil
+            case .text_channel(let textChannel):
+                textChannel.default_permissions
+            case .voice_channel(let voiceChannel):
+                voiceChannel.default_permissions
+        }
+    }
 }
 
 
@@ -263,52 +310,19 @@ extension Channel: Encodable {
         switch self {
             case .saved_messages(let c):
                 try tagContainer.encode(Tag.SavedMessages, forKey: .channel_type)
-                var container = encoder.container(keyedBy: SavedMessages.CodingKeys.self)
-                try container.encode(c.id, forKey: .id)
-                try container.encode(c.user, forKey: .user)
+                try c.encode(to: encoder)
             case .dm_channel(let c):
                 try tagContainer.encode(Tag.DirectMessage, forKey: .channel_type)
-                var container = encoder.container(keyedBy: DMChannel.CodingKeys.self)
-                try container.encode(c.id, forKey: .id)
-                try container.encode(c.last_message_id, forKey: .last_message_id)
-                try container.encode(c.recipients, forKey: .recipients)
-                try container.encode(c.active, forKey: .active)
+                try c.encode(to: encoder)
             case .group_dm_channel(let c):
                 try tagContainer.encode(Tag.Group, forKey: .channel_type)
-                var container = encoder.container(keyedBy: GroupDMChannel.CodingKeys.self)
-                try container.encode(c.id, forKey: .id)
-                try container.encode(c.description, forKey: .description)
-                try container.encode(c.icon, forKey: .icon)
-                try container.encode(c.last_message_id, forKey: .last_message_id)
-                try container.encode(c.nsfw, forKey: .nsfw)
-                try container.encode(c.name, forKey: .name)
-                try container.encode(c.owner, forKey: .owner)
-                try container.encode(c.permissions, forKey: .permissions)
-                try container.encode(c.recipients, forKey: .recipients)
+                try c.encode(to: encoder)
             case .text_channel(let c):
                 try tagContainer.encode(Tag.TextChannel, forKey: .channel_type)
-                var container = encoder.container(keyedBy: TextChannel.CodingKeys.self)
-                try container.encode(c.id, forKey: .id)
-                try container.encode(c.description, forKey: .description)
-                try container.encode(c.icon, forKey: .icon)
-                try container.encode(c.last_message_id, forKey: .last_message_id)
-                try container.encode(c.nsfw, forKey: .nsfw)
-                try container.encode(c.server, forKey: .server)
-                try container.encode(c.name, forKey: .name)
-                try container.encode(c.default_permissions, forKey: .default_permissions)
-                try container.encode(c.role_permissions, forKey: .role_permissions)
-                try container.encode(c.voice, forKey: .voice)
+                try c.encode(to: encoder)
             case .voice_channel(let c):
                 try tagContainer.encode(Tag.VoiceChannel, forKey: .channel_type)
-                var container = encoder.container(keyedBy: VoiceChannel.CodingKeys.self)
-                try container.encode(c.id, forKey: .id)
-                try container.encode(c.description, forKey: .description)
-                try container.encode(c.icon, forKey: .icon)
-                try container.encode(c.nsfw, forKey: .nsfw)
-                try container.encode(c.server, forKey: .server)
-                try container.encode(c.name, forKey: .name)
-                try container.encode(c.default_permissions, forKey: .default_permissions)
-                try container.encode(c.role_permissions, forKey: .role_permissions)
+                try c.encode(to: encoder)
         }
     }
 }

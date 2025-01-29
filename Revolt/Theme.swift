@@ -408,6 +408,19 @@ public struct ThemeColor: Equatable, ShapeStyle, View {
     public var color: Color {
         Color(red: r, green: g, blue: b, opacity: a)
     }
+    
+    public var uiColor: UIColor {
+        UIColor(color)
+    }
+    
+    public var hex: String {
+        let r = String(Int(self.r * 255), radix: 16, uppercase: true)
+        let g = String(Int(self.g * 255), radix: 16, uppercase: true)
+        let b = String(Int(self.b * 255), radix: 16, uppercase: true)
+        let a = String(Int(self.a * 255), radix: 16, uppercase: true)
+        
+        return "#\(r)\(g)\(b)\(a)"
+    }
 
     public static var white: ThemeColor = ThemeColor(hex: "#FFFFFFFF")
     public static var black: ThemeColor = ThemeColor(hex: "#000000FF")
@@ -415,61 +428,66 @@ public struct ThemeColor: Equatable, ShapeStyle, View {
 
 @Codable
 public struct Theme: Codable, Equatable {
-    public var accent: ThemeColor = ThemeColor(hex: "#FD7771FF")
-    public var background: ThemeColor = ThemeColor.white
-    public var background2: ThemeColor = ThemeColor.white
-    public var foreground: ThemeColor = ThemeColor.black
-    public var foreground2: ThemeColor = ThemeColor(hex: "#3A3A3AFF")
-    public var foreground3: ThemeColor = ThemeColor(hex: "#1F1F1FFF")
-    public var messageBox: ThemeColor = ThemeColor.white
-    public var messageBoxBackground: ThemeColor = ThemeColor.white
-    public var topBar: ThemeColor = ThemeColor(hex: "#FFFFFFAA")
-    public var messageBoxBorder: ThemeColor = ThemeColor.black
+    public var accent: ThemeColor = ThemeColor(hex: "#FD6671FF")
+    public var background: ThemeColor = ThemeColor(hex: "#F6F6F6FF")
+    public var background2: ThemeColor = ThemeColor(hex: "#FFFFFFFF")
+    public var background3: ThemeColor = ThemeColor(hex: "#F1F1F1FF")
+    public var background4: ThemeColor = ThemeColor(hex: "#4D4D4DFF")
+    public var foreground: ThemeColor = ThemeColor(hex: "#000000FF")
+    public var foreground2: ThemeColor = ThemeColor(hex: "#1F1F1FFF")
+    public var foreground3: ThemeColor = ThemeColor(hex: "#3A3A3AFF")
+    public var messageBox: ThemeColor = ThemeColor(hex: "#F1F1F1FF")
+    public var topBar: ThemeColor = ThemeColor(hex: "#FFFFFFEE")
+    public var error: ThemeColor = ThemeColor(hex: "#ED4245")
+    public var mention: ThemeColor = ThemeColor(hex: "#FBFF000F")
     public var shouldFollowiOSTheme: Bool = false
 
     public static var light: Theme {
         Theme(
-            accent: ThemeColor(hex: "#FD7771FF"),
-            background: ThemeColor.white,
-            background2: ThemeColor(hex: "#F5F5F5FF"),
-            foreground: ThemeColor.black,
+            accent: ThemeColor(hex: "#FD6671FF"),
+            background: ThemeColor(hex: "#F6F6F6FF"),
+            background2: ThemeColor(hex: "#FFFFFFFF"),
+            background3: ThemeColor(hex: "#F1F1F1FF"),
+            background4: ThemeColor(hex: "#4D4D4DFF"),
+            foreground: ThemeColor(hex: "#000000FF"),
             foreground2: ThemeColor(hex: "#1F1F1FFF"),
             foreground3: ThemeColor(hex: "#3A3A3AFF"),
-            messageBox: ThemeColor.white,
-            messageBoxBackground: ThemeColor.white,
+            messageBox: ThemeColor(hex: "#F1F1F1FF"),
             topBar: ThemeColor(hex: "#FFFFFFEE"),
-            messageBoxBorder: ThemeColor.black,
+            error: ThemeColor(hex: "#ED4245"),
+            mention: ThemeColor(hex: "#FBFF000F"),
             shouldFollowiOSTheme: false
         )
     }
 
     public static var dark: Theme {
         Theme(
-            accent: ThemeColor(hex: "#FD7771FF"),
+            accent: ThemeColor(hex: "#FD6671FF"),
             background: ThemeColor(hex: "#191919FF"),
-            background2: ThemeColor(hex:"#242424FF"),
-            foreground: ThemeColor.white,
+            background2: ThemeColor(hex: "#242424FF"),
+            background3: ThemeColor(hex: "#1E1E1EFF"),
+            background4: ThemeColor(hex: "#4D4D4DFF"),
+            foreground: ThemeColor(hex: "#FFFFFFFF"),
             foreground2: ThemeColor(hex: "#C8C8C8FF"),
             foreground3: ThemeColor(hex: "#848484FF"),
             messageBox: ThemeColor(hex:"#363636FF"),
-            messageBoxBackground: ThemeColor(hex:"#363636FF"),
             topBar: ThemeColor(hex: "#191919EE"),
-            messageBoxBorder: ThemeColor.white,
+            error: ThemeColor(hex: "#ED4245"),
+            mention: ThemeColor(hex: "#FBFF000F"),
             shouldFollowiOSTheme: false
         )
     }
 }
 
-extension Member {
-    public func displayColour(theme: Theme, server: Server) -> AnyShapeStyle? {
-        roles?
-            .compactMap { server.roles?[$0] }
-            .sorted(by: { $0.rank > $1.rank })
-            .compactMap(\.colour)
-            .last
-            .map {
-                print($0)
-                return parseCSSColor(currentTheme: theme, input: $0)
-            }
+extension Theme {
+    /// This function takes a ThemeColor and determines if it is "light" or "dark", via a true/false flag.
+    /// True means "light", and False means "dark".
+    static func isLightOrDark(_ color: ThemeColor) -> Bool {
+        let (r, g, b) = (color.r * 255, color.g * 255, color.b * 255)
+        
+        // https://alienryderflex.com/hsp.html
+        // basically percieved brightness > sqrt((1*255^2) / 4)
+        let hsp = sqrt((0.299 * (r * r)) + (0.587 * (g * g)) + (0.114 * (b * b)))
+        return hsp > 127.5
     }
 }

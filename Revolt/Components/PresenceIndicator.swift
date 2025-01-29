@@ -27,7 +27,6 @@ struct PresenceIndicator: View {
         let colour = colours[presence]!
         
         Circle()
-            .stroke(.black, lineWidth: 1)
             .fill(colour)
             .frame(width: width, height: height)
     }

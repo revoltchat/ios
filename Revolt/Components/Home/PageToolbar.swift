@@ -11,39 +11,67 @@ import Types
 
 struct PageToolbar<C: View, T: View>: View {
     @EnvironmentObject var viewState: ViewState
-    @Binding var showSidebar: Bool
-    @ViewBuilder var contents: () -> C
-    @ViewBuilder var trailing: () -> T
+    var toggleSidebar: () -> ()
+    
+    var contents: () -> C
+    var trailing: (() -> T)?
+    
+    init(toggleSidebar: @escaping () -> (), @ViewBuilder contents: @escaping () -> C, trailing: @escaping () -> T) {
+        self.toggleSidebar = toggleSidebar
+        self.contents = contents
+        self.trailing = trailing
+    }
     
     var body: some View {
-        HStack {
-            Button {
-                withAnimation {
-                    showSidebar = true
+        ZStack {
+            HStack(alignment: .center) {
+                Button {
+                    toggleSidebar()
+                } label: {
+                    Image(systemName: "line.3.horizontal")
+                        .resizable()
+                        .frame(width: 24, height: 14)
+                        .foregroundStyle(viewState.theme.foreground2.color)
                 }
-            } label: {
-                Image(systemName: "line.3.horizontal")
-                    .resizable()
-                    .frame(width: 24, height: 14)
-                    .foregroundStyle(viewState.theme.foreground2.color)
+                
+                Spacer()
+                
+                if let trailing {
+                    trailing()
+                }
             }
             
-            Spacer()
-            
-            contents()
-            
-            Spacer()
-            
-            trailing()
+            HStack(alignment: .center) {
+                Spacer()
+                
+                contents()
+                
+                Spacer()
+            }
         }
         .padding(.horizontal, 12)
-        .padding(.vertical, 6)
+        .padding(.top, 4)
+        .padding(.bottom, 8)
         .background(viewState.theme.topBar.color)
+        .overlay(alignment: .bottom) {
+            Rectangle()
+                .frame(maxWidth: .infinity, maxHeight: 1)
+                .foregroundStyle(viewState.theme.background2)
+        }
+    }
+}
+
+extension PageToolbar where T == EmptyView {
+    init(toggleSidebar: @escaping () -> (), @ViewBuilder contents: @escaping () -> C) {
+        self.toggleSidebar = toggleSidebar
+        self.contents = contents
+        self.trailing = nil
     }
 }
 
 #Preview {
-    PageToolbar(showSidebar: .constant(false)) {
+    
+    PageToolbar(toggleSidebar: {}) {
         Text("Placeholder")
     } trailing: {
         Text("Ending")

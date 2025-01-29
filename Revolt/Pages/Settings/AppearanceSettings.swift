@@ -9,124 +9,106 @@ import Foundation
 import SwiftUI
 
 
+struct ThemeColorPicker: View {
+    @Environment(\.self) var environment
+    @EnvironmentObject var viewState: ViewState
+    
+    var title: String
+    @Binding var color: ThemeColor
+    
+    var body: some View {
+        ColorPicker(selection: Binding {
+            color.color
+        } set: { new in
+            withAnimation {
+                color.set(with: new.resolve(in: environment))
+            }
+        }, label: {
+            Text(title)
+        })
+    }
+}
+
 struct AppearanceSettings: View {
     @Environment(\.self) var environment
     @Environment(\.colorScheme) var colorScheme
     @EnvironmentObject var viewState: ViewState
 
-    @State var accent: Color
-    @State var background: Color
-    @State var background2: Color
-    @State var textColor: Color
-    @State var messageBox: Color
-    @State var messageBoxBackground: Color
-    @State var topBar: Color
-    @State var messageBoxBorder: Color
-
     var body: some View {
-        VStack(alignment: .leading) {
-            HStack(spacing: 4) {
+        VStack {
+            HStack {
+                Spacer()
+                
                 Button {
-                    viewState.theme = .light
+                    withAnimation {
+                        viewState.theme = .light
+                    }
                 } label: {
                     Text("Light")
                         .foregroundStyle(viewState.theme.accent.color)
                 }
-                .frame(maxWidth: .infinity)
+                
+                Spacer()
                 
                 Button {
-                    viewState.theme = .dark
+                    withAnimation {
+                        viewState.theme = .dark
+                    }
                 } label: {
                     Text("Dark")
                         .foregroundStyle(viewState.theme.accent.color)
                 }
-                .frame(maxWidth: .infinity)
+                
+                Spacer()
                 
                 Button {
-                    let _ = viewState.applySystemScheme(theme: colorScheme, followSystem: true)
+                    withAnimation {
+                        let _ = viewState.applySystemScheme(theme: colorScheme, followSystem: true)
+                    }
                 } label: {
                     Text("Auto")
                         .foregroundStyle(viewState.theme.accent.color)
                 }
-                .frame(maxWidth: .infinity)
+                
+                Spacer()
             }
-            .frame(maxWidth: .infinity)
+            .padding([.horizontal, .top], 16)
+            
+            List {
+                Section("Theme") {
+                    ThemeColorPicker(title: "Accent", color: $viewState.theme.accent)
+                    ThemeColorPicker(title: "Background", color: $viewState.theme.background)
+                    ThemeColorPicker(title: "Primary Background", color: $viewState.theme.background2)
+                    ThemeColorPicker(title: "Secondary Background", color: $viewState.theme.background3)
+                    ThemeColorPicker(title: "Tertiary Background", color: $viewState.theme.background4)
+                    ThemeColorPicker(title: "Foreground", color: $viewState.theme.foreground)
+                    ThemeColorPicker(title: "Secondary Foreground", color: $viewState.theme.foreground2)
+                    ThemeColorPicker(title: "Tertiary Foreground", color: $viewState.theme.foreground3)
+                    ThemeColorPicker(title: "Message Box", color: $viewState.theme.messageBox)
+                    ThemeColorPicker(title: "Navigation Bar", color: $viewState.theme.topBar)
+                    ThemeColorPicker(title: "Error", color: $viewState.theme.error)
+                    ThemeColorPicker(title: "Mention", color: $viewState.theme.mention)
+                }
+                .listRowBackground(viewState.theme.background2)
+                .animation(.easeInOut, value: viewState.theme)
 
-            ColorPicker(selection: $accent, label: {
-                Text("Accent")
-            })
-            .onChange(of: accent) {
-                let resolved = accent.resolve(in: environment)
-                viewState.theme.accent.set(with: resolved)
+                
+                Section("Messages") {
+                    CheckboxListItem(title: "Compact Mode", isOn: Binding(get: { false }, set: {_ in }))
+                        .listRowBackground(viewState.theme.background2)
+                        .animation(.easeInOut, value: viewState.theme)
+                }
+                
             }
-            
-            ColorPicker(selection: $background, label: {
-                Text("Primary Background")
-            })
-            .onChange(of: background) {
-                let resolved = background.resolve(in: environment)
-                viewState.theme.background.set(with: resolved)
-            }
-            
-            ColorPicker(selection: $background2, label: {
-                Text("Secondary Background")
-            })
-            .onChange(of: background2) {
-                let resolved = background2.resolve(in: environment)
-                viewState.theme.background2.set(with: resolved)
-            }
-            
-            ColorPicker(selection: $textColor, label: {
-                Text("Text Colour")
-            })
-            .onChange(of: textColor) {
-                let resolved = textColor.resolve(in: environment)
-                viewState.theme.foreground.set(with: resolved)
-            }
-            
-            ColorPicker(selection: $messageBox, label: {
-                Text("Message Box")
-            })
-            .onChange(of: messageBox) {
-                let resolved = messageBox.resolve(in: environment)
-                viewState.theme.messageBox.set(with: resolved)
-            }
-            
-            ColorPicker(selection: $messageBoxBackground, label: {
-                Text("Message Box Background")
-            })
-            .onChange(of: messageBoxBackground) {
-                let resolved = messageBoxBackground.resolve(in: environment)
-                viewState.theme.messageBoxBackground.set(with: resolved)
-            }
-            
-            ColorPicker(selection: $messageBoxBorder, label: {
-                Text("Message Box Border")
-            })
-            .onChange(of: messageBoxBorder) {
-                let resolved = messageBoxBorder.resolve(in: environment)
-                viewState.theme.messageBoxBorder.set(with: resolved)
-            }
-            
-            ColorPicker(selection: $topBar, label: {
-                Text("Top Bar")
-            })
-            .onChange(of: topBar) {
-                let resolved = topBar.resolve(in: environment)
-                viewState.theme.topBar.set(with: resolved)
-            }
-            
-            Spacer()
+            .scrollContentBackground(.hidden)
         }
         .toolbar {
             ToolbarItem(placement: .principal) {
                 Text("Appearance")
             }
         }
-        .toolbarBackground(viewState.theme.topBar.color, for: .automatic)
-
-        .padding(.horizontal, 16)
-        .background(viewState.theme.background.color)
+        .background(viewState.theme.background)
+        .toolbarBackground(viewState.theme.topBar, for: .automatic)
         .animation(.easeInOut, value: viewState.theme)
     }
 }
@@ -134,28 +116,11 @@ struct AppearanceSettings: View {
 struct AppearanceSettings_Preview: PreviewProvider {
     static var previews: some View {
         let viewState = ViewState.preview()
-        AppearanceSettings(
-            accent: viewState.theme.accent.color,
-            background: viewState.theme.background.color,
-            background2: viewState.theme.background2.color,
-            textColor: viewState.theme.foreground.color,
-            messageBox: viewState.theme.messageBox.color,
-            messageBoxBackground: viewState.theme.messageBoxBackground.color,
-            topBar: viewState.theme.topBar.color,
-            messageBoxBorder: viewState.theme.messageBoxBorder.color
-        )
+        
+        AppearanceSettings()
         .applyPreviewModifiers(withState: viewState.applySystemScheme(theme: .light))
         
-        AppearanceSettings(
-            accent: viewState.theme.accent.color,
-            background: viewState.theme.background.color,
-            background2: viewState.theme.background2.color,
-            textColor: viewState.theme.foreground.color,
-            messageBox: viewState.theme.messageBox.color,
-            messageBoxBackground: viewState.theme.messageBoxBackground.color,
-            topBar: viewState.theme.topBar.color,
-            messageBoxBorder: viewState.theme.messageBoxBorder.color
-        )
+        AppearanceSettings()
         .applyPreviewModifiers(withState: viewState.applySystemScheme(theme: .dark))
     }
 }

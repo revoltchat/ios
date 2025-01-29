@@ -141,10 +141,10 @@ struct LogIn: View {
 
             Spacer()
 
-            NavigationLink("Resend a verification email", destination: ResendEmail())
+            NavigationLink("Resend a verification email", destination: { ResendEmail() })
                 .padding(15)
             
-            NavigationLink("Forgot Password", destination: ForgotPassword())
+            NavigationLink("Forgot Password", destination: { ForgotPassword() })
                 .padding(15)
 
             Spacer()
@@ -165,77 +165,158 @@ struct Mfa: View {
 
     @State var selected: String? = nil
     @State var currentText: String = ""
+    @State var error: String? = nil
+    
+    @FocusState var textEntryFocus: String?
 
     @Environment(\.colorScheme) var colorScheme: ColorScheme
+
+    func getMethodDetails(method: String) -> (String, String, String, String, UIKeyboardType) {
+        switch method {
+            case "Password":
+                return ("lock.fill", "Enter a password", "Enter your saved password.", "Password", .default)
+            case "Totp":
+                return ("checkmark", "Enter a six-digit code", "Enter the six-digit code from your authenticator app", "Code", .numberPad)
+            case "Recovery":
+                return ("arrow.counterclockwise", "Enter a recovery code", "Enter your backup recovery code", "Recovery code", .default)
+            default:
+                return ("questionmark", "Unknown", "Unknown", "Unknown", .default)
+        }
+    }
+    
+    func sendMfa() {
+        let key: String
+        
+        switch selected {
+            case "Password":
+                key = "password"
+            case "Totp":
+                key = "totp_code"
+            case "Recovery":
+                key = "recovery_code"
+            case _:
+                return
+        }
+        
+        Task {
+            await viewState.signIn(mfa_ticket: ticket, mfa_response: [key: currentText], callback: { response in
+                switch response {
+                    case .Success:
+                        path = NavigationPath()
+                    case .Disabled:
+                        error = "Account disabled"
+                    case .Invalid:
+                        error = "Invalid \(selected!.replacing("_", with: " "))"
+                    case .Onboarding:
+                        ()
+                    case .Mfa(let ticket, let methods):
+                        self.ticket = ticket
+                        self.methods = methods
+                        error = "Please try again"
+                }
+            })
+        }
+    }
     
     var body: some View {
-        VStack {
-            Spacer()
-    
-            Text("One more thing")
-                .font(.title)
-            
-            Spacer()
-
-            Text("You've got 2FA enabled to keep your account extra-safe.")
-
-            Spacer()
-        
-            List(methods, id: \.self) { method in
-                Button(action: {
-                    withAnimation {
-                        if selected == method {
-                            selected = nil
-                        } else {
-                            selected = method
-                        }
+        HStack(alignment: .center) {
+            VStack(alignment: .center, spacing: 16) {
+                Spacer()
+                
+                Text("One more thing")
+                    .bold()
+                    .font(.title)
+                
+                Spacer()
+                
+                Text("You've got 2FA enabled to keep your account extra-safe.")
+                    .foregroundStyle(.secondary)
+                
+                Spacer()
+                
+                if let error {
+                    Text(verbatim: error)
+                        .foregroundStyle(.red)
+                }
+                
+                ScrollView {
+                    ForEach(methods, id: \.self) { method in
+                        let (icon, text, desc, placeholder, keyboardType) = getMethodDetails(method: method)
                         
-                        currentText = ""
-                    }
-                }, label: {
-                    VStack(alignment: .leading) {
-                        HStack(alignment: .top) {
-                            Text("use a \(method.lowercased()) code")
-                                .frame(alignment: .center)
-                        }
-                        
-                        if selected == method {
-                            ZStack(alignment: .trailing) {
-                                TextField("\(method.lowercased()) code", text: $currentText)
-                                Button("enter", systemImage: "arrowshape.right.circle") {
-                                    let key: String
-                                    
-                                    switch method {
-                                        case "Password":
-                                            key = "password"
-                                        case "Totp":
-                                            key = "totp_code"
-                                        case "Recovery":
-                                            key = "recovery_code"
-                                        case _:
-                                            return
+                        VStack(alignment: .leading) {
+                            Button {
+                                withAnimation {
+                                    if selected == method {
+                                        selected = nil
+                                        textEntryFocus = nil
+                                    } else {
+                                        selected = method
+                                        textEntryFocus = method
                                     }
                                     
-                                    Task {
-                                        await viewState.signIn(mfa_ticket: ticket, mfa_response: [key: currentText], callback: { response in
-                                            switch response {
-                                                case .Success:
-                                                    path = NavigationPath()
-                                                case _:
-                                                    ()
+                                    currentText = ""
+                                }
+                            } label: {
+                                VStack(alignment: .center, spacing: 12) {
+                                    HStack(alignment: .center, spacing: 16) {
+                                        
+                                        Image(systemName: icon)
+                                            .resizable()
+                                            .scaledToFit()
+                                            .frame(width: 24)
+                                        
+                                        Text(text)
+                                            .bold()
+                                        
+                                        Spacer()
+                                        
+                                        Image(systemName: "chevron.down")
+                                    }
+                                    
+                                    if selected == method {
+                                        Text(desc)
+                                            .foregroundStyle(.secondary)
+                                        
+                                        VStack(alignment: .leading, spacing: 16) {
+                                            TextField(placeholder, text: $currentText)
+                                                .focused($textEntryFocus, equals: method)
+                                            #if os(iOS)
+                                                .keyboardType(keyboardType)
+                                            #endif
+                                                .textContentType(.oneTimeCode)
+                                                .onSubmit(sendMfa)
+                                            
+                                            Button {
+                                                sendMfa()
+                                            } label: {
+                                                HStack {
+                                                    Spacer()
+                                                    Text("Next")
+                                                    Spacer()
+                                                }
                                             }
-                                        })
+                                            .buttonStyle(.borderedProminent)
+                                            .buttonBorderShape(.roundedRectangle(radius: 8))
+                                            .tint(.themePrimary)
+                                        }
                                     }
                                 }
-                                .labelStyle(.iconOnly)
+                                .padding(.horizontal, 32)
+                                .padding(.vertical, 16)
                             }
+                            .background(RoundedRectangle(cornerRadius: 8)
+                                .foregroundStyle(.gray.opacity(0.2))
+                            )
                         }
                     }
-                    .transition(.slide)
-                    .animation(.easeInOut, value: currentText)
-                })
+                }
+                
+                Spacer()
             }
+            .padding(.horizontal, 24)
+            .frame(maxWidth: .infinity, maxHeight: .infinity)
         }
+        .frame(maxWidth: .infinity, maxHeight: .infinity)
         .foregroundColor((colorScheme == .light) ? Color.black : Color.white)
     }
 }

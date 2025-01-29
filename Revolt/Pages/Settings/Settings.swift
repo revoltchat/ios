@@ -19,71 +19,155 @@ enum CurrentSettingsPage: Hashable {
 struct Settings: View {
     @EnvironmentObject var viewState: ViewState
 
-    @State var currentPage: CurrentSettingsPage? = .language
-    
+    @State var presentLogoutDialog = false
+
     var body: some View {
         List {
-            Section("Revolt") {
-                NavigationLink(destination: ProfileSettings.init) {
+            Section("User Settings") {
+                NavigationLink {
+                    UserSettings()
+                } label: {
                     Image(systemName: "person.fill")
+                        .resizable()
+                        .scaledToFit()
+                        .frame(width: 16, height: 16)
+                    Text("My Account")
+                }
+                NavigationLink {
+                    ProfileSettings()
+                } label: {
+                    Image(systemName: "person.text.rectangle.fill")
+                        .resizable()
+                        .scaledToFit()
+                        .frame(width: 16, height: 16)
                     Text("Profile")
                 }
-                
-                NavigationLink(destination: SessionsSettings.init) {
-                    Image(systemName: "shield.fill")
+
+                NavigationLink {
+                    SessionsSettings()
+                } label: {
+                    Image(systemName: "checkmark.shield.fill")
+                        .resizable()
+                        .scaledToFit()
+                        .frame(width: 16, height: 16)
                     Text("Sessions")
                 }
-                
-                NavigationLink(destination: { AppearanceSettings(
-                    accent: viewState.theme.accent.color,
-                    background: viewState.theme.background.color,
-                    background2: viewState.theme.background2.color,
-                    textColor: viewState.theme.foreground.color,
-                    messageBox: viewState.theme.messageBox.color,
-                    messageBoxBackground: viewState.theme.messageBoxBackground.color,
-                    topBar: viewState.theme.topBar.color,
-                    messageBoxBorder: viewState.theme.messageBoxBorder.color
-                )}) {
+            }
+            .listRowBackground(viewState.theme.background2)
+
+            Section("Client Settings") {
+                NavigationLink {
+                    AppearanceSettings()
+                } label: {
                     Image(systemName: "paintpalette.fill")
+                        .resizable()
+                        .scaledToFit()
+                        .frame(width: 16, height: 16)
                     Text("Appearance")
                 }
-                
-                NavigationLink(destination: LanguageSettings.init) {
+
+                NavigationLink {
+                    NotificationSettings()
+                } label: {
+                    Image(systemName: "bell.fill")
+                        .resizable()
+                        .scaledToFit()
+                        .frame(width: 16, height: 16)
+                    Text("Notifications")
+                }
+                NavigationLink {
+                    LanguageSettings()
+                } label: {
                     Image(systemName: "globe")
+                        .resizable()
+                        .scaledToFit()
+                        .frame(width: 16, height: 16)
                     Text("Language")
                 }
             }
             .listRowBackground(viewState.theme.background2)
             
+            Section("Revolt") {
+                NavigationLink {
+                    BotSettings()
+                } label: {
+                    Image(systemName: "desktopcomputer")
+                        .resizable()
+                        .scaledToFit()
+                        .frame(width: 16, height: 16)
+                    Text("Bots")
+                }
+
+            }.listRowBackground(viewState.theme.background2)
+
             Section("Misc") {
-                NavigationLink(destination: About.init) {
+                NavigationLink {
+                    About()
+                } label: {
                     Image(systemName: "info.circle.fill")
+                        .resizable()
+                        .scaledToFit()
+                        .frame(width: 16, height: 16)
                     Text("About")
                 }
-                
+                NavigationLink {
+                    ExperimentsSettings()
+                } label: {
+                    Image(systemName: "flask.fill")
+                        .resizable()
+                        .scaledToFit()
+                        .frame(width: 16, height: 16)
+                    Text("Experiments")
+                }
+#if DEBUG
+                NavigationLink {
+                    DeveloperSettings()
+                } label: {
+                    Image(systemName: "hammer.fill")
+                        .resizable()
+                        .scaledToFit()
+                        .frame(width: 16, height: 16)
+                    Text("Developer")
+                }
+#endif
+            }
+            .listRowBackground(viewState.theme.background2)
+            
+            Section {
                 Button {
-                    viewState.logout()
+                    presentLogoutDialog = true
                 } label: {
                     HStack {
                         Image(systemName: "arrow.left.square")
+                            .resizable()
+                            .scaledToFit()
                             .foregroundStyle(.red)
+                            .frame(width: 16, height: 16)
                         Text("Logout")
                             .foregroundStyle(.red)
                     }
                 }
             }
             .listRowBackground(viewState.theme.background2)
+            
         }
         .scrollContentBackground(.hidden)
         .frame(maxWidth: .infinity, maxHeight: .infinity)
-        .toolbar {
-            ToolbarItem(placement: .principal) {
-                Text("Settings")
-            }
-        }
+        .navigationTitle("Settings")
         .toolbarBackground(viewState.theme.topBar.color, for: .automatic)
-
         .background(viewState.theme.background)
+        .confirmationDialog("Are you sure?", isPresented: $presentLogoutDialog, titleVisibility: .visible) {
+            Button("Yes", role: .destructive) {
+                Task {
+                    await viewState.signOut()
+                }
+            }
+            .keyboardShortcut(.defaultAction)
+            Button("Wait!", role: .cancel) {
+                presentLogoutDialog = false
+            }
+            .keyboardShortcut(.cancelAction)
+        }
     }
 }
 

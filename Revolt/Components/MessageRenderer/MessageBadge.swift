@@ -17,8 +17,8 @@ struct MessageBadge: View {
         Text(text)
             .font(.caption)
             .fontWeight(.medium)
-            .padding(.horizontal, 8)
-            .padding(.vertical, 4)
+            .padding(.horizontal, 4)
+            .padding(.vertical, 2)
             .background(color, in: RoundedRectangle(cornerRadius: 5))
     }
 }

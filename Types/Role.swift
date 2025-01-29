@@ -7,7 +7,7 @@
 
 import Foundation
 
-public struct Role: Decodable {
+public struct Role: Codable, Equatable, Hashable {
     public var name: String
     public var permissions: Overwrite
     public var colour: String?

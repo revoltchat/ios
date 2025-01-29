@@ -82,7 +82,7 @@ public struct User: Identifiable, Codable, Equatable, Hashable {
     }
 }
 
-public struct Profile: Decodable, Equatable, Hashable {
+public struct Profile: Codable, Equatable, Hashable {
     public init(content: String? = nil, background: File? = nil) {
         self.content = content
         self.background = background

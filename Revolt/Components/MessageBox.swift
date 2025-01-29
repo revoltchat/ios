@@ -10,52 +10,63 @@ import SwiftUI
 import PhotosUI
 import Types
 
-struct Reply {
+struct Reply: Identifiable, Equatable {
     var message: Message
     var mention: Bool = false
-}
-
-class ReplyViewModel: ObservableObject {
-    var idx: Int
-
-    @Binding var replies: [Reply]
-
-    func remove() {
-        replies.remove(at: idx)
-    }
-
-    internal init(idx: Int, replies: Binding<[Reply]>) {
-        self.idx = idx
-        _replies = replies
-    }
+    
+    var id: String { message.id }
 }
 
 struct ReplyView: View {
     @EnvironmentObject var viewState: ViewState
-    @ObservedObject var viewModel: ReplyViewModel
+    
+    @Binding var reply: Reply
+    
+    @Binding var replies: [Reply]
+    
+    var channel: Channel
+    var server: Server?
 
-    var id: String
-
-    @ViewBuilder
+    func remove() {
+        withAnimation {
+            replies.removeAll(where: { $0.id == reply.id })
+        }
+    }
+    
     var body: some View {
-        let reply = viewModel.replies[viewModel.idx]
+        let user = viewState.users[reply.message.author]!
+        let member = server.flatMap { viewState.members[$0.id]?[user.id] }
 
-        let author = viewState.users[reply.message.author]!
-
-        HStack {
-            Button(action: viewModel.remove) {
-                Image(systemName: "xmark.circle")
+        HStack(alignment: .center, spacing: 8) {
+            Button(action: remove) {
+                Image(systemName: "xmark")
+                    .resizable()
+                    .frame(width: 10, height: 10)
+                    .foregroundStyle(viewState.theme.foreground3)
+                    .bold()
             }
-            Avatar(user: author, width:16, height: 16)
-            Text(author.username)
-            if let content = reply.message.content {
-                Text(content)
+            
+            Avatar(user: user, width: 16, height: 16)
+            
+            Text(reply.message.masquerade?.name ?? member?.nickname ?? user.display_name ?? user.username)
+                .font(.caption)
+                .fixedSize()
+                .foregroundStyle(member?.displayColour(theme: viewState.theme, server: server!) ?? AnyShapeStyle(viewState.theme.foreground.color))
+            
+            if !(reply.message.attachments?.isEmpty ?? true) {
+                Text(Image(systemName: "doc.text.fill"))
+                    .font(.caption)
+                    .foregroundStyle(viewState.theme.foreground2)
+            }
+            
+            if let content = Binding($reply.message.content) {
+                Contents(text: content, fontSize: 12)
                     .lineLimit(1)
                     .truncationMode(.tail)
             }
-            Spacer()
-            Button(action: { viewModel.replies[viewModel.idx].mention.toggle() }) {
-                if viewModel.replies[viewModel.idx].mention {
+            
+            Button(action: { reply.mention.toggle() }) {
+                if reply.mention {
                     Text("@ on")
                         .foregroundColor(.accentColor)
                 } else {
@@ -70,11 +81,13 @@ struct MessageBox: View {
     enum AutocompleteType {
         case user
         case channel
+        case emoji
     }
 
     enum AutocompleteValues {
         case channels([Channel])
         case users([(User, Member?)])
+        case emojis([PickerEmoji])
     }
 
     struct Photo: Identifiable, Hashable {
@@ -93,6 +106,7 @@ struct MessageBox: View {
     @Binding var channelReplies: [Reply]
     var focusState: FocusState<Bool>.Binding
     @Binding var showingSelectEmoji: Bool
+    @Binding var editing: Message?
 
     @State var showingSelectFile = false
     @State var showingSelectPhoto = false
@@ -111,22 +125,39 @@ struct MessageBox: View {
     let channel: Channel
     let server: Server?
 
-    init(channel: Channel, server: Server?, channelReplies: Binding<[Reply]>, focusState f: FocusState<Bool>.Binding, showingSelectEmoji: Binding<Bool>) {
+    init(channel: Channel, server: Server?, channelReplies: Binding<[Reply]>, focusState f: FocusState<Bool>.Binding, showingSelectEmoji: Binding<Bool>, editing: Binding<Message?>) {
         self.channel = channel
         self.server = server
         _channelReplies = channelReplies
         focusState = f
         _showingSelectEmoji = showingSelectEmoji
+        _editing = editing
+        
+        if let msg = editing.wrappedValue {
+            content = msg.content ?? ""
+        }
     }
 
     func sendMessage() {
         let c = content
         content = ""
-        let f = selectedPhotos.map({ ($0.data, $0.filename) })
-        selectedPhotos = []
+        let replies = channelReplies
+        channelReplies = []
 
-        Task {
-            await viewState.queueMessage(channel: channel.id, replies: channelReplies, content: c, attachments: f)
+        if let message = editing {
+            Task {
+                editing = nil
+
+                await viewState.http.editMessage(channel: channel.id, message: message.id, edits: MessageEdit(content: c))
+            }
+            
+        } else {
+            let f = selectedPhotos.map({ ($0.data, $0.filename) })
+            selectedPhotos = []
+            
+            Task {
+                await viewState.queueMessage(channel: channel.id, replies: replies, content: c, attachments: f)
+            }
         }
     }
 
@@ -149,7 +180,11 @@ struct MessageBox: View {
                         users = viewState.members[server!.id]!.values.map({ m in (viewState.users[m.id.user]!, m) })
                 }
 
-                return AutocompleteValues.users(users)
+                return AutocompleteValues.users(users.filter { pair in
+                    pair.0.display_name?.lowercased().starts(with: autocompleteSearchValue.lowercased())
+                    ?? pair.1?.nickname?.lowercased().starts(with: autocompleteSearchValue.lowercased())
+                    ?? pair.0.username.lowercased().starts(with: autocompleteSearchValue.lowercased())
+                })
             case .channel:
                 let channels: [Channel]
 
@@ -160,55 +195,39 @@ struct MessageBox: View {
                         channels = server!.channels.compactMap({ viewState.channels[$0] })
                 }
 
-                return AutocompleteValues.channels(channels)
+                return AutocompleteValues.channels(channels.filter { channel in
+                    channel.getName(viewState).lowercased().starts(with: autocompleteSearchValue.lowercased())
+                })
+            case .emoji:
+                return AutocompleteValues.emojis(loadEmojis(withState: viewState)
+                    .values
+                    .flatMap { $0 }
+                    .filter { emoji in
+                        let names: [String]
+                        
+                        if let emojiId = emoji.emojiId, let emoji = viewState.emojis[emojiId] {
+                            names = [emoji.name]
+                        } else {
+                            var values = emoji.alternates
+                            values.append(emoji.base)
+                            names = values.map { String(String.UnicodeScalarView($0.compactMap(Unicode.Scalar.init))) }
+                        }
+                        
+                        return names.contains(where: { $0.lowercased().starts(with: autocompleteSearchValue.lowercased()) })
+                    })
         }
-    }
-
-    func getCurrentlyTyping() -> [(User, Member?)]? {
-        viewState.currentlyTyping[channel.id]?.compactMap({ user_id in
-            guard let user = viewState.users[user_id] else {
-                return nil
-            }
-
-            var member: Member?
-
-            if let server = server {
-                member = viewState.members[server.id]![user_id]
-            }
-
-            return (user, member)
-        })
-    }
-
-    func formatTypingIndicatorText(withUsers users: [(User, Member?)]) -> String {
-        let base = ListFormatter.localizedString(byJoining: users.map({ (user, member) in member?.nickname ?? user.display_name ?? user.username }))
-
-        let ending = users.count == 1 ? "is typing" : "are typing"
-
-        return "\(base) \(ending)"
     }
 
     var body: some View {
         VStack(alignment: .leading, spacing: 4) {
-            if let users = getCurrentlyTyping(), !users.isEmpty {
-                HStack {
-                    HStack(spacing: -10) {
-                        ForEach(users, id: \.0.id) { (user, member) in
-                            Avatar(user: user, member: member, width: 16, height: 16)
-                        }
-                    }
-
-                    Text(formatTypingIndicatorText(withUsers: users))
-                        .font(.callout)
-                        .foregroundStyle(viewState.theme.foreground2)
-                }
+            ForEach($channelReplies) { reply in
+                ReplyView(reply: reply, replies: $channelReplies, channel: channel, server: server)
+                    .padding(.horizontal, 4)
+                    //.transition(.move(edge: .bottom))
             }
-            ForEach(Array(channelReplies.enumerated()), id: \.element.message.id) { reply in
-                let model = ReplyViewModel(idx: reply.offset, replies: $channelReplies)
-                ReplyView(viewModel: model, id: reply.element.message.id)
-                    .padding(.horizontal, 16)
-            }
-            VStack(spacing: 8) {
+            .animation(.default, value: channelReplies)
+            
+            VStack(alignment: .leading, spacing: 8) {
                 if selectedPhotos.count > 0 {
                     ScrollView(.horizontal) {
                         HStack {
@@ -221,13 +240,13 @@ struct MessageBox: View {
                                         Image(uiImage: image)
                                             .resizable()
                                             .scaledToFit()
-                                            .frame( maxWidth: 100, maxHeight: 100 )
+                                            .frame(maxWidth: 100, maxHeight: 100)
                                             .clipShape(RoundedRectangle(cornerRadius: 5.0, style: .circular))
 #else
                                         Image(nsImage: image)
                                             .resizable()
                                             .scaledToFit()
-                                            .frame( maxWidth: 100, maxHeight: 100 )
+                                            .frame(maxWidth: 100, maxHeight: 100)
                                             .clipShape(RoundedRectangle(cornerRadius: 5.0, style: .circular))
 #endif
                                     } else {
@@ -267,12 +286,12 @@ struct MessageBox: View {
                                     ForEach(users, id: \.0.id) { (user, member) in
                                         Button {
                                             withAnimation {
-                                                content = String(content.dropLast())
+                                                content = String(content.dropLast(autocompleteSearchValue.count + 1))
                                                 content.append("<@\(user.id)>")
                                                 autoCompleteType = nil
                                             }
                                         } label: {
-                                            HStack(spacing: 4) {
+                                            HStack(spacing: 8) {
                                                 Avatar(user: user, member: member, width: 24, height: 24)
                                                 Text(verbatim: member?.nickname ?? user.display_name ?? user.username)
                                             }
@@ -285,7 +304,7 @@ struct MessageBox: View {
                                     ForEach(channels) { channel in
                                         Button {
                                             withAnimation {
-                                                content = String(content.dropLast())
+                                                content = String(content.dropLast(autocompleteSearchValue.count + 1))
                                                 content.append("<#\(channel.id)>")
                                                 autoCompleteType = nil
                                             }
@@ -296,21 +315,87 @@ struct MessageBox: View {
                                         .background(viewState.theme.background2.color)
                                         .clipShape(RoundedRectangle(cornerRadius: 8))
                                     }
+                                case .emojis(let emojis):
+                                    ForEach(emojis) { emoji in
+                                        Button {
+                                            let emojiString: String
+                                            
+                                            if let emojiId = emoji.emojiId {
+                                                emojiString = ":\(emojiId):"
+                                            } else {
+                                                emojiString = String(String.UnicodeScalarView(emoji.base.compactMap(Unicode.Scalar.init)))
+                                            }
+                                            
+                                            withAnimation {
+                                                content = String(content.dropLast(autocompleteSearchValue.count + 1))
+                                                content.append(emojiString)
+                                                autoCompleteType = nil
+                                            }
+                                        } label: {
+                                            HStack(spacing: 8) {
+                                                if let id = emoji.emojiId {
+                                                    let emoji = viewState.emojis[id]!
+                                                    
+                                                    LazyImage(source: .emoji(id), height: 24, width: 24, clipTo: Rectangle())
+                                                    Text(verbatim: emoji.name)
+                                                } else {
+                                                    let emojiString = String(String.UnicodeScalarView(emoji.base.compactMap(Unicode.Scalar.init)))
+                                                    let image = convertEmojiToImage(text: emojiString)
+                                                    
+#if os(iOS)
+                                                    Image(uiImage: image)
+                                                        .resizable()
+                                                        .aspectRatio(contentMode: .fit)
+                                                        .frame(width: 24, height: 24)
+#elseif os(macOS)
+                                                    Image(nsImage: image)
+                                                        .resizable()
+                                                        .aspectRatio(contentMode: .fit)
+                                                        .frame(width: 24, height: 24)
+#endif
+                                                    
+                                                    Text(verbatim: emojiString)
+                                                }
+                                            }
+                                        }
+                                    }
                             }
                         }
                         .frame(height: 42)
                     }
                     .frame(maxWidth: .infinity)
                 }
+                
+                if editing != nil {
+                    Button {
+                        editing = nil
+                        content = ""
+                    } label: {
+                        HStack {
+                            Image(systemName: "pencil")
+                                .foregroundStyle(viewState.theme.accent)
+                            
+                            Text("Editing Message")
+                            
+                            Spacer()
+                            
+                            Image(systemName: "xmark")
+                                .foregroundStyle(viewState.theme.foreground2)
+                        }
+                        .bold()
+                    }
+                }
 
                 HStack(alignment: .top) {
-                    UploadButton(showingSelectFile: $showingSelectFile, showingSelectPhoto: $showingSelectPhoto, selectedPhotoItems: $selectedPhotoItems, selectedPhotos: $selectedPhotos)
-                        .frame(alignment: .top)
+                    if editing == nil {
+                        UploadButton(showingSelectFile: $showingSelectFile, showingSelectPhoto: $showingSelectPhoto, selectedPhotoItems: $selectedPhotoItems, selectedPhotos: $selectedPhotos)
+                            .frame(alignment: .top)
+                    }
 
                     TextField("", text: $content.animation(), axis: .vertical)
                         .focused(focusState)
                         .placeholder(when: content.isEmpty) {
-                            Text("Message \(channel.getName(viewState))")
+                            Text("Message #\(channel.getName(viewState))")
                                 .foregroundStyle(viewState.theme.foreground2.color)
                         }
                         .onChange(of: content) { _, value in
@@ -324,6 +409,8 @@ struct MessageBox: View {
                                             autoCompleteType = .user
                                         case "#":
                                             autoCompleteType = .channel
+                                        case ":":
+                                            autoCompleteType = .emoji
                                         default:
                                             autoCompleteType = nil
                                     }
@@ -344,6 +431,18 @@ struct MessageBox: View {
                                 withAnimation {
                                     focusState.wrappedValue = true
                                 }
+                            }
+                        })
+                        .onChange(of: editing, { b, a in
+                            if let a {
+                                selectedPhotos = []
+                                selectedPhotoItems = []
+                                autoCompleteType = nil
+                                autocompleteSearchValue = ""
+                                content = a.content ?? ""
+                            } else {
+                                channelReplies = []
+                                content = ""
                             }
                         })
                         .sheet(isPresented: $showingSelectEmoji) {
@@ -392,7 +491,7 @@ struct MessageBox: View {
         .padding(.top, 4)
         .padding(.horizontal, 12)
         .padding(.bottom, 12)
-        .background(viewState.theme.messageBoxBackground.color)
+        .background(viewState.theme.messageBox.color)
     }
 }
 
@@ -405,8 +504,10 @@ struct UploadButton: View {
     @Binding var selectedPhotos: [MessageBox.Photo]
 
     func onFileCompletion(res: Result<URL, Error>) {
-        if case .success(let url) = res {
+        if case .success(let url) = res, url.startAccessingSecurityScopedResource() {
             let data = try? Data(contentsOf: url)
+            url.stopAccessingSecurityScopedResource()
+            
             guard let data = data else { return }
 
 #if os(macOS)
@@ -480,7 +581,7 @@ struct MessageBox_Previews: PreviewProvider {
         let channel = viewState.channels["0"]!
         let server = viewState.servers["0"]!
 
-        MessageBox(channel: channel, server: server, channelReplies: $replies, focusState: $focused, showingSelectEmoji: $showingSelectEmoji)
+        MessageBox(channel: channel, server: server, channelReplies: $replies, focusState: $focused, showingSelectEmoji: $showingSelectEmoji, editing: .constant(nil))
             .applyPreviewModifiers(withState: viewState)
     }
 }

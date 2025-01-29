@@ -16,12 +16,15 @@ struct Avatar: View {
     public var user: User
     public var member: Member? = nil
     public var masquerade: Masquerade? = nil
+    public var webhook: MessageWebhook? = nil
     public var width: CGFloat = 32
     public var height: CGFloat = 32
     public var withPresence: Bool = false
 
     var source: LazyImageSource? {
-        if let url = masquerade?.avatar {
+        if let avatar = webhook?.avatar {
+            return .id(avatar, "avatars")
+        } else if let url = masquerade?.avatar {
             return .url(URL(string: url)!)
         } else if let file = member?.avatar ?? user.avatar {
             return .file(file)
@@ -40,25 +43,28 @@ struct Avatar: View {
                     .clipped()
                     .clipShape(Circle())
             } else {
-                if let source = source {
-                    LazyImage(source: source, height: height, width: width, clipTo: Circle())
-                } else {
-                    let baseUrl = viewState.http.baseURL
-                    
-                    KFImage.url(URL(string: "\(baseUrl)/users/\(user.id)/default_avatar"))
-                        .placeholder { Color.clear }
-                        .resizable()
-                        .aspectRatio(contentMode: .fill)
-                        .frame(width: width, height: height)
-                        .clipped()
-                        .clipShape(Circle())
-                }
+                LazyImage(
+                    source: .url(viewState.resolveAvatarUrl(user: user, member: member, masquerade: masquerade)),
+                    height: height,
+                    width: width,
+                    clipTo: Circle()
+                )
             }
             
             if withPresence {
-                PresenceIndicator(presence: user.status?.presence, width: width / 2.8, height: height / 2.8)
+                ZStack(alignment: .center) {
+                    Circle()
+                        .foregroundStyle(.black)
+                        .frame(width: width / 2.5, height: width / 2.5)
+                        .blendMode(.destinationOut)
+
+                    PresenceIndicator(presence: user.status?.presence, width: width / 3, height: height / 3)
+                }
+                    .padding(.bottom, -2)
+                    .padding(.trailing, -2)
             }
         }
+        .compositingGroup()
     }
 }
 

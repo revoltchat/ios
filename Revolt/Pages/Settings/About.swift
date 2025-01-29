@@ -15,7 +15,7 @@ struct About: View {
         VStack {
             Image("wide")
 
-            Text("Revolt on IOS")
+            Text("Revolt iOS")
 
             Text(Bundle.main.releaseVersionNumber!)
                 .font(.caption)

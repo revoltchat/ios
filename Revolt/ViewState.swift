@@ -6,6 +6,8 @@ import Collections
 import Sentry
 import LiveKit
 import Types
+import UserNotifications
+import KeychainAccess
 
 enum UserStateError: Error {
     case signInError
@@ -65,8 +67,7 @@ extension LoginResponse: Decodable {
 }
 
 enum ConnectionState {
-    case connecting
-    case connected
+    case connecting, connected, signedOut
 }
 
 struct QueuedMessage {
@@ -92,8 +93,10 @@ enum MainSelection: Hashable, Codable {
 enum ChannelSelection: Hashable, Codable {
     case channel(String)
     case force_textchannel(String)
+    case force_voicechannel(String)
     case home
     case friends
+    case noChannel
 
     var id: String? {
         switch self {
@@ -111,7 +114,10 @@ enum NavigationDestination: Hashable, Codable {
     case channel_settings(String)
     case add_friend
     case create_group([String])
-    case add_server
+    case create_server
+    case channel_search(String)
+    case invite(String)
+    case channel_pins(String)
 }
 
 struct UserMaybeMember: Identifiable {
@@ -123,30 +129,113 @@ struct UserMaybeMember: Identifiable {
 
 @MainActor
 public class ViewState: ObservableObject {
-    var http: HTTPClient = HTTPClient(token: nil, baseURL: "http://192.168.1.3:8000")
-    var ws: WebSocketStream? = nil
-    var apiInfo: ApiInfo? = nil
+    static var shared: ViewState? = nil
 
+#if os(iOS)
+    static var application: UIApplication? = nil
+#elseif os(macOS)
+    static var application: NSApplication? = nil
+#endif
+
+    let keychain = Keychain(service: "chat.revolt.app")
+    var http: HTTPClient = HTTPClient(token: nil, baseURL: "http://192.168.1.8:14702") // "https://api.revolt.chat/0.8"
     var launchTransaction: any Sentry.Span
+    
+    @Published var ws: WebSocketStream? = nil
+    
+    @Published var apiInfo: ApiInfo? = nil {
+        didSet {
+            let apiInfo = apiInfo
+            DispatchQueue.global(qos: .background).async {
+                UserDefaults.standard.set(try! JSONEncoder().encode(apiInfo), forKey: "apiInfo")
+            }
+        }
+    }
 
     @Published var sessionToken: String? = nil {
         didSet {
-            UserDefaults.standard.set(sessionToken, forKey: "sessionToken")
+            keychain["sessionToken"] = sessionToken
         }
     }
-    @Published var users: [String: Types.User] = [:]
-    @Published var servers: OrderedDictionary<String, Server> = [:]
-    @Published var channels: [String: Channel] = [:]
-    @Published var messages: [String: Message] = [:]
-    @Published var channelMessages: [String: [String]] = [:]
-    @Published var members: [String: [String: Member]] = [:]
-    @Published var dms: [Channel] = []
-    @Published var emojis: [String: Emoji] = [:]
-    @Published var voiceStates: [String: ChannelVoiceState] = [:]
+    @Published var users: [String: Types.User] {
+        didSet {
+            let users = users
+            DispatchQueue.global(qos: .background).async {
+                UserDefaults.standard.set(try! JSONEncoder().encode(users), forKey: "users")
+            }
+        }
+    }
+    @Published var servers: OrderedDictionary<String, Server> {
+        didSet {
+            let servers = servers
+            DispatchQueue.global(qos: .background).async {
+                UserDefaults.standard.set(try! JSONEncoder().encode(servers), forKey: "servers")
+            }
+        }
+    }
+    @Published var channels: [String: Channel] {
+        didSet {
+            let channels = channels
+            DispatchQueue.global(qos: .background).async {
+                UserDefaults.standard.set(try! JSONEncoder().encode(channels), forKey: "channels")
+            }
+        }
+    }
+    @Published var messages: [String: Message] {
+        didSet {
+            let messages = messages
+            DispatchQueue.global(qos: .background).async {
+                UserDefaults.standard.set(try! JSONEncoder().encode(messages), forKey: "messages")
+            }
+        }
+    }
+    @Published var channelMessages: [String: [String]] {
+        didSet {
+            let channelMessages = channelMessages
+            DispatchQueue.global(qos: .background).async {
+                UserDefaults.standard.set(try! JSONEncoder().encode(channelMessages), forKey: "channelMessages")
+            }
+        }
+    }
+    @Published var members: [String: [String: Member]] {
+        didSet {
+            let members = members
+            DispatchQueue.global(qos: .background).async {
+                UserDefaults.standard.set(try! JSONEncoder().encode(members), forKey: "members")
+            }
+        }
+    }
+    @Published var dms: [Channel] {
+        didSet {
+            let dms = dms
+            DispatchQueue.global(qos: .background).async {
+                UserDefaults.standard.set(try! JSONEncoder().encode(dms), forKey: "dms")
+            }
+        }
+    }
+    @Published var emojis: [String: Emoji] {
+        didSet {
+            let emojis = emojis
+            DispatchQueue.global(qos: .background).async {
+                UserDefaults.standard.set(try! JSONEncoder().encode(emojis), forKey: "emojis")
+            }
+        }
+    }
+    
+    @Published var currentUser: Types.User? = nil {
+        didSet {
+            let currentUser = currentUser
+            DispatchQueue.global(qos: .background).async {
+                UserDefaults.standard.set(try! JSONEncoder().encode(currentUser), forKey: "currentUser")
+            }
+        }
+    }
+    
+    @Published var voiceStates: [String: [String: UserVoiceState]] = [:]
 
     @Published var state: ConnectionState = .connecting
-    @Published var queuedMessages: Dictionary<String, [QueuedMessage]> = [:]
-    @Published var currentUser: Types.User? = nil
+    @Published var forceMainScreen: Bool = false
+    @Published var queuedMessages: [String: [QueuedMessage]] = [:]
     @Published var loadingMessages: Set<String> = Set()
     @Published var currentlyTyping: [String: OrderedSet<String>] = [:]
     @Published var isOnboarding: Bool = false
@@ -154,14 +243,15 @@ public class ViewState: ObservableObject {
     @Published var currentUserSheet: UserMaybeMember? = nil
     @Published var currentVoiceChannel: String? = nil
     @Published var currentVoice: Room? = nil
+    @Published var atTopOfChannel: Set<String> = []
 
-    @Published var currentServer: MainSelection = .dms {
+    @Published var currentSelection: MainSelection {
         didSet {
-            UserDefaults.standard.set(try! JSONEncoder().encode(currentServer), forKey: "currentServer")
+            UserDefaults.standard.set(try! JSONEncoder().encode(currentSelection), forKey: "currentSelection")
         }
     }
 
-    @Published var currentChannel: ChannelSelection = .home {
+    @Published var currentChannel: ChannelSelection {
         didSet {
             UserDefaults.standard.set(try! JSONEncoder().encode(currentChannel), forKey: "currentChannel")
         }
@@ -184,42 +274,75 @@ public class ViewState: ObservableObject {
         }
     }
 
-    @Published var path: NavigationPath = NavigationPath()
+    @Published var path: NavigationPath {
+        didSet {
+            UserDefaults.standard.set(try! JSONEncoder().encode(path.codable), forKey: "path")
+        }
+    }
+    
+    var userSettingsStore: UserSettingsData
+
+    static func decodeUserDefaults<T: Decodable>(forKey key: String, withDecoder decoder: JSONDecoder) throws -> T? {
+        if let value = UserDefaults.standard.data(forKey: key) {
+            return try decoder.decode(T.self, from: value)
+        } else {
+            return nil
+        }
+    }
+    
+    static func decodeUserDefaults<T: Decodable>(forKey key: String, withDecoder decoder: JSONDecoder, defaultingTo def: T) -> T {
+        return (try? decodeUserDefaults(forKey: key, withDecoder: decoder)) ?? def
+    }
 
     init() {
         launchTransaction = SentrySDK.startTransaction(name: "launch", operation: "launch")
         let decoder = JSONDecoder()
+        
+        self.apiInfo = ViewState.decodeUserDefaults(forKey: "apiInfo", withDecoder: decoder, defaultingTo: nil)
+        
+        self.userSettingsStore = UserSettingsData.maybeRead(viewState: nil)
+        self.sessionToken = keychain["sessionToken"]
 
-        self.sessionToken = "2Aj-9dSullwKLXQ9_c71czw6DA45-ZJ4lT-9IxzZNiArZLnqQniVZBHk6sOI4iPf" //UserDefaults.standard.string(forKey: "sessionToken")
-
-        if let currentServer = UserDefaults.standard.data(forKey: "currentServer") {
-            self.currentServer = (try? decoder.decode(MainSelection.self, from: currentServer)) ?? .dms
-        } else {
-            self.currentServer = .dms
-        }
-
-        if let currentChannel = UserDefaults.standard.data(forKey: "currentChannel") {
-            self.currentChannel = (try? decoder.decode(ChannelSelection.self, from: currentChannel)) ?? .home
-        } else {
-            self.currentChannel = .home
-        }
-
-        if let locale = UserDefaults.standard.data(forKey: "locale") {
-            self.currentLocale = try! decoder.decode(Locale?.self, from: locale)
-        } else {
-            self.currentLocale = nil
-        }
+        self.users = ViewState.decodeUserDefaults(forKey: "users", withDecoder: decoder, defaultingTo: [:])
+        self.servers = ViewState.decodeUserDefaults(forKey: "servers", withDecoder: decoder, defaultingTo: [:])
+        self.channels = ViewState.decodeUserDefaults(forKey: "channels", withDecoder: decoder, defaultingTo: [:])
+        self.messages = ViewState.decodeUserDefaults(forKey: "messages", withDecoder: decoder, defaultingTo: [:])
+        self.channelMessages = ViewState.decodeUserDefaults(forKey: "channelMessages", withDecoder: decoder, defaultingTo: [:])
+        self.members = ViewState.decodeUserDefaults(forKey: "members", withDecoder: decoder, defaultingTo: [:])
+        self.dms = ViewState.decodeUserDefaults(forKey: "dms", withDecoder: decoder, defaultingTo: [])
+        self.emojis = ViewState.decodeUserDefaults(forKey: "emojis", withDecoder: decoder, defaultingTo: [:])
+        
+        self.currentSelection = ViewState.decodeUserDefaults(forKey: "currentSelection", withDecoder: decoder, defaultingTo: .dms)
+        self.currentChannel = ViewState.decodeUserDefaults(forKey: "currentChannel", withDecoder: decoder, defaultingTo: .home)
+        self.currentLocale = ViewState.decodeUserDefaults(forKey: "locale", withDecoder: decoder, defaultingTo: nil)
 
         self.currentSessionId = UserDefaults.standard.string(forKey: "currentSessionId")
 
-        if let themeData = UserDefaults.standard.data(forKey: "theme") {
-            self.theme = try! decoder.decode(Theme.self, from: themeData)
-        } else {
-            self.theme = .dark
+        self.theme = ViewState.decodeUserDefaults(forKey: "theme", withDecoder: decoder, defaultingTo: .dark)
+        
+        self.currentUser = ViewState.decodeUserDefaults(forKey: "currentUser", withDecoder: decoder, defaultingTo: nil)
+        
+        // self.path = NavigationPath()
+        
+       if let value = UserDefaults.standard.data(forKey: "path"), let path = try? decoder.decode(NavigationPath.CodableRepresentation.self, from: value) {
+           self.path = NavigationPath(path)
+       } else {
+           self.path = NavigationPath()
+       }
+        
+        if self.currentUser != nil, self.apiInfo != nil {
+            self.forceMainScreen = true
         }
 
         self.users["00000000000000000000000000"] = User(id: "00000000000000000000000000", username: "Revolt", discriminator: "0000")
         self.http.token = self.sessionToken
+        
+        self.userSettingsStore.viewState = self // this is a cursed workaround
+        ViewState.shared = self
+        
+        if let user = self.currentUser {
+            SentrySDK.setUser(Sentry.User(userId: user.id))
+        }
     }
 
     func applySystemScheme(theme: ColorScheme, followSystem: Bool = false) -> Self {
@@ -234,18 +357,21 @@ public class ViewState: ObservableObject {
         this.state = .connected
         this.currentUser = User(id: "0", username: "Zomatree", discriminator: "0000", badges: Int.max, status: Status(text: "hello world", presence: .Busy), relationship: .User, profile: Profile(content: "hello world"))
         this.users["0"] = this.currentUser!
+        this.users["1"] = User(id: "1", username: "Other Person", discriminator: "0001", profile: Profile(content: "Balls"))
         this.servers["0"] = Server(id: "0", owner: "0", name: "Testing Server", channels: ["0"], default_permissions: Permissions.all, categories: [Types.Category(id: "0", title: "Channels", channels: ["0", "1"])])
         this.channels["0"] = .text_channel(TextChannel(id: "0", server: "0", name: "General"))
         this.channels["1"] = .voice_channel(VoiceChannel(id: "1", server: "0", name: "Voice General"))
         this.channels["2"] = .saved_messages(SavedMessages(id: "2", user: "0"))
-        this.messages["01HD4VQY398JNRJY60JDY2QHA5"] = Message(id: "01HD4VQY398JNRJY60JDY2QHA5", content: "Hello World", author: "0", channel: "0", mentions: ["0"])
+        this.channels["3"] = .dm_channel(DMChannel(id: "3", active: true, recipients: ["0", "1"]))
+        this.messages["01HD4VQY398JNRJY60JDY2QHA5"] = Message(id: "01HD4VQY398JNRJY60JDY2QHA5", content: String(repeating: "HelloWorld", count: 100), author: "0", channel: "0", mentions: ["0"])
         this.messages["01HDEX6M2E3SHY8AC2S6B9SEAW"] = Message(id: "01HDEX6M2E3SHY8AC2S6B9SEAW", content: "reply", author: "0", channel: "0", replies: ["01HD4VQY398JNRJY60JDY2QHA5"])
-        this.channelMessages["0"] = ["01HD4VQY398JNRJY60JDY2QHA5", "01HDEX6M2E3SHY8AC2S6B9SEAW"]
         this.members["0"] = ["0": Member(id: MemberId(server: "0", user: "0"), joined_at: "", can_publish: true, can_receive: true)]
+        this.messages["01HZ3CFEG10WH52YVXG34WZ9EM"] = Message(id: "01HZ3CFEG10WH52YVXG34WZ9EM", content: "Followup", author: "0", channel: "0")
+        this.channelMessages["0"] = ["01HD4VQY398JNRJY60JDY2QHA5", "01HDEX6M2E3SHY8AC2S6B9SEAW", "01HZ3CFEG10WH52YVXG34WZ9EM"]
         this.emojis = ["0": Emoji(id: "01GX773A8JPQ0VP64NWGEBMQ1E", parent: .server(EmojiParentServer(id: "0")), creator_id: "0", name: "balls")]
-        this.currentServer = .server("0")
+        this.currentSelection = .server("0")
         this.currentChannel = .channel("0")
-        this.dms.append(this.channels["2"]!)
+        this.dms.append(contentsOf: [this.channels["2"]!, this.channels["3"]!])
 
         for i in (1...9) {
             this.users["\(i)"] = User(id: "\(i)", username: "\(i)", discriminator: "\(i)\(i)\(i)\(i)", relationship: .Friend)
@@ -271,7 +397,7 @@ public class ViewState: ObservableObject {
     }
 
     func signIn(mfa_ticket: String, mfa_response: [String: String], callback: @escaping((LoginState) -> ())) async {
-        let body = ["mfa_ticket": mfa_ticket, "mfa_response": mfa_response, "friendly_name": "Revolt IOS"] as [String : Any]
+        let body = ["mfa_ticket": mfa_ticket, "mfa_response": mfa_response, "friendly_name": "Revolt iOS"] as [String : Any]
 
         await innerSignIn(body, callback)
     }
@@ -299,7 +425,9 @@ public class ViewState: ObservableObject {
                                     self.currentSessionId = success._id
                                     self.sessionToken = success.token
                                     self.http.token = success.token
-
+                                    
+                                    await self.promptForNotifications()
+                                    
                                     do {
                                         let onboardingState = try await self.http.checkOnboarding().get()
                                         if onboardingState.onboarding {
@@ -307,9 +435,11 @@ public class ViewState: ObservableObject {
                                         } else {
                                             self.isOnboarding = false
                                             callback(.Success)
+                                            self.state = .connecting
                                         }
                                     } catch {
                                         self.isOnboarding = false
+                                        self.state = .connecting
                                         return callback(.Success) // if the onboard check dies, just try to go for it
                                     }
                                 }
@@ -326,9 +456,61 @@ public class ViewState: ObservableObject {
             }
     }
 
-    func signOut() async -> Result<Bool, UserStateError>  {
-        sessionToken = nil
-        return .success(true)
+    /// A successful result here means pending (the session has been destroyed but the client still has data cached)
+    func signOut() async -> Result<(), UserStateError>  {
+        let status = try? await http.signout().get()
+        guard let status = status else { return .failure(.signOutError)}
+        self.ws?.stop()
+        
+        withAnimation {
+            state = .signedOut
+        }
+        
+        // IMPORTANT: do not destroy the cache/session here. It'll cause the app to crash before it can transition to the welcome screen.
+        // The cache is destroyed in RevoltApp.swift:ApplicationSwitcher
+        
+        return .success(())
+    }
+    
+    /// A workaround for the UserSettingStore finding out we're not authenticated, since not a main actor.
+    func setSignedOutState() {
+        withAnimation {
+            state = .signedOut
+        }
+    }
+    
+    func destroyCache() {
+        // In future this'll need to delete files too
+        path = NavigationPath()
+
+        users.removeAll()
+        servers.removeAll()
+        channels.removeAll()
+        messages.removeAll()
+        members.removeAll()
+        emojis.removeAll()
+        dms.removeAll()
+        currentlyTyping.removeAll()
+        channelMessages.removeAll()
+        
+        currentUser = nil
+        currentSelection = .dms
+        currentChannel = .home
+        currentSessionId = nil
+        
+        userSettingsStore.isLoggingOut()
+        self.ws = nil
+    }
+    
+    func promptForNotifications() async {
+        let notificationsGranted = try? await UNUserNotificationCenter.current().requestAuthorization(options: [.alert, .badge, .sound, .providesAppNotificationSettings])
+        if notificationsGranted != nil && notificationsGranted! {
+            ViewState.application?.registerForRemoteNotifications()
+            self.userSettingsStore.store.notifications.rejectedRemoteNotifications = false
+        } else {
+            self.userSettingsStore.store.notifications.rejectedRemoteNotifications = true
+        }
+        self.userSettingsStore.writeStoreToFile()
     }
 
     func formatUrl(with: File) -> String {
@@ -338,25 +520,37 @@ public class ViewState: ObservableObject {
     func formatUrl(fromEmoji emojiId: String) -> String {
         "\(apiInfo!.features.autumn.url)/emojis/\(emojiId)"
     }
-
+    
+    func formatUrl(fromId id: String, withTag tag: String) -> String {
+        "\(apiInfo!.features.autumn.url)/\(tag)/\(id)"
+    }
+    
     func backgroundWsTask() async {
         if ws != nil {
             return
         }
 
         guard let token = sessionToken else {
+            state = .signedOut
             return
         }
 
         let fetchApiInfoSpan = launchTransaction.startChild(operation: "fetchApiInfo")
-
-        let apiInfo = try! await self.http.fetchApiInfo().get()
-        self.http.apiInfo = apiInfo
-        self.apiInfo = apiInfo
-
+        
+        do {
+            let apiInfo = try await self.http.fetchApiInfo().get()
+            self.http.apiInfo = apiInfo
+            self.apiInfo = apiInfo
+        } catch {
+            SentrySDK.capture(error: error)
+            state = .connecting
+            fetchApiInfoSpan.finish()
+            return
+        }
+        
         fetchApiInfoSpan.finish()
 
-        let ws = WebSocketStream(url: apiInfo.ws, token: token, onEvent: onEvent)
+        let ws = WebSocketStream(url: apiInfo!.ws, token: token, onEvent: onEvent)
         self.ws = ws
     }
 
@@ -382,18 +576,25 @@ public class ViewState: ObservableObject {
     }
 
     func onEvent(_ event: WsMessage) async {
+        print(event)
         switch event {
             case .ready(let event):
                 let processReadySpan = launchTransaction.startChild(operation: "processReady")
 
                 for channel in event.channels {
                     channels[channel.id] = channel
-                    channelMessages[channel.id] = []
+                    
+                    if channelMessages[channel.id] == nil {
+                        channelMessages[channel.id] = []
+                    }
                 }
 
                 for server in event.servers {
                     servers[server.id] = server
-                    members[server.id] = [:]
+                    
+                    if members[server.id] == nil {
+                        members[server.id] = [:]
+                    }
                 }
 
                 for user in event.users {
@@ -403,11 +604,17 @@ public class ViewState: ObservableObject {
 
                     users[user.id] = user
                 }
+                
+                for member in event.members {
+                    members[member.id.server]![member.id.user] = member
+                }
 
                 dms = try! await http.fetchDms().get()
 
                 for dm in dms {
-                    channelMessages[dm.id] = []
+                    if channelMessages[dm.id] == nil {
+                        channelMessages[dm.id] = []
+                    }
                 }
 
                 let unreads = try! await http.fetchUnreads().get()
@@ -421,18 +628,38 @@ public class ViewState: ObservableObject {
                 }
 
                 for voiceState in event.voice_states {
-                    self.voiceStates[voiceState.id] = voiceState
+                    for userVoiceState in voiceState.participants {
+                        self.voiceStates[voiceState.id, default: [:]][userVoiceState.id] = userVoiceState
+                    }
                 }
 
                 state = .connected
-
+                ws?.currentState = .connected
+                ws?.retryCount = 0
+                await verifyStateIntegrity()
+                
                 processReadySpan.finish()
                 launchTransaction.finish()
+                
+                for channel in channels.values {
+                    if let last_message_id = channel.last_message_id,
+                       let last_cached_message = channelMessages[channel.id]?.last,
+                       last_message_id != last_cached_message
+                    {
+                        if last_message_id != last_cached_message {
+                            // TODO: load newer messages - blocked on rewriting loading messages up and down the channel
+                            channelMessages[channel.id] = []
+                        }
+                    }
+                }
 
             case .message(let m):
-                if users[m.author] == nil {
-                    let user = try! await http.fetchUser(user: m.author).get()
-                    users[m.author] = user
+                if let user = m.user {
+                    users[user.id] = user
+                }
+                
+                if let member = m.member {
+                    members[member.id.server]?[member.id.user] = member
                 }
 
                 messages[m.id] = m
@@ -443,10 +670,23 @@ public class ViewState: ObservableObject {
                 let message = messages[event.id]
 
                 if var message = message {
-                    message.edited = event.data.edited
+                    if let edited = event.data.edited {
+                        message.edited = edited
+                    }
 
                     if let content = event.data.content {
                         message.content = content
+                    }
+                    
+                    if let pinned = event.data.pinned {
+                        message.pinned = pinned
+                    }
+                    
+                    for remove in event.remove ?? [] {
+                        switch remove {
+                            case .pinned:
+                                message.pinned = nil
+                        }
                     }
 
                     messages[event.id] = message
@@ -456,7 +696,9 @@ public class ViewState: ObservableObject {
                 print("authenticated")
 
             case .invalid_session:
-                self.logout()
+                Task {
+                    await self.signOut()
+                }
 
             case .channel_start_typing(let e):
                 var typing = currentlyTyping[e.id] ?? []
@@ -476,44 +718,72 @@ public class ViewState: ObservableObject {
                 }
 
             case .channel_ack(let e):
-                unreads[e.id]?.last_id = nil
+                unreads[e.id]?.last_id = e.message_id
                 unreads[e.id]?.mentions?.removeAll { $0 <= e.message_id }
 
             case .voice_channel_join(let e):
-                if voiceStates[e.id] == nil {
-                    voiceStates[e.id] = ChannelVoiceState(id: e.id, participants: [e.state])
-                } else {
-                    voiceStates[e.id]!.participants.append(e.state)
-                }
+                voiceStates[e.id, default: [:]][e.id] = e.state
 
             case .voice_channel_leave(let e):
-                if var voiceState = voiceStates[e.id] {
-                    voiceState.participants.removeAll(where: { $0.id == e.user })
+                voiceStates[e.id]?.removeValue(forKey: e.user)
 
-                    if voiceState.participants.isEmpty {
-                        voiceStates.removeValue(forKey: e.id)
+                if voiceStates[e.id]?.isEmpty ?? false {
+                    voiceStates.removeValue(forKey: e.id)
+                }
+                
+            case .message_react(let e):
+                if var message = messages[e.id] {
+                    var reactions = message.reactions ?? [:]
+                    var users = reactions[e.emoji_id] ?? []
+                    users.append(e.user_id)
+                    reactions[e.emoji_id] = users
+                    message.reactions = reactions
+                    messages[e.id] = message
+                }
+            
+            case .message_unreact(let e):
+                if var message = messages[e.id] {
+                    if var reactions = message.reactions {
+                        if var users = reactions[e.emoji_id] {
+                            users.removeAll { $0 == e.user_id }
+                            
+                            if users.isEmpty {
+                                reactions.removeValue(forKey: e.emoji_id)
+                            } else {
+                                reactions[e.emoji_id] = users
+                            }
+                            message.reactions = reactions
+                            messages[e.id] = message
+                        }
+                    }
+                }
+            case .message_append(let e):
+                if var message = messages[e.id] {
+                    var embeds = message.embeds ?? []
+                    embeds.append(e.append)
+                    message.embeds = embeds
+                    messages[e.id] = message
+                }
+            
+            case .user_voice_state_update(let e):
+                if var userState = voiceStates[e.channel_id]?[e.id] {
+                    if let is_receiving = e.data.is_receiving {
+                        userState.is_receiving = is_receiving
+                    }
+                    
+                    if let is_publishing = e.data.is_publishing {
+                        userState.is_publishing = is_publishing
+                    }
+                    
+                    if let screensharing = e.data.screensharing {
+                        userState.screensharing = screensharing
+                    }
+                    
+                    if let camera = e.data.camera {
+                        userState.camera = camera
                     }
                 }
         }
-    }
-
-    func logout() {
-        currentUser = nil
-        sessionToken = nil
-        currentServer = .dms
-        currentChannel = .home
-        currentlyTyping = [:]
-        currentSessionId = nil
-        users = [:]
-        servers = [:]
-        channels = [:]
-        messages = [:]
-        channelMessages = [:]
-        members = [:]
-        dms = []
-        path = NavigationPath()
-
-        ws?.stop()
     }
 
     func joinServer(code: String) async -> JoinResponse {
@@ -542,7 +812,7 @@ public class ViewState: ObservableObject {
             dms.append(channel!)
         }
 
-        currentServer = .dms
+        currentSelection = .dms
         currentChannel = .channel(channel!.id)
     }
 
@@ -563,18 +833,33 @@ public class ViewState: ObservableObject {
     }
 
     func getUnreadCountFor(server: Server) -> UnreadCount? {
-        let channelUnreads = server.channels.compactMap({ channels[$0] }).map({ getUnreadCountFor(channel: $0) })
+        if let serverNotificationValue = userSettingsStore.cache.notificationSettings.server[server.id] {
+            if serverNotificationValue == .muted && serverNotificationValue == .none {
+                return nil
+            }
+        }
+        
+        let channelUnreads = server.channels
+            .compactMap { channels[$0] }
+            .map { ($0, getUnreadCountFor(channel: $0)) }
 
         var mentionCount = 0
         var hasUnread = false
 
-        for unread in channelUnreads {
+        for (channel, unread) in channelUnreads {
+            let channelNotificationValue = userSettingsStore.cache.notificationSettings.channel[channel.id]
+            
             if let unread = unread {
                 switch unread {
                     case .unread:
-                        hasUnread = true
+                        if channelNotificationValue != NotificationState.none && channelNotificationValue != .muted {
+                            hasUnread = true
+                        }
+                        
                     case .mentions(let count):
-                        mentionCount += count
+                        if channelNotificationValue != NotificationState.none && channelNotificationValue != .mention {
+                            mentionCount += count
+                        }
                 }
             }
         }
@@ -597,9 +882,124 @@ public class ViewState: ObservableObject {
             currentUserSheet = UserMaybeMember(user: user, member: member)
         }
     }
-
-    func openUserSheet(user: Types.User, member: Member?) {
+    
+    func openUserSheet(user: Types.User, member: Member? = nil) {
         currentUserSheet = UserMaybeMember(user: user, member: member)
+    }
+    
+    public var openServer: Server? {
+        if case .server(let serverId) = currentSelection {
+            return servers[serverId]
+        }
+        
+        return nil
+    }
+    
+    public var openServerMember: Member? {
+        if case .server(let serverId) = currentSelection, let userId = currentUser?.id {
+            return members[serverId]?[userId]
+        }
+        
+        return nil
+    }
+    
+    func verifyStateIntegrity() async {
+        if currentUser == nil {
+            logger.warning("Current user is empty, logging out")
+            try! await signOut().get()
+        }
+        
+        if let token = UserDefaults.standard.string(forKey: "sessionToken") {
+            UserDefaults.standard.removeObject(forKey: "sessionToken")
+            keychain["sessionToken"] = token
+        }
+        
+        if case .channel(let id) = currentChannel {
+            if let channel = channels[id] {
+                if let serverId = channel.server, currentSelection == .dms {
+                    logger.warning("Current channel is a server channel but selection is dms")
+                    
+                    currentSelection = .server(serverId)
+                }
+            } else {
+                logger.warning("Current channel no longer exists")
+                currentSelection = .dms
+                currentChannel = .home
+            }
+        }
+        
+        if case .server(let id) = currentSelection {
+            if servers[id] == nil {
+                logger.warning("Current server no longer exists")
+                currentSelection = .dms
+                currentChannel = .home
+            }
+        }
+    }
+    
+    func selectServer(withId id: String) {
+        currentSelection = .server(id)
+        
+        if let last = userSettingsStore.store.lastOpenChannels[id] {
+            currentChannel = .channel(last)
+        } else if let server = servers[id] {
+            if let firstChannel = server.channels.compactMap({
+                switch channels[$0] {
+                    case .text_channel(let c):
+                        return c
+                    default:
+                        return nil
+                }
+            }).first {
+                currentChannel = .channel(firstChannel.id)
+            } else {
+                currentChannel = .noChannel
+            }
+        }
+    }
+    
+    func selectChannel(inServer server: String, withId id: String) {
+        currentChannel = .channel(id)
+        userSettingsStore.store.lastOpenChannels[server] = id
+    }
+    
+    func selectDms() {
+        currentSelection = .dms
+        
+        if let last = userSettingsStore.store.lastOpenChannels["dms"] {
+            currentChannel = .channel(last)
+        } else {
+            currentChannel = .home
+        }
+    }
+    
+    func selectDm(withId id: String) {
+        currentChannel = .channel(id)
+        let channel = channels[id]!
+        
+        switch channel {
+            case .dm_channel, .group_dm_channel:
+                userSettingsStore.store.lastOpenChannels["dms"] = id
+            default:
+                userSettingsStore.store.lastOpenChannels.removeValue(forKey: "dms")
+                
+        }
+    }
+    
+    func resolveAvatarUrl(user: Types.User, member: Member?, masquerade: Masquerade?) -> URL {
+        if let avatar = masquerade?.avatar, let url = URL(string: avatar) {
+            return url
+        }
+        
+        if let avatar = member?.avatar, let url = URL(string: formatUrl(with: avatar)) {
+            return url
+        }
+        
+        if let avatar = user.avatar, let url = URL(string: formatUrl(with: avatar)) {
+            return url
+        }
+        
+        return URL(string: "\(http.baseURL)/users/\(user.id)/default_avatar")!
     }
 }
 

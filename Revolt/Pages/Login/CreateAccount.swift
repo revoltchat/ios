@@ -325,13 +325,17 @@ struct CreateAccount: View {
                                 try! await Task.sleep(for: .seconds(2))
                                 withAnimation {
                                     isSpinnerComplete = false
-                                    onboardingStage = .Verify
+                                    if viewState.apiInfo?.features.email == true {
+                                        onboardingStage = .Verify
+                                    } else {
+                                        onboardingStage = .Username
+                                    }
                                 }
                             }
                     }
                     
                     #else
-                    Text("No hcapture support")
+                    Text("No hcaptcha support")
                     #endif
                 }
             }

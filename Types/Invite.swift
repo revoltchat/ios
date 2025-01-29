@@ -7,7 +7,7 @@
 
 import Foundation
 
-public struct ServerInvite: Decodable, Identifiable {
+public struct ServerInvite: Codable, Identifiable {
     public var id: String
     public var server: String
     public var creator: String
@@ -19,7 +19,7 @@ public struct ServerInvite: Decodable, Identifiable {
     }
 }
 
-public struct GroupInvite: Decodable, Identifiable {
+public struct GroupInvite: Codable, Identifiable {
     public var id: String
     public var creator: String
     public var channel: String
@@ -44,9 +44,9 @@ public enum Invite: Identifiable {
     }
 }
 
-extension Invite: Decodable {
+extension Invite: Codable {
     enum CodingKeys: String, CodingKey { case type }
-    enum Tag: String, Decodable { case Server, Group }
+    enum Tag: String, Codable { case Server, Group }
     
     public init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
@@ -57,6 +57,19 @@ extension Invite: Decodable {
                 self = .server(try singleValueContainer.decode(ServerInvite.self))
             case .Group:
                 self = .group(try singleValueContainer.decode(GroupInvite.self))
+        }
+    }
+    
+    public func encode(to encoder: any Encoder) throws {
+        var tagContainer = encoder.container(keyedBy: CodingKeys.self)
+        
+        switch self {
+            case .server(let s):
+                try tagContainer.encode(Tag.Server, forKey: .type)
+                try s.encode(to: encoder)
+            case .group(let g):
+                try tagContainer.encode(Tag.Group, forKey: .type)
+                try g.encode(to: encoder)
         }
     }
 }

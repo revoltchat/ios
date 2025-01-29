@@ -11,6 +11,8 @@ import Types
 
 
 struct ServerIcon<S: Shape>: View {
+    @EnvironmentObject var viewState: ViewState
+    
     var server: Server
     var height: CGFloat? = nil
     var width: CGFloat? = nil
@@ -20,19 +22,32 @@ struct ServerIcon<S: Shape>: View {
         if let icon = server.icon {
             LazyImage(source: .file(icon), height: height, width: height, clipTo: clipTo)
         } else {
-            ZStack(alignment: .center) {
-                let firstChar = server.name.first!
-                
-                clipTo
-                    .fill(.gray)  // TODO: background3
-                    .frame(width: width, height: height)
-
-                Text(verbatim: "\(firstChar)")
-            }
+            FallbackServerIcon(name: server.name, width: width, height: height, clipTo: clipTo)
         }
     }
 }
 
+struct FallbackServerIcon<S: Shape>: View {
+    @EnvironmentObject var viewState: ViewState
+    
+    var name: String
+    var width: CGFloat?
+    var height: CGFloat?
+    var clipTo: S
+    
+    var body: some View {
+        ZStack(alignment: .center) {
+            let firstChar = name.first ?? "?"
+            
+            clipTo
+                .fill(viewState.theme.background3)
+                .frame(width: width, height: height)
+            
+            Text(verbatim: "\(firstChar)")
+                .bold()
+        }
+    }
+}
 
 struct ServerListIcon: View {
     @EnvironmentObject var viewState: ViewState
@@ -44,11 +59,12 @@ struct ServerListIcon: View {
     @Binding var currentSelection: MainSelection
     
     var body: some View {
-        ServerIcon(server: server, height: height, width: width, clipTo: Rectangle())
-            .if(currentSelection == .server(server.id)) {
-                $0.clipShape(RoundedRectangle(cornerRadius: 12))
-            } else: {
-                $0.clipShape(Circle())
-            }
+        ServerIcon(
+            server: server,
+            height: height,
+            width: width,
+            clipTo: RoundedRectangle(cornerRadius: currentSelection == .server(server.id) ? 12 : 100)
+        )
+            .animation(.easeInOut, value: currentSelection == .server(server.id))
     }
 }

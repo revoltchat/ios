@@ -16,7 +16,7 @@ func resolveServerPermissions(user: User, member: Member, server: Server) -> Per
     var permissions = server.default_permissions
     
     for role in member.roles?
-        .map({ server.roles![$0]! })
+        .compactMap({ server.roles?[$0] })
         .sorted(by: { $0.rank < $1.rank }) ?? []
     {
         permissions.formApply(overwrite: role.permissions)
@@ -72,7 +72,16 @@ func resolveChannelPermissions(from: User, targettingUser user: User, targetting
                 permissions.formApply(overwrite: defaultPermissions)
             }
             
-            let overwrites = textChannel.role_permissions?.map({(server!.roles![$0]!, $1)}).sorted(by: {$0.0.rank < $1.0.rank}) ?? []
+            let overwrites = textChannel.role_permissions?
+                .compactMap({ (id, overwrite) in
+                    guard let role = server?.roles?[id] else {
+                        return nil
+                    }
+                    
+                    return (role, overwrite)
+                })
+                .sorted(by: { (a, b) in a.0.rank < b.0.rank})
+                ?? ([] as [(Role, Overwrite)])
             
             for (_, overwrite) in overwrites {
                 permissions.formApply(overwrite: overwrite)
@@ -99,7 +108,9 @@ func resolveChannelPermissions(from: User, targettingUser user: User, targetting
                 permissions.formApply(overwrite: defaultPermissions)
             }
             
-            let overwrites = voiceChannel.role_permissions?.map({(server!.roles![$0]!, $1)}).sorted(by: {$0.0.rank < $1.0.rank}) ?? []
+            let overwrites = voiceChannel.role_permissions?
+                .compactMap({ (id, perm) in server?.roles?[id].map { role in (role, perm) } })
+                .sorted(by: {$0.0.rank < $1.0.rank}) ?? []
             
             for (_, overwrite) in overwrites {
                 permissions.formApply(overwrite: overwrite)

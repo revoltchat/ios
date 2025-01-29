@@ -29,3 +29,18 @@ enum ChannelType {
 protocol Messageable: Identifiable {
     var channelType: ChannelType { get }
 }
+
+struct LocalFile: Equatable {
+    var content: Data
+    var filename: String
+}
+
+enum SettingImage: Equatable {
+    case remote(File?)
+    case local(LocalFile?)
+}
+
+enum Icon: Equatable {
+    case remote(File?)
+    case local(Data)
+}

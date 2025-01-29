@@ -4,7 +4,16 @@
     "" : {
 
     },
+    ":" : {
+
+    },
     "(edited)" : {
+
+    },
+    "[Privacy Policy](%@)" : {
+
+    },
+    "[Terms of Use](%@)" : {
 
     },
     "@" : {
@@ -14,6 +23,9 @@
 
     },
     "@ on" : {
+
+    },
+    "@Unknown" : {
 
     },
     "#%@" : {
@@ -32,7 +44,13 @@
         }
       }
     },
-    "%@ code" : {
+    "%@ joined" : {
+
+    },
+    "%@ pinned a message" : {
+
+    },
+    "%@ unpinned a message" : {
 
     },
     "%lld" : {
@@ -41,11 +59,29 @@
     "%lld of 100 members" : {
 
     },
+    "%lld users" : {
+
+    },
+    "•" : {
+
+    },
     "About" : {
 
     },
     "Accent" : {
 
+    },
+    "Accept Invite" : {
+
+    },
+    "Account Info" : {
+
+    },
+    "Account Management" : {
+
+    },
+    "Account Settings" : {
+      "comment" : "User Settings tooltip"
     },
     "Active Sessions" : {
 
@@ -56,13 +92,37 @@
     "Add a topic..." : {
 
     },
+    "Add Authenticator" : {
+      "comment" : "User settings button"
+    },
+    "Add bot" : {
+
+    },
+    "Add Bot" : {
+
+    },
     "add friend" : {
 
     },
     "Add Friend" : {
 
     },
+    "Allows others to invite the bot to their servers and groups" : {
+
+    },
     "Appearance" : {
+
+    },
+    "Are you sure you want to delete your account?" : {
+
+    },
+    "Are you sure you want to disable your account?" : {
+
+    },
+    "Are you sure you want to leave?" : {
+
+    },
+    "Are you sure?" : {
 
     },
     "Auto" : {
@@ -74,10 +134,19 @@
     "Bans" : {
 
     },
+    "Bans - %lld" : {
+
+    },
     "Bio" : {
 
     },
     "Bot" : {
+
+    },
+    "Bots" : {
+
+    },
+    "Bots are not verified by Revolt." : {
 
     },
     "Brought to you with ❤️ by the Revolt team." : {
@@ -86,22 +155,58 @@
     "Busy" : {
 
     },
+    "By creating a bot, you are agreeing to the [Acceptable Usage Policy](https://revolt.chat/aup)." : {
+
+    },
     "Cancel" : {
+
+    },
+    "Cancel Friend Request" : {
 
     },
     "Categories" : {
 
     },
+    "Change it" : {
+      "comment" : "'done' button for changing password\n'done' button for changing username"
+    },
+    "Change Password" : {
+
+    },
     "Channel Icon" : {
+
+    },
+    "Channel Name" : {
 
     },
     "Click the join button to connect" : {
 
     },
-    "Code or link" : {
+    "Client Settings" : {
 
     },
+    "code" : {
+      "comment" : "TOTP code"
+    },
+    "Code time" : {
+      "comment" : "debug print, dont translate"
+    },
     "Community Guidelines" : {
+
+    },
+    "Compact Mode" : {
+
+    },
+    "Confirm" : {
+
+    },
+    "Confirm deleting your account" : {
+
+    },
+    "Confirm disabling your account" : {
+
+    },
+    "Connected" : {
 
     },
     "Connecting..." : {
@@ -110,13 +215,40 @@
     "Conversations" : {
 
     },
-    "Copy contents" : {
+    "Copied!" : {
+
+    },
+    "Copy Invite Link" : {
 
     },
     "Copy Link" : {
 
     },
+    "Copy Message ID" : {
+
+    },
+    "Copy Message Link" : {
+
+    },
+    "Copy Server ID" : {
+
+    },
+    "Copy text" : {
+
+    },
+    "Copy to clipboard" : {
+
+    },
+    "Copy Token" : {
+
+    },
     "Create" : {
+
+    },
+    "Create a bot" : {
+
+    },
+    "Create a new role" : {
 
     },
     "Create a new server" : {
@@ -125,10 +257,19 @@
     "Create Account" : {
 
     },
+    "Create Bot" : {
+
+    },
     "Create Group" : {
 
     },
-    "Created %lld days ago" : {
+    "Create Invite" : {
+
+    },
+    "Create Role" : {
+
+    },
+    "Created %lld day(s) ago" : {
 
     },
     "Created today" : {
@@ -140,25 +281,79 @@
     "Dark" : {
 
     },
+    "Default" : {
+
+    },
     "Delete" : {
+
+    },
+    "Delete Account" : {
+      "comment" : "User settings button"
+    },
+    "Delete bot" : {
+
+    },
+    "Delete bot?" : {
 
     },
     "Delete channel" : {
 
     },
+    "Delete Message" : {
+
+    },
+    "Delete role" : {
+
+    },
     "Delete server" : {
+
+    },
+    "Delete Session?" : {
+
+    },
+    "Developer" : {
+
+    },
+    "Developer: Nuke everything and force welcome screen" : {
 
     },
     "Didn't get an email?" : {
 
     },
-    "Direct Messages" : {
+    "Disable Account" : {
+      "comment" : "User settings button"
+    },
+    "Disabled" : {
+
+    },
+    "Disconnect" : {
+
+    },
+    "Disconnected" : {
 
     },
     "Discovery" : {
 
     },
-    "Edit" : {
+    "Do it" : {
+
+    },
+    "Done" : {
+
+    },
+    "Edit Message" : {
+
+    },
+    "Edit Permissions" : {
+
+    },
+    "Edit profile" : {
+
+    },
+    "Edit Server Profile" : {
+
+    },
+    "Editing Message" : {
 
     },
     "Email" : {
@@ -167,22 +362,40 @@
     "Email Token" : {
 
     },
+    "Emoji Name" : {
+
+    },
     "Emojis" : {
 
     },
-    "Ending" : {
+    "Emojis - %lld" : {
 
     },
-    "enter" : {
+    "Enter a link like rvlt.gg/Testers or an invite code like Testers" : {
 
+    },
+    "Enter a new username" : {
+
+    },
+    "Enter Password" : {
+      "comment" : "Password prompt"
+    },
+    "Enter the code provided by your authenticator app" : {
+      "comment" : "prompting the user for their OTP while setting up TOTP"
     },
     "Enter the verification code sent to your email" : {
 
+    },
+    "Enter TOTP code" : {
+      "comment" : "Authenticator prompt"
     },
     "Enter your email, and if we've got you on record we'll send you another one" : {
 
     },
     "Enter your Username" : {
+
+    },
+    "Experiments" : {
 
     },
     "Find your community, connect with the world." : {
@@ -191,7 +404,7 @@
     "Focus" : {
 
     },
-    "foo" : {
+    "Force remote notification upload" : {
 
     },
     "Forgot Password" : {
@@ -203,11 +416,26 @@
     "Friends" : {
 
     },
+    "Generate Recovery Codes" : {
+      "comment" : "User settings button"
+    },
     "Get another code" : {
 
     },
     "Give us some detail" : {
 
+    },
+    "Go back" : {
+
+    },
+    "Group TODO" : {
+
+    },
+    "Hello, World!" : {
+
+    },
+    "Hold Up!" : {
+      "comment" : "title prompt for password when setting up totp"
     },
     "Home" : {
 
@@ -221,6 +449,12 @@
     "Idle" : {
 
     },
+    "Interactions url" : {
+
+    },
+    "Invalid invite" : {
+
+    },
     "Invisible" : {
 
     },
@@ -230,10 +464,16 @@
     "Invite another user" : {
 
     },
+    "Invite code or link" : {
+
+    },
     "Invite Users" : {
 
     },
     "Invite your friends" : {
+
+    },
+    "Invited by" : {
 
     },
     "Invites" : {
@@ -248,13 +488,22 @@
     "Join Call" : {
 
     },
+    "Join Invite" : {
+
+    },
     "Joined" : {
 
     },
     "Language" : {
 
     },
+    "Leave" : {
+
+    },
     "Leave Call" : {
+
+    },
+    "Leave Server" : {
 
     },
     "Let's fix that" : {
@@ -269,16 +518,31 @@
     "Light" : {
 
     },
+    "Loading" : {
+
+    },
+    "Loading Data..." : {
+      "comment" : "User setings notice - still fetching data"
+    },
     "Loading more messages..." : {
 
     },
     "Loading..." : {
 
     },
+    "loading#0000" : {
+      "comment" : "The username is still loading from the api"
+    },
     "Log In" : {
 
     },
     "Logout" : {
+
+    },
+    "Looks a bit empty in here." : {
+
+    },
+    "Mark as read" : {
 
     },
     "Members" : {
@@ -287,22 +551,31 @@
     "Members - %lld" : {
 
     },
-    "Message %@" : {
+    "Message #%@" : {
 
     },
     "Message Box" : {
 
     },
-    "Message Box Background" : {
-
-    },
-    "Message Box Border" : {
+    "Messages" : {
 
     },
     "Misc" : {
 
     },
     "Mute" : {
+
+    },
+    "My Account" : {
+
+    },
+    "My Bots" : {
+
+    },
+    "Name" : {
+
+    },
+    "NEW" : {
 
     },
     "New Group" : {
@@ -314,10 +587,34 @@
     "New Password" : {
 
     },
+    "Next" : {
+
+    },
+    "No ban reason." : {
+
+    },
+    "No hcaptcha support" : {
+
+    },
     "Not Connected" : {
 
     },
+    "Note: this field is reserved for the future." : {
+
+    },
+    "Notification options" : {
+
+    },
+    "Notifications" : {
+
+    },
+    "NSFW" : {
+
+    },
     "Offline" : {
+
+    },
+    "Old Password" : {
 
     },
     "One more thing" : {
@@ -326,8 +623,8 @@
     "Online" : {
 
     },
-    "Open Profile" : {
-
+    "Open in authenticator app" : {
+      "comment" : "open the user's authenticator app"
     },
     "Overview" : {
 
@@ -341,7 +638,10 @@
     "Pick a category" : {
 
     },
-    "Placeholder" : {
+    "Pin Message" : {
+
+    },
+    "Pins" : {
 
     },
     "Please note that this does not get sent to this server's moderators" : {
@@ -359,13 +659,31 @@
     "Profile Picture" : {
 
     },
+    "Push Notifications" : {
+
+    },
     "React" : {
 
+    },
+    "Reactions" : {
+
+    },
+    "Reconnecting" : {
+
+    },
+    "Regenerate Recovery Codes" : {
+      "comment" : "User settings button"
+    },
+    "Remove" : {
+
+    },
+    "Remove Authenticator" : {
+      "comment" : "User settings button"
     },
     "Reply" : {
 
     },
-    "Report" : {
+    "Report Message" : {
 
     },
     "Report reason" : {
@@ -377,13 +695,31 @@
     "Reset Password" : {
 
     },
+    "Reset token" : {
+
+    },
+    "Reset token?" : {
+
+    },
+    "Revoke" : {
+
+    },
     "Revolt" : {
+
+    },
+    "Revolt iOS" : {
 
     },
     "Revolt is one of the best ways to stay connected with your friends and community, anywhere, anytime." : {
 
     },
-    "Revolt on IOS" : {
+    "Role Colour" : {
+
+    },
+    "Role Name" : {
+
+    },
+    "Role Rank" : {
 
     },
     "Roles" : {
@@ -404,13 +740,25 @@
     "Secondary Background" : {
 
     },
+    "Select Emoji" : {
+
+    },
     "Select File" : {
+
+    },
+    "Select permission" : {
 
     },
     "Select Photo" : {
 
     },
     "Select Username" : {
+
+    },
+    "Send Message" : {
+
+    },
+    "Server Banner" : {
 
     },
     "Server Description" : {
@@ -426,7 +774,7 @@
 
     },
     "Settings" : {
-
+      "comment" : "Settings Tooltip"
     },
     "Share Invite" : {
 
@@ -434,7 +782,22 @@
     "Sign Up" : {
 
     },
+    "Signed out... How did you get here?" : {
+
+    },
+    "Something went wrong. Try again later?" : {
+
+    },
+    "Stop right there!" : {
+
+    },
     "Submit" : {
+
+    },
+    "System Messages" : {
+
+    },
+    "Tap to reconnect" : {
 
     },
     "Tell us what's wrong with this message" : {
@@ -443,8 +806,26 @@
     "Terms of Service" : {
 
     },
-    "Text Colour" : {
+    "Text Field" : {
 
+    },
+    "The bot will not be granted any permissions." : {
+
+    },
+    "The trolls have rejected your old password" : {
+      "comment" : "The password was rejected by the server"
+    },
+    "The trolls have rejected your password" : {
+
+    },
+    "Theme" : {
+
+    },
+    "This area is guarded by trolls. Fetch them your TOTP code to continue." : {
+      "comment" : "subtitle prompt for password when modifying totp"
+    },
+    "This area is guarded by trolls. Tell them your password to continue." : {
+      "comment" : "subtitle prompt for password when setting up totp"
     },
     "This channel is marked as NSFW" : {
 
@@ -455,16 +836,25 @@
     "This is the start of your conversation." : {
 
     },
+    "This will prevent you from being able to sign in. You'll need to message support to get your account reactivated." : {
+
+    },
     "todo" : {
 
     },
     "Todo" : {
 
     },
-    "Top Bar" : {
+    "Try again" : {
+      "comment" : "the user entered an incorrect password"
+    },
+    "Two-Factor Authentication" : {
 
     },
     "unknown" : {
+
+    },
+    "Unknown" : {
 
     },
     "Unknown Channel" : {
@@ -473,11 +863,17 @@
     "Unknown message" : {
 
     },
-    "use a %@ code" : {
+    "Unpin Message" : {
+
+    },
+    "Upload Emoji" : {
 
     },
     "User Management" : {
 
+    },
+    "User Settings" : {
+      "comment" : "Settings tooltip"
     },
     "Username" : {
 
@@ -488,13 +884,43 @@
     "Verify" : {
 
     },
+    "Verify time" : {
+      "comment" : "debug print, dont translate"
+    },
+    "Wait a minute!" : {
+
+    },
+    "Wait!" : {
+
+    },
+    "Watch" : {
+
+    },
+    "Webhook" : {
+
+    },
     "Welcome to" : {
 
     },
     "What's wrong..." : {
 
     },
+    "Yes" : {
+
+    },
+    "You have been logged out" : {
+
+    },
+    "You have not enabled two-factor authentication!" : {
+      "comment" : "User settings info notice"
+    },
+    "You must enter your password" : {
+      "comment" : "the user entered a blank password"
+    },
     "You've got 2FA enabled to keep your account extra-safe." : {
+
+    },
+    "Your account will be disabled, and may be reactivated by opening a support request. After a week, it will be permenantly deleted." : {
 
     }
   },

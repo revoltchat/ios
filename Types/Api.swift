@@ -71,7 +71,7 @@ public struct ApiInfo: Codable {
     public var vapid: String
 }
 
-public struct Session: Decodable, Identifiable {
+public struct Session: Codable, Identifiable {
     public init(id: String, name: String) {
         self.id = id
         self.name = name
