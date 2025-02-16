@@ -50,12 +50,12 @@ struct VoiceChannelView: View {
     @State var screenSharing: Bool = false
     @State var inCall: Bool = false
     @State var updater: Bool = false
-        
+    
     @MainActor
     func connect() async {
         let token = try! await viewState.http.joinVoiceChannel(channel: channel.id).get()
         let dele = VoiceChannelDelegate(updater: $updater)
-        let room = Room(delegate: dele)
+        let room = Room(delegate: dele, connectOptions: ConnectOptions(autoSubscribe: false))
         
         try! await room.connect(url: viewState.apiInfo!.features.livekit.url.replacing("http", with: "ws", maxReplacements: 1), token: token.token)
         
@@ -139,45 +139,55 @@ struct VoiceChannelView: View {
             VStack {
                 ScrollView {
                     if let room = viewState.currentVoice {
-                        ForEach(partipants(room: room), id: \.1.id) { (participant, user) in
-                            let title = user.member?.nickname ?? user.user.display_name ?? user.user.username
-                            
-                            ForEach(participant.trackPublications.values.filter({ $0.kind == .video })) { track in
-                                VoiceChannelBox(title: title) {
-                                    if track is LocalTrackPublication || track.isSubscribed {
-                                        SwiftUIVideoView(track.track as! VideoTrack, layoutMode: .fit)
-                                    } else if let remoteTrack = track as? RemoteTrackPublication {
-                                        Button {
-                                            Task {
-                                                try! await remoteTrack.set(subscribed: true)
+                        RoomScope(room: room) {
+                            ForEach(partipants(room: room), id: \.1.id) { (participant, user) in
+                                let title = user.member?.nickname ?? user.user.display_name ?? user.user.username
+                                
+                                ForEach(participant.trackPublications.values.filter({ $0.kind == .video })) { track in
+                                    VoiceChannelBox(title: title) {
+                                        let _ = print(track.source, track.kind, track.isSubscribed)
+                                        if track is LocalTrackPublication || track.isSubscribed {
+                                            SwiftUIVideoView(track.track as! VideoTrack, layoutMode: .fit)
+                                                .clipShape(RoundedRectangle(cornerRadius: 8))
+                                        } else if let remoteTrack = track as? RemoteTrackPublication {
+                                            ZStack {
+                                                viewState.theme.background3
+                                                    .clipShape(RoundedRectangle(cornerRadius: 8))
+                                                
+                                                Button {
+                                                    Task {
+                                                        try! await remoteTrack.set(subscribed: true)
+                                                    }
+                                                } label: {
+                                                    Text("Watch")
+                                                        .padding(12)
+                                                        .background(Capsule().fill(viewState.theme.background2))
+                                                }
                                             }
-                                        } label: {
-                                            Text("Watch")
-                                                .padding(8)
-                                                .background(RoundedRectangle(cornerRadius: 8).fill(viewState.theme.background3))
                                         }
-                                    }
-                                } overlay: {
-                                    if let remoteTrack = track as? RemoteTrackPublication {
-                                        Button {
-                                            Task {
-                                                try! await remoteTrack.set(subscribed: false)
+                                    } overlay: {
+                                        if let remoteTrack = track as? RemoteTrackPublication, remoteTrack.isSubscribed {
+                                            Button {
+                                                Task {
+                                                    try! await remoteTrack.set(subscribed: false)
+                                                }
+                                            } label: {
+                                                Text("Disconnect")
+                                                    .padding(8)
+                                                    .background(RoundedRectangle(cornerRadius: 8).fill(viewState.theme.error))
+                                                    .transition(.opacity)
                                             }
-                                        } label: {
-                                            Text("Disconnect")
-                                                .padding(8)
-                                                .background(RoundedRectangle(cornerRadius: 8).fill(viewState.theme.error))
+                                            
                                         }
                                     }
                                 }
+                                
+                                VoiceChannelBox(title: title) {
+                                    Avatar(user: user.user, member: user.member, width: 48, height: 48)
+                                }
+                                .addBorder(participant.isSpeaking ? Color.green : Color.clear, width: 1, cornerRadius: 8)
                             }
-                            
-                            VoiceChannelBox(title: title) {
-                                Avatar(user: user.user, member: user.member, width: 48, height: 48)
-                            }
-                            .addBorder(participant.isSpeaking ? Color.green : Color.clear, width: 1, cornerRadius: 8)
                         }
-                        .environmentObject(room)
                     } else {
                         HStack(alignment: .center) {
                             VStack(alignment: .center) {
@@ -189,6 +199,7 @@ struct VoiceChannelView: View {
                         }
                     }
                 }
+                .contentMargins(.top, 16, for: .scrollContent)
                 
                 //Spacer()
                 
@@ -196,7 +207,7 @@ struct VoiceChannelView: View {
                     Group {
                         Button {
                             Task {
-                                if await AVAudioApplication.requestRecordPermission() && inCall {
+                                if inCall, await AVAudioApplication.requestRecordPermission() {
                                     unmuted.toggle()
                                 }
                             }
@@ -206,7 +217,7 @@ struct VoiceChannelView: View {
                                 .padding(.vertical, 8)
                         }
                         
-                        Button { screenSharing.toggle() } label: {
+                        Button { if inCall { screenSharing.toggle() } } label: {
                             Image(systemName: "desktopcomputer")
                                 .padding(.horizontal, 16)
                                 .padding(.vertical, 8)
@@ -221,14 +232,16 @@ struct VoiceChannelView: View {
                         .frame(maxWidth: .infinity)
                         
                         Button {
-                            viewState.currentChannel = .force_textchannel(channel.id)
+                            withAnimation {
+                                viewState.currentChannel = .force_textchannel(channel.id)
+                            }
                         } label: {
                             Image(systemName: "bubble.fill")
                                 .padding(.horizontal, 16)
                                 .padding(.vertical, 8)
                         }
                         
-                        Button { defeaned.toggle() } label: {
+                        Button { if inCall { defeaned.toggle() } } label: {
                             Image(systemName: defeaned ? "speaker.slash.fill" : "speaker.wave.3.fill")
                                 .frame(width: 16, height: 16)
                                 .padding(.horizontal, 16)
@@ -263,16 +276,23 @@ struct VoiceChannelView: View {
         .onChange(of: unmuted, { @MainActor _, unmuted in
             if let room = viewState.currentVoice {
                 Task {
-                    try! await room.localParticipant.setMicrophone(enabled: unmuted)
+                    if unmuted {
+                        try! await room.localParticipant.setMicrophone(enabled: true)
+                    } else if let micTrack = room.localParticipant.localAudioTracks.first {
+                        try! await room.localParticipant.unpublish(publication: micTrack)
+                    }
                 }
             }
         })
         .onChange(of: screenSharing, { @MainActor _, screenSharing in
             if let room = viewState.currentVoice {
                 Task {
-                    if await AVAudioApplication.requestRecordPermission(), await AVCaptureDevice.requestAccess(for: .video) {
-                        try! await room.localParticipant.set(source: .camera, enabled: screenSharing, captureOptions: ScreenShareCaptureOptions(useBroadcastExtension: false, includeCurrentApplication: true))
+                    if screenSharing, await AVAudioApplication.requestRecordPermission() {
+                        try! await room.localParticipant.set(source: .screenShareVideo, enabled: screenSharing, captureOptions: ScreenShareCaptureOptions(useBroadcastExtension: false, includeCurrentApplication: true))
+                    } else if let micTrack = room.localParticipant.localVideoTracks.first {
+                        try! await room.localParticipant.unpublish(publication: micTrack)
                     }
+
                 }
             }
         })
@@ -333,6 +353,10 @@ class VoiceChannelDelegate: RoomDelegate {
     func room(_ room: Room, participant: RemoteParticipant, didPublishTrack publication: RemoteTrackPublication) {
         print("remote \(publication.kind), \(publication.source)")
         print(publication.track)
+        
+        if publication.kind == .audio {
+            Task { try! await publication.set(subscribed: true) }
+        }
         
         self.updater.toggle()
     }

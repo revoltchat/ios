@@ -104,20 +104,24 @@ struct ChannelListItem: View {
                                 if participant.camera {
                                     Image(systemName: "camera.fill")
                                         .resizable()
+                                        .scaledToFit()
                                         .frame(width: 16, height: 16)
                                 }
                                 
                                 if participant.screensharing {
                                     Image(systemName: "desktopcomputer")
                                         .resizable()
+                                        .scaledToFit()
                                         .frame(width: 16, height: 16)
                                 }
                                 
                                 if !(member.can_receive ?? true) {
                                     Image(systemName: "mic.slash.fill")
                                         .resizable()
+                                        .scaledToFit()
                                         .frame(width: 16, height: 16)
                                         .foregroundStyle(.red)
+                                    
                                 } else if !participant.is_publishing {
                                     Image(systemName: "mic.slash.fill")
                                         .resizable()
@@ -127,11 +131,14 @@ struct ChannelListItem: View {
                                 if !(member.can_receive ?? true) {
                                     Image("headphones.slash")
                                         .resizable()
+                                        .scaledToFit()
                                         .frame(width: 16, height: 16)
                                         .foregroundStyle(.red)
+                                    
                                 } else if !participant.is_receiving {
                                     Image("headphones.slash")
                                         .resizable()
+                                        .scaledToFit()
                                         .frame(width: 16, height: 16)
                                 }
                             }

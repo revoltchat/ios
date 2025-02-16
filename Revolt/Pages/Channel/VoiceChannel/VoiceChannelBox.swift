@@ -35,6 +35,7 @@ struct VoiceChannelBox<Title: View, Contents: View, Trailing: View, Overlay: Vie
                 }
                 Spacer()
             }
+            .zIndex(0)
             
             HStack {
                 title
@@ -45,10 +46,13 @@ struct VoiceChannelBox<Title: View, Contents: View, Trailing: View, Overlay: Vie
                 }
             }
             .frame(alignment: .bottom)
+            .zIndex(1)
+            
             
             if selected {
                 overlay
                     .frame(alignment: .topLeading)
+                    .zIndex(2)
             }
         }
         .aspectRatio(16/9, contentMode: .fill)
