@@ -20,9 +20,9 @@ struct ServerInfoSheet: View {
         List {
             ZStack(alignment: .bottomLeading) {
                 if let banner = server.banner {
-                    LazyImage(source: .file(banner), clipTo: UnevenRoundedRectangle(topLeadingRadius: 5, topTrailingRadius: 5))
-                        .frame(height: 128)
-                        .aspectRatio(contentMode: .fill)
+                    LazyImage(source: .file(banner), height: 128, clipTo: Rectangle())
+                        .frame(minWidth: 0)
+                        .clipShape(RoundedRectangle(cornerRadius: 5))
                 }
                 
                 HStack(alignment: .bottom) {
@@ -43,7 +43,7 @@ struct ServerInfoSheet: View {
                 .padding(.horizontal, 8)
                 .padding(.bottom, 8)
             }
-            .listRowInsets(EdgeInsets(top: 0, leading: 0, bottom: 0, trailing: 0))
+            //.listRowInsets(EdgeInsets(top: 0, leading: 0, bottom: 0, trailing: 0))
             .listRowSeparator(.hidden)
             .listRowBackground(viewState.theme.background)
             
@@ -116,6 +116,7 @@ struct ServerInfoSheet: View {
         .listStyle(.inset)
         .scrollContentBackground(.hidden)
         .scrollBounceBehavior(.basedOnSize, axes: [.vertical])
+        .contentMargins(.top, 0, for: .scrollContent)
         .presentationDetents([.medium, .large])
         .confirmationDialog("Are you sure you want to leave?", isPresented: $showLeaveServerDialog) {
             Button("Leave", role: .destructive) {

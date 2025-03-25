@@ -77,7 +77,6 @@
 		1773C03D2C07DD1F007B8867 /* MessageableChannel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1773C03C2C07DD1F007B8867 /* MessageableChannel.swift */; };
 		17772C182C30AF83000D1EDA /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17772C172C30AF83000D1EDA /* AppDelegate.swift */; };
 		1777DD892ADC3C31003D6C72 /* Markdown.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1777DD882ADC3C31003D6C72 /* Markdown.swift */; };
-		177DA1172CEADBB1000FC7EA /* AnyCodable in Frameworks */ = {isa = PBXBuildFile; productRef = 177DA1162CEADBB1000FC7EA /* AnyCodable */; };
 		1781011E2C8CBC2900AC2756 /* SubviewAttachingTextView in Frameworks */ = {isa = PBXBuildFile; productRef = 1781011D2C8CBC2900AC2756 /* SubviewAttachingTextView */; };
 		1782F5E62B08F60B00759D40 /* Discovery.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1782F5E52B08F60B00759D40 /* Discovery.swift */; };
 		17863A592C8094840051A52C /* Tile.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17863A582C8094840051A52C /* Tile.swift */; };
@@ -141,6 +140,8 @@
 		17F502562B9BFB2800A3022D /* CreateGroup.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17F502552B9BFB2800A3022D /* CreateGroup.swift */; };
 		17F555272AFC229900958F2F /* ServerSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17F555262AFC229900958F2F /* ServerSettings.swift */; };
 		17F8B7092C7983730065F1DE /* CreateServer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17F8B7082C7983730065F1DE /* CreateServer.swift */; };
+		17F8FBC62D8CA40E006EAD0A /* AnyCodable in Frameworks */ = {isa = PBXBuildFile; productRef = 177DA1162CEADBB1000FC7EA /* AnyCodable */; };
+		17F8FBCA2D8CC019006EAD0A /* Zoomable in Frameworks */ = {isa = PBXBuildFile; productRef = 17F8FBC92D8CC019006EAD0A /* Zoomable */; };
 		17F9D7632C9208B500D0BB6F /* MessageReactionsSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17F9D7622C9208B500D0BB6F /* MessageReactionsSheet.swift */; };
 		36D461CF77D84B97B94929A9 /* Sentry in Frameworks */ = {isa = PBXBuildFile; productRef = 03268FCCFC7D4D1F8B6E9F6F /* Sentry */; };
 		D49B705329C4D3FE009494A5 /* RevoltApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = D49B705229C4D3FE009494A5 /* RevoltApp.swift */; };
@@ -356,10 +357,12 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				17F8FBC62D8CA40E006EAD0A /* AnyCodable in Frameworks */,
 				DAAA4BF429F2274A00F41E52 /* Collections in Frameworks */,
 				175997192B2FB90700C39CF6 /* Flow in Frameworks */,
 				1746CF5A2B83C6750051FD47 /* CodableWrapper in Frameworks */,
 				17D9C2BD2ADCA48D00426857 /* Kingfisher in Frameworks */,
+				17F8FBCA2D8CC019006EAD0A /* Zoomable in Frameworks */,
 				1781011E2C8CBC2900AC2756 /* SubviewAttachingTextView in Frameworks */,
 				172754CC2B39989E002223FE /* SwiftParsec in Frameworks */,
 				178BB10C2B02D84C001143A4 /* HCaptcha in Frameworks */,
@@ -859,6 +862,7 @@
 				1751239A2CAC687C00D30C23 /* KeychainAccess */,
 				17E72F822CACEAB8009E7C40 /* SwiftyCrop */,
 				177DA1162CEADBB1000FC7EA /* AnyCodable */,
+				17F8FBC92D8CC019006EAD0A /* Zoomable */,
 			);
 			productName = Revolt;
 			productReference = D49B704F29C4D3FE009494A5 /* Revolt.app */;
@@ -918,6 +922,7 @@
 				175123992CAC687C00D30C23 /* XCRemoteSwiftPackageReference "KeychainAccess" */,
 				17E72F812CACEAB8009E7C40 /* XCRemoteSwiftPackageReference "SwiftyCrop" */,
 				177DA1152CEADBB1000FC7EA /* XCRemoteSwiftPackageReference "AnyCodable" */,
+				17F8FBC82D8CC019006EAD0A /* XCRemoteSwiftPackageReference "Zoomable" */,
 			);
 			productRefGroup = D49B705029C4D3FE009494A5 /* Products */;
 			projectDirPath = "";
@@ -1749,6 +1754,14 @@
 				kind = branch;
 			};
 		};
+		17F8FBC82D8CC019006EAD0A /* XCRemoteSwiftPackageReference "Zoomable" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/ryohey/Zoomable";
+			requirement = {
+				branch = main;
+				kind = branch;
+			};
+		};
 		6DCF7E838FEB4C359405B802 /* XCRemoteSwiftPackageReference "sentry-cocoa" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/getsentry/sentry-cocoa/";
@@ -1873,6 +1886,11 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 178BB10A2B02D84C001143A4 /* XCRemoteSwiftPackageReference "HCaptcha-ios-sdk" */;
 			productName = HCaptcha_RxSwift;
+		};
+		17F8FBC92D8CC019006EAD0A /* Zoomable */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 17F8FBC82D8CC019006EAD0A /* XCRemoteSwiftPackageReference "Zoomable" */;
+			productName = Zoomable;
 		};
 		DA99EC5229D6148200419FDA /* Alamofire */ = {
 			isa = XCSwiftPackageProductDependency;

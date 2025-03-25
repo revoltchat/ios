@@ -86,7 +86,7 @@ struct HomeRewritten: View {
             HStack(spacing: 0) {
                 HStack(spacing: 0) {
                     ServerScrollView()
-                        .frame(maxWidth: 60)
+                        .frame(width: 60)
                     
                     switch currentSelection {
                         case .server(_):
@@ -95,7 +95,7 @@ struct HomeRewritten: View {
                             DMScrollView(currentChannel: $currentChannel, toggleSidebar: toggleSidebar)
                     }
                 }
-                .frame(maxWidth: 300)
+                .frame(width: 300)
                 
                 MaybeChannelView(currentChannel: $currentChannel, currentSelection: $currentSelection, toggleSidebar: toggleSidebar, disableScroll: $disableScroll, disableSidebar: $disableSidebar)
                     .frame(maxWidth: .infinity)
@@ -108,12 +108,11 @@ struct HomeRewritten: View {
                 ZStack(alignment: .topLeading) {
                     HStack(spacing: 0) {
                         ServerScrollView()
-                            .frame(maxWidth: 60)
+                            .frame(width: 60)
                         
                         switch currentSelection {
                             case .server(_):
                                 ServerChannelScrollView(currentSelection: $currentSelection, currentChannel: $currentChannel, toggleSidebar: toggleSidebar)
-
                             case .dms:
                                 DMScrollView(currentChannel: $currentChannel, toggleSidebar: toggleSidebar)
                         }
