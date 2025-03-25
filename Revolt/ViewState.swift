@@ -135,8 +135,18 @@ public class ViewState: ObservableObject {
 #endif
 
     let keychain = Keychain(service: "chat.revolt.app")
-    var http: HTTPClient = HTTPClient(token: nil, baseURL: "https://api.revolt.chat/0.8")
+    var http: HTTPClient
     var launchTransaction: any Sentry.Span
+    
+    // This is only used for developer settings, this must not be editable in release builds
+    @Published var apiUrl: String {
+        didSet {
+            let apiUrl = apiUrl
+            DispatchQueue.global(qos: .background).async {
+                UserDefaults.standard.set(try! JSONEncoder().encode(apiUrl), forKey: "apiUrl")
+            }
+        }
+    }
     
     @Published var ws: WebSocketStream? = nil
     
@@ -275,7 +285,7 @@ public class ViewState: ObservableObject {
     
     var userSettingsStore: UserSettingsData
 
-    static func decodeUserDefaults<T: Decodable>(forKey key: String, withDecoder decoder: JSONDecoder) throws -> T? {
+    static func decodeUserDefaults<T: Decodable>(forKey key: String, withDecoder decoder: JSONDecoder = JSONDecoder()) throws -> T? {
         if let value = UserDefaults.standard.data(forKey: key) {
             return try decoder.decode(T.self, from: value)
         } else {
@@ -290,6 +300,11 @@ public class ViewState: ObservableObject {
     init() {
         launchTransaction = SentrySDK.startTransaction(name: "launch", operation: "launch")
         let decoder = JSONDecoder()
+        
+        let apiUrl = ViewState.decodeUserDefaults(forKey: "apiUrl", withDecoder: decoder, defaultingTo: DEFAULT_API_URL)
+        self.apiUrl = apiUrl
+        
+        self.http = HTTPClient(token: nil, baseURL: apiUrl)
         
         self.apiInfo = ViewState.decodeUserDefaults(forKey: "apiInfo", withDecoder: decoder, defaultingTo: nil)
         
@@ -315,13 +330,15 @@ public class ViewState: ObservableObject {
         
         self.currentUser = ViewState.decodeUserDefaults(forKey: "currentUser", withDecoder: decoder, defaultingTo: nil)
         
-        // self.path = NavigationPath()
-        
-       if let value = UserDefaults.standard.data(forKey: "path"), let path = try? decoder.decode(NavigationPath.CodableRepresentation.self, from: value) {
-           self.path = NavigationPath(path)
-       } else {
-           self.path = NavigationPath()
-       }
+        self.path = NavigationPath()
+//        self.currentSelection = .dms
+//        self.currentChannel = .home
+
+        if let value = UserDefaults.standard.data(forKey: "path"), let path = try? decoder.decode(NavigationPath.CodableRepresentation.self, from: value) {
+            self.path = NavigationPath(path)
+        } else {
+            self.path = NavigationPath()
+        }
         
         if self.currentUser != nil, self.apiInfo != nil {
             self.forceMainScreen = true
@@ -413,7 +430,7 @@ public class ViewState: ObservableObject {
                         let result = try! JSONDecoder().decode(LoginResponse.self, from: data)
                         switch result {
                             case .Success(let success):
-                                Task {
+                                Task { @MainActor in
                                     self.isOnboarding = true
                                     self.currentSessionId = success._id
                                     self.sessionToken = success.token

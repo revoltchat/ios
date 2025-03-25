@@ -2,6 +2,7 @@ import SwiftUI
 import Sentry
 import Types
 
+let DEFAULT_API_URL: String = "https://api.revolt.chat/0.8"
 
 @main
 struct RevoltApp: App {
