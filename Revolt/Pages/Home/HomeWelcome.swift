@@ -53,7 +53,7 @@ struct HomeWelcome: View {
                             .resizable()
                             .frame(width: 32, height: 20)
                     } handle: {
-                        openURL(URL(string: "https://insrt.uk/donate")!)
+                        openURL(URL(string: "https://wiki.revolt.chat/notes/project/financial-support/")!)
                     }
                     
                     HomeButton(title: "Open Settings", description: "You can also open settings from the bottom of the server list") {
