@@ -115,6 +115,10 @@ struct RoleSettings: View {
                                 payload.hoist = currentValue.hoist
                             }
                             
+                            if initial.rank != currentValue.rank {
+                                payload.rank = currentValue.rank
+                            }
+                            
                             initial = try! await viewState.http.editRole(server: server.id, role: roleId, payload: payload).get()
                             
                             if initial.permissions != currentValue.permissions {
