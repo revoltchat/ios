@@ -45,6 +45,7 @@ struct HTTPClient {
         if token != nil {
             headers.add(name: "x-session-token", value: token!)
         }
+        
         let req = self.session.request(
             "\(baseURL)\(route)",
             method: method,
@@ -52,7 +53,7 @@ struct HTTPClient {
             encoder: encoder,
             headers: headers
         )
-
+        
         let response = await req.serializingString()
             .response
 
@@ -174,9 +175,16 @@ struct HTTPClient {
     func uploadFile(data: Data, name: String, category: FileCategory) async -> Result<AutumnResponse, RevoltError> {
         let url = "\(apiInfo!.features.autumn.url)/\(category.rawValue)"
 
+        var headers: HTTPHeaders = HTTPHeaders()
+        
+        if token != nil {
+            headers.add(name: "x-session-token", value: token!)
+        }
+        
         return await session.upload(
             multipartFormData: { form in form.append(data, withName: "file", fileName: name)},
-            to: url
+            to: url,
+            headers: headers
         )
             .serializingDecodable(decoder: JSONDecoder())
             .response
@@ -403,7 +411,7 @@ struct HTTPClient {
     func uploadEmoji(id: String, name: String, parent: EmojiParent, nsfw: Bool) async -> Result<Emoji, RevoltError> {
         await req(method: .put, route: "/custom/emoji/\(id)", parameters: CreateEmojiPayload(id: id, name: name, parent: parent, nsfw: nsfw))
     }
-    
+
     func deleteEmoji(emoji: String) async -> Result<EmptyResponse, RevoltError> {
         await req(method: .delete, route: "/custom/emoji/\(emoji)")
     }
