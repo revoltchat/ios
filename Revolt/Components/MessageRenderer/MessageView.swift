@@ -36,20 +36,23 @@ struct MessageView: View {
     }
     
     private func pfpView(size: AvatarSize) -> some View {
-        ZStack(alignment: .topLeading) {
-            Avatar(user: viewModel.author, member: viewModel.member, masquerade: viewModel.message.masquerade, webhook: viewModel.message.webhook, width: size.sizes.0, height: size.sizes.0)
-                .onTapGesture {
-                    if !isStatic || viewModel.message.webhook != nil {
-                        viewState.openUserSheet(withId: viewModel.author.id, server: viewModel.server?.id)
-                    }
+        Button {
+            if !isStatic || viewModel.message.webhook != nil {
+                viewState.openUserSheet(withId: viewModel.author.id, server: viewModel.server?.id)
+            }
+        } label: {
+            ZStack(alignment: .topLeading) {
+                Avatar(user: viewModel.author, member: viewModel.member, masquerade: viewModel.message.masquerade, webhook: viewModel.message.webhook, width: size.sizes.0, height: size.sizes.0)
+                
+                if viewModel.message.masquerade != nil {
+                    Avatar(user: viewModel.author, member: viewModel.member, webhook: viewModel.message.webhook, width: size.sizes.1, height: size.sizes.1)
+                        .padding(.leading, -size.sizes.2)
+                        .padding(.top, -size.sizes.2)
                 }
-
-            if viewModel.message.masquerade != nil {
-                Avatar(user: viewModel.author, member: viewModel.member, webhook: viewModel.message.webhook, width: size.sizes.1, height: size.sizes.1)
-                    .padding(.leading, -size.sizes.2)
-                    .padding(.top, -size.sizes.2)
             }
         }
+        .buttonStyle(.plain)
+        
     }
     
     private var nameView: some View {
@@ -108,7 +111,7 @@ struct MessageView: View {
                             }
                         }
                         
-                        MessageContentsView(viewModel: viewModel, isStatic: isStatic, onlyShowContent: onlyShowContent)
+                        MessageContentsView(viewModel: viewModel, onlyShowContent: onlyShowContent)
                         
                         if viewModel.message.edited != nil {
                             Text("(edited)")
@@ -146,7 +149,7 @@ struct MessageView: View {
                                 }
                             }
                             
-                            MessageContentsView(viewModel: viewModel, isStatic: isStatic, onlyShowContent: onlyShowContent)
+                            MessageContentsView(viewModel: viewModel, onlyShowContent: onlyShowContent)
                         }
                     }
                 }

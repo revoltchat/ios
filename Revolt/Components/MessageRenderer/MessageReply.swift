@@ -77,15 +77,22 @@ struct InnerMessageReplyView: View {
                 if !(message.attachments?.isEmpty ?? true) {
                     Text(Image(systemName: "doc.text.fill"))
                         .font(.caption)
-                        .foregroundStyle(viewState.theme.foreground2)
+                        .foregroundStyle(viewState.theme.foreground3)
+                    
+                    Text("Sent an attachment")
+                        .font(.caption)
+                        .italic()
+                        .foregroundStyle(viewState.theme.foreground3)
                 }
                 
-                if let content = message.content {
-                    Contents(text: .constant(content))
-                        .font(.caption)
-                        .foregroundStyle(viewState.theme.foreground2)
-                        .lineLimit(1)
-                        .truncationMode(.tail)
+                if let content = message.content, !content.isEmpty {
+                    Contents(
+                        text: .constant(content),
+                        font: .preferredFont(forTextStyle: .caption1),
+                        foregroundColor: viewState.theme.foreground3.uiColor
+                    )
+                    .lineLimit(1)
+                    .truncationMode(.tail)
                 }
             } else {
                 Image(systemName: "person.circle.fill")

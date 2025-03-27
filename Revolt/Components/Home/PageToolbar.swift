@@ -14,9 +14,9 @@ struct PageToolbar<C: View, T: View>: View {
     var toggleSidebar: () -> ()
     
     var contents: () -> C
-    var trailing: (() -> T)?
+    var trailing: (() -> T)
     
-    init(toggleSidebar: @escaping () -> (), @ViewBuilder contents: @escaping () -> C, trailing: (() -> T)? = nil) {
+    init(toggleSidebar: @escaping () -> (), @ViewBuilder contents: @escaping () -> C, @ViewBuilder trailing: @escaping () -> T) {
         self.toggleSidebar = toggleSidebar
         self.contents = contents
         self.trailing = trailing
@@ -36,9 +36,7 @@ struct PageToolbar<C: View, T: View>: View {
                 
                 Spacer()
                 
-                if let trailing {
-                    trailing()
-                }
+                trailing()
             }
             
             HStack(alignment: .center) {
@@ -65,7 +63,7 @@ extension PageToolbar where T == EmptyView {
     init(toggleSidebar: @escaping () -> (), @ViewBuilder contents: @escaping () -> C) {
         self.toggleSidebar = toggleSidebar
         self.contents = contents
-        self.trailing = nil
+        self.trailing = { EmptyView() }
     }
 }
 

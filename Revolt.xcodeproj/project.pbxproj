@@ -94,6 +94,7 @@
 		17966B652AE0842A00BAEC58 /* ChannelIcon.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17966B642AE0842A00BAEC58 /* ChannelIcon.swift */; };
 		17A21DF62CFA71AC0024C9F0 /* AddBot.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17A21DF52CFA71AA0024C9F0 /* AddBot.swift */; };
 		17A589FA2C44781F00B9D85A /* AnyTransition.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17A589F92C44781F00B9D85A /* AnyTransition.swift */; };
+		17A6894D2D9590CE00F25C6C /* Array.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17A6894C2D9590CC00F25C6C /* Array.swift */; };
 		17A7FE372C49DE6F0083B22F /* Member.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17A7FE362C49DE6F0083B22F /* Member.swift */; };
 		17A7FE392C49EBD20083B22F /* Image.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17A7FE382C49EBD20083B22F /* Image.swift */; };
 		17B375812C41FEC300FC7E6E /* Types.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 17DE7DB22BFAEC3F00C99188 /* Types.framework */; };
@@ -275,6 +276,7 @@
 		17966B642AE0842A00BAEC58 /* ChannelIcon.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChannelIcon.swift; sourceTree = "<group>"; };
 		17A21DF52CFA71AA0024C9F0 /* AddBot.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddBot.swift; sourceTree = "<group>"; };
 		17A589F92C44781F00B9D85A /* AnyTransition.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnyTransition.swift; sourceTree = "<group>"; };
+		17A6894C2D9590CC00F25C6C /* Array.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Array.swift; sourceTree = "<group>"; };
 		17A7FE362C49DE6F0083B22F /* Member.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Member.swift; sourceTree = "<group>"; };
 		17A7FE382C49EBD20083B22F /* Image.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Image.swift; sourceTree = "<group>"; };
 		17B1A0462BFC471C005D4664 /* Types.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Types.swift; sourceTree = "<group>"; };
@@ -390,6 +392,7 @@
 		170C23D82C224BA40057E399 /* Extensions */ = {
 			isa = PBXGroup;
 			children = (
+				17A6894C2D9590CC00F25C6C /* Array.swift */,
 				172B0CAA2CEAE0C000012CE2 /* Optional.swift */,
 				17340A462CE051D900AD8A19 /* UIFont.swift */,
 				17C212432CD19E75002D486C /* Section.swift */,
@@ -1076,6 +1079,7 @@
 				1750EF6E2B0585B300DD3EB3 /* ResendEmail.swift in Sources */,
 				17E019D72AF1998300AB4663 /* MessageAttachment.swift in Sources */,
 				DAAA4BFB29F2518900F41E52 /* MessageView.swift in Sources */,
+				17A6894D2D9590CE00F25C6C /* Array.swift in Sources */,
 				17C212442CD19E77002D486C /* Section.swift in Sources */,
 				173A336A2C422EF800B8A58E /* DeveloperSettings.swift in Sources */,
 				17BB78BA2CA4DF25000CAD87 /* OptionSet.swift in Sources */,

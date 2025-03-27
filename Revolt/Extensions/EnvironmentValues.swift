@@ -12,4 +12,5 @@ extension EnvironmentValues {
     @Entry var currentMessage: MessageContentsViewModel? = nil
     @Entry var currentServer: Server? = nil
     @Entry var currentChannel: Channel? = nil
+    @Entry var channelMessageSelection: Binding<Set<String>> = .constant([])
 }

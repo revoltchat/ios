@@ -108,9 +108,9 @@ struct MessageableChannelView: View {
     @State var highlighted: String? = nil
     @State var replies: [Reply] = []
     @State var scrollPosition: String? = nil
-    @State var topMessage: MessageContentsViewModel? = nil
-    @State var bottomMessage: MessageContentsViewModel? = nil
     @State var messages: [[MessageContentsViewModel]] = []
+    @State var selection: Set<String> = []
+    @State var nearBottom: Bool = false
     
     var toggleSidebar: () -> ()
     
@@ -118,6 +118,7 @@ struct MessageableChannelView: View {
     @Binding var disableSidebar: Bool
     
     @FocusState var focused: Bool
+    @Namespace var topID
     
     var isCompactMode: Bool {
         return TEMP_IS_COMPACT_MODE.0
@@ -126,7 +127,7 @@ struct MessageableChannelView: View {
     func viewMembers() {
         
     }
-    
+
     func createInvite() {
         
     }
@@ -230,9 +231,6 @@ struct MessageableChannelView: View {
         }
         
         Task(priority: .high) {
-            topMessage = messages.first?.first
-            bottomMessage = messages.last?.last
-            
             if messages.isEmpty {
                 await loadMoreMessages(before: nil)
             }
@@ -258,159 +256,208 @@ struct MessageableChannelView: View {
                     Image(systemName: "chevron.right")
                         .frame(height: 4)
                 }
+            } trailing: {
+                // TODO: finish
+//                if !selection.isEmpty {
+//                    HStack {
+//                        Button("Delete", role: .destructive) {
+//                            ()
+//                        }
+//                        
+//                        Button("Done", role: .cancel) {
+//                            withAnimation {
+//                                selection.removeAll()
+//                            }
+//                        }
+//                    }
+//                }
             }
             
             ZStack {
                 VStack(alignment: .leading, spacing: 0) {
                     GeometryReader { geoProxy in
                         ScrollViewReader { proxy in
-                            List {
-                                if viewState.atTopOfChannel.contains(viewModel.channel.id) {
-                                    VStack(alignment: .leading) {
-                                        Text("#\(viewModel.channel.getName(viewState))")
-                                            .font(.title)
-                                        Text("This is the start of your conversation.")
+                            ZStack(alignment: .bottomTrailing) {
+                                ScrollView {
+                                    LazyVStack {
+                                        Group {
+                                            if viewState.atTopOfChannel.contains(viewModel.channel.id) {
+                                                VStack(alignment: .leading) {
+                                                    Text("#\(viewModel.channel.getName(viewState))")
+                                                        .font(.title)
+                                                    Text("This is the start of your conversation.")
+                                                }
+                                            } else {
+                                                Text("Loading more messages...")
+                                            }
+                                        }
+                                        .id(topID)
+                                        
+                                        ForEach(messages, id: \.ids) { group in
+                                            let first = group.first!
+                                            let rest = group.dropFirst()
+                                            
+                                            VStack(alignment: .leading, spacing: 0) {
+                                                if first.message.id == viewState.unreads[viewModel.channel.id]?.last_id, first.message.id != viewModel.messages.last {
+                                                    HStack(spacing: 0) {
+                                                        Text("NEW")
+                                                            .font(.caption)
+                                                            .fontWeight(.bold)
+                                                            .padding(.horizontal, 8)
+                                                            .background(RoundedRectangle(cornerRadius: 100).foregroundStyle(viewState.theme.accent))
+    
+                                                        Rectangle()
+                                                            .frame(height: 1)
+                                                            .foregroundStyle(viewState.theme.accent)
+                                                    }
+                                                }
+                                                
+                                                MessageWrapper(viewModel: first) {
+                                                    MessageView(
+                                                        viewModel: first,
+                                                        isStatic: false
+                                                    )
+                                                    .padding(.top, 8)
+                                                    .padding(.leading, selection.isEmpty ? 12 : 0)
+                                                    .padding(.bottom, rest.isEmpty ? 4 : 0)
+                                                    .padding(.trailing, selection.isEmpty ? 12 : 4)
+                                                }
+                                                .background((first.message.mentions?.firstIndex(of: viewState.currentUser!.id) != nil || highlighted == first.message.id
+                                                             ? viewState.theme.mention
+                                                             : viewState.theme.background).animation(.easeInOut))
+                                                .animation(.easeInOut, value: highlighted)
+                                                .environment(\.channelMessageSelection, $selection.animation())
+                                                
+                                                ForEach(rest) { message in
+                                                    MessageWrapper(viewModel: message) {
+                                                        HStack(alignment: .firstTextBaseline, spacing: 0) {
+                                                            Group {
+                                                                if message.message.edited != nil {
+                                                                    Text("(edited)")
+                                                                        .font(.caption)
+                                                                        .foregroundStyle(viewState.theme.foreground3)
+                                                                        .multilineTextAlignment(.center)
+                                                                } else {
+                                                                    Spacer()
+                                                                }
+                                                            }
+                                                            .frame(width: 60)
+                                                            
+                                                            MessageContentsView(viewModel: message)
+                                                        }
+                                                    }
+                                                    .background((message.message.mentions?.firstIndex(of: viewState.currentUser!.id) != nil || highlighted == message.message.id
+                                                                 ? viewState.theme.mention
+                                                                 : viewState.theme.background).animation(.default))
+                                                }
+                                                .padding(.trailing, selection.isEmpty ? 12 : 4)
+                                                .animation(.easeInOut, value: highlighted)
+                                                .environment(\.channelMessageSelection, $selection.animation())
+                                            }
+                                            .id(group.ids)
+                                        }
                                     }
-                                    .listRowBackground(viewState.theme.background)
-                                } else {
-                                    Text("Loading more messages...")
-                                        .listRowBackground(viewState.theme.background)
-                                        .listRowSeparator(.hidden)
                                 }
-                                
-                                ForEach(messages, id: \.last!.message.id) { group in
-                                    let first = group.first!
-                                    let rest = group.dropFirst()
+                                .task {
+                                    messages = getMessages(scrollProxy: proxy)
                                     
-                                    MessageView(
-                                        viewModel: first,
-                                        isStatic: false
-                                    )
-                                    .listRowBackground((first.message.mentions?.firstIndex(of: viewState.currentUser!.id) != nil || highlighted == first.message.id
-                                                       ? viewState.theme.mention
-                                                        : viewState.theme.background).animation(.easeInOut))
-                                    .animation(.easeInOut, value: highlighted)
-                                    .listRowInsets(EdgeInsets(top: 8, leading: 12, bottom: rest.isEmpty ? 4 : 0, trailing: 12))
-                                    .id(first.message.id)
-                                    
-                                    ForEach(rest, id: \.message.id) { message in
-                                        MessageContentsView(viewModel: message, isStatic: false)
-                                            .listRowBackground((message.message.mentions?.firstIndex(of: viewState.currentUser!.id) != nil || highlighted == message.message.id
-                                                               ? viewState.theme.mention
-                                                               : viewState.theme.background).animation(.default))
-                                            .id(message.message.id)
+                                    if let unread = viewState.unreads[viewModel.channel.id], let last_id = unread.last_id {
+                                        proxy.scrollTo(last_id)
                                     }
-                                    .animation(.easeInOut, value: highlighted)
-                                    .padding(.leading, 48)
-                                    .listRowSeparator(.hidden)
-                                    .listRowInsets(EdgeInsets(top: 0, leading: 12, bottom: 0, trailing: 12))
-                                
-                                    if first.message.id == viewState.unreads[viewModel.channel.id]?.last_id, first.message.id != viewModel.messages.last {
-                                        HStack(spacing: 0) {
-                                            Text("NEW")
-                                                .font(.caption)
-                                                .fontWeight(.bold)
-                                                .padding(.horizontal, 8)
-                                                .background(RoundedRectangle(cornerRadius: 100).foregroundStyle(viewState.theme.accent))
+                                }
+                                .onChange(of: viewModel.messages) { _, _ in
+                                    messages = getMessages(scrollProxy: proxy)
+                                }
+                                .safeAreaPadding(EdgeInsets(top: 0, leading: 0, bottom: 32, trailing: 0))
+                                .overlay(alignment: .top) {
+                                    if let last_id = viewState.unreads[viewModel.channel.id]?.last_id, let last_message_id = viewModel.channel.last_message_id {
+                                        if last_id < last_message_id {
 
-                                            Rectangle()
-                                                .frame(height: 1)
-                                                .foregroundStyle(viewState.theme.accent)
+                                            Text("New messages since \(formatRelative(id: last_id))")
+                                                .padding(4)
+                                                .frame(maxWidth: .infinity)
+                                                .background(viewState.theme.accent)
+                                                .clipShape(UnevenRoundedRectangle(bottomLeadingRadius: 5, bottomTrailingRadius: 5))
+                                                .onTapGesture {
+                                                    proxy.scrollTo(last_id)
+                                                }
                                         }
-                                        .listRowBackground(viewState.theme.background)
-                                        .listRowSeparator(.hidden)
                                     }
                                 }
+                                .overlay(alignment: .bottomLeading) {
+                                    if let users = getCurrentlyTyping(), !users.isEmpty {
+                                        HStack {
+                                            HStack(spacing: -6) {
+                                                ForEach(users, id: \.0.id) { (user, member) in
+                                                    Avatar(user: user, member: member, width: 12, height: 12)
+                                                }
+                                            }
+
+                                            Text(formatTypingIndicatorText(withUsers: users))
+                                                .font(Font.system(size: 14))
+                                                .foregroundStyle(viewState.theme.foreground2)
+                                                .lineLimit(1)
+
+                                            Spacer()
+                                        }
+                                        .frame(maxWidth: .infinity)
+                                        .padding(.horizontal, 12)
+                                        .padding(.top, 2)
+                                        .background(viewState.theme.messageBox)
+                                    }
+                                }
+                                .scrollDisabled(disableScroll)
+                                .scrollTargetLayout()
+                                .defaultScrollAnchor(.bottom)
+                                .scrollDismissesKeyboard(.immediately)
                                 
-//                                Color.clear
-//                                    .listRowSeparator(.hidden)
-//                                    .id("bottom")
-//                                    .listRowInsets(EdgeInsets(top: 0, leading: 0, bottom: 0, trailing: 0))
-//                                    .listRowBackground(Color.clear)
-//                                    .frame(height: 0)
-//                                    .onAppear {
-//                                        if let lastMessage = messages.last?.last {
-//                                        }
-//                                    }
-//                                    .onChange(of: messages) { (_, _) in
-//                                        withAnimation {
-//                                            proxy.scrollTo("bottom")
-//                                        }
-//                                    }
-                            }
-                            .task {
-                                messages = getMessages(scrollProxy: proxy)
-                            }
-                            .onChange(of: viewModel.messages, { _, _ in
-                                messages = getMessages(scrollProxy: proxy)
-                            })
-                            .onScrollTargetVisibilityChange(idType: String.self, { ids in
-                                if let firstId = ids.first, firstId == topMessage?.message.id {
-                                    Task {
-                                        await loadMoreMessages(before: firstId)
-                                    }
-                                } else if let lastId = ids.last, lastId == bottomMessage?.message.id {
-                                    Task {
-                                        await viewState.http.ackMessage(channel: viewModel.channel.id, message: lastId)
-                                    }
-                                }
-                            })
-                            .onScrollPhaseChange({ old, new in
-                                if new != .idle {
-                                    disableSidebar = true
-                                } else {
-                                    disableSidebar = false
-                                }
-                            })
-                            .safeAreaPadding(EdgeInsets(top: 0, leading: 0, bottom: 24, trailing: 0))
-                            .listStyle(.plain)
-                            .listRowSeparator(.hidden)
-                            .overlay(alignment: .top) {
-                                if let last_id = viewState.unreads[viewModel.channel.id]?.last_id, let last_message_id = viewModel.channel.last_message_id {
-                                    if last_id < last_message_id {
-                                        
-                                        Text("New messages since \(formatRelative(id: last_id))")
-                                            .padding(4)
-                                            .frame(maxWidth: .infinity)
-                                            .background(viewState.theme.accent)
-                                            .clipShape(UnevenRoundedRectangle(bottomLeadingRadius: 5, bottomTrailingRadius: 5))
-                                            .onTapGesture {
-                                                proxy.scrollTo(last_id)
-                                            }
-                                    }
-                                }
-                            }
-                            .overlay(alignment: .bottomLeading) {
-                                if let users = getCurrentlyTyping(), !users.isEmpty {
-                                    HStack {
-                                        HStack(spacing: -6) {
-                                            ForEach(users, id: \.0.id) { (user, member) in
-                                                Avatar(user: user, member: member, width: 12, height: 12)
-                                            }
+                                Button {
+                                    withAnimation {
+                                        if let last = messages.last {
+                                            proxy.scrollTo(last.ids)
                                         }
-                                        
-                                        Text(formatTypingIndicatorText(withUsers: users))
-                                            .font(Font.system(size: 14))
-                                            .foregroundStyle(viewState.theme.foreground2)
-                                            .lineLimit(1)
-                                        
-                                        Spacer()
                                     }
-                                    .frame(maxWidth: .infinity)
-                                    .padding(.horizontal, 12)
-                                    .padding(.top, 2)
-                                    .background(viewState.theme.messageBox)
+                                } label: {
+                                    Image(systemName: "arrow.down")
+                                        .foregroundStyle(viewState.theme.foreground)
+                                }
+                                .padding()
+                                .background(viewState.theme.background2)
+                                .clipShape(RoundedRectangle(cornerRadius: 8))
+                                .padding(.bottom, 24)
+                                .padding(.trailing, 24)
+                                .opacity(nearBottom ? 0 : 1)
+                            }
+                        }
+                        .onScrollTargetVisibilityChange(idType: [String].self) { ids in
+                            print(ids)
+                            
+                            withAnimation {
+                                if let lastMessages = messages.last, Set(arrayLiteral: lastMessages.ids).isDisjoint(with: Set(ids)) {
+                                    nearBottom = false
+                                } else {
+                                    nearBottom = true
                                 }
                             }
-                            .environment(\.defaultMinListRowHeight, 0)
-                            //.gesture(TapGesture().onEnded { focused = false }, isEnabled: focused)
-                            .scrollDismissesKeyboard(.never)
-                            .scrollDisabled(disableScroll)
+                            
+                            if let firstIds = ids.first, let firstMessages = messages.first, firstIds == firstMessages.ids {
+                                Task {
+                                    await loadMoreMessages(before: firstIds.first!)
+                                }
+                            } else if let lastIds = ids.last, let lastMessages = messages.last, lastIds == lastMessages.ids {
+                                Task {
+                                    await viewState.http.ackMessage(channel: viewModel.channel.id, message: lastIds.last!)
+                                }
+                            }
                         }
-                        .defaultScrollAnchor(.bottom)
-                        .scrollDismissesKeyboard(.never)
+                        .onScrollPhaseChange { old, new in
+                            if new != .idle {
+                                disableSidebar = true
+                            } else {
+                                disableSidebar = false
+                            }
+                        }
                     }
-                    .gesture(TapGesture().onEnded { focused = false }, isEnabled: focused)
                     
                     MessageBox(
                         channel: viewModel.channel,
@@ -458,6 +505,195 @@ struct MessageableChannelView: View {
         .frame(maxWidth: .infinity)
         .background(viewState.theme.background.color)
         .presentationDetents([.fraction(0.4)])
+    }
+}
+
+struct MessageWrapper<C: View>: View {
+    @EnvironmentObject var viewState: ViewState
+    @Environment(\.channelMessageSelection) @Binding var selection
+    
+    @ObservedObject var viewModel: MessageContentsViewModel
+    
+    @ViewBuilder var inner: () -> C
+    
+    @State var showMemberSheet: Bool = false
+    @State var showReportSheet: Bool = false
+    @State var showReactSheet: Bool = false
+    @State var showReactionsSheet: Bool = false
+    
+    private var canManageMessages: Bool {
+        let member = viewModel.server.flatMap {
+            viewState.members[$0.id]?[viewState.currentUser!.id]
+        }
+        
+        let permissions = resolveChannelPermissions(from: viewState.currentUser!, targettingUser: viewState.currentUser!, targettingMember: member, channel: viewModel.channel, server: viewModel.server)
+        
+        return permissions.contains(.manageMessages)
+    }
+    
+    private var isMessageAuthor: Bool {
+        viewModel.message.author == viewState.currentUser?.id
+    }
+    
+    private var canDeleteMessage: Bool {
+        return isMessageAuthor || canManageMessages
+    }
+    
+    func toggle() {
+        if selection.contains(viewModel.message.id) {
+            selection.remove(viewModel.message.id)
+        } else {
+            selection.insert(viewModel.message.id)
+        }
+    }
+    
+    var body: some View {
+        HStack(alignment: .center, spacing: 0) {
+            if !selection.isEmpty {
+                let contains = selection.contains(viewModel.message.id)
+                
+                Image(systemName: contains ? "checkmark.circle.fill" : "circle")
+                    .resizable()
+                    .frame(width: 24, height: 24)
+                    .foregroundStyle(contains ? viewState.theme.foreground : viewState.theme.background2, viewState.theme.accent)
+                    .padding(.leading, 12)
+                    .padding(.trailing, 12)
+            }
+            
+            inner()
+            
+            Spacer()
+        }
+        .sheet(isPresented: $showReportSheet) {
+            ReportMessageSheetView(showSheet: $showReportSheet, messageView: viewModel)
+                .presentationBackground(viewState.theme.background)
+        }
+        .sheet(isPresented: $showReactSheet) {
+            EmojiPicker(background: AnyView(viewState.theme.background)) { emoji in
+                Task {
+                    showReactSheet = false
+                    await viewState.http.reactMessage(channel: viewModel.message.channel, message: viewModel.message.id, emoji: emoji.id)
+                }
+            }
+            .padding([.top, .horizontal])
+            .background(viewState.theme.background.ignoresSafeArea(.all))
+            .presentationDetents([.large])
+            .presentationBackground(viewState.theme.background)
+        }
+        .sheet(isPresented: $showReactionsSheet) {
+            MessageReactionsSheet(viewModel: viewModel)
+        }
+        .contextMenu {
+            if isMessageAuthor {
+                Button {
+                    Task {
+                        var replies: [Reply] = []
+                        
+                        for reply in viewModel.message.replies ?? [] {
+                            var message: Message? = viewState.messages[reply]
+                            
+                            if message == nil {
+                                message = try? await viewState.http.fetchMessage(channel: viewModel.channel.id, message: reply).get()
+                            }
+                            
+                            if let message {
+                                replies.append(Reply(message: message, mention: viewModel.message.mentions?.contains(message.author) ?? false))
+                            }
+                        }
+                        
+                        viewModel.channelReplies = replies
+                        viewModel.editing = viewModel.message
+                    }
+                } label: {
+                    Label("Edit Message", systemImage: "pencil")
+                }
+            }
+            
+            Button(action: viewModel.reply, label: {
+                Label("Reply", systemImage: "arrowshape.turn.up.left.fill")
+            })
+            
+            Button {
+                showReactSheet = true
+            } label: {
+                Label("React", systemImage: "face.smiling.inverse")
+            }
+            
+            if !(viewModel.message.reactions?.isEmpty ?? true) {
+                Button {
+                    showReactionsSheet = true
+                } label: {
+                    Label("Reactions", systemImage: "face.smiling.inverse")
+                }
+            }
+            
+            if canManageMessages {
+                if !(viewModel.message.pinned ?? false) {
+                    Button {
+                        Task {
+                            await viewModel.pin()
+                        }
+                    } label: {
+                        Label("Pin Message", systemImage: "pin.fill")
+                    }
+                } else {
+                    Button {
+                        Task {
+                            await viewModel.unpin()
+                        }
+                    } label: {
+                        Label("Unpin Message", systemImage: "pin.slash.fill")
+                    }
+                }
+            }
+            
+            Button {
+                copyText(text: viewModel.message.content ?? "")
+            } label: {
+                Label("Copy text", systemImage: "doc.on.clipboard")
+            }
+            
+            Button {
+                if let server = viewModel.server {
+                    copyUrl(url: URL(string: "https://revolt.chat/app/server/\(server.id)/channel/\(viewModel.channel.id)/\(viewModel.message.id)")!)
+                } else {
+                    copyUrl(url: URL(string: "https://revolt.chat/app/channel/\(viewModel.channel.id)/\(viewModel.message.id)")!)
+                    
+                }
+            } label: {
+                Label("Copy Message Link", systemImage: "link")
+            }
+            
+            Button {
+                copyText(text: viewModel.message.id)
+            } label: {
+                Label("Copy Message ID", systemImage: "doc.on.clipboard")
+            }
+            
+            Button {
+                toggle()
+            } label: {
+                Label("Select Message", systemImage: "checkmark.circle.fill")
+            }
+            
+            if canDeleteMessage {
+                Button(role: .destructive, action: {
+                    Task {
+                        await viewModel.delete()
+                    }
+                }, label: {
+                    Label("Delete Message", systemImage: "trash")
+                })
+            }
+            
+            if !isMessageAuthor {
+                Button(role: .destructive, action: { showReportSheet.toggle() }, label: {
+                    Label("Report Message", systemImage: "exclamationmark.triangle")
+                })
+            }
+        }
+
+        .gesture(TapGesture().onEnded(toggle), isEnabled: !selection.isEmpty)
     }
 }
 
