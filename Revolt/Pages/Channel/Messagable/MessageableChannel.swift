@@ -422,7 +422,7 @@ struct MessageableChannelView: View {
                     )
                 }
                 
-                if viewModel.channel.nsfw {
+                if viewModel.channel.nsfw ?? false {
                     HStack(alignment: .center) {
                         Spacer()
                         

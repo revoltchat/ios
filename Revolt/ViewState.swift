@@ -586,7 +586,6 @@ public class ViewState: ObservableObject {
     }
 
     func onEvent(_ event: WsMessage) async {
-        print(event)
         switch event {
             case .ready(let event):
                 let processReadySpan = launchTransaction.startChild(operation: "processReady")
@@ -758,6 +757,348 @@ public class ViewState: ObservableObject {
                     message.embeds = embeds
                     messages[e.id] = message
                 }
+            case .bulk(let e):
+                for event in e.v {
+                    await onEvent(event)
+                }
+            case .error(let e):
+                print(e.data)
+            case .logout:
+                try! await signOut().get()
+            case .pong(let e):
+                print("ponog")
+            case .message_remove_reaction(let e):
+                if var message = messages[e.id] {
+                    message.reactions?.removeValue(forKey: e.emoji_id)
+                    messages[e.id] = message
+                }
+            case .bulk_message_delete(let e):
+                channelMessages[e.channel]?.removeAll { e.ids.contains($0) }
+                
+                for id in e.ids {
+                    messages.removeValue(forKey: id)
+                }
+            case .channel_create(let channel):
+                channels[channel.id] = channel
+                
+                if let serverId = channel.server, var server = servers[serverId] {
+                    server.channels.append(channel.id)
+                    servers[serverId] = server
+                }
+            case .channel_update(let e):
+                if var channel = channels[e.id] {
+                    if let owner = e.data.owner {
+                        channel.owner = owner
+                    }
+                    
+                    if let name = e.data.name {
+                        channel.name = name
+                    }
+                    
+                    if let description = e.data.description {
+                        channel.description = description
+                    }
+                    
+                    if let icon = e.data.icon {
+                        channel.icon = icon
+                    }
+                    
+                    if let nsfw = e.data.nsfw {
+                        channel.nsfw = nsfw
+                    }
+                    
+                    if let active = e.data.active {
+                        channel.active = active
+                    }
+                    
+                    if let permissions = e.data.permissions {
+                        channel.permissions = permissions
+                    }
+                    
+                    if let role_permissions = e.data.role_permissions {
+                        channel.role_permissions = role_permissions
+                    }
+                    
+                    if let default_permissions = e.data.default_permissions {
+                        channel.default_permissions = default_permissions
+                    }
+                    
+                    if let last_message_id = e.data.last_message_id {
+                        channel.last_message_id = last_message_id
+                    }
+                    
+                    for clear in e.clear ?? [] {
+                        switch clear {
+                            case .description:
+                                channel.description = nil
+                            case .icon:
+                                channel.icon = nil
+                            case .default_permissions:
+                                channel.default_permissions = nil
+                        }
+                    }
+                    
+                    channels[e.id] = channel
+                }
+            case .channel_delete(let e):
+                channels.removeValue(forKey: e.id)
+            case .channel_group_join(let e):
+                if var channel = channels[e.id] {
+                    channel.recipients?.append(e.user)
+                    channels[e.id] = channel
+                }
+            case .channel_group_leave(let e):
+                channels.removeValue(forKey: e.id)
+            case .server_create(let e):
+                servers[e.id] = e.server
+                
+                for channel in e.channels {
+                    channels[channel.id] = channel
+                }
+                
+                for emoji in e.emojis {
+                    emojis[emoji.id] = emoji
+                }
+                
+            case .server_update(let e):
+                if var server = servers[e.id] {
+                    if let owner = e.data.owner {
+                        server.owner = owner
+                    }
+                    
+                    if let name = e.data.name {
+                        server.name = name
+                    }
+                    
+                    if let description = e.data.description {
+                        server.description = description
+                    }
+                    
+                    if let channels = e.data.channels {
+                        server.channels = channels
+                    }
+                    
+                    if let categories = e.data.categories {
+                        server.categories = categories
+                    }
+                    
+                    if let system_messages = e.data.system_messages {
+                        server.system_messages = system_messages
+                    }
+                    
+                    if let roles = e.data.roles {
+                        server.roles = roles
+                    }
+                    
+                    if let default_permissions = e.data.default_permissions {
+                        server.default_permissions = default_permissions
+                    }
+                    
+                    if let icon = e.data.icon {
+                        server.icon = icon
+                    }
+                    
+                    if let banner = e.data.banner {
+                        server.banner = banner
+                    }
+                    
+                    if let flags = e.data.flags {
+                        server.flags = flags
+                    }
+                    
+                    if let nsfw = e.data.nsfw {
+                        server.nsfw = nsfw
+                    }
+                    
+                    if let analytics = e.data.analytics {
+                        server.analytics = analytics
+                    }
+                    
+                    if let discoverable = e.data.discoverable {
+                        server.discoverable = discoverable
+                    }
+                    
+                    for clear in e.clear ?? [] {
+                        switch clear {
+                            case .description:
+                                server.description = nil
+                            case .categories:
+                                server.categories = nil
+                            case .system_messages:
+                                server.system_messages = nil
+                            case .icon:
+                                server.icon = nil
+                            case .banner:
+                                server.banner = nil
+                        }
+                    }
+                    
+                    servers[e.id] = server
+                }
+            case .server_delete(let e):
+                servers.removeValue(forKey: e.id)
+            case .server_member_join(let e):
+                () // dont actually need to do anything
+            case .server_member_update(let e):
+                if var member = members[e.id.server]?[e.id.user] {
+                    if let joined_at = e.data.joined_at {
+                        member.joined_at = joined_at
+                    }
+                    
+                    if let nickname = e.data.nickname {
+                        member.nickname = nickname
+                    }
+                    
+                    if let avatar = e.data.avatar {
+                        member.avatar = avatar
+                    }
+                    
+                    if let roles = e.data.roles {
+                        member.roles = roles
+                    }
+                    
+                    if let timeout = e.data.timeout {
+                        member.timeout = timeout
+                    }
+                    
+                    for clear in e.clear ?? [] {
+                        switch clear {
+                            case .nickname:
+                                member.nickname = nil
+                            case .avatar:
+                                member.avatar = nil
+                            case .roles:
+                                member.roles = nil
+                            case .timeout:
+                                member.timeout = nil
+                        }
+                    }
+                    
+                    members[e.id.server]?[e.id.user] = member
+                }
+            case .server_member_leave(let e):
+                members[e.id]?.removeValue(forKey: e.user)
+                
+            case .server_role_update(let e):
+                if var server = servers[e.id], var role = server.roles?[e.role_id] {
+                    if let name = e.data.name {
+                        role.name = name
+                    }
+                    
+                    if let permissions = e.data.permissions {
+                        role.permissions = permissions
+                    }
+                    
+                    if let colour = e.data.colour {
+                        role.colour = colour
+                    }
+                    
+                    if let hoist = e.data.hoist {
+                        role.hoist = hoist
+                    }
+                    
+                    if let rank = e.data.rank {
+                        role.rank = rank
+                    }
+                    
+                    for clear in e.clear ?? [] {
+                        switch clear {
+                            case .colour:
+                                role.colour = nil
+                        }
+                    }
+                    
+                    server.roles?[e.role_id] = role
+                    servers[e.id] = server
+                }
+            case .server_role_delete(let e):
+                servers[e.id]?.roles?.removeValue(forKey: e.role_id)
+            case .user_update(let e):
+                if var user = users[e.id] {
+                    if let username = e.data.username {
+                        user.username = username
+                    }
+                    
+                    if let discriminator = e.data.discriminator {
+                        user.discriminator = discriminator
+                    }
+                    
+                    if let display_name = e.data.display_name {
+                        user.display_name = display_name
+                    }
+                    
+                    if let avatar = e.data.avatar {
+                        user.avatar = avatar
+                    }
+                    
+                    if let relations = e.data.relations {
+                        user.relations = relations
+                    }
+                    
+                    if let badges = e.data.badges {
+                        user.badges = badges
+                    }
+                    
+                    if let status = e.data.status {
+                        user.status = status
+                    }
+                    
+                    if let flags = e.data.flags {
+                        user.flags = flags
+                    }
+                    
+                    if let privileged = e.data.privileged {
+                        user.privileged = privileged
+                    }
+                    
+                    if let bot = e.data.bot {
+                        user.bot = bot
+                    }
+                    
+                    if let relationship = e.data.relationship {
+                        user.relationship = relationship
+                    }
+                    
+                    if let online = e.data.online {
+                        user.online = online
+                    }
+                    
+                    for clear in e.clear ?? [] {
+                        switch clear {
+                            case .avatar:
+                                user.avatar = nil
+                            case .status_text:
+                                user.status?.text = nil
+                            case .status_presence:
+                                user.status?.presence = nil
+                            case .profile_content:
+                                user.profile?.content = nil
+                            case .profile_background:
+                                user.profile?.background = nil
+                            case .display_name:
+                                user.display_name = nil
+                        }
+                    }
+                    
+                    users[e.id] = user
+                }
+            case .user_relationship(let e):
+                users[e.id] = e.user
+            case .user_settings_update(let e):
+                ()  // TODO: update local settings from the event
+            case .user_platform_wipe(let e):
+                users.removeValue(forKey: e.user_id)
+                messages = messages.filter { $0.value.author != e.user_id }
+            case .emoji_create(let e):
+                emojis[e.id] = e
+            case .emoji_delete(let e):
+                emojis.removeValue(forKey: e.id)
+            case .webhook_create(let e):
+                ()
+            case .webhook_delete(let e):
+                ()
+            case .webhook_update(let e):
+                ()
         }
     }
 
@@ -1013,4 +1354,3 @@ extension Channel {
         }
     }
 }
-

@@ -33,7 +33,7 @@ struct ChannelOverviewSettings: View {
             icon: .remote(c.wrappedValue.icon),
             name: c.wrappedValue.getName(viewState),
             description: c.wrappedValue.description ?? "",
-            nsfw: c.wrappedValue.nsfw
+            nsfw: c.wrappedValue.nsfw ?? false
         )
         
         return .init(currentValues: settings, channel: c)

@@ -8,7 +8,7 @@
 import Foundation
 
 public struct Server: Codable, Identifiable, Equatable, Hashable {
-    public init(id: String, owner: String, name: String, channels: [String], default_permissions: Permissions, description: String? = nil, categories: [Category]? = nil, system_messages: SystemMessages? = nil, roles: [String : Role]? = nil, icon: File? = nil, banner: File? = nil, nsfw: Bool? = nil, flags: ServerFlags? = nil) {
+    public init(id: String, owner: String, name: String, channels: [String], default_permissions: Permissions, description: String? = nil, categories: [Category]? = nil, system_messages: SystemMessages? = nil, roles: [String : Role]? = nil, icon: File? = nil, banner: File? = nil, nsfw: Bool? = nil, flags: ServerFlags? = nil, analytics: Bool? = nil, discoverable: Bool? = nil) {
         self.id = id
         self.owner = owner
         self.name = name
@@ -22,6 +22,8 @@ public struct Server: Codable, Identifiable, Equatable, Hashable {
         self.banner = banner
         self.nsfw = nsfw
         self.flags = flags
+        self.analytics = analytics
+        self.discoverable = discoverable
     }
     
     public var id: String
@@ -37,10 +39,12 @@ public struct Server: Codable, Identifiable, Equatable, Hashable {
     public var banner: File?
     public var nsfw: Bool?
     public var flags: ServerFlags?
+    public var analytics: Bool?
+    public var discoverable: Bool?
     
     enum CodingKeys: String, CodingKey {
         case id = "_id"
-        case owner, name, channels, default_permissions, description, categories, system_messages, roles, icon, banner, nsfw, flags
+        case owner, name, channels, default_permissions, description, categories, system_messages, roles, icon, banner, nsfw, flags, analytics, discoverable
     }
 }
 

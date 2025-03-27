@@ -39,8 +39,14 @@ public struct Status: Codable, Equatable, Hashable {
     public var presence: Presence?
 }
 
-public struct UserRelation: Codable, Equatable, Hashable {
+public struct UserRelation: Codable, Equatable, Hashable, Identifiable {
+    public var id: String
     public var status: String
+    
+    enum CodingKeys: String, CodingKey {
+        case id = "_id"
+        case status
+    }
 }
 
 public struct User: Identifiable, Codable, Equatable, Hashable {

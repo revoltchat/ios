@@ -144,6 +144,72 @@ public enum Channel: Identifiable, Equatable, Hashable {
     case text_channel(TextChannel)
     case voice_channel(VoiceChannel)
     
+    public var name: String? {
+        get {
+            switch self {
+                case .saved_messages(let savedMessages):
+                    nil
+                case .dm_channel(let dMChannel):
+                    nil
+                case .group_dm_channel(let groupDMChannel):
+                    groupDMChannel.name
+                case .text_channel(let textChannel):
+                    textChannel.name
+                case .voice_channel(let voiceChannel):
+                    voiceChannel.name
+            }
+        }
+        set {
+            if let newValue {
+                switch self {
+                    case .saved_messages(let savedMessages):
+                        ()
+                    case .dm_channel(let dMChannel):
+                        ()
+                    case .group_dm_channel(var groupDMChannel):
+                        groupDMChannel.name = newValue
+                    case .text_channel(var textChannel):
+                        textChannel.name = newValue
+                    case .voice_channel(var voiceChannel):
+                        voiceChannel.name = newValue
+                }
+            }
+        }
+    }
+    
+    public var owner: String? {
+        get {
+            switch self {
+                case .saved_messages:
+                    nil
+                case .dm_channel:
+                    nil
+                case .group_dm_channel(let groupDMChannel):
+                    groupDMChannel.owner
+                case .text_channel:
+                    nil
+                case .voice_channel:
+                    nil
+            }
+        }
+        set {
+            if let newValue {
+                switch self {
+                    case .saved_messages:
+                        ()
+                    case .dm_channel:
+                        ()
+                    case .group_dm_channel(var groupDMChannel):
+                        groupDMChannel.owner = newValue
+                    case .text_channel:
+                        ()
+                    case .voice_channel:
+                        ()
+                }
+            }
+        }
+    }
+    
     public var id: String {
         switch self {
             case .saved_messages(let c):
@@ -160,76 +226,156 @@ public enum Channel: Identifiable, Equatable, Hashable {
     }
     
     public var icon: File? {
-        switch self {
-            case .saved_messages(_):
-                nil
-            case .dm_channel(_):
-                nil
-            case .group_dm_channel(let c):
-                c.icon
-            case .text_channel(let c):
-                c.icon
-            case .voice_channel(let c):
-                c.icon
+        get {
+            switch self {
+                case .group_dm_channel(let c):
+                    c.icon
+                case .text_channel(let c):
+                    c.icon
+                case .voice_channel(let c):
+                    c.icon
+                default:
+                    nil
+            }
+        }
+        set {
+            switch self {
+                case .group_dm_channel(var groupDMChannel):
+                    groupDMChannel.icon = newValue
+                case .text_channel(var textChannel):
+                    textChannel.icon = newValue
+                case .voice_channel(var voiceChannel):
+                    voiceChannel.icon = newValue
+                default:
+                    ()
+            }
         }
     }
     
     public var description: String? {
         get {
             switch self {
-                case .saved_messages(_):
-                    nil
-                case .dm_channel(_):
-                    nil
                 case .group_dm_channel(let c):
                     c.description
                 case .text_channel(let c):
                     c.description
                 case .voice_channel(let c):
                     c.description
+                default:
+                    nil
             }
         }
         set {
             switch self {
-                case .saved_messages(let savedMessages):
-                    ()
-                case .dm_channel(let dMChannel):
-                    ()
                 case .group_dm_channel(var groupDMChannel):
                     groupDMChannel.description = newValue
                 case .text_channel(var textChannel):
                     textChannel.description = newValue
                 case .voice_channel(var voiceChannel):
                     voiceChannel.description = newValue
+                default:
+                    ()
             }
         }
     }
     
     public var last_message_id: String? {
-        switch self {
-            case .dm_channel(let c):
-                c.last_message_id
-            case .group_dm_channel(let c):
-                c.last_message_id
-            case .text_channel(let c):
-                c.last_message_id
-            default:
-                nil
+        get {
+            switch self {
+                case .dm_channel(let c):
+                    c.last_message_id
+                case .group_dm_channel(let c):
+                    c.last_message_id
+                case .text_channel(let c):
+                    c.last_message_id
+                default:
+                    nil
+            }
+        }
+        set {
+            switch self {
+                case .dm_channel(var dMChannel):
+                    dMChannel.last_message_id = newValue
+                case .group_dm_channel(var groupDMChannel):
+                    groupDMChannel.last_message_id = newValue
+                case .text_channel(var textChannel):
+                    textChannel.last_message_id = newValue
+                default:
+                    ()
+            }
         }
     }
     
-    public var nsfw: Bool {
-        switch self {
-            case .saved_messages(_):
-                false
-            case .dm_channel(_):
-                false
-            case .group_dm_channel(let c):
-                c.nsfw ?? false
-            case .text_channel(let c):
-                c.nsfw ?? false
-            case .voice_channel(let c):
-                c.nsfw ?? false
+    public var nsfw: Bool? {
+        get {
+            switch self {
+                case .group_dm_channel(let c):
+                    c.nsfw
+                case .text_channel(let c):
+                    c.nsfw
+                case .voice_channel(let c):
+                    c.nsfw
+                default:
+                    nil
+            }
+        }
+        set {
+            switch self {
+                case .group_dm_channel(var groupDMChannel):
+                    groupDMChannel.nsfw = newValue
+                case .text_channel(var textChannel):
+                    textChannel.nsfw = newValue
+                case .voice_channel(var voiceChannel):
+                    voiceChannel.nsfw = newValue
+                default:
+                    ()
+            }
+        }
+    }
+    
+    public var active: Bool? {
+        get {
+            switch self {
+                case .dm_channel(let dMChannel):
+                    dMChannel.active
+                default:
+                    nil
+            }
+        }
+        set {
+            if let newValue {
+                switch self {
+                    case .dm_channel(var dMChannel):
+                        dMChannel.active = newValue
+                    default:
+                        ()
+                }
+            }
+        }
+    }
+    
+    public var recipients: [String]? {
+        get {
+            switch self {
+                case .dm_channel(let dMChannel):
+                    dMChannel.recipients
+                case .group_dm_channel(let groupDMChannel):
+                    groupDMChannel.recipients
+                default:
+                    nil
+            }
+        }
+        set {
+            if let newValue {
+                switch self {
+                    case .dm_channel(var dMChannel):
+                        dMChannel.recipients = newValue
+                    case .group_dm_channel(var groupDMChannel):
+                        groupDMChannel.recipients = newValue
+                    default:
+                        ()
+                }
+            }
         }
     }
     
@@ -249,32 +395,67 @@ public enum Channel: Identifiable, Equatable, Hashable {
     }
     
     public var role_permissions: [String: Overwrite]? {
-        switch self {
-            case .saved_messages(let savedMessages):
-                nil
-            case .dm_channel(let dMChannel):
-                nil
-            case .group_dm_channel(let groupDMChannel):
-                nil
-            case .text_channel(let textChannel):
-                textChannel.role_permissions
-            case .voice_channel(let voiceChannel):
-                voiceChannel.role_permissions
+        get {
+            switch self {
+                case .text_channel(let textChannel):
+                    textChannel.role_permissions
+                case .voice_channel(let voiceChannel):
+                    voiceChannel.role_permissions
+                default:
+                    nil
+            }
+        }
+        set {
+            switch self {
+                case .text_channel(var textChannel):
+                    textChannel.role_permissions = newValue
+                case .voice_channel(var voiceChannel):
+                    voiceChannel.role_permissions = newValue
+                default:
+                    ()
+            }
+        }
+    }
+    
+    public var permissions: Permissions? {
+        get {
+            switch self {
+                case .group_dm_channel(let groupDMChannel):
+                    groupDMChannel.permissions
+                default:
+                    nil
+            }
+        }
+        set {
+            switch self {
+                case .group_dm_channel(var groupDMChannel):
+                    groupDMChannel.permissions = newValue
+                default:
+                    ()
+            }
         }
     }
     
     public var default_permissions: Overwrite? {
-        switch self {
-            case .saved_messages(let savedMessages):
-                nil
-            case .dm_channel(let dMChannel):
-                nil
-            case .group_dm_channel(let groupDMChannel):
-                nil
-            case .text_channel(let textChannel):
-                textChannel.default_permissions
-            case .voice_channel(let voiceChannel):
-                voiceChannel.default_permissions
+        get {
+            switch self {
+                case .text_channel(let textChannel):
+                    textChannel.default_permissions
+                case .voice_channel(let voiceChannel):
+                    voiceChannel.default_permissions
+                default:
+                    nil
+            }
+        }
+        set {
+            switch self {
+                case .text_channel(var textChannel):
+                    textChannel.default_permissions = newValue
+                case .voice_channel(var voiceChannel):
+                    voiceChannel.default_permissions = newValue
+                default:
+                    ()
+            }
         }
     }
 }
