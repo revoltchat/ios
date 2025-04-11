@@ -8,6 +8,7 @@
 import Foundation
 import SwiftUI
 import Types
+import SwipeActions
 
 struct ChannelScrollController {
     var proxy: ScrollViewProxy?
@@ -279,82 +280,78 @@ struct MessageableChannelView: View {
                         ScrollViewReader { proxy in
                             ZStack(alignment: .bottomTrailing) {
                                 ScrollView {
-                                    LazyVStack {
-                                        Group {
-                                            if viewState.atTopOfChannel.contains(viewModel.channel.id) {
-                                                VStack(alignment: .leading) {
-                                                    Text("#\(viewModel.channel.getName(viewState))")
-                                                        .font(.title)
-                                                    Text("This is the start of your conversation.")
-                                                }
-                                            } else {
-                                                Text("Loading more messages...")
-                                            }
-                                        }
-                                        .id(topID)
-                                        
-                                        ForEach(messages, id: \.ids) { group in
-                                            let first = group.first!
-                                            let rest = group.dropFirst()
-                                            
-                                            VStack(alignment: .leading, spacing: 0) {
-                                                if first.message.id == viewState.unreads[viewModel.channel.id]?.last_id, first.message.id != viewModel.messages.last {
-                                                    HStack(spacing: 0) {
-                                                        Text("NEW")
-                                                            .font(.caption)
-                                                            .fontWeight(.bold)
-                                                            .padding(.horizontal, 8)
-                                                            .background(RoundedRectangle(cornerRadius: 100).foregroundStyle(viewState.theme.accent))
-    
-                                                        Rectangle()
-                                                            .frame(height: 1)
-                                                            .foregroundStyle(viewState.theme.accent)
+                                    SwipeViewGroup {
+                                        LazyVStack(spacing: 4) {
+                                            Group {
+                                                if viewState.atTopOfChannel.contains(viewModel.channel.id) {
+                                                    VStack(alignment: .leading) {
+                                                        Text("#\(viewModel.channel.getName(viewState))")
+                                                            .font(.title)
+                                                        Text("This is the start of your conversation.")
                                                     }
+                                                } else {
+                                                    Text("Loading more messages...")
                                                 }
+                                            }
+                                            .id(topID)
+                                            
+                                            ForEach(messages, id: \.ids) { group in
+                                                let first = group.first!
+                                                let rest = group.dropFirst()
                                                 
-                                                MessageWrapper(viewModel: first) {
-                                                    MessageView(
-                                                        viewModel: first,
-                                                        isStatic: false
-                                                    )
-                                                    .padding(.top, 8)
-                                                    .padding(.leading, selection.isEmpty ? 12 : 0)
-                                                    .padding(.bottom, rest.isEmpty ? 4 : 0)
-                                                    .padding(.trailing, selection.isEmpty ? 12 : 4)
-                                                }
-                                                .background((first.message.mentions?.firstIndex(of: viewState.currentUser!.id) != nil || highlighted == first.message.id
-                                                             ? viewState.theme.mention
-                                                             : viewState.theme.background).animation(.easeInOut))
-                                                .animation(.easeInOut, value: highlighted)
-                                                .environment(\.channelMessageSelection, $selection.animation())
-                                                
-                                                ForEach(rest) { message in
-                                                    MessageWrapper(viewModel: message) {
-                                                        HStack(alignment: .firstTextBaseline, spacing: 0) {
-                                                            Group {
-                                                                if message.message.edited != nil {
-                                                                    Text("(edited)")
-                                                                        .font(.caption)
-                                                                        .foregroundStyle(viewState.theme.foreground3)
-                                                                        .multilineTextAlignment(.center)
-                                                                } else {
-                                                                    Spacer()
-                                                                }
-                                                            }
-                                                            .frame(width: 60)
+                                                VStack(alignment: .leading, spacing: 0) {
+                                                    if first.message.id == viewState.unreads[viewModel.channel.id]?.last_id, first.message.id != viewModel.messages.last {
+                                                        HStack(spacing: 0) {
+                                                            Text("NEW")
+                                                                .font(.caption)
+                                                                .fontWeight(.bold)
+                                                                .padding(.horizontal, 8)
+                                                                .background(RoundedRectangle(cornerRadius: 100).foregroundStyle(viewState.theme.accent))
                                                             
-                                                            MessageContentsView(viewModel: message)
+                                                            Rectangle()
+                                                                .frame(height: 1)
+                                                                .foregroundStyle(viewState.theme.accent)
                                                         }
                                                     }
-                                                    .background((message.message.mentions?.firstIndex(of: viewState.currentUser!.id) != nil || highlighted == message.message.id
-                                                                 ? viewState.theme.mention
-                                                                 : viewState.theme.background).animation(.default))
+                                                    
+                                                    MessageWrapper(viewModel: first, highlighted: $highlighted) {
+                                                        MessageView(
+                                                            viewModel: first,
+                                                            isStatic: false
+                                                        )
+                                                        .padding(.top, 4)
+                                                        .padding(.leading, selection.isEmpty ? 12 : 0)
+                                                        .padding(.bottom, rest.isEmpty ? 4 : 0)
+                                                        .padding(.trailing, selection.isEmpty ? 12 : 4)
+                                                    }
+                                                    .animation(.easeInOut, value: highlighted)
+                                                    .environment(\.channelMessageSelection, $selection.animation())
+                                                    
+                                                    ForEach(rest) { message in
+                                                        MessageWrapper(viewModel: message, highlighted: $highlighted) {
+                                                            HStack(alignment: .firstTextBaseline, spacing: 0) {
+                                                                Group {
+                                                                    if message.message.edited != nil {
+                                                                        Text("(edited)")
+                                                                            .font(.caption)
+                                                                            .foregroundStyle(viewState.theme.foreground3)
+                                                                            .multilineTextAlignment(.center)
+                                                                    } else {
+                                                                        Spacer()
+                                                                    }
+                                                                }
+                                                                .frame(width: 60)
+                                                                
+                                                                MessageContentsView(viewModel: message)
+                                                            }
+                                                            .padding(.trailing, selection.isEmpty ? 12 : 4)
+                                                        }
+                                                    }
+                                                    .animation(.easeInOut, value: highlighted)
+                                                    .environment(\.channelMessageSelection, $selection.animation())
                                                 }
-                                                .padding(.trailing, selection.isEmpty ? 12 : 4)
-                                                .animation(.easeInOut, value: highlighted)
-                                                .environment(\.channelMessageSelection, $selection.animation())
+                                                .id(group.ids)
                                             }
-                                            .id(group.ids)
                                         }
                                     }
                                 }
@@ -503,7 +500,7 @@ struct MessageableChannelView: View {
             }
         }
         .frame(maxWidth: .infinity)
-        .background(viewState.theme.background.color)
+        .background(viewState.theme.background)
         .presentationDetents([.fraction(0.4)])
     }
 }
@@ -513,6 +510,7 @@ struct MessageWrapper<C: View>: View {
     @Environment(\.channelMessageSelection) @Binding var selection
     
     @ObservedObject var viewModel: MessageContentsViewModel
+    @Binding var highlighted: String?
     
     @ViewBuilder var inner: () -> C
     
@@ -548,152 +546,167 @@ struct MessageWrapper<C: View>: View {
     }
     
     var body: some View {
-        HStack(alignment: .center, spacing: 0) {
-            if !selection.isEmpty {
-                let contains = selection.contains(viewModel.message.id)
-                
-                Image(systemName: contains ? "checkmark.circle.fill" : "circle")
-                    .resizable()
-                    .frame(width: 24, height: 24)
-                    .foregroundStyle(contains ? viewState.theme.foreground : viewState.theme.background2, viewState.theme.accent)
-                    .padding(.leading, 12)
-                    .padding(.trailing, 12)
-            }
-            
-            inner()
-            
-            Spacer()
-        }
-        .sheet(isPresented: $showReportSheet) {
-            ReportMessageSheetView(showSheet: $showReportSheet, messageView: viewModel)
-                .presentationBackground(viewState.theme.background)
-        }
-        .sheet(isPresented: $showReactSheet) {
-            EmojiPicker(background: AnyView(viewState.theme.background)) { emoji in
-                Task {
-                    showReactSheet = false
-                    await viewState.http.reactMessage(channel: viewModel.message.channel, message: viewModel.message.id, emoji: emoji.id)
-                }
-            }
-            .padding([.top, .horizontal])
-            .background(viewState.theme.background.ignoresSafeArea(.all))
-            .presentationDetents([.large])
-            .presentationBackground(viewState.theme.background)
-        }
-        .sheet(isPresented: $showReactionsSheet) {
-            MessageReactionsSheet(viewModel: viewModel)
-        }
-        .contextMenu {
-            if isMessageAuthor {
-                Button {
-                    Task {
-                        var replies: [Reply] = []
-                        
-                        for reply in viewModel.message.replies ?? [] {
-                            var message: Message? = viewState.messages[reply]
-                            
-                            if message == nil {
-                                message = try? await viewState.http.fetchMessage(channel: viewModel.channel.id, message: reply).get()
-                            }
-                            
-                            if let message {
-                                replies.append(Reply(message: message, mention: viewModel.message.mentions?.contains(message.author) ?? false))
-                            }
-                        }
-                        
-                        viewModel.channelReplies = replies
-                        viewModel.editing = viewModel.message
-                    }
-                } label: {
-                    Label("Edit Message", systemImage: "pencil")
-                }
-            }
-            
-            Button(action: viewModel.reply, label: {
-                Label("Reply", systemImage: "arrowshape.turn.up.left.fill")
-            })
-            
-            Button {
-                showReactSheet = true
-            } label: {
-                Label("React", systemImage: "face.smiling.inverse")
-            }
-            
-            if !(viewModel.message.reactions?.isEmpty ?? true) {
-                Button {
-                    showReactionsSheet = true
-                } label: {
-                    Label("Reactions", systemImage: "face.smiling.inverse")
-                }
-            }
-            
-            if canManageMessages {
-                if !(viewModel.message.pinned ?? false) {
-                    Button {
-                        Task {
-                            await viewModel.pin()
-                        }
-                    } label: {
-                        Label("Pin Message", systemImage: "pin.fill")
-                    }
-                } else {
-                    Button {
-                        Task {
-                            await viewModel.unpin()
-                        }
-                    } label: {
-                        Label("Unpin Message", systemImage: "pin.slash.fill")
-                    }
-                }
-            }
-            
-            Button {
-                copyText(text: viewModel.message.content ?? "")
-            } label: {
-                Label("Copy text", systemImage: "doc.on.clipboard")
-            }
-            
-            Button {
-                if let server = viewModel.server {
-                    copyUrl(url: URL(string: "https://revolt.chat/app/server/\(server.id)/channel/\(viewModel.channel.id)/\(viewModel.message.id)")!)
-                } else {
-                    copyUrl(url: URL(string: "https://revolt.chat/app/channel/\(viewModel.channel.id)/\(viewModel.message.id)")!)
+        SwipeView {
+            HStack(alignment: .center, spacing: 0) {
+                if !selection.isEmpty {
+                    let contains = selection.contains(viewModel.message.id)
                     
+                    Image(systemName: contains ? "checkmark.circle.fill" : "circle")
+                        .resizable()
+                        .frame(width: 24, height: 24)
+                        .foregroundStyle(contains ? viewState.theme.foreground : viewState.theme.background2, viewState.theme.accent)
+                        .padding(.leading, 12)
+                        .padding(.trailing, 12)
                 }
-            } label: {
-                Label("Copy Message Link", systemImage: "link")
+                
+                inner()
+                
+                Spacer()
             }
-            
-            Button {
-                copyText(text: viewModel.message.id)
-            } label: {
-                Label("Copy Message ID", systemImage: "doc.on.clipboard")
+            .sheet(isPresented: $showReportSheet) {
+                ReportMessageSheetView(showSheet: $showReportSheet, messageView: viewModel)
+                    .presentationBackground(viewState.theme.background)
             }
-            
-            Button {
-                toggle()
-            } label: {
-                Label("Select Message", systemImage: "checkmark.circle.fill")
-            }
-            
-            if canDeleteMessage {
-                Button(role: .destructive, action: {
+            .sheet(isPresented: $showReactSheet) {
+                EmojiPicker(background: AnyView(viewState.theme.background)) { emoji in
                     Task {
-                        await viewModel.delete()
+                        showReactSheet = false
+                        await viewState.http.reactMessage(channel: viewModel.message.channel, message: viewModel.message.id, emoji: emoji.id)
                     }
-                }, label: {
-                    Label("Delete Message", systemImage: "trash")
-                })
+                }
+                .padding([.top, .horizontal])
+                .background(viewState.theme.background.ignoresSafeArea(.all))
+                .presentationDetents([.large])
+                .presentationBackground(viewState.theme.background)
             }
-            
-            if !isMessageAuthor {
-                Button(role: .destructive, action: { showReportSheet.toggle() }, label: {
-                    Label("Report Message", systemImage: "exclamationmark.triangle")
-                })
+            .sheet(isPresented: $showReactionsSheet) {
+                MessageReactionsSheet(viewModel: viewModel)
             }
+            .background((viewModel.message.mentions?.firstIndex(of: viewState.currentUser!.id) != nil || highlighted == viewModel.message.id
+                         ? viewState.theme.mention
+                         : viewState.theme.background).animation(.default))
+            .contextMenu {
+                if isMessageAuthor {
+                    Button {
+                        Task {
+                            var replies: [Reply] = []
+                            
+                            for reply in viewModel.message.replies ?? [] {
+                                var message: Message? = viewState.messages[reply]
+                                
+                                if message == nil {
+                                    message = try? await viewState.http.fetchMessage(channel: viewModel.channel.id, message: reply).get()
+                                }
+                                
+                                if let message {
+                                    replies.append(Reply(message: message, mention: viewModel.message.mentions?.contains(message.author) ?? false))
+                                }
+                            }
+                            
+                            viewModel.channelReplies = replies
+                            viewModel.editing = viewModel.message
+                        }
+                    } label: {
+                        Label("Edit Message", systemImage: "pencil")
+                    }
+                }
+                
+                Button(action: viewModel.reply, label: {
+                    Label("Reply", systemImage: "arrowshape.turn.up.left.fill")
+                })
+                
+                Button {
+                    showReactSheet = true
+                } label: {
+                    Label("React", systemImage: "face.smiling.inverse")
+                }
+                
+                if !(viewModel.message.reactions?.isEmpty ?? true) {
+                    Button {
+                        showReactionsSheet = true
+                    } label: {
+                        Label("Reactions", systemImage: "face.smiling.inverse")
+                    }
+                }
+                
+                if canManageMessages {
+                    if !(viewModel.message.pinned ?? false) {
+                        Button {
+                            Task {
+                                await viewModel.pin()
+                            }
+                        } label: {
+                            Label("Pin Message", systemImage: "pin.fill")
+                        }
+                    } else {
+                        Button {
+                            Task {
+                                await viewModel.unpin()
+                            }
+                        } label: {
+                            Label("Unpin Message", systemImage: "pin.slash.fill")
+                        }
+                    }
+                }
+                
+                Button {
+                    copyText(text: viewModel.message.content ?? "")
+                } label: {
+                    Label("Copy text", systemImage: "doc.on.clipboard")
+                }
+                
+                Button {
+                    if let server = viewModel.server {
+                        copyUrl(url: URL(string: "https://revolt.chat/app/server/\(server.id)/channel/\(viewModel.channel.id)/\(viewModel.message.id)")!)
+                    } else {
+                        copyUrl(url: URL(string: "https://revolt.chat/app/channel/\(viewModel.channel.id)/\(viewModel.message.id)")!)
+                        
+                    }
+                } label: {
+                    Label("Copy Message Link", systemImage: "link")
+                }
+                
+                Button {
+                    copyText(text: viewModel.message.id)
+                } label: {
+                    Label("Copy Message ID", systemImage: "doc.on.clipboard")
+                }
+                
+                Button {
+                    toggle()
+                } label: {
+                    Label("Select Message", systemImage: "checkmark.circle.fill")
+                }
+                
+                if canDeleteMessage {
+                    Button(role: .destructive, action: {
+                        Task {
+                            await viewModel.delete()
+                        }
+                    }, label: {
+                        Label("Delete Message", systemImage: "trash")
+                    })
+                }
+                
+                if !isMessageAuthor {
+                    Button(role: .destructive, action: { showReportSheet.toggle() }, label: {
+                        Label("Report Message", systemImage: "exclamationmark.triangle")
+                    })
+                }
+            }
+            .gesture(TapGesture().onEnded(toggle), isEnabled: !selection.isEmpty)
+        } trailingActions: { ctx in
+            SwipeAction(systemImage: "arrowshape.turn.up.left.fill", backgroundColor: .green) {
+                viewModel.reply()
+                ctx.state.wrappedValue = .closed
+            }
+            .allowSwipeToTrigger()
         }
-
-        .gesture(TapGesture().onEnded(toggle), isEnabled: !selection.isEmpty)
+        .swipeMinimumDistance(30)
+        .swipeStretchRubberBandingPower(0)
+        .swipeActionCornerRadius(0)
+        .swipeActionsMaskCornerRadius(0)
+        .swipeSpacing(0)
     }
 }
 

@@ -42,6 +42,7 @@
 		1746A4B62CAF57C300095CF3 /* GroupDMChannelPermissionsSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1746A4B52CAF57C300095CF3 /* GroupDMChannelPermissionsSettings.swift */; };
 		1746CF5A2B83C6750051FD47 /* CodableWrapper in Frameworks */ = {isa = PBXBuildFile; productRef = 1746CF592B83C6750051FD47 /* CodableWrapper */; };
 		1748B2072B1FB88B00AA2D47 /* MessageReactions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1748B2062B1FB88B00AA2D47 /* MessageReactions.swift */; };
+		174A47602DA955590049F1C5 /* SwipeActions in Frameworks */ = {isa = PBXBuildFile; productRef = 174A475F2DA955590049F1C5 /* SwipeActions */; };
 		174BB4612CC1C48900D6EC32 /* EnvironmentValues.swift in Sources */ = {isa = PBXBuildFile; fileRef = 174BB4602CC1C48400D6EC32 /* EnvironmentValues.swift */; };
 		174DA9E82B9E4D70001BC330 /* Parsing in Frameworks */ = {isa = PBXBuildFile; productRef = 174DA9E72B9E4D70001BC330 /* Parsing */; };
 		1750EF6E2B0585B300DD3EB3 /* ResendEmail.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1750EF6D2B0585B300DD3EB3 /* ResendEmail.swift */; };
@@ -369,6 +370,7 @@
 				17F8FBCA2D8CC019006EAD0A /* Zoomable in Frameworks */,
 				1781011E2C8CBC2900AC2756 /* SubviewAttachingTextView in Frameworks */,
 				172754CC2B39989E002223FE /* SwiftParsec in Frameworks */,
+				174A47602DA955590049F1C5 /* SwipeActions in Frameworks */,
 				178BB10C2B02D84C001143A4 /* HCaptcha in Frameworks */,
 				DA99EC5329D6148200419FDA /* Alamofire in Frameworks */,
 				17E72F832CACEAB8009E7C40 /* SwiftyCrop in Frameworks */,
@@ -869,6 +871,7 @@
 				17E72F822CACEAB8009E7C40 /* SwiftyCrop */,
 				177DA1162CEADBB1000FC7EA /* AnyCodable */,
 				17F8FBC92D8CC019006EAD0A /* Zoomable */,
+				174A475F2DA955590049F1C5 /* SwipeActions */,
 			);
 			productName = Revolt;
 			productReference = D49B704F29C4D3FE009494A5 /* Revolt.app */;
@@ -929,6 +932,7 @@
 				17E72F812CACEAB8009E7C40 /* XCRemoteSwiftPackageReference "SwiftyCrop" */,
 				177DA1152CEADBB1000FC7EA /* XCRemoteSwiftPackageReference "AnyCodable" */,
 				17F8FBC82D8CC019006EAD0A /* XCRemoteSwiftPackageReference "Zoomable" */,
+				174A475E2DA955590049F1C5 /* XCRemoteSwiftPackageReference "SwipeActions" */,
 			);
 			productRefGroup = D49B705029C4D3FE009494A5 /* Products */;
 			projectDirPath = "";
@@ -1666,6 +1670,14 @@
 				minimumVersion = 1.0.3;
 			};
 		};
+		174A475E2DA955590049F1C5 /* XCRemoteSwiftPackageReference "SwipeActions" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/aheze/SwipeActions";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 1.1.0;
+			};
+		};
 		174DA9E62B9E4D70001BC330 /* XCRemoteSwiftPackageReference "swift-parsing" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/pointfreeco/swift-parsing/";
@@ -1824,6 +1836,11 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 1746CF582B83C6750051FD47 /* XCRemoteSwiftPackageReference "CodableWrapper" */;
 			productName = CodableWrapper;
+		};
+		174A475F2DA955590049F1C5 /* SwipeActions */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 174A475E2DA955590049F1C5 /* XCRemoteSwiftPackageReference "SwipeActions" */;
+			productName = SwipeActions;
 		};
 		174DA9E72B9E4D70001BC330 /* Parsing */ = {
 			isa = XCSwiftPackageProductDependency;

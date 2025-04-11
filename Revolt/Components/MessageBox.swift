@@ -65,6 +65,8 @@ struct ReplyView: View {
                     .truncationMode(.tail)
             }
             
+            Spacer()
+            
             Button(action: { reply.mention.toggle() }) {
                 if reply.mention {
                     Text("@ on")
