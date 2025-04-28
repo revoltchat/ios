@@ -1667,7 +1667,7 @@
 			repositoryURL = "https://github.com/winddpan/CodableWrapper";
 			requirement = {
 				kind = upToNextMajorVersion;
-				minimumVersion = 1.0.3;
+				minimumVersion = 1.1.2;
 			};
 		};
 		174A475E2DA955590049F1C5 /* XCRemoteSwiftPackageReference "SwipeActions" */ = {
@@ -1690,8 +1690,8 @@
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/kishikawakatsumi/KeychainAccess";
 			requirement = {
-				branch = master;
-				kind = branch;
+				kind = revision;
+				revision = e0c7eebc5a4465a3c4680764f26b7a61f567cdaf;
 			};
 		};
 		1757A26B2BB7444D007EE8B9 /* XCRemoteSwiftPackageReference "client-sdk-swift" */ = {
@@ -1770,16 +1770,16 @@
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/benedom/SwiftyCrop";
 			requirement = {
-				branch = master;
-				kind = branch;
+				kind = revision;
+				revision = ef27522c4850ccc899b0f4f745bfcc3aee892dfc;
 			};
 		};
 		17F8FBC82D8CC019006EAD0A /* XCRemoteSwiftPackageReference "Zoomable" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/ryohey/Zoomable";
 			requirement = {
-				branch = main;
-				kind = branch;
+				kind = revision;
+				revision = 525c0e1784825261b84d21c5cd5a159245a40ea6;
 			};
 		};
 		6DCF7E838FEB4C359405B802 /* XCRemoteSwiftPackageReference "sentry-cocoa" */ = {

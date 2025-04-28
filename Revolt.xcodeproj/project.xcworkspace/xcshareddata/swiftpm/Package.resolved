@@ -1,5 +1,5 @@
 {
-  "originHash" : "12f60acd696db88c4d867cfe0187251621d5be3f862c515a28a88c87a26ffd30",
+  "originHash" : "1678793659e488b0541cf0ebfd234d774dd84fa94df25948db21768700b16a5f",
   "pins" : [
     {
       "identity" : "alamofire",
@@ -33,8 +33,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/winddpan/CodableWrapper",
       "state" : {
-        "revision" : "ab56ff6eef7294af03b973a161a6a6724c4e79a7",
-        "version" : "1.1.1"
+        "revision" : "eb90d37dbdf4ea437d6f86b874bac1e6da75f1b4",
+        "version" : "1.1.2"
       }
     },
     {
@@ -69,7 +69,6 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/kishikawakatsumi/KeychainAccess",
       "state" : {
-        "branch" : "master",
         "revision" : "e0c7eebc5a4465a3c4680764f26b7a61f567cdaf"
       }
     },
@@ -204,8 +203,7 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/benedom/SwiftyCrop",
       "state" : {
-        "branch" : "master",
-        "revision" : "6ee0b98647d8068066b8c77876acb868ad2294a5"
+        "revision" : "ef27522c4850ccc899b0f4f745bfcc3aee892dfc"
       }
     },
     {
@@ -249,7 +247,6 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/ryohey/Zoomable",
       "state" : {
-        "branch" : "main",
         "revision" : "525c0e1784825261b84d21c5cd5a159245a40ea6"
       }
     }
