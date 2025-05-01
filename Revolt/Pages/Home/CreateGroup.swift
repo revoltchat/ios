@@ -58,6 +58,7 @@ struct CreateGroup: View {
                         .padding(.leading, 12)
                     }
                     .toggleStyle(CheckboxStyle())
+                    .contentShape(Rectangle())
                     .listRowBackground(viewState.theme.background2)
                 }
             }

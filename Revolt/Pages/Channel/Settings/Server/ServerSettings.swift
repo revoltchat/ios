@@ -13,36 +13,46 @@ struct ServerSettings: View {
     @EnvironmentObject var viewState: ViewState
     @Binding var server: Server
     
+    @State var userPermissions: Permissions = Permissions.all
+    
     var body: some View {
         List {
             Section("Settings") {
-                NavigationLink {
-                    ServerOverviewSettings(server: $server)
-                } label: {
-                    Image(systemName: "info.circle.fill")
-                    Text("Overview")
+                if userPermissions.contains(.manageServer) {
+                    NavigationLink {
+                        ServerOverviewSettings(server: $server)
+                    } label: {
+                        Image(systemName: "info.circle.fill")
+                        Text("Overview")
+                    }
                 }
                 
-                NavigationLink(destination: Text("Todo")) {
-                    Image(systemName: "list.bullet")
-                    Text("Categories")
+                if userPermissions.contains(.manageChannel) {
+                    NavigationLink(destination: Text("Todo")) {
+                        Image(systemName: "list.bullet")
+                        Text("Categories")
+                    }
                 }
 
-                NavigationLink {
-                    ServerRolesSettings(server: $server)
-                } label: {
-                    Image(systemName: "flag.fill")
-                    Text("Roles")
+                if userPermissions.contains(.manageRole) {
+                    NavigationLink {
+                        ServerRolesSettings(server: $server)
+                    } label: {
+                        Image(systemName: "flag.fill")
+                        Text("Roles")
+                    }
                 }
             }
             .listRowBackground(viewState.theme.background2)
             
             Section("Customisation") {
-                NavigationLink {
-                    ServerEmojiSettings(server: $server)
-                } label: {
-                    Image(systemName: "face.smiling")
-                    Text("Emojis")
+                if userPermissions.contains(.manageCustomisation) {
+                    NavigationLink {
+                        ServerEmojiSettings(server: $server)
+                    } label: {
+                        Image(systemName: "face.smiling")
+                        Text("Emojis")
+                    }
                 }
             }
             .listRowBackground(viewState.theme.background2)
@@ -53,30 +63,37 @@ struct ServerSettings: View {
                     Text("Members")
                 }
                 
-                NavigationLink(destination: Text("Todo")) {
-                    Image(systemName: "envelope.fill")
-                    Text("Invites")
+                if userPermissions.contains(.manageServer) {
+                    NavigationLink(destination: Text("Todo")) {
+                        Image(systemName: "envelope.fill")
+                        Text("Invites")
+                    }
                 }
                 
-                NavigationLink {
-                    ServerBanSettings(server: $server)
-                } label: {
-                    Image(systemName: "person.fill.xmark")
-                    Text("Bans")
+                if userPermissions.contains(.banMembers) {
+                    NavigationLink {
+                        ServerBanSettings(server: $server)
+                    } label: {
+                        Image(systemName: "person.fill.xmark")
+                        Text("Bans")
+                    }
                 }
             }
             .listRowBackground(viewState.theme.background2)
             
-            Button {
-                
-            } label: {
-                HStack {
-                    Image(systemName: "trash.fill")
-                    Text("Delete server")
+            if server.owner == viewState.currentUser?.id {
+                Button {
+                    
+                } label: {
+                        HStack {
+                            Image(systemName: "trash.fill")
+                            Text("Delete server")
+                        }
+                        .foregroundStyle(.red)
                 }
-                .foregroundStyle(.red)
+                .listRowBackground(viewState.theme.background2)
             }
-            .listRowBackground(viewState.theme.background2)
+
             
         }
         .scrollContentBackground(.hidden)
@@ -90,6 +107,11 @@ struct ServerSettings: View {
             }
         }
         .toolbarBackground(viewState.theme.topBar.color, for: .automatic)
+        .task {
+            if let user = viewState.currentUser, let member = viewState.members[server.id]?[user.id] {
+                userPermissions = resolveServerPermissions(user: user, member: member, server: server)
+            }
+        }
     }
 }
 
