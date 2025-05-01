@@ -11,8 +11,12 @@ import Types
 import os
 
 enum RevoltError: Error {
+    struct RevoltHTTPError: Codable {
+        var type: String
+        var location: String
+    }
     case Alamofire(AFError)
-    case HTTPError(String?, Int)
+    case HTTPError(RevoltHTTPError?, Int)
     case JSONDecoding(any Error)
 }
 
@@ -45,7 +49,7 @@ struct HTTPClient {
         if token != nil {
             headers.add(name: "x-session-token", value: token!)
         }
-        
+
         let req = self.session.request(
             "\(baseURL)\(route)",
             method: method,
@@ -67,7 +71,8 @@ struct HTTPClient {
         }
 
         if ![200, 201, 202, 203, 204, 205, 206, 207, 208, 226].contains(code) {
-            return .failure(.HTTPError(response.value, code))
+            let errorBody = try? response.value.map { try JSONDecoder().decode(RevoltError.RevoltHTTPError.self, from: $0.data(using: .utf8)!) }
+            return .failure(.HTTPError(errorBody, code))
         }
 
         return .success(response)
@@ -95,7 +100,7 @@ struct HTTPClient {
                 }
 
             } else {
-                return .failure(.HTTPError("No error or body", 0))
+                return .failure(.HTTPError(nil, 0))
             }
         }
     }
@@ -420,6 +425,10 @@ struct HTTPClient {
         await req(method: .post, route: "/sync/settings/fetch", parameters: ["keys": keys])
     }
     
+    func setSettings(key: String, value: String) async -> Result<EmptyResponse, RevoltError> {
+        await req(method: .post, route: "/sync/settings/set", parameters: [key: value.replacing("\"", with: "\\\"")])
+    }
+    
     func fetchChannelPins(channel: String) async -> Result<SearchResponse, RevoltError> {
         await req(method: .post, route: "/channels/\(channel)/search", parameters: ChannelSearchPayload(pinned: true, sort: .latest, include_users: true))
     }
@@ -458,5 +467,9 @@ struct HTTPClient {
     
     func fetchBans(server: String) async -> Result<BansResponse, RevoltError> {
         await req(method: .get, route: "/servers/\(server)/bans")
+    }
+
+    func editMember(server: String, user: String, payload: EditMemberPayload) async -> Result<Member, RevoltError> {
+        await req(method: .patch, route: "/servers/\(server)/members/\(user)", parameters: payload)
     }
 }

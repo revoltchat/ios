@@ -71,15 +71,22 @@ struct ViewInvite: View {
                         
                         Button {
                             Task {
-                                let join = try! await viewState.http.joinServer(code: code).get()
-                                viewState.servers[join.server.id] = join.server
-                                
-                                for channel in join.channels {
-                                    viewState.channels[channel.id] = channel
-                                    viewState.channelMessages[channel.id] = []
+                                let result = await viewState.http.joinServer(code: code)
+                                switch result {
+                                    case .success(let join):
+                                        viewState.servers[join.server.id] = join.server
+                                        
+                                        for channel in join.channels {
+                                            viewState.channels[channel.id] = channel
+                                            viewState.channelMessages[channel.id] = []
+                                        }
+                                        viewState.selectChannel(inServer: serverInfo.server_id, withId: serverInfo.channel_id)
+                                    case .failure(let e):
+                                        if case .HTTPError(let body, _) = e, let body, body.type == "AlreadyInServer" {
+                                            viewState.selectChannel(inServer: serverInfo.server_id, withId: serverInfo.channel_id)
+                                            viewState.path.removeLast()
+                                        }
                                 }
-                                
-                                viewState.selectChannel(inServer: serverInfo.server_id, withId: serverInfo.channel_id)
                             }
                         } label: {
                             Text("Accept Invite")

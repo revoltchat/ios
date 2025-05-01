@@ -21,7 +21,6 @@ struct HomeWelcome: View {
             }
             
             Spacer()
-                .frame(maxHeight: 100)
             
             VStack(alignment: .center, spacing: 24) {
                 VStack(alignment: .center, spacing: 8) {
@@ -31,6 +30,15 @@ struct HomeWelcome: View {
                     Image("wide")
                         .maybeColorInvert(color: viewState.theme.background, isDefaultImage: false, defaultIsLight: true)
                 }
+                
+                VStack {
+                    Text("The iOS app is current in early beta, plenty of features are unimplemented or buggy, if you want a better experience please use the web app on iOS for now.")
+                        .foregroundStyle(viewState.theme.accent)
+                        .multilineTextAlignment(.leading)
+                        .padding(8)
+                }
+                .addBorder(viewState.theme.accent, width: 2, cornerRadius: 8)
+                .padding(.horizontal, 32)
                 
                 VStack {
                     HomeButton(title: "Discover Revolt", description: "Find a community based on your hobbies or interests.") {
@@ -46,7 +54,7 @@ struct HomeWelcome: View {
                             .frame(width: 32, height: 32)
 
                     } handle: {
-                        
+                        viewState.path.append(NavigationDestination.invite("Testers"))
                     }
                     HomeButton(title: "Donate to Revolt", description: "Support the project by donating - thank you") {
                         Image(systemName: "banknote")
@@ -65,6 +73,7 @@ struct HomeWelcome: View {
                     }
                 }
             }
+            .frame(alignment: .center)
             
             Spacer()
         }

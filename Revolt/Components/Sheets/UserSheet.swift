@@ -38,8 +38,8 @@ struct UserSheetHeader: View {
             }
             
             HStack(alignment: .center, spacing: 16) {
-                Avatar(user: user, width: 48, height: 48, withPresence: true, canFullscreen: true)
-                
+                Avatar(user: user, width: 48, height: 48, withPresence: true)
+
                 VStack(alignment: .leading) {
                     if let display_name = user.display_name {
                         Text(display_name)
