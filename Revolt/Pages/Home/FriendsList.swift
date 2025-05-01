@@ -56,26 +56,28 @@ struct FriendsList: View {
             ].filter({ !$0.1.isEmpty })
             
             Section {
-                NavigationLink(value: NavigationDestination.add_friend) {
-                    HStack(spacing: 12) {
-                        Image(systemName: "person.crop.circle.fill.badge.plus")
-                            .resizable()
-                            .scaledToFit()
-                            .frame(width: 24, height: 24)
-                        
-                        Text("Add Friend")
-                    }
+                HStack(spacing: 12) {
+                    Image(systemName: "person.crop.circle.fill.badge.plus")
+                        .resizable()
+                        .scaledToFit()
+                        .frame(width: 24, height: 24)
+                    
+                    Text("Add Friend")
+                }
+                .onTapGesture {
+                    viewState.path.append(NavigationDestination.add_friend)
                 }
                 
-                NavigationLink(destination: CreateGroup.init) {
-                    HStack(spacing: 12) {
-                        Image(systemName: "person.2")
-                            .resizable()
-                            .scaledToFit()
-                            .frame(width: 24, height: 24)
-                        
-                        Text("Create Group")
-                    }
+                HStack(spacing: 12) {
+                    Image(systemName: "person.2")
+                        .resizable()
+                        .scaledToFit()
+                        .frame(width: 24, height: 24)
+                    
+                    Text("Create Group")
+                }
+                .onTapGesture {
+                    viewState.path.append(NavigationDestination.create_group([]))
                 }
             }
             .listRowSeparator(.hidden)
@@ -84,68 +86,68 @@ struct FriendsList: View {
             ForEach(arr, id: \.0) { (title, users) in
                 Section {
                     ForEach(users) { user in
-                        Button {
-                            viewState.openUserSheet(user: user)
-                        } label: {
-                            HStack {
-                                HStack(spacing: 12) {
-                                    Avatar(user: user, withPresence: true)
+                        HStack {
+                            HStack(spacing: 12) {
+                                Avatar(user: user, withPresence: true)
+                                    .frame(width: 16, height: 16)
+                                    .frame(width: 24, height: 24)
+                                
+                                Text(user.display_name ?? user.username)
+                            }
+                            
+                            Spacer()
+                            
+                            if user.relationship == .Incoming {
+                                Button {
+                                    Task {
+                                        if case .success(_) = await viewState.http.acceptFriendRequest(user: user.id) {
+                                            viewState.users[user.id]!.relationship = .Friend
+                                        }
+                                    }
+                                } label: {
+                                    Image(systemName: "checkmark.circle.fill")
+                                        .resizable()
+                                        .foregroundStyle(viewState.theme.foreground2.color)
                                         .frame(width: 16, height: 16)
                                         .frame(width: 24, height: 24)
-                                    
-                                    Text(user.display_name ?? user.username)
-                                }
-                                
-                                Spacer()
-                                
-                                if user.relationship == .Incoming {
-                                    Button {
-                                        Task {
-                                            if case .success(_) = await viewState.http.acceptFriendRequest(user: user.id) {
-                                                viewState.users[user.id]!.relationship = .Friend
-                                            }
-                                        }
-                                    } label: {
-                                        Image(systemName: "checkmark.circle.fill")
-                                            .resizable()
-                                            .foregroundStyle(viewState.theme.foreground2.color)
-                                            .frame(width: 16, height: 16)
-                                            .frame(width: 24, height: 24)
-                                    }
-                                }
-                                
-                                if [.Incoming, .Outgoing, .Friend].contains(user.relationship) {
-                                    Button {
-                                        Task {
-                                            if case .success(_) = await viewState.http.removeFriend(user: user.id) {
-                                                viewState.users[user.id]!.relationship = .None
-                                            }
-                                        }
-                                    } label: {
-                                        Image(systemName: "x.circle.fill")
-                                            .resizable()
-                                            .foregroundStyle(viewState.theme.foreground2.color)
-                                            .frame(width: 16, height: 16)
-                                            .frame(width: 24, height: 24)
-                                    }
-                                }
-                                
-                                if user.relationship == .Blocked {
-                                    Button {
-                                        Task {
-                                            if case .success(_) = await viewState.http.unblockUser(user: user.id) {
-                                                viewState.users[user.id]!.relationship = .None
-                                            }
-                                        }
-                                    } label: {
-                                        Image(systemName: "person.crop.circle.fill.badge.xmark")
-                                            .resizable()
-                                            .foregroundStyle(viewState.theme.foreground2.color)
-                                            .frame(width: 16, height: 16)
-                                            .frame(width: 24, height: 24)
-                                    }
                                 }
                             }
+                            
+                            if [.Incoming, .Outgoing, .Friend].contains(user.relationship) {
+                                Button {
+                                    Task {
+                                        if case .success(_) = await viewState.http.removeFriend(user: user.id) {
+                                            viewState.users[user.id]!.relationship = .None
+                                        }
+                                    }
+                                } label: {
+                                    Image(systemName: "x.circle.fill")
+                                        .resizable()
+                                        .foregroundStyle(viewState.theme.foreground2.color)
+                                        .frame(width: 16, height: 16)
+                                        .frame(width: 24, height: 24)
+                                }
+                            }
+                            
+                            if user.relationship == .Blocked {
+                                Button {
+                                    Task {
+                                        if case .success(_) = await viewState.http.unblockUser(user: user.id) {
+                                            viewState.users[user.id]!.relationship = .None
+                                        }
+                                    }
+                                } label: {
+                                    Image(systemName: "person.crop.circle.fill.badge.xmark")
+                                        .resizable()
+                                        .foregroundStyle(viewState.theme.foreground2.color)
+                                        .frame(width: 16, height: 16)
+                                        .frame(width: 24, height: 24)
+                                }
+                            }
+                        }
+                        .contentShape(Rectangle())
+                        .onTapGesture {
+                            viewState.openUserSheet(user: user)
                         }
                     }
                 } header: {

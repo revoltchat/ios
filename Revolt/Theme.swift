@@ -439,6 +439,7 @@ public struct Theme: Codable, Equatable {
     public var messageBox: ThemeColor = ThemeColor(hex: "#F1F1F1FF")
     public var topBar: ThemeColor = ThemeColor(hex: "#FFFFFFEE")
     public var error: ThemeColor = ThemeColor(hex: "#ED4245")
+    public var success: ThemeColor = ThemeColor(hex: "#91b362")
     public var mention: ThemeColor = ThemeColor(hex: "#FBFF000F")
     public var shouldFollowiOSTheme: Bool = false
 
@@ -455,6 +456,7 @@ public struct Theme: Codable, Equatable {
             messageBox: ThemeColor(hex: "#F1F1F1FF"),
             topBar: ThemeColor(hex: "#FFFFFFEE"),
             error: ThemeColor(hex: "#ED4245"),
+            success: ThemeColor(hex: "#91b362"),
             mention: ThemeColor(hex: "#FBFF000F"),
             shouldFollowiOSTheme: false
         )
@@ -473,6 +475,7 @@ public struct Theme: Codable, Equatable {
             messageBox: ThemeColor(hex:"#363636FF"),
             topBar: ThemeColor(hex: "#191919EE"),
             error: ThemeColor(hex: "#ED4245"),
+            success: ThemeColor(hex: "#91b362"),
             mention: ThemeColor(hex: "#FBFF000F"),
             shouldFollowiOSTheme: false
         )

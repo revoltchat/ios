@@ -127,7 +127,7 @@ struct HomeRewritten: View {
                             .ignoresSafeArea(.all)
                         
                         MaybeChannelView(currentChannel: $currentChannel, currentSelection: $currentSelection, toggleSidebar: toggleSidebar, disableScroll: $disableScroll, disableSidebar: $disableSidebar)
-                            .disabled(offset != 0.0)
+                            .allowsHitTesting(offset == 0)
                             .offset(x: offset)
                             .frame(width: geo.size.width)
                             .onTapGesture {
