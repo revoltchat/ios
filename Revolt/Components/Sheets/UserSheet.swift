@@ -38,7 +38,7 @@ struct UserSheetHeader: View {
             }
             
             HStack(alignment: .center, spacing: 16) {
-                Avatar(user: user, width: 48, height: 48, withPresence: true)
+                Avatar(user: user, width: 48, height: 48, withPresence: true, canFullscreen: true)
                 
                 VStack(alignment: .leading) {
                     if let display_name = user.display_name {
@@ -62,13 +62,14 @@ struct UserSheetHeader: View {
 struct UserSheet: View {
     @EnvironmentObject var viewState: ViewState
     
-    var user: User
-    var member: Member?
+    @State var user: User
+    @State var member: Member?
     
     @State var profile: Profile?
     @State var owner: User = .init(id: String(repeating: "0", count: 26), username: "Unknown", discriminator: "0000")
     @State var mutualServers: [String] = []
     @State var mutualFriends: [String] = []
+    @State var showReportSheet = false
     
     func getRoleColour(role: Role) -> AnyShapeStyle {
         if let colour = role.colour {
@@ -81,7 +82,6 @@ struct UserSheet: View {
     var body: some View {
         VStack(alignment: .leading, spacing: 8) {
             if let profile = profile {
-                
                 Grid(tracks: 2, flow: .rows, spacing: 12) {
                     UserSheetHeader(user: user, member: member, profile: profile)
                         .gridSpan(column: 2)
@@ -215,78 +215,106 @@ struct UserSheet: View {
                         .gridSpan(column: 2)
                     }
                     
-                    Group {
-                        switch user.relationship ?? .None {
-                            case .User:
-                                Button {
-                                    viewState.path.append(NavigationDestination.settings)
-                                } label: {
-                                    HStack {
-                                        Spacer()
-                                        
-                                        Text("Edit profile")
-                                        
-                                        Spacer()
+                    HStack {
+                        Group {
+                            switch user.relationship ?? .None {
+                                case .User:
+                                    Button {
+                                        viewState.path.append(NavigationDestination.settings)
+                                    } label: {
+                                        HStack {
+                                            Spacer()
+                                            
+                                            Text("Edit profile")
+                                            
+                                            Spacer()
+                                        }
                                     }
-                                }
-                                .padding(8)
-                                .background(viewState.theme.accent, in: RoundedRectangle(cornerRadius: 50))
-                                
-                            case .Blocked:
-                                EmptyView()  // TODO: unblock
-                            case .BlockedOther:
-                                EmptyView()
-                            case .Friend:
-                                Button {
-                                    Task {
-                                        await viewState.openDm(with: user.id)
+                                    .padding(8)
+                                    .background(viewState.theme.accent, in: RoundedRectangle(cornerRadius: 50))
+                                    
+                                case .Blocked:
+                                    EmptyView()  // TODO: unblock
+                                case .BlockedOther:
+                                    EmptyView()
+                                case .Friend:
+                                    Button {
+                                        Task {
+                                            await viewState.openDm(with: user.id)
+                                        }
+                                    } label: {
+                                        HStack {
+                                            Spacer()
+                                            
+                                            Text("Send Message")
+                                            
+                                            Spacer()
+                                        }
                                     }
-                                } label: {
-                                    HStack {
-                                        Spacer()
-                                        
-                                        Text("Send Message")
-                                        
-                                        Spacer()
+                                    .padding(8)
+                                    .background(viewState.theme.accent, in: RoundedRectangle(cornerRadius: 50))
+                                    
+                                case .Incoming, .None:
+                                    Button {
+                                        Task {
+                                            await viewState.http.sendFriendRequest(username: user.username)
+                                        }
+                                    } label: {
+                                        HStack {
+                                            Spacer()
+                                            
+                                            Text("Add Friend")
+                                            
+                                            Spacer()
+                                        }
                                     }
-                                }
-                                .padding(8)
-                                .background(viewState.theme.accent, in: RoundedRectangle(cornerRadius: 50))
-
-                            case .Incoming, .None:
-                                Button {
-                                    Task {
-                                        await viewState.http.sendFriendRequest(username: user.username)
+                                    .padding(8)
+                                    .background(viewState.theme.accent, in: RoundedRectangle(cornerRadius: 50))
+                                    
+                                case .Outgoing:
+                                    Button {
+                                        Task {
+                                            await viewState.http.removeFriend(user: user.id)
+                                        }
+                                    } label: {
+                                        HStack {
+                                            Spacer()
+                                            
+                                            Text("Cancel Friend Request")
+                                            
+                                            Spacer()
+                                        }
                                     }
-                                } label: {
-                                    HStack {
-                                        Spacer()
-                                        
-                                        Text("Add Friend")
-                                        
-                                        Spacer()
-                                    }
-                                }
-                                .padding(8)
-                                .background(viewState.theme.accent, in: RoundedRectangle(cornerRadius: 50))
-                                
-                            case .Outgoing:
-                                Button {
-                                    Task {
-                                        await viewState.http.removeFriend(user: user.id)
-                                    }
-                                } label: {
-                                    HStack {
-                                        Spacer()
-                                        
-                                        Text("Cancel Friend Request")
-                                        
-                                        Spacer()
-                                    }
-                                }
-                                .padding(8)
-                                .background(viewState.theme.accent, in: RoundedRectangle(cornerRadius: 50))
+                                    .padding(8)
+                                    .background(viewState.theme.accent, in: RoundedRectangle(cornerRadius: 50))
+                            }
                         }
+                        
+                        Menu {
+                            Button("Block") {
+                                Task {
+                                    if case .success(let blockedUser) = await viewState.http.blockUser(user: user.id) {
+                                        user = blockedUser
+                                    }
+                                }
+                            }
+                            
+                            Button("Copy ID") {
+                                copyText(text: user.id)
+                            }
+                            
+                            Button("Report", role: .destructive) {
+                                showReportSheet = true
+                            }
+                        } label: {
+                            Image(systemName: "ellipsis.circle")
+                                .resizable()
+                                .scaledToFit()
+                                .frame(width: 24, height: 24)
+                                .fontWeight(.light)
+                        }
+                        .menuStyle(.borderlessButton)
+                        .padding(.horizontal, 12)
                     }
                     .gridSpan(column: 2)
                 }
@@ -302,6 +330,9 @@ struct UserSheet: View {
         .padding(.top, 16)
         .background(viewState.theme.background.color)
         .presentationBackground(viewState.theme.background)
+        .sheet(isPresented: $showReportSheet) {
+            Text("TODO")
+        }
         .task {
             if let profile = user.profile {
                 self.profile = profile
