@@ -187,3 +187,18 @@ struct EditBotPayload: Encodable {
         case isPublic = "public"
     }
 }
+
+struct EditMemberPayload: Encodable {
+    enum Remove: String, Encodable {
+        case nickname = "Nickname"
+        case avatar = "Avatar"
+        case roles = "Roles"
+        case timeout = "Timeout"
+    }
+    
+    var nickname: String?
+    var avatar: String?
+    var roles: [String]?
+    var timeout: String?
+    var remove: [Remove]?
+}
