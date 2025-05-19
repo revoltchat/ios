@@ -1268,11 +1268,44 @@ struct InnerContents: UIViewRepresentable {
                 var currentAttrs = attrString.attributes(at: lowerInt, effectiveRange: nil)
                 
                 currentAttrs[.link] = URL(string: "revoltchat://channels?channel=\(id)")!
-                currentAttrs[.backgroundColor] = UIColor.clear.withAlphaComponent(0.1)
-                
+
                 let channelName = channel.getName(viewState)
                 attrString.deleteCharacters(in: NSRange(globalRange, in: attrString.string))
                 attrString.insert(NSAttributedString(string: "#\(channelName)", attributes: currentAttrs), at: lowerInt)
+            }
+        }
+        
+        for match in attrString.string.matches(of: /@(everyone|online)/).reversed() {
+            let lowerInt = match.range.lowerBound.utf16Offset(in: attrString.string)
+            let lower = match.range.lowerBound
+            let upper = match.range.upperBound
+            
+            let globalRange = Range(uncheckedBounds: (lower, upper))
+            
+            var currentAttrs = attrString.attributes(at: lowerInt, effectiveRange: nil)
+            
+            currentAttrs[.foregroundColor] = viewState.theme.accent.uiColor
+            
+            attrString.deleteCharacters(in: NSRange(globalRange, in: attrString.string))
+            attrString.insert(NSAttributedString(string: "@\(match.output.1)", attributes: currentAttrs), at: lowerInt)
+        }
+        
+        for match in attrString.string.matches(of: /<%(\w{26})>/).reversed() {
+            let id = match.output.1
+            
+            if let role = currentServer?.roles?[String(id)] {
+                let lowerInt = match.range.lowerBound.utf16Offset(in: attrString.string)
+                let lower = match.range.lowerBound
+                let upper = match.range.upperBound
+                
+                let globalRange = Range(uncheckedBounds: (lower, upper))
+                
+                var currentAttrs = attrString.attributes(at: lowerInt, effectiveRange: nil)
+                
+                currentAttrs[.foregroundColor] = viewState.theme.accent.uiColor  // TODO: somehow do the role colour - current parser emmits swiftui colours
+                
+                attrString.deleteCharacters(in: NSRange(globalRange, in: attrString.string))
+                attrString.insert(NSAttributedString(string: "@\(role.name)", attributes: currentAttrs), at: lowerInt)
             }
         }
         

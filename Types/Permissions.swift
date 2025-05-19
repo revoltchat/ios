@@ -74,8 +74,10 @@ public struct Permissions: OptionSet, Hashable {
     public static let muteMembers = Permissions(rawValue: 1 << 33)
     public static let deafenMembers = Permissions(rawValue: 1 << 34)
     public static let moveMembers = Permissions(rawValue: 1 << 35)
+    public static let mentionEveryone = Permissions(rawValue: 1 << 37)
+    public static let mentionRoles = Permissions(rawValue: 1 << 38)
     
-    public static let all = Permissions(arrayLiteral: [.manageChannel, .manageServer, .managePermissions, .manageRole, .manageCustomisation, .kickMembers, .banMembers, .timeoutMembers, .assignRoles, .manageNickname, .changeNicknames, .changeAvatars, .removeAvatars, .viewChannel, .readMessageHistory, .sendEmbeds, .manageMessages, .manageWebhooks, .inviteOthers, .sendEmbeds, .uploadFiles, .masquerade, .react,.connect, .speak, .video, .muteMembers, .deafenMembers, .moveMembers])
+    public static let all = Permissions(arrayLiteral: [.manageChannel, .manageServer, .managePermissions, .manageRole, .manageCustomisation, .kickMembers, .banMembers, .timeoutMembers, .assignRoles, .manageNickname, .changeNicknames, .changeAvatars, .removeAvatars, .viewChannel, .readMessageHistory, .sendEmbeds, .manageMessages, .manageWebhooks, .inviteOthers, .sendEmbeds, .uploadFiles, .masquerade, .react,.connect, .speak, .video, .muteMembers, .deafenMembers, .moveMembers, .mentionEveryone, .mentionRoles])
     
     public static let defaultViewOnly = Permissions([.viewChannel, .readMessageHistory])
     public static let `default` = Permissions.defaultViewOnly.intersection(Permissions([.sendMessages, .inviteOthers, .sendEmbeds, .uploadFiles, .connect, .speak]))
@@ -154,6 +156,10 @@ public struct Permissions: OptionSet, Hashable {
                 return "Deafen Members"
             case .moveMembers:
                 return "Move Members"
+            case .mentionEveryone:
+                return "Mention Everyone"
+            case .mentionRoles:
+                return "Mention Roles"
             default:
                 return "Unknown"
         }
@@ -219,11 +225,14 @@ public struct Permissions: OptionSet, Hashable {
                 return "Allows members to deafen others in a voice channel."
             case .moveMembers:
                 return "Allows members to move others between voice channels."
+            case .mentionEveryone:
+                return "Allows members to mention @everyone."
+            case .mentionRoles:
+                return "Allows members to mention roles."
             default:
                 return "Unknown"
         }
     }
-
 }
 
 extension Permissions: Codable {

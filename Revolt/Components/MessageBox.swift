@@ -64,7 +64,7 @@ struct ReplyView: View {
                     .lineLimit(1)
                     .truncationMode(.tail)
             }
-            
+
             Spacer()
             
             Button(action: { reply.mention.toggle() }) {
@@ -81,14 +81,34 @@ struct ReplyView: View {
 
 struct MessageBox: View {
     enum AutocompleteType {
-        case user
+        case usersAndRoles
         case channel
         case emoji
+    }
+    
+    enum UserOrRole: Identifiable {
+        case user(UserMaybeMember)
+        case role(String, Role)
+        case everyone
+        case online
+        
+        var id: String {
+            switch self {
+                case .user(let userMaybeMember):
+                    return userMaybeMember.id
+                case .role(let id, _):
+                    return id
+                case .everyone:
+                    return "everyone"
+                case .online:
+                    return "online"
+            }
+        }
     }
 
     enum AutocompleteValues {
         case channels([Channel])
-        case users([(User, Member?)])
+        case usersAndRoles([UserOrRole])
         case emojis([PickerEmoji])
     }
 
@@ -123,6 +143,8 @@ struct MessageBox: View {
 
     @State var autoCompleteType: AutocompleteType? = nil
     @State var autocompleteSearchValue: String = ""
+    
+    @State var currentPermissions: Permissions = .default
 
     let channel: Channel
     let server: Server?
@@ -165,28 +187,50 @@ struct MessageBox: View {
 
     func getAutocompleteValues(fromType type: AutocompleteType) -> AutocompleteValues {
         switch type {
-            case .user:
-                let users: [(User, Member?)]
+            case .usersAndRoles:
+                var usersAndRoles: [UserOrRole]
 
                 switch channel {
                     case .saved_messages(_):
-                        users = [(viewState.currentUser!, nil)]
+                        usersAndRoles = [.user(UserMaybeMember(user: viewState.currentUser!, member: nil))]
 
                     case .dm_channel(let dMChannel):
-                        users = dMChannel.recipients.map({ (viewState.users[$0]!, nil) })
+                        usersAndRoles = dMChannel.recipients.map { .user(UserMaybeMember(user: viewState.users[$0]!, member: nil)) }
 
                     case .group_dm_channel(let groupDMChannel):
-                        users = groupDMChannel.recipients.map({ (viewState.users[$0]!, nil) })
+                        usersAndRoles = groupDMChannel.recipients.map { .user(UserMaybeMember(user: viewState.users[$0]!, member: nil)) }
 
                     case .text_channel(_), .voice_channel(_):
-                        users = viewState.members[server!.id]!.values.map({ m in (viewState.users[m.id.user]!, m) })
+                        usersAndRoles = viewState.members[server!.id]!.values.compactMap { m in
+                            viewState.users[m.id.user].map { .user(UserMaybeMember(user: $0, member: m)) }
+                        }
+                        
+                        if currentPermissions.contains(.mentionRoles) {
+                            if let roles = server?.roles {
+                                usersAndRoles.append(contentsOf: roles.map { (key, value) in .role(key, value) })
+                            }
+                        }
+                        
+                        if currentPermissions.contains(.mentionEveryone) {
+                            usersAndRoles.append(contentsOf: [.everyone, .online])
+                        }
                 }
 
-                return AutocompleteValues.users(users.filter { pair in
-                    pair.0.display_name?.lowercased().starts(with: autocompleteSearchValue.lowercased())
-                    ?? pair.1?.nickname?.lowercased().starts(with: autocompleteSearchValue.lowercased())
-                    ?? pair.0.username.lowercased().starts(with: autocompleteSearchValue.lowercased())
-                })
+                return AutocompleteValues.usersAndRoles(usersAndRoles.filter({ value in
+                    let lowered = autocompleteSearchValue.lowercased()
+                    switch value {
+                        case .user(let user):
+                            return user.user.display_name?.lowercased().starts(with: lowered)
+                                ?? user.member?.nickname?.lowercased().starts(with: lowered)
+                                ?? user.user.username.lowercased().starts(with: lowered)
+                        case .role(_, let role):
+                            return role.name.lowercased().starts(with: lowered)
+                        case .everyone:
+                            return "everyone".starts(with: lowered)
+                        case .online:
+                            return "online".starts(with: lowered)
+                    }
+                }))
             case .channel:
                 let channels: [Channel]
 
@@ -284,18 +328,60 @@ struct MessageBox: View {
                     ScrollView(.horizontal) {
                         LazyHStack {
                             switch values {
-                                case .users(let users):
-                                    ForEach(users, id: \.0.id) { (user, member) in
+                                case .usersAndRoles(let usersOrRoles):
+                                    ForEach(usersOrRoles) { userOrRole in
                                         Button {
+                                            let value: String
+                                            
+                                            switch userOrRole {
+                                                case .user(let user):
+                                                    value = "<@\(user.id)>"
+                                                case .role(let id, _):
+                                                    value = "<%\(id)>"
+                                                case .everyone:
+                                                    value = "@everyone"
+                                                case .online:
+                                                    value = "@online"
+                                            }
+                                            
                                             withAnimation {
                                                 content = String(content.dropLast(autocompleteSearchValue.count + 1))
-                                                content.append("<@\(user.id)>")
+                                                content.append(value)
                                                 autoCompleteType = nil
                                             }
                                         } label: {
                                             HStack(spacing: 8) {
-                                                Avatar(user: user, member: member, width: 24, height: 24)
-                                                Text(verbatim: member?.nickname ?? user.display_name ?? user.username)
+                                                switch userOrRole {
+                                                    case .user(let user):
+                                                        Avatar(user: user.user, member: user.member, width: 24, height: 24)
+                                                        Text(verbatim: user.member?.nickname ?? user.user.display_name ?? user.user.username)
+                                                    case .role(let id, let role):
+                                                        Image(systemName: "at")
+                                                            .resizable()
+                                                            .scaledToFit()
+                                                            .frame(width: 16, height: 16)
+                                                            .foregroundStyle(viewState.theme.foreground)
+                                                        
+                                                        Text(verbatim: role.name)
+                                                            .foregroundStyle(role.colour.map { parseCSSColor(currentTheme: viewState.theme, input: $0) } ?? AnyShapeStyle(viewState.theme.foreground))
+                                                    case .everyone:
+                                                        Image(systemName: "at")
+                                                            .resizable()
+                                                            .scaledToFit()
+                                                            .frame(width: 16, height: 16)
+                                                            .foregroundStyle(viewState.theme.foreground)
+                                                        
+                                                        Text("everyone")
+                                                    case .online:
+                                                        Image(systemName: "at")
+                                                            .resizable()
+                                                            .scaledToFit()
+                                                            .frame(width: 16, height: 16)
+                                                            .foregroundStyle(viewState.theme.foreground)
+                                                        
+                                                        Text("online")
+
+                                                }
                                             }
                                             .padding(6)
                                         }
@@ -359,7 +445,10 @@ struct MessageBox: View {
                                                     Text(verbatim: emojiString)
                                                 }
                                             }
+                                            .padding(6)
                                         }
+                                        .background(viewState.theme.background2.color)
+                                        .clipShape(RoundedRectangle(cornerRadius: 8))
                                     }
                             }
                         }
@@ -408,7 +497,7 @@ struct MessageBox: View {
 
                                     switch pre {
                                         case "@":
-                                            autoCompleteType = .user
+                                            autoCompleteType = .usersAndRoles
                                         case "#":
                                             autoCompleteType = .channel
                                         case ":":
@@ -494,6 +583,11 @@ struct MessageBox: View {
         .padding(.horizontal, 12)
         .padding(.bottom, 12)
         .background(viewState.theme.messageBox.color)
+        .onAppear {
+            let member = server.flatMap { viewState.members[$0.id]?[viewState.currentUser!.id] }
+            
+            currentPermissions = resolveChannelPermissions(from: viewState.currentUser!, targettingUser: viewState.currentUser!, targettingMember: member, channel: channel, server: server)
+        }
     }
 }
 

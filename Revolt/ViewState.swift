@@ -1275,6 +1275,7 @@ public class ViewState: ObservableObject {
     }
     
     func selectChannel(inServer server: String, withId id: String) {
+        currentSelection = .server(server)
         currentChannel = .channel(id)
         userSettingsStore.store.lastOpenChannels[server] = id
     }
