@@ -10,6 +10,10 @@ import SwiftUI
 import CodableWrapper
 import Parsing
 import Types
+import Sentry
+import OSLog
+
+let themeLogger = Logger(subsystem: Bundle.main.bundleIdentifier!, category: "Theme")
 
 func parseHex(hex: String) -> (Double, Double, Double, Double) {
     let hex = hex.trimmingCharacters(in: CharacterSet.alphanumerics.inverted)
@@ -153,7 +157,13 @@ let linearGradiantParser = Parse(input: Substring.self) { inp in
             angleParser.map { AngleType.constant($0.0, $0.1) }
             Parse {
                 "to"
+                
+                Skip { Many { " " } }
+                
                 directionParser
+                
+                Skip { Many { " " } }
+                
                 Optionally {
                     directionParser
                 }
@@ -358,7 +368,9 @@ func parseCSSColor(currentTheme: Theme, input: String) -> AnyShapeStyle {
                     return AnyShapeStyle(LinearGradient(colors: colors, startPoint: start, endPoint: end))
                 }
         }
-    } catch {
+    } catch let e {
+        SentrySDK.capture(error: e)
+        themeLogger.error("CSS Parser error: \(e)")
         return AnyShapeStyle(Color.black)
     }
 }
