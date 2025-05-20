@@ -13,6 +13,7 @@ struct ServerInfoSheet: View {
     @Environment(\.dismiss) var dismiss
     
     @State var showLeaveServerDialog: Bool = false
+    @State var showMemberProfileSheet: Bool = false
     
     var server: Server
     
@@ -70,8 +71,7 @@ struct ServerInfoSheet: View {
                 }
                 
                 Button {
-                    dismiss()
-                    viewState.path.append(NavigationDestination.server_settings(server.id))
+                    showMemberProfileSheet = true
                 } label: {
                     HStack(spacing: 12) {
                         Image(systemName: "person.crop.circle.fill")
@@ -118,6 +118,9 @@ struct ServerInfoSheet: View {
         .scrollBounceBehavior(.basedOnSize, axes: [.vertical])
         .contentMargins(.top, 0, for: .scrollContent)
         .presentationDetents([.medium, .large])
+        .sheet(isPresented: $showMemberProfileSheet) {
+            MemberProfileSheet.fromViewState(viewState, server: server)
+        }
         .confirmationDialog("Are you sure you want to leave?", isPresented: $showLeaveServerDialog) {
             Button("Leave", role: .destructive) {
                 dismiss()

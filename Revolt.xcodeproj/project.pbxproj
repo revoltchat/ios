@@ -60,6 +60,7 @@
 		176485732CA3882E00AF8141 /* Binding.swift in Sources */ = {isa = PBXBuildFile; fileRef = 176485722CA3882E00AF8141 /* Binding.swift */; };
 		176485752CA3947B00AF8141 /* PermissionToggle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 176485742CA3947B00AF8141 /* PermissionToggle.swift */; };
 		176FA6E82C9336A900EF73C0 /* ViewInvite.swift in Sources */ = {isa = PBXBuildFile; fileRef = 176FA6E72C9336A900EF73C0 /* ViewInvite.swift */; };
+		17735D222DDCE09900A6C911 /* PreferenceKey.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17735D212DDCE09600A6C911 /* PreferenceKey.swift */; };
 		1773C0272C07DC32007B8867 /* Types.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 17DE7DB22BFAEC3F00C99188 /* Types.framework */; platformFilters = (ios, maccatalyst, macos, ); };
 		1773C0282C07DC32007B8867 /* Types.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 17DE7DB22BFAEC3F00C99188 /* Types.framework */; platformFilters = (ios, maccatalyst, macos, ); settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		1773C02F2C07DC99007B8867 /* Api.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17DE7E0C2BFAFDDD00C99188 /* Api.swift */; };
@@ -96,6 +97,7 @@
 		17A21DF62CFA71AC0024C9F0 /* AddBot.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17A21DF52CFA71AA0024C9F0 /* AddBot.swift */; };
 		17A589FA2C44781F00B9D85A /* AnyTransition.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17A589F92C44781F00B9D85A /* AnyTransition.swift */; };
 		17A6894D2D9590CE00F25C6C /* Array.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17A6894C2D9590CC00F25C6C /* Array.swift */; };
+		17A6894F2D95FC7800F25C6C /* MemberProfileSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17A6894E2D95FC6A00F25C6C /* MemberProfileSheet.swift */; };
 		17A7FE372C49DE6F0083B22F /* Member.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17A7FE362C49DE6F0083B22F /* Member.swift */; };
 		17A7FE392C49EBD20083B22F /* Image.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17A7FE382C49EBD20083B22F /* Image.swift */; };
 		17B375812C41FEC300FC7E6E /* Types.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 17DE7DB22BFAEC3F00C99188 /* Types.framework */; };
@@ -261,6 +263,7 @@
 		176485722CA3882E00AF8141 /* Binding.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Binding.swift; sourceTree = "<group>"; };
 		176485742CA3947B00AF8141 /* PermissionToggle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PermissionToggle.swift; sourceTree = "<group>"; };
 		176FA6E72C9336A900EF73C0 /* ViewInvite.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewInvite.swift; sourceTree = "<group>"; };
+		17735D212DDCE09600A6C911 /* PreferenceKey.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PreferenceKey.swift; sourceTree = "<group>"; };
 		1773C03C2C07DD1F007B8867 /* MessageableChannel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageableChannel.swift; sourceTree = "<group>"; };
 		17772C172C30AF83000D1EDA /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		1777DD882ADC3C31003D6C72 /* Markdown.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Markdown.swift; sourceTree = "<group>"; };
@@ -278,6 +281,7 @@
 		17A21DF52CFA71AA0024C9F0 /* AddBot.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddBot.swift; sourceTree = "<group>"; };
 		17A589F92C44781F00B9D85A /* AnyTransition.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnyTransition.swift; sourceTree = "<group>"; };
 		17A6894C2D9590CC00F25C6C /* Array.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Array.swift; sourceTree = "<group>"; };
+		17A6894E2D95FC6A00F25C6C /* MemberProfileSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MemberProfileSheet.swift; sourceTree = "<group>"; };
 		17A7FE362C49DE6F0083B22F /* Member.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Member.swift; sourceTree = "<group>"; };
 		17A7FE382C49EBD20083B22F /* Image.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Image.swift; sourceTree = "<group>"; };
 		17B1A0462BFC471C005D4664 /* Types.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Types.swift; sourceTree = "<group>"; };
@@ -394,6 +398,7 @@
 		170C23D82C224BA40057E399 /* Extensions */ = {
 			isa = PBXGroup;
 			children = (
+				17735D212DDCE09600A6C911 /* PreferenceKey.swift */,
 				17A6894C2D9590CC00F25C6C /* Array.swift */,
 				172B0CAA2CEAE0C000012CE2 /* Optional.swift */,
 				17340A462CE051D900AD8A19 /* UIFont.swift */,
@@ -613,6 +618,7 @@
 		17BC47692B9CB4F500A593DA /* Sheets */ = {
 			isa = PBXGroup;
 			children = (
+				17A6894E2D95FC6A00F25C6C /* MemberProfileSheet.swift */,
 				17E28E072AF319D500F6069F /* AddServerSheet.swift */,
 				17CE2E132AE709CE0059FB3A /* UserSheet.swift */,
 				17BC476A2B9CB51200A593DA /* ShareInviteSheet.swift */,
@@ -1080,6 +1086,7 @@
 				17E019D32AF17F9D00AB4663 /* ProfileSettings.swift in Sources */,
 				DAAA4C0929F2974300F41E52 /* Http.swift in Sources */,
 				170C23D92C224BA40057E399 /* View.swift in Sources */,
+				17735D222DDCE09900A6C911 /* PreferenceKey.swift in Sources */,
 				1750EF6E2B0585B300DD3EB3 /* ResendEmail.swift in Sources */,
 				17E019D72AF1998300AB4663 /* MessageAttachment.swift in Sources */,
 				DAAA4BFB29F2518900F41E52 /* MessageView.swift in Sources */,
@@ -1125,6 +1132,7 @@
 				17B7128D2B03E9D700CFF61C /* FriendsList.swift in Sources */,
 				17BF54D12B17B24200178866 /* LanguageSettings.swift in Sources */,
 				17E019CD2AF136B100AB4663 /* PresenceIndicator.swift in Sources */,
+				17A6894F2D95FC7800F25C6C /* MemberProfileSheet.swift in Sources */,
 				17CCCF702ADA17B600D78D7A /* Utils.swift in Sources */,
 				172F2D032C22ED5C00948C00 /* Collection.swift in Sources */,
 				178E26BC2B1542820015CAC7 /* PageToolbar.swift in Sources */,
