@@ -71,39 +71,41 @@ struct ServerEmojiSettings: View {
                 }
                 .listRowSeparator(.hidden)
                 
-                HStack {
-                    if let selectedImage {
-                        Image(uiImage: selectedImage)
-                            .resizable()
-                            .frame(width: 32, height: 32)
-                    }
-                    
-                    if !emojiName.isEmpty {
-                        Text(":").foregroundStyle(viewState.theme.foreground2)
-                            +
-                        Text(verbatim: emojiName)
-                            +
-                        Text(":").foregroundStyle(viewState.theme.foreground2)
-
-                    }
-                    
-                    Spacer()
-                    
-                    Button("Create") {
-                        Task {
-                            let file = try! await viewState.http.uploadFile(data: selectedImage!.pngData()!, name: "emoji", category: .emoji).get()
-                            let emoji = try! await viewState.http.uploadEmoji(id: file.id, name: emojiName, parent: .server(EmojiParentServer(id: server.id)), nsfw: false).get()
-                            viewState.emojis[emoji.id] = emoji
-                            emojiName = ""
-                            selectedPhoto = nil
-                            selectedImage = nil
+                if selectedImage != nil || !emojiName.isEmpty {
+                    HStack {
+                        if let selectedImage {
+                            Image(uiImage: selectedImage)
+                                .resizable()
+                                .frame(width: 32, height: 32)
                         }
+                        
+                        if !emojiName.isEmpty {
+                            Text(":").foregroundStyle(viewState.theme.foreground2)
+                            +
+                            Text(verbatim: emojiName)
+                            +
+                            Text(":").foregroundStyle(viewState.theme.foreground2)
+                            
+                        }
+                        
+                        Spacer()
+                        
+                        Button("Create") {
+                            Task {
+                                let file = try! await viewState.http.uploadFile(data: selectedImage!.pngData()!, name: "emoji", category: .emoji).get()
+                                let emoji = try! await viewState.http.uploadEmoji(id: file.id, name: emojiName, parent: .server(EmojiParentServer(id: server.id)), nsfw: false).get()
+                                viewState.emojis[emoji.id] = emoji
+                                emojiName = ""
+                                selectedPhoto = nil
+                                selectedImage = nil
+                            }
+                        }
+                        .foregroundStyle(viewState.theme.accent)
+                        .disabled(selectedImage == nil || emojiName.isEmpty)
                     }
-                    .disabled(selectedImage == nil || emojiName.isEmpty)
                 }
             }
             .listRowBackground(viewState.theme.background2)
-            
             
             Section("Emojis - \(emojis.count)") {
                 ForEach(emojis) { emoji in
