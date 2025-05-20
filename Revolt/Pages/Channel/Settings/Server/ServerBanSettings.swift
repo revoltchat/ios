@@ -41,7 +41,7 @@ struct ServerBanSettings: View {
         do {
             try await viewState.http.unbanUser(server: server.id, user: user.id)
         } catch let e {
-            error = e
+            error = e.localizedDescription
         }
     }
     
@@ -90,7 +90,7 @@ struct ServerBanSettings: View {
                             .listRowBackground(viewState.theme.background2)
                             .swipeActions {
                                 Button(role: .destructive) {
-                                    Task { unbanUser(user) }
+                                    Task { await unbanUser(user) }
                                 } label: {
                                     Label("Revoke", systemImage: "trash.fill")
                                 }
@@ -110,7 +110,7 @@ struct ServerBanSettings: View {
         .toolbarBackground(viewState.theme.topBar.color, for: .automatic)
         .alert(banPopout.map { "\($0.0.username)#\($0.0.discriminator)" } ?? "", isPresented: $banPopout.bindOptionalToBool(), presenting: banPopout, actions: { (user, ban) in
             Button("Unban", role: .destructive) {
-                Task { unbanUser(user) }
+                Task { await unbanUser(user) }
             }
         }, message: { (user, ban) in
             Text(ban.reason ?? "No ban reason.")

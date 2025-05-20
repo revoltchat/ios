@@ -69,7 +69,6 @@ struct PermissionSetting: View {
                     
                 case .defaultRole(let binding):
                     Toggle(
-                        perm.name,
                         isOn: Binding {
                             binding.wrappedValue.contains(perm)
                         } set: { b in
@@ -79,7 +78,13 @@ struct PermissionSetting: View {
                                 binding.wrappedValue.remove(perm)
                             }
                         }
-                    )
+                    ) {
+                        VStack(alignment: .leading) {
+                            Text(perm.name)
+                            Text(perm.description)
+                                .font(.caption)
+                        }
+                    }
             }
         }
     }
