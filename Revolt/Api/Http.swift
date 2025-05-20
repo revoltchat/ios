@@ -472,4 +472,8 @@ struct HTTPClient {
     func editMember(server: String, user: String, payload: EditMemberPayload) async -> Result<Member, RevoltError> {
         await req(method: .patch, route: "/servers/\(server)/members/\(user)", parameters: payload)
     }
+    
+    func unbanUser(server: String, user: String) async -> Result<EmptyResponse, RevoltError> {
+        await req(method: .delete, route: "/servers/\(server)/bans/\(user)")
+    }
 }

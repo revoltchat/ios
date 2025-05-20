@@ -28,4 +28,20 @@ extension Binding {
             }
         )
     }
+    
+    func bindOptionalToBool<T>() -> Binding<Bool> where Value == T? {
+        .init {
+            switch self.wrappedValue {
+                case .some(_):
+                    return true
+                case .none:
+                    return false
+            }
+        } set: { v in
+            if !v {
+                self.wrappedValue = nil
+            }
+        }
+
+    }
 }
