@@ -196,6 +196,12 @@ let linearGradiantParser = Parse(input: Substring.self) { inp in
     ")"
 }
 
+let variableColorParser = Parse(input: Substring.self) {
+    "var("
+    Prefix(1...) { c in c != ")" }
+    ")"
+}
+
 enum CssColor {
     case linear_gradiant(LinearGradiant)
     case simple(ColorType)
@@ -204,20 +210,16 @@ enum CssColor {
 
 let CSSColorParser = Parse(input: Substring.self) {
     OneOf {
+        variableColorParser.map(CssColor.variable)
         linearGradiantParser.map(CssColor.linear_gradiant)
         colorParser.map(CssColor.simple)
-        Parse {
-            "var("
-            CharacterSet.alphanumerics
-            ")"
-        }.map(CssColor.variable)
     }
 }
 
 func resolveColor(color: ColorType) -> Color {
     switch color {
         case .name(let name):
-            switch name {
+            switch name.lowercased() {
                 case "red":
                     return .red
                 case "green":
