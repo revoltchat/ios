@@ -80,6 +80,7 @@ struct ChannelIcon: View {
                     Text("Saved Messages")
             }
         }
+        .lineLimit(1)
     }
 }
 

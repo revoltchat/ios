@@ -23,29 +23,23 @@ struct PageToolbar<C: View, T: View>: View {
     }
     
     var body: some View {
-        ZStack {
-            HStack(alignment: .center) {
-                Button {
-                    toggleSidebar()
-                } label: {
-                    Image(systemName: "line.3.horizontal")
-                        .resizable()
-                        .frame(width: 24, height: 14)
-                        .foregroundStyle(viewState.theme.foreground2.color)
-                }
-                
-                Spacer()
-                
-                trailing()
+        HStack(alignment: .center) {
+            Button {
+                toggleSidebar()
+            } label: {
+                Image(systemName: "line.3.horizontal")
+                    .resizable()
+                    .frame(width: 24, height: 14)
+                    .foregroundStyle(viewState.theme.foreground2.color)
             }
             
-            HStack(alignment: .center) {
-                Spacer()
-                
-                contents()
-                
-                Spacer()
-            }
+            Spacer()
+            
+            contents()
+            
+            Spacer()
+            
+            trailing()
         }
         .padding(.horizontal, 12)
         .padding(.top, 4)

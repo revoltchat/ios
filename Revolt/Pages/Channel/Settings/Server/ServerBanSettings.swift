@@ -39,7 +39,9 @@ struct ServerBanSettings: View {
     
     func unbanUser(_ user: User) async {
         do {
-            try await viewState.http.unbanUser(server: server.id, user: user.id)
+            let _ = try await viewState.http.unbanUser(server: server.id, user: user.id).get()
+            bans?.removeAll(where: { $0.id.user == user.id })
+            bannedUsers.removeValue(forKey: user.id)
         } catch let e {
             error = e.localizedDescription
         }

@@ -118,6 +118,7 @@ struct MessageReactions: View {
                     MessageReaction(channel: channel, message: message, emoji: emoji, users: users, disabled: restrict_reactions)
                 }
             }
+            .padding(.bottom, 4)
         }
     }
 }

@@ -427,8 +427,6 @@ struct MessageableChannelView: View {
                             }
                         }
                         .onScrollTargetVisibilityChange(idType: [String].self) { ids in
-                            print(ids)
-                            
                             withAnimation {
                                 if let lastMessages = messages.last, Set(arrayLiteral: lastMessages.ids).isDisjoint(with: Set(ids)) {
                                     nearBottom = false

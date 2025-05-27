@@ -627,6 +627,7 @@ public class ViewState: ObservableObject {
                 }
 
                 let unreads = try! await http.fetchUnreads().get()
+                self.unreads = [:]
 
                 for unread in unreads {
                     self.unreads[unread.id.channel] = unread
@@ -655,6 +656,29 @@ public class ViewState: ObservableObject {
                         }
                     }
                 }
+                
+                // remove old cached items which no longer exist
+
+                let newServerIds = event.servers.map(\.id)
+
+                // remove any server we are no longer part of
+                for serverId in servers.keys {
+                    if !newServerIds.contains(serverId) {
+                        let server = servers.removeValue(forKey: serverId)!
+
+                        for channel in server.channels {
+                            channels.removeValue(forKey: channel)
+                            channelMessages.removeValue(forKey: channel)
+                        }
+
+                        members.removeValue(forKey: serverId)
+                    }
+                }
+
+                // remove any channels which no longer exist
+                var newChannelIds = event.channels.map(\.id)
+
+                channels = channels.filter { newChannelIds.contains($0.key) }
 
             case .message(let m):
                 if let user = m.user {

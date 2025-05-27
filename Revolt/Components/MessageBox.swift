@@ -487,6 +487,7 @@ struct MessageBox: View {
                         .focused(focusState)
                         .placeholder(when: content.isEmpty) {
                             Text("Message #\(channel.getName(viewState))")
+                                .lineLimit(1)
                                 .foregroundStyle(viewState.theme.foreground2.color)
                         }
                         .onChange(of: content) { _, value in

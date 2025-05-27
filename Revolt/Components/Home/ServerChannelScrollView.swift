@@ -64,6 +64,10 @@ struct ChannelListItem: View {
             }
             .padding(8)
         }
+        .background(backgroundColor)
+        .foregroundStyle(foregroundColor)
+        .clipShape(RoundedRectangle(cornerRadius: 5))
+        .contentShape(.contextMenuPreview, RoundedRectangle(cornerRadius: 5))
         .contextMenu {
             Button("Mark as read") {
                 Task {
@@ -87,9 +91,6 @@ struct ChannelListItem: View {
                 }
             }
         }
-        .background(backgroundColor)
-        .foregroundStyle(foregroundColor)
-        .clipShape(RoundedRectangle(cornerRadius: 5))
         .sheet(item: $inviteSheetUrl) { url in
             ShareInviteSheet(channel: channel, url: url.url)
         }

@@ -18,9 +18,7 @@ struct MaybeChannelView: View {
     var body: some View {
         switch currentChannel {
             case .channel(let channelId):
-                if let channel = viewState.channels[channelId] {
-                    let messages = Binding($viewState.channelMessages[channelId])!
-                    
+                if let channel = viewState.channels[channelId], let messages = Binding($viewState.channelMessages[channelId]) {
                     MessageableChannelView(
                         viewModel: MessageableChannelViewModel(
                             viewState: viewState,
@@ -69,10 +67,15 @@ struct HomeRewritten: View {
     @State var disableScroll = false
     @State var disableSidebar = false
     
-    var minGestureLength: CGFloat = 20
+    let minGestureLength: CGFloat = 20
+    let minSwipeVelocity: CGFloat = 200
+    let minSnapPercentage: CGFloat = 0.4
+    let sidebarWidthPercentage: CGFloat = 0.85
+    let minSidebarWidth: CGFloat = 600
+    let animationStyle: Animation = .snappy
     
     func toggleSidebar() {
-        withAnimation {
+        withAnimation(animationStyle) {
             if offset != .zero {
                 offset = .zero
             } else {
@@ -102,8 +105,8 @@ struct HomeRewritten: View {
             }
         } else {
             GeometryReader { geo in
-                let sidebarWidth = min(geo.size.width * 0.85, 600)
-                let snapSide = sidebarWidth * (1 / 3)
+                let sidebarWidth = min(geo.size.width * sidebarWidthPercentage, minSidebarWidth)
+                let snapSide = sidebarWidth * minSnapPercentage
                 
                 ZStack(alignment: .topLeading) {
                     HStack(spacing: 0) {
@@ -132,7 +135,7 @@ struct HomeRewritten: View {
                             .frame(width: geo.size.width)
                             .onTapGesture {
                                 if offset != 0.0 {
-                                    withAnimation(.easeInOut) {
+                                    withAnimation(animationStyle) {
                                         offset = .zero
                                     }
                                 }
@@ -140,6 +143,12 @@ struct HomeRewritten: View {
                     }
                     .simultaneousGesture(
                         DragGesture(minimumDistance: minGestureLength)
+                                // this gesture handles:
+                                // - disabling scrolling on the inner view (ie text channel) to prevent two gestures from running
+                                // - if the gesture length is greature than 2/5 of the width snap open
+                                // - snaps open the sidebar based of the velocity
+                                // - offsets the inner view by the gesture length
+                                // - sets the offset back to 0 if its not being snapped open to hide it again
                                 .onChanged({ g in
                                     if g.translation.width >= minGestureLength {
                                         disableScroll = true
@@ -151,16 +160,17 @@ struct HomeRewritten: View {
                                         forceOpen = false
                                     }
                                         
-                                    withAnimation {
+                                    withAnimation(animationStyle) {
                                         offset = min(max(g.translation.width, 0), sidebarWidth)
                                     }
                                 })
                                 .onEnded({ v in
                                     disableScroll = false
                                     
-                                    withAnimation(.easeInOut) {
-                                        if forceOpen {
-                                            forceOpen = false
+                                    let velocity = v.predictedEndLocation.x - v.location.x
+
+                                    withAnimation(animationStyle) {
+                                        if forceOpen || velocity > minSwipeVelocity {
                                             offset = sidebarWidth
                                         } else {
                                             offset = .zero

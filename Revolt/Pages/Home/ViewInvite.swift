@@ -74,6 +74,9 @@ struct ViewInvite: View {
                                 let result = await viewState.http.joinServer(code: code)
                                 switch result {
                                     case .success(let join):
+                                        let member = try! await viewState.http.fetchMember(server: join.server.id, member: viewState.currentUser!.id).get()
+                                        
+                                        viewState.members[join.server.id] = [member.id.user: member]
                                         viewState.servers[join.server.id] = join.server
                                         
                                         for channel in join.channels {
