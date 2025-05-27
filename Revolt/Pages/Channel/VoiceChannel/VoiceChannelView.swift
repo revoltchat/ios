@@ -53,11 +53,13 @@ struct VoiceChannelView: View {
     
     @MainActor
     func connect() async {
-        let token = try! await viewState.http.joinVoiceChannel(channel: channel.id).get()
+        let node = viewState.apiInfo!.features.livekit.nodes.first!
+        
+        let token = try! await viewState.http.joinVoiceChannel(channel: channel.id, node: node.name).get()
         let dele = VoiceChannelDelegate(updater: $updater)
         let room = Room(delegate: dele, connectOptions: ConnectOptions(autoSubscribe: false))
         
-        try! await room.connect(url: viewState.apiInfo!.features.livekit.url.replacing("http", with: "ws", maxReplacements: 1), token: token.token)
+        try! await room.connect(url: node.public_url, token: token.token)
         
         viewState.currentVoiceChannel = channel.id
         viewState.currentVoice = room

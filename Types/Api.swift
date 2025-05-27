@@ -27,14 +27,28 @@ public struct RevoltFeature: Codable {
     public var url: String
 }
 
+public struct LiveKitNode: Codable {
+    public init(name: String, lat: Float, lon: Float, public_url: String) {
+        self.name = name
+        self.lat = lat
+        self.lon = lon
+        self.public_url = public_url
+    }
+    
+    public var name: String
+    public var lat: Float
+    public var lon: Float
+    public var public_url: String
+}
+
 public struct LiveKitFeature: Codable {
-    public init(enabled: Bool, url: String) {
+    public init(enabled: Bool, nodes: [LiveKitNode]) {
         self.enabled = enabled
-        self.url = url
+        self.nodes = nodes
     }
     
     public var enabled: Bool
-    public var url: String
+    public var nodes: [LiveKitNode]
 }
 
 public struct ApiFeatures: Codable {
